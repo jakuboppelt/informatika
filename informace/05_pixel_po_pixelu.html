@@ -1,0 +1,641 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Pixel po pixelu</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#F5F8FC;
+    --surface:#FFFFFF;
+    --surface-alt:#E9F1FA;
+    --border:#CADCFC;
+    --ink:#1B2A4A;
+    --ink-muted:#5A6B85;
+    --accent:#C4841F;
+    --accent-strong:#E8A33D;
+    --accent-ink:#3A2A0A;
+    --pause-bg:#1B2A4A;
+    --pause-ink:#F5F8FC;
+    --pause-ink-muted:#AEC0DD;
+    --off:#D7E2F3;
+    --off-ink:#8298BC;
+    --bad:#C6524A;
+    --good:#3FA765;
+    --shadow:0 1px 2px rgba(27,42,74,.06),0 8px 24px rgba(27,42,74,.08);
+    --font-head:'Source Serif 4',Georgia,'Times New Roman',serif;
+    --font-body:'Public Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+    --font-mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:#0F1626; --surface:#182444; --surface-alt:#1F2E54; --border:#2E3E66;
+      --ink:#EAF1FB; --ink-muted:#9BB0D1; --accent:#F2B34D; --accent-strong:#F2B34D;
+      --accent-ink:#241A05; --pause-bg:#0B1220; --pause-ink:#EAF1FB; --pause-ink-muted:#8FA3C4;
+      --off:#26325A; --off-ink:#7C8FB4; --bad:#E17A72; --good:#5FC488;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:#0F1626; --surface:#182444; --surface-alt:#1F2E54; --border:#2E3E66;
+    --ink:#EAF1FB; --ink-muted:#9BB0D1; --accent:#F2B34D; --accent-strong:#F2B34D;
+    --accent-ink:#241A05; --pause-bg:#0B1220; --pause-ink:#EAF1FB; --pause-ink-muted:#8FA3C4;
+    --off:#26325A; --off-ink:#7C8FB4; --bad:#E17A72; --good:#5FC488;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);overflow:hidden;}
+  h1,h2,h3{font-family:var(--font-head);text-wrap:balance;margin:0;}
+  p{margin:0;}
+  button{font-family:inherit;}
+
+  .app{height:100%;display:flex;flex-direction:column;}
+  .stage{flex:1;position:relative;min-height:0;}
+  .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:2.2rem 1.25rem;overflow-y:auto;}
+  .slide-inner{width:100%;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:1.2rem;}
+  .slide[hidden]{display:none;}
+
+  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  .title-slide .eyebrow{color:var(--accent-strong);}
+  h2.slide-title{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:700;line-height:1.15;}
+  .lede{color:var(--ink-muted);font-size:1.02rem;line-height:1.55;max-width:64ch;}
+
+  .title-slide{text-align:center;}
+  .title-slide .slide-inner{align-items:center;gap:1.1rem;}
+  .title-slide h1{font-size:clamp(2rem,6.5vw,3.1rem);font-weight:700;}
+  .title-slide .lede{max-width:48ch;margin:0 auto;}
+
+  /* ---------- pixel grid ---------- */
+  .pixel-grid{display:grid;gap:2px;background:var(--border);border:1px solid var(--border);border-radius:8px;padding:2px;margin:0 auto;}
+  .pixel-cell{width:1.7rem;height:1.7rem;background:var(--surface);cursor:pointer;border:none;padding:0;}
+  .pixel-cell.is-on{background:var(--ink);}
+  @media (max-width:520px){.pixel-cell{width:1.15rem;height:1.15rem;}}
+  .pixel-stats{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;font-family:var(--font-mono);font-size:.88rem;color:var(--ink-muted);}
+  .pixel-stats b{color:var(--ink);}
+
+  /* ---------- sliders / chips ---------- */
+  .lookup{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;box-shadow:var(--shadow);}
+  .lookup-chips{display:flex;gap:.6rem;flex-wrap:wrap;flex:1;}
+  .chip{font-family:var(--font-mono);font-size:.85rem;background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;color:var(--ink);}
+  .chip b{display:block;font-size:.65rem;font-weight:600;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;}
+  .swatch{width:3.4rem;height:3.4rem;border-radius:10px;border:1px solid var(--border);flex:none;}
+  input[type=range]{width:100%;accent-color:var(--accent-strong);}
+  .slider-row{display:flex;align-items:center;gap:.7rem;}
+  .slider-row label{width:1.4rem;flex:none;font-family:var(--font-mono);font-weight:700;color:var(--ink-muted);}
+  .slider-col{display:flex;flex-direction:column;gap:.6rem;flex:1;min-width:180px;}
+
+  /* ---------- compare grid ---------- */
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  @media (max-width:520px){.compare-grid{grid-template-columns:1fr;}}
+  .compare-col{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+  .compare-head{padding:.7rem 1rem;background:var(--surface-alt);font-weight:600;font-size:.85rem;border-bottom:1px solid var(--border);}
+  .compare-row{display:flex;justify-content:space-between;align-items:baseline;padding:.5rem 1rem;font-family:var(--font-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--border);font-size:.9rem;}
+  .compare-row:last-child{border-bottom:none;}
+  .compare-row span:first-child{color:var(--ink-muted);}
+  .compare-row span:last-child{font-weight:600;text-align:right;}
+  .compare-note{font-size:.85rem;color:var(--ink-muted);font-style:italic;}
+  .compare-body{padding:.85rem 1rem;font-size:.92rem;line-height:1.5;color:var(--ink-muted);}
+  .video-link{display:flex;align-items:center;gap:.9rem;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;box-shadow:var(--shadow);transition:border-color .2s ease;}
+  .video-link:hover{border-color:var(--accent-strong);}
+  .video-link-play{flex:none;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--accent-strong);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;}
+  .video-link-text{display:flex;flex-direction:column;gap:.15rem;}
+  .video-link-title{font-weight:600;color:var(--ink);font-size:.98rem;}
+  .video-link-sub{font-family:var(--font-mono);font-size:.76rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.04em;}
+  .compare-body b{color:var(--ink);}
+
+  table.datatable{width:100%;border-collapse:collapse;font-size:.88rem;}
+  table.datatable th,table.datatable td{padding:.55rem .6rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;}
+  table.datatable th{color:var(--ink-muted);font-weight:600;font-size:.72rem;letter-spacing:.03em;text-transform:uppercase;font-family:var(--font-mono);}
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px;background:var(--surface);}
+
+  /* ---------- calculator ---------- */
+  .calc-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;}
+  .calc-btn{appearance:none;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:10px;padding:.5rem .9rem;font-weight:600;font-size:.85rem;}
+  .calc-btn.is-active{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+  .calc-field{display:flex;flex-direction:column;gap:.3rem;}
+  .calc-field label{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;}
+  .calc-field input{width:5.5rem;font-family:var(--font-mono);font-size:1rem;font-weight:700;border:1px solid var(--border);border-radius:8px;padding:.4rem .5rem;background:var(--bg);color:var(--ink);}
+  .formula{font-family:var(--font-mono);font-weight:700;text-align:center;font-size:clamp(.95rem,3.6vw,1.3rem);background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.1rem;color:var(--ink);}
+
+  /* ---------- raster vs vector zoom demo ---------- */
+  .zoom-demo{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;}
+  .zoom-panel{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
+  .zoom-frame{width:9rem;height:9rem;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .zoom-frame canvas{image-rendering:pixelated;image-rendering:crisp-edges;}
+  .zoom-frame svg{width:100%;height:100%;}
+  .zoom-panel-label{font-family:var(--font-mono);font-size:.78rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.04em;}
+
+  /* ---------- jpeg quality demo ---------- */
+  .jpeg-demo{display:flex;flex-direction:column;align-items:center;gap:.8rem;}
+  .jpeg-frame{width:12rem;height:12rem;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
+  .jpeg-frame canvas{width:100%;height:100%;image-rendering:pixelated;}
+
+  /* ---------- pause / question ---------- */
+  .pause-slide{background:var(--pause-bg);color:var(--pause-ink);}
+  .pause-slide .eyebrow{color:var(--accent-strong);}
+  .qmark{width:4.2rem;height:4.2rem;border-radius:50%;background:var(--accent-strong);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:700;font-size:1.9rem;margin:0 auto;}
+  .pause-slide h2{font-size:clamp(1.5rem,5vw,2.2rem);font-style:italic;text-align:center;font-weight:600;}
+  .pause-slide .slide-inner{align-items:center;text-align:center;gap:1.3rem;}
+
+  /* ---------- summary ---------- */
+  .summary-slide{background:var(--pause-bg);color:var(--pause-ink);}
+  .summary-slide .eyebrow{color:var(--accent-strong);}
+  .summary-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.85rem;}
+  .summary-list li{position:relative;padding-left:1.2rem;line-height:1.5;font-size:1rem;}
+  .summary-list li::before{content:"";position:absolute;left:0;top:.55rem;width:.5rem;height:.5rem;border-radius:50%;background:var(--accent-strong);}
+  .summary-list b{color:var(--accent-strong);}
+
+  /* ---------- nav bar ---------- */
+  .navbar{flex:none;display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.7rem 1rem;padding-bottom:calc(.7rem + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--border);}
+  .nav-btn{appearance:none;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:10px;padding:.5rem .9rem;font-weight:600;font-size:.88rem;display:flex;align-items:center;gap:.3rem;flex:none;}
+  .nav-btn:disabled{opacity:.35;cursor:default;}
+  .dots{display:flex;gap:.4rem;flex:1 1 auto;min-width:0;overflow-x:auto;justify-content:center;scrollbar-width:none;-ms-overflow-style:none;}
+  .dots::-webkit-scrollbar{display:none;}
+  .dot{flex:none;width:.5rem;height:.5rem;border-radius:50%;background:var(--off);border:none;cursor:pointer;padding:0;}
+  .dot.is-active{background:var(--accent);width:1.15rem;border-radius:.3rem;transition:width .2s ease;}
+  .counter{flex:none;font-family:var(--font-mono);font-size:.78rem;color:var(--ink-muted);min-width:3.4rem;text-align:center;}
+
+  @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important;}}
+</style>
+
+<div class="app">
+  <div class="stage" id="stage">
+
+    <!-- 1 : hero + bw pixel grid -->
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Kódování obrazu</div>
+        <h1>Co počítač vidí, když se dívá na obrázek?</h1>
+        <p class="lede">Žádný "obrázek" — jen mřížku čísel. Zkus si nakreslit vlastní černobílý obrázek kliknutím:</p>
+        <div class="pixel-grid" id="bwGrid" style="grid-template-columns:repeat(12,1fr);"></div>
+        <div class="pixel-stats">
+          <span>pixelů: <b id="bwCount">96</b></span>
+          <span>bitů (1 na pixel): <b id="bwBits">96</b></span>
+          <span>bajtů: <b id="bwBytes">12</b></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 : pixel a rozlišení -->
+    <section class="slide" data-index="1" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Základy</div>
+        <h2 class="slide-title">Pixel a rozlišení</h2>
+        <p class="lede"><b>Pixel</b> (z anglického "picture element") je jedno políčko té mřížky — nejmenší kousek obrázku, který má jednu barvu. <b>Rozlišení</b> říká, kolik pixelů má obrázek na šířku a na výšku.</p>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <div class="compare-head">Málo pixelů</div>
+            <div class="pixel-grid" style="grid-template-columns:repeat(8,1fr);padding:8px;margin:.8rem auto;" id="lowResGrid"></div>
+            <div class="compare-body" style="text-align:center;">8 × 8 = <b>64</b> pixelů</div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-head">Hodně pixelů</div>
+            <div class="pixel-grid" style="grid-template-columns:repeat(16,1fr);padding:8px;margin:.8rem auto;" id="hiResGrid"></div>
+            <div class="compare-body" style="text-align:center;">16 × 16 = <b>256</b> pixelů</div>
+          </div>
+        </div>
+        <p class="lede">Běžná fotka z mobilu má klidně 4000 × 3000 = <b>12 milionů</b> pixelů.</p>
+      </div>
+    </section>
+
+    <!-- 3 : odstíny šedi -->
+    <section class="slide" data-index="2" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Odstíny šedi</div>
+        <h2 class="slide-title">Šedá potřebuje celý bajt</h2>
+        <p class="lede">Černá, nebo bílá nestačí, když chceš i odstíny mezi tím. Klasické řešení: 1 bajt (8 bitů) na pixel = 2⁸ = <b>256 odstínů</b> šedi (0 = černá, 255 = bílá).</p>
+        <div class="lookup">
+          <div class="swatch" id="graySwatch" style="background:rgb(128,128,128);"></div>
+          <div class="slider-col">
+            <input type="range" id="grayRange" min="0" max="255" value="128">
+          </div>
+          <div class="lookup-chips">
+            <div class="chip"><b>dekadicky</b><span id="grayDec">128</span></div>
+            <div class="chip"><b>dvojkově</b><span id="grayBin">10000000</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 : RGB -->
+    <section class="slide" data-index="3" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Barva</div>
+        <h2 class="slide-title">Model RGB — tři bajty na pixel</h2>
+        <p class="lede">Barevný pixel je poskládaný ze tří kanálů — <b>R</b>ed, <b>G</b>reen, <b>B</b>lue — každý 0–255. Dohromady: 256×256×256 = přes <b>16,7 milionu</b> barev, ze 3 bajtů (24 bitů) na pixel.</p>
+        <div class="lookup">
+          <div class="swatch" id="rgbSwatch" style="background:rgb(196,132,31);"></div>
+          <div class="slider-col">
+            <div class="slider-row"><label>R</label><input type="range" id="rRange" min="0" max="255" value="196"></div>
+            <div class="slider-row"><label>G</label><input type="range" id="gRange" min="0" max="255" value="132"></div>
+            <div class="slider-row"><label>B</label><input type="range" id="bRange" min="0" max="255" value="31"></div>
+          </div>
+          <div class="lookup-chips">
+            <div class="chip"><b>rgb</b><span id="rgbDec">196, 132, 31</span></div>
+            <div class="chip"><b>hex</b><span id="rgbHex">#C4841F</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 : kolik to zabírá místa -->
+    <section class="slide" data-index="4" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Vzorec</div>
+        <h2 class="slide-title">Kolik to vlastně zabírá místa?</h2>
+        <div class="formula">šířka × výška × bitů na pixel = velikost</div>
+        <div class="calc-row">
+          <div class="calc-field"><label>šířka (px)</label><input type="number" id="calcW" value="100" min="1" max="8000"></div>
+          <div class="calc-field"><label>výška (px)</label><input type="number" id="calcH" value="100" min="1" max="8000"></div>
+        </div>
+        <div class="calc-row" id="depthBtns">
+          <button class="calc-btn" data-bits="1">černobílý (1 b)</button>
+          <button class="calc-btn" data-bits="8">šedá (8 b)</button>
+          <button class="calc-btn is-active" data-bits="24">RGB (24 b)</button>
+        </div>
+        <div class="formula" id="calcResult" style="font-size:clamp(1rem,4vw,1.4rem);">30 000 bajtů ≈ 29,3 kB</div>
+      </div>
+    </section>
+
+    <!-- 6 : rastr nebo vektor -->
+    <section class="slide" data-index="5" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Dva přístupy</div>
+        <h2 class="slide-title">Rastr, nebo vektor?</h2>
+        <p class="lede">Všechno předchozí byl <b>rastr</b> — obrázek jako mřížka pixelů, kde má každý svou hodnotu. Existuje ale úplně jiný způsob: <b>vektor</b> neukládá pixely, ale matematický popis tvarů.</p>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <div class="compare-head">Rastr</div>
+            <div class="compare-body">Uloží barvu <i>každého</i> pixelu zvlášť. Příklad zápisu: dlouhá tabulka čísel — pixel [0,0]=bílá, [0,1]=bílá, [0,2]=černá…</div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-head">Vektor</div>
+            <div class="compare-body">Uloží tvar jako vzorec. Příklad zápisu: <span style="font-family:var(--font-mono);">kruh(střed=50,50; poloměr=20; barva=červená)</span></div>
+          </div>
+        </div>
+        <a class="video-link" href="https://www.youtube.com/watch?v=p2thSkOa_Xg" target="_blank" rel="noopener">
+          <span class="video-link-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          </span>
+          <span class="video-link-text">
+            <span class="video-link-title">Rastr vs. vektor — krátké video</span>
+            <span class="video-link-sub">otevře se na YouTube</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 7 : reálný příklad + přiblížení -->
+    <section class="slide" data-index="6" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Zkus si to</div>
+        <h2 class="slide-title">Přibliž stejný kruh v obou verzích</h2>
+        <div class="zoom-demo">
+          <div class="zoom-panel">
+            <div class="zoom-panel-label">Rastr</div>
+            <div class="zoom-frame"><canvas id="zoomCanvas" width="16" height="16"></canvas></div>
+          </div>
+          <div class="zoom-panel">
+            <div class="zoom-panel-label">Vektor (SVG)</div>
+            <div class="zoom-frame" id="zoomSvgFrame">
+              <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="var(--accent-strong)"/></svg>
+            </div>
+          </div>
+        </div>
+        <input type="range" id="zoomRange" min="1" max="10" value="1">
+        <p class="lede" style="text-align:center;">Rastr se při přiblížení rozpixeluje — vektor se jen přepočítá znovu a zůstává ostrý.</p>
+      </div>
+    </section>
+
+    <!-- 8 : výhody a nevýhody -->
+    <section class="slide" data-index="7" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Shrnutí rozdílu</div>
+        <h2 class="slide-title">Výhody a nevýhody</h2>
+        <div class="table-wrap">
+          <table class="datatable">
+            <thead><tr><th></th><th>Rastr</th><th>Vektor</th></tr></thead>
+            <tbody>
+              <tr><td><b>výhody</b></td><td>zvládne fotky a plynulé přechody barev; univerzální podpora</td><td>škáluje se beze ztráty kvality; malé soubory pro jednoduchou grafiku; snadná úprava tvarů</td></tr>
+              <tr><td><b>nevýhody</b></td><td>při zvětšení se rozpixeluje; velikost roste s rozlišením</td><td>nehodí se na fotky; vykreslení chce výpočet</td></tr>
+              <tr><td><b>příklady</b></td><td>JPEG, PNG, GIF, BMP</td><td>SVG, fonty, loga, CAD výkresy</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="compare-note">Logo na vizitce i na billboardu? Vektor to zvládne z jednoho souboru — rastr by na billboardu vypadal rozpixelovaně.</p>
+      </div>
+    </section>
+
+    <!-- 9 : problem - syrová data jsou obří -->
+    <section class="slide" data-index="8" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Problém</div>
+        <h2 class="slide-title">Syrová data jsou obří</h2>
+        <p class="lede">Fotka z mobilu, řekněme 4000 × 3000 pixelů, v barvě (24 bitů na pixel):</p>
+        <div class="formula">4000 × 3000 × 24 b ≈ <b>36 MB</b> na jednu fotku</div>
+        <p class="lede">Bez komprese by ti stovka fotek nezabrala do telefonu. Potřebujeme stejný trik jako u textu — jen aplikovaný na pixely.</p>
+      </div>
+    </section>
+
+    <!-- 10 : bezztrátová vs ztrátová -->
+    <section class="slide" data-index="9" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Dvě cesty</div>
+        <h2 class="slide-title">Bezztrátová, nebo ztrátová komprese?</h2>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <div class="compare-head">Bezztrátová (PNG, GIF)</div>
+            <div class="compare-body">Stejný princip jako ZIP z minulé lekce — využije opakování a časté hodnoty. Po rozbalení je obrázek <b>pixel od pixelu identický</b> s originálem.</div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-head">Ztrátová (JPEG)</div>
+            <div class="compare-body">Schválně zahodí detaily, které oko stejně skoro nepozná — výměnou za mnohem menší soubor. Po rozbalení <b>není</b> identický s originálem.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 : jak jpeg podvádí -->
+    <section class="slide" data-index="10" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Trik JPEGu</div>
+        <h2 class="slide-title">Jak JPEG "podvádí"</h2>
+        <p class="lede">Lidské oko je citlivější na jas než na jemné barevné detaily. JPEG proto bloky pixelů zjednoduší — čím nižší kvalita, tím větší bloky se zprůměrují. Vyzkoušej posuvník:</p>
+        <div class="jpeg-demo">
+          <div class="jpeg-frame"><canvas id="jpegCanvas" width="64" height="64"></canvas></div>
+          <input type="range" id="jpegRange" min="0" max="100" value="100" style="max-width:20rem;">
+          <p class="lede" style="text-align:center;">kvalita: <b id="jpegQualityLabel">100</b> %</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 : otázka -->
+    <section class="slide pause-slide" data-index="11" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Otázka k zamyšlení</div>
+        <div class="qmark">?</div>
+        <h2>PNG, nebo JPEG?</h2>
+        <p class="lede" style="text-align:center;color:var(--pause-ink-muted);margin:0 auto;">Proč se screenshot s textem a grafy ukládá lépe jako PNG, ale fotka z dovolené jako JPEG?</p>
+      </div>
+    </section>
+
+    <!-- 13 : odpověď -->
+    <section class="slide" data-index="12" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Řešení</div>
+        <h2 class="slide-title">Ostré hrany vs plynulé přechody</h2>
+        <p class="lede"><b>PNG</b> je bezztrátové — ostré hrany textu a grafiky zůstanou beze změny. U JPEGu by kolem písmen vznikaly rozmazané barevné artefakty.</p>
+        <p class="lede"><b>JPEG</b> naopak umí plynulé barevné přechody fotky zabalit do mnohem menšího souboru — a drobná ztráta detailu na fotce oko skoro nepozná.</p>
+      </div>
+    </section>
+
+    <!-- 14 : shrnutí -->
+    <section class="slide summary-slide" data-index="13" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Shrnutí</div>
+        <h2 class="slide-title" style="color:var(--pause-ink)">Co jsme se naučili</h2>
+        <ul class="summary-list">
+          <li>Obrázek je pro počítač mřížka <b>pixelů</b> — černobílý potřebuje 1 bit, šedý 1 bajt, barevný (RGB) 3 bajty na pixel.</li>
+          <li>Velikost spočítáš vzorcem <b>šířka × výška × bitů na pixel</b>.</li>
+          <li><b>Rastr</b> ukládá každý pixel, <b>vektor</b> ukládá matematický popis tvarů — proto se vektor škáluje beze ztráty.</li>
+          <li>Komprese je <b>bezztrátová</b> (PNG — identická kopie) nebo <b>ztrátová</b> (JPEG — zahodí nepostřehnutelné detaily výměnou za menší soubor).</li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="navbar">
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 14</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- navigation ----------
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total = slides.length;
+  var current = 0;
+  var dotsEl = document.getElementById("dots");
+  var counterEl = document.getElementById("counter");
+  var prevBtn = document.getElementById("prevBtn");
+  var nextBtn = document.getElementById("nextBtn");
+
+  slides.forEach(function(_, i){
+    var d = document.createElement("button");
+    d.className = "dot" + (i === 0 ? " is-active" : "");
+    d.setAttribute("aria-label", "Snímek " + (i+1));
+    d.addEventListener("click", function(){ goTo(i); });
+    dotsEl.appendChild(d);
+  });
+  var dotEls = Array.prototype.slice.call(dotsEl.children);
+
+  function goTo(i){
+    if (i < 0 || i >= total) return;
+    slides[current].hidden = true;
+    current = i;
+    slides[current].hidden = false;
+    dotEls.forEach(function(d, idx){ d.classList.toggle("is-active", idx === current); });
+    counterEl.textContent = (current+1) + " / " + total;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+  }
+  prevBtn.addEventListener("click", function(){ goTo(current - 1); });
+  nextBtn.addEventListener("click", function(){ goTo(current + 1); });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "ArrowRight") goTo(current + 1);
+    if (e.key === "ArrowLeft") goTo(current - 1);
+  });
+  goTo(0);
+
+  function toBinary8(n){ var s = n.toString(2); while (s.length < 8) s = "0" + s; return s; }
+  function toHex2(n){ var s = n.toString(16).toUpperCase(); while (s.length < 2) s = "0" + s; return s; }
+
+  // ---------- slide 1 : bw pixel grid ----------
+  var BW_COLS = 12, BW_ROWS = 8;
+  var bwGrid = document.getElementById("bwGrid");
+  var bwCells = [];
+  for (var i = 0; i < BW_COLS * BW_ROWS; i++){
+    var cell = document.createElement("button");
+    cell.className = "pixel-cell";
+    cell.addEventListener("click", function(e){
+      e.currentTarget.classList.toggle("is-on");
+      updateBwStats();
+    });
+    bwGrid.appendChild(cell);
+    bwCells.push(cell);
+  }
+  // draw a simple starter smiley so it's not empty at rest
+  [14,15,20,21,53,54,59,60,73,74,75,76,77,78].forEach(function(idx){
+    if (bwCells[idx]) bwCells[idx].classList.add("is-on");
+  });
+  var bwCountEl = document.getElementById("bwCount");
+  var bwBitsEl = document.getElementById("bwBits");
+  var bwBytesEl = document.getElementById("bwBytes");
+  function updateBwStats(){
+    var n = BW_COLS * BW_ROWS;
+    bwCountEl.textContent = n;
+    bwBitsEl.textContent = n;
+    bwBytesEl.textContent = Math.ceil(n / 8);
+  }
+  updateBwStats();
+
+  // ---------- slide 2 : low/high res static grids ----------
+  function fillStaticGrid(el, cols, rows, onIdx){
+    for (var i = 0; i < cols * rows; i++){
+      var c = document.createElement("div");
+      c.className = "pixel-cell" + (onIdx.indexOf(i) !== -1 ? " is-on" : "");
+      c.style.width = c.style.height = (cols > 10 ? ".55rem" : "1rem");
+      el.appendChild(c);
+    }
+  }
+  fillStaticGrid(document.getElementById("lowResGrid"), 8, 8, [9,10,17,18,27,28,29,30,33,34,35,36,45,46,52,53]);
+  fillStaticGrid(document.getElementById("hiResGrid"), 16, 16, [18,19,20,21,33,34,35,36,37,38,49,58,64,73,79,88,94,103,108,109,118,119,120,121,133,134,135,139,140,150,151,152,153,154,155]);
+
+  // ---------- slide 3 : grayscale ----------
+  var grayRange = document.getElementById("grayRange");
+  var graySwatch = document.getElementById("graySwatch");
+  var grayDec = document.getElementById("grayDec");
+  var grayBin = document.getElementById("grayBin");
+  function updateGray(){
+    var v = parseInt(grayRange.value, 10);
+    graySwatch.style.background = "rgb(" + v + "," + v + "," + v + ")";
+    grayDec.textContent = v;
+    grayBin.textContent = toBinary8(v);
+  }
+  grayRange.addEventListener("input", updateGray);
+  updateGray();
+
+  // ---------- slide 4 : RGB ----------
+  var rRange = document.getElementById("rRange");
+  var gRange = document.getElementById("gRange");
+  var bRange = document.getElementById("bRange");
+  var rgbSwatch = document.getElementById("rgbSwatch");
+  var rgbDec = document.getElementById("rgbDec");
+  var rgbHex = document.getElementById("rgbHex");
+  function updateRgb(){
+    var r = parseInt(rRange.value,10), g = parseInt(gRange.value,10), b = parseInt(bRange.value,10);
+    rgbSwatch.style.background = "rgb(" + r + "," + g + "," + b + ")";
+    rgbDec.textContent = r + ", " + g + ", " + b;
+    rgbHex.textContent = "#" + toHex2(r) + toHex2(g) + toHex2(b);
+  }
+  [rRange, gRange, bRange].forEach(function(r){ r.addEventListener("input", updateRgb); });
+  updateRgb();
+
+  // ---------- slide 5 : size calculator ----------
+  var calcW = document.getElementById("calcW");
+  var calcH = document.getElementById("calcH");
+  var calcResult = document.getElementById("calcResult");
+  var depthBtns = document.querySelectorAll("#depthBtns .calc-btn");
+  var currentBits = 24;
+  depthBtns.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      depthBtns.forEach(function(b){ b.classList.remove("is-active"); });
+      btn.classList.add("is-active");
+      currentBits = parseInt(btn.getAttribute("data-bits"), 10);
+      updateCalc();
+    });
+  });
+  function formatBytes(bytes){
+    if (bytes < 1024) return bytes + " bajtů";
+    if (bytes < 1024*1024) return bytes + " bajtů ≈ " + (bytes/1024).toFixed(1) + " kB";
+    return bytes + " bajtů ≈ " + (bytes/1024/1024).toFixed(1) + " MB";
+  }
+  function updateCalc(){
+    var w = Math.max(1, parseInt(calcW.value, 10) || 1);
+    var h = Math.max(1, parseInt(calcH.value, 10) || 1);
+    var bits = w * h * currentBits;
+    var bytes = Math.ceil(bits / 8);
+    calcResult.textContent = formatBytes(bytes);
+  }
+  calcW.addEventListener("input", updateCalc);
+  calcH.addEventListener("input", updateCalc);
+  updateCalc();
+
+  // ---------- slide 7 : raster vs vector zoom ----------
+  var zoomCanvas = document.getElementById("zoomCanvas");
+  var zoomSvgFrame = document.getElementById("zoomSvgFrame");
+  var zoomRange = document.getElementById("zoomRange");
+  var zctx = zoomCanvas.getContext("2d");
+  // draw a small low-res circle once
+  zctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--surface") || "#fff";
+  zctx.fillRect(0,0,16,16);
+  zctx.fillStyle = "#E8A33D";
+  for (var zy = 0; zy < 16; zy++){
+    for (var zx = 0; zx < 16; zx++){
+      var dx = zx - 7.5, dy = zy - 7.5;
+      if (dx*dx + dy*dy <= 49) zctx.fillRect(zx, zy, 1, 1);
+    }
+  }
+  function updateZoom(){
+    var z = parseInt(zoomRange.value, 10);
+    var size = 16 * (2 + z * 2.4); // px
+    zoomCanvas.style.width = size + "px";
+    zoomCanvas.style.height = size + "px";
+  }
+  zoomRange.addEventListener("input", updateZoom);
+  updateZoom();
+
+  // ---------- slide 11 : jpeg block quality demo ----------
+  var jpegCanvas = document.getElementById("jpegCanvas");
+  var jpegRange = document.getElementById("jpegRange");
+  var jpegQualityLabel = document.getElementById("jpegQualityLabel");
+  var jctx = jpegCanvas.getContext("2d");
+  var SRC = 64;
+  // build a colorful source image once (gradient + a circle) into offscreen canvas
+  var offCanvas = document.createElement("canvas");
+  offCanvas.width = SRC; offCanvas.height = SRC;
+  var octx = offCanvas.getContext("2d");
+  var grad = octx.createLinearGradient(0, 0, SRC, SRC);
+  grad.addColorStop(0, "#F2B34D");
+  grad.addColorStop(0.5, "#C4841F");
+  grad.addColorStop(1, "#1B2A4A");
+  octx.fillStyle = grad;
+  octx.fillRect(0, 0, SRC, SRC);
+  octx.fillStyle = "#EAF1FB";
+  octx.beginPath();
+  octx.arc(SRC*0.5, SRC*0.5, SRC*0.28, 0, Math.PI*2);
+  octx.fill();
+  var srcData = octx.getImageData(0, 0, SRC, SRC);
+
+  function renderJpeg(quality){
+    // quality 100 -> block size 1 (no loss). quality 0 -> block size 16 (very blocky)
+    var block = Math.max(1, Math.round((100 - quality) / 100 * 15) + 1);
+    var out = jctx.createImageData(SRC, SRC);
+    for (var by = 0; by < SRC; by += block){
+      for (var bx = 0; bx < SRC; bx += block){
+        var rSum=0,gSum=0,bSum=0,aSum=0,count=0;
+        for (var yy = by; yy < Math.min(by+block, SRC); yy++){
+          for (var xx = bx; xx < Math.min(bx+block, SRC); xx++){
+            var idx = (yy*SRC+xx)*4;
+            rSum += srcData.data[idx]; gSum += srcData.data[idx+1];
+            bSum += srcData.data[idx+2]; aSum += srcData.data[idx+3];
+            count++;
+          }
+        }
+        var rAvg = rSum/count, gAvg = gSum/count, bAvg = bSum/count, aAvg = aSum/count;
+        for (var yy2 = by; yy2 < Math.min(by+block, SRC); yy2++){
+          for (var xx2 = bx; xx2 < Math.min(bx+block, SRC); xx2++){
+            var idx2 = (yy2*SRC+xx2)*4;
+            out.data[idx2] = rAvg; out.data[idx2+1] = gAvg; out.data[idx2+2] = bAvg; out.data[idx2+3] = aAvg;
+          }
+        }
+      }
+    }
+    jctx.putImageData(out, 0, 0);
+  }
+  jpegRange.addEventListener("input", function(){
+    jpegQualityLabel.textContent = jpegRange.value;
+    renderJpeg(parseInt(jpegRange.value, 10));
+  });
+  renderJpeg(100);
+})();
+</script>
+
+</body></html>
