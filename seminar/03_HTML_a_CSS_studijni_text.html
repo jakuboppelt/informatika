@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML a CSS – maturitní otázka</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: studijní text – pevný obsah vlevo (desktop), čtecí sloupec ~70 znaků; kód a tabulky v rámečcích se svým posunem */
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --fg: #1a1e27;
+  --muted: #586174;
+  --line: #d9dee7;
+  --accent: #1f4fd1;
+  --accent-soft: #e7edfc;
+  --tag: #c2410c;
+  --code-bg: #eef1f6;
+  --code-fg: #1d2330;
+  --warn: #8a5300;
+  --warn-bg: #fff4e0;
+  --ok: #13703f;
+  --ok-bg: #e5f5ec;
+  --tok-str: #0f7a55;
+  --tok-com: #7a8396;
+  --tok-prop: #7a3fc4;
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11141a; --surface: #181c24; --fg: #e5e8ef; --muted: #9aa3b6; --line: #2a303d;
+    --accent: #86a8ff; --accent-soft: #1b2440; --tag: #ff9d66; --code-bg: #0d1016; --code-fg: #dfe3ec;
+    --warn: #f2b85c; --warn-bg: #2a2011; --ok: #5ed39b; --ok-bg: #122a1f;
+    --tok-str: #6fd6a6; --tok-com: #7c8598; --tok-prop: #c39bff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11141a; --surface: #181c24; --fg: #e5e8ef; --muted: #9aa3b6; --line: #2a303d;
+  --accent: #86a8ff; --accent-soft: #1b2440; --tag: #ff9d66; --code-bg: #0d1016; --code-fg: #dfe3ec;
+  --warn: #f2b85c; --warn-bg: #2a2011; --ok: #5ed39b; --ok-bg: #122a1f;
+  --tok-str: #6fd6a6; --tok-com: #7c8598; --tok-prop: #c39bff;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--f-body); font-size: 1.0625rem; line-height: 1.65;
+  padding-inline: 16px; padding-block: 0 64px;
+}
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 56px;
+}
+@media (max-width: 900px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+
+/* Obsah (TOC) */
+.toc { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; max-height: 100vh; overflow-y: auto; padding-block: 40px 24px; font-family: var(--f-display); font-size: 0.875rem; }
+.toc h2 { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; font-weight: 700; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: block; color: var(--muted); text-decoration: none; padding: 3px 10px; border-left: 2px solid var(--line); line-height: 1.35; }
+.toc a:hover, .toc a:focus-visible { color: var(--accent); border-left-color: var(--accent); }
+.toc .grp { margin-top: 12px; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg); font-weight: 700; padding-left: 12px; }
+@media (max-width: 900px) {
+  .toc { position: static; max-height: none; padding-block: 16px 0; }
+  .toc details { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 10px 14px; }
+  .toc summary { cursor: pointer; font-weight: 700; }
+}
+@media (min-width: 901px) { .toc summary { display: none; } }
+
+main { min-width: 0; max-width: 46rem; }
+
+/* Hlavička */
+.hero { padding-block: 48px 24px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+.eyebrow { font-family: var(--f-display); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+.hero h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.05; margin: 0 0 16px; text-wrap: balance; letter-spacing: -0.02em; }
+.hero h1 .t { color: var(--tag); font-family: var(--f-mono); font-weight: 600; font-size: 0.8em; }
+.hero .lead { font-size: 1.15rem; color: var(--muted); margin: 0; max-width: 40rem; }
+
+.must { margin-top: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
+.must h2 { font-family: var(--f-display); font-size: 1rem; margin: 0 0 8px; }
+.must ul { margin: 0; padding-left: 1.2em; columns: 2; column-gap: 32px; font-size: 0.97rem; }
+.must li { break-inside: avoid; margin-bottom: 4px; }
+@media (max-width: 640px) { .must ul { columns: 1; } }
+
+/* Nadpisy a text */
+section { padding-top: 40px; }
+.part { font-family: var(--f-display); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 56px 0 0; padding-top: 16px; border-top: 3px solid var(--fg); }
+h2 { font-family: var(--f-display); font-weight: 800; font-size: 1.75rem; line-height: 1.15; margin: 0 0 14px; text-wrap: balance; letter-spacing: -0.01em; }
+h3 { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; margin: 28px 0 8px; }
+p { margin: 0 0 14px; }
+ul, ol { margin: 0 0 14px; padding-left: 1.3em; }
+li { margin-bottom: 4px; }
+a { color: var(--accent); }
+strong { font-weight: 600; }
+code { font-family: var(--f-mono); font-size: 0.86em; background: var(--code-bg); color: var(--code-fg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+.tagc { color: var(--tag); }
+dfn { font-style: normal; font-weight: 600; }
+
+/* Kód */
+pre { margin: 0 0 18px; background: var(--code-bg); color: var(--code-fg); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-family: var(--f-mono); font-size: 0.82rem; line-height: 1.55; tab-size: 2; }
+pre code { background: none; padding: 0; white-space: pre; font-size: inherit; }
+.token.comment { color: var(--tok-com); font-style: italic; }
+.token.tag, .token.selector { color: var(--tag); }
+.token.tag .token.punctuation { color: var(--tag); opacity: .8; }
+.token.attr-name, .token.property { color: var(--tok-prop); }
+.token.attr-value, .token.string { color: var(--tok-str); }
+.token.keyword, .token.atrule, .token.rule, .token.function { color: var(--accent); }
+.token.doctype { color: var(--tok-com); }
+.token.number, .token.unit { color: var(--warn); }
+
+/* Tabulky */
+.tbl { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.93rem; line-height: 1.45; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--f-display); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+td code { white-space: nowrap; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; font-family: var(--f-mono); font-size: 0.85rem; }
+
+/* Poznámky */
+.note { border-radius: 8px; padding: 12px 16px; margin: 0 0 18px; font-size: 0.97rem; border: 1px solid; }
+.note > :last-child { margin-bottom: 0; }
+.note b.lbl { font-family: var(--f-display); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+.note.mat { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.note.mat b.lbl { color: var(--accent); }
+.note.warn { background: var(--warn-bg); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+.note.warn b.lbl { color: var(--warn); }
+.note.tip { background: var(--ok-bg); border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
+.note.tip b.lbl { color: var(--ok); }
+
+/* Tři vrstvy */
+.layers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 20px; }
+@media (max-width: 640px) { .layers { grid-template-columns: minmax(0, 1fr); } }
+.layer { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.layer .lang { font-family: var(--f-mono); font-weight: 600; font-size: 0.95rem; }
+.layer .role { font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; margin: 2px 0 6px; }
+.layer p { font-size: 0.92rem; margin: 0; color: var(--muted); }
+.layer.h .lang { color: var(--tag); }
+.layer.c .lang { color: var(--accent); }
+.layer.j .lang { color: var(--warn); }
+
+/* Časová osa */
+.timeline { list-style: none; padding: 0; margin: 0 0 18px; border-left: 2px solid var(--line); }
+.timeline li { position: relative; padding: 0 0 14px 20px; margin: 0; }
+.timeline li::before { content: ""; position: absolute; left: -6px; top: 8px; width: 10px; height: 10px; border-radius: 50%; background: var(--surface); border: 2px solid var(--accent); }
+.timeline .yr { font-family: var(--f-mono); font-weight: 600; font-size: 0.85rem; color: var(--accent); font-variant-numeric: tabular-nums; }
+.timeline .ev { font-weight: 600; }
+.timeline .d { display: block; color: var(--muted); font-size: 0.94rem; }
+
+/* Box model */
+.box { font-family: var(--f-mono); font-size: 0.78rem; margin: 0 0 18px; }
+.box > div { border-radius: 6px; padding: 10px 14px 14px; }
+.box .lab { display: block; margin-bottom: 6px; font-weight: 600; letter-spacing: 0.03em; }
+.bm-margin { background: color-mix(in srgb, var(--warn) 14%, var(--surface)); border: 1px dashed var(--warn); }
+.bm-margin > .lab { color: var(--warn); }
+.bm-border { background: var(--fg); color: var(--bg); padding: 10px 12px 12px !important; border-radius: 4px; }
+.bm-padding { background: color-mix(in srgb, var(--ok) 16%, var(--surface)); color: var(--fg); border-radius: 3px; padding: 10px 14px 14px; }
+.bm-padding > .lab { color: var(--ok); }
+.bm-content { background: var(--accent-soft); color: var(--fg); border: 1px solid var(--accent); padding: 14px; text-align: center; border-radius: 2px; }
+
+/* Specificita */
+.spec { display: inline-flex; gap: 2px; font-family: var(--f-mono); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.spec span { background: var(--code-bg); border: 1px solid var(--line); padding: 0 6px; border-radius: 3px; }
+
+/* Editor */
+.editor { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin: 0 0 12px; background: var(--surface); }
+@media (max-width: 760px) { .editor { grid-template-columns: minmax(0, 1fr); } }
+.editor .pane-h { font-family: var(--f-display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 8px 12px; border-bottom: 1px solid var(--line); background: var(--bg); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.editor textarea { width: 100%; height: 420px; border: 0; resize: vertical; padding: 12px; font-family: var(--f-mono); font-size: 0.8rem; line-height: 1.5; background: var(--code-bg); color: var(--code-fg); tab-size: 2; display: block; }
+.editor textarea:focus { outline: 2px solid var(--accent); outline-offset: -2px; }
+.editor iframe { width: 100%; height: 420px; border: 0; background: #fff; display: block; }
+.editor .left { border-right: 1px solid var(--line); min-width: 0; }
+@media (max-width: 760px) { .editor .left { border-right: 0; border-bottom: 1px solid var(--line); } }
+button.reset { font-family: var(--f-display); font-size: 0.75rem; font-weight: 700; text-transform: none; letter-spacing: 0; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: 5px; padding: 3px 10px; cursor: pointer; }
+button.reset:hover { border-color: var(--accent); color: var(--accent); }
+button.reset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Otázky */
+details.q { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); margin: 0 0 8px; }
+details.q summary { cursor: pointer; padding: 10px 14px; font-weight: 600; list-style: none; display: flex; gap: 10px; }
+details.q summary::-webkit-details-marker { display: none; }
+details.q summary::before { content: "+"; font-family: var(--f-mono); color: var(--accent); font-weight: 600; }
+details.q[open] summary::before { content: "−"; }
+details.q summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 8px; }
+details.q .a { padding: 0 14px 12px 34px; font-size: 0.96rem; }
+details.q .a > :last-child { margin-bottom: 0; }
+
+/* Osnova odpovědi */
+.plan { counter-reset: s; list-style: none; padding: 0; }
+.plan li { counter-increment: s; position: relative; padding-left: 42px; margin-bottom: 12px; }
+.plan li::before { content: counter(s); position: absolute; left: 0; top: 1px; width: 28px; height: 28px; border-radius: 50%; background: var(--fg); color: var(--bg); font-family: var(--f-display); font-weight: 700; font-size: 0.85rem; display: grid; place-items: center; }
+.plan li b { font-family: var(--f-display); }
+
+dl.gloss { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 18px; margin: 0 0 18px; font-size: 0.96rem; }
+dl.gloss dt { font-family: var(--f-display); font-weight: 700; }
+dl.gloss dd { margin: 0; color: var(--muted); }
+@media (max-width: 560px) { dl.gloss { grid-template-columns: minmax(0, 1fr); } dl.gloss dd { margin-bottom: 8px; } }
+
+.foot { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.88rem; }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Úvod</li>
+    <li><a href="#vrstvy">HTML, CSS a JavaScript</a></li>
+    <li><a href="#jak-web-funguje">Jak se stránka zobrazí</a></li>
+    <li><a href="#historie">Historie</a></li>
+    <li class="grp">HTML</li>
+    <li><a href="#syntaxe">Syntaxe a prvky</a></li>
+    <li><a href="#kostra">Kostra dokumentu</a></li>
+    <li><a href="#prvky">Přehled prvků</a></li>
+    <li><a href="#tabulky">Tabulky</a></li>
+    <li><a href="#formulare">Formuláře</a></li>
+    <li><a href="#semantika">Sémantické HTML5</a></li>
+    <li><a href="#blok-radek">Blokové a řádkové prvky</a></li>
+    <li><a href="#dom">DOM</a></li>
+    <li class="grp">CSS</li>
+    <li><a href="#css-princip">Princip a syntaxe</a></li>
+    <li><a href="#pripojeni">Tři způsoby připojení</a></li>
+    <li><a href="#selektory">Selektory</a></li>
+    <li><a href="#kaskada">Kaskáda a specificita</a></li>
+    <li><a href="#box-model">Box model</a></li>
+    <li><a href="#jednotky">Jednotky, barvy, písmo</a></li>
+    <li><a href="#layout">Rozložení stránky</a></li>
+    <li><a href="#responzivita">Responzivní design</a></li>
+    <li><a href="#animace">Přechody a animace</a></li>
+    <li class="grp">Praxe</li>
+    <li><a href="#priklad">Celý příklad</a></li>
+    <li><a href="#zkus">Vyzkoušej si</a></li>
+    <li><a href="#nastroje">Nástroje</a></li>
+    <li><a href="#vyuziti">Využití</a></li>
+    <li><a href="#chyby">Časté chyby</a></li>
+    <li class="grp">K maturitě</li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Maturitní otázka č. 3 · Studijní text</p>
+  <h1>Tvorba webu: HTML a CSS <span class="t">&lt;/&gt;</span></h1>
+  <p class="lead">Všechno, co potřebuješ vědět k maturitní otázce: co je HTML a CSS, jak vznikly, jak se píšou a jak spolupracují s JavaScriptem. Text je psaný tak, abys ho zvládl sám, i když jsi na hodinách chyběl.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit rozdíl mezi HTML, CSS a JavaScriptem</li>
+      <li>popsat historii HTML a kdo ho spravuje</li>
+      <li>napsat kostru HTML dokumentu a vysvětlit každý řádek</li>
+      <li>vyjmenovat hlavní HTML prvky podle kategorií</li>
+      <li>vysvětlit sémantické HTML a proč je důležité</li>
+      <li>popsat tři způsoby připojení CSS</li>
+      <li>vysvětlit kaskádu, specificitu a dědičnost</li>
+      <li>nakreslit a popsat box model</li>
+      <li>popsat Flexbox, Grid a media queries</li>
+      <li>uvést příklady využití HTML a CSS v praxi</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Úvod</p>
+
+<section id="vrstvy">
+<h2>HTML, CSS a JavaScript: tři vrstvy webu</h2>
+<p>Každá webová stránka stojí na třech technologiích. Každá má jinou roli a dobrá stránka je od sebe drží oddělené.</p>
+<div class="layers">
+  <div class="layer h"><div class="lang">HTML</div><div class="role">Obsah a struktura</div><p>Co na stránce je: nadpisy, odstavce, obrázky, odkazy, formuláře.</p></div>
+  <div class="layer c"><div class="lang">CSS</div><div class="role">Vzhled</div><p>Jak to vypadá: barvy, písma, rozložení, přizpůsobení mobilu.</p></div>
+  <div class="layer j"><div class="lang">JavaScript</div><div class="role">Chování</div><p>Co to dělá: reakce na kliknutí, změny obsahu za běhu, komunikace se serverem.</p></div>
+</div>
+<p>Často se používá přirovnání k domu. <strong>HTML</strong> jsou zdi, okna a dveře, tedy konstrukce. <strong>CSS</strong> je omítka, barva a nábytek. <strong>JavaScript</strong> je elektřina: vypínač, po jehož stisknutí se něco stane.</p>
+
+<h3>Je HTML programovací jazyk?</h3>
+<p>Ne. Na tuhle otázku se zkoušející často ptá, protože otázka se jmenuje „Programování HTML a CSS“.</p>
+<div class="tbl"><table>
+<thead><tr><th>Jazyk</th><th>Typ</th><th>Proč</th></tr></thead>
+<tbody>
+<tr><td><strong>HTML</strong></td><td><dfn>značkovací jazyk</dfn> (markup language)</td><td>Jen označuje, co je který kus textu (nadpis, odstavec, odkaz). Nemá proměnné, podmínky ani cykly.</td></tr>
+<tr><td><strong>CSS</strong></td><td><dfn>stylový jazyk</dfn> (style sheet language)</td><td>Popisuje vzhled pomocí pravidel. Neumí provádět algoritmy.</td></tr>
+<tr><td><strong>JavaScript</strong></td><td><dfn>programovací (skriptovací) jazyk</dfn></td><td>Má proměnné, podmínky, cykly, funkce. Dokáže řešit libovolnou výpočetní úlohu.</td></tr>
+</tbody></table></div>
+<p>HTML a CSS jsou tedy <strong>deklarativní</strong>: popisujeme, <em>jak má výsledek vypadat</em>, a ne postup, jak ho vytvořit. Proto se správně mluví o „tvorbě webu v HTML a CSS“, ne o programování.</p>
+</section>
+
+<section id="jak-web-funguje">
+<h2>Jak se stránka dostane k uživateli</h2>
+<ol>
+  <li>Uživatel zadá adresu (URL), např. <code>https://www.skola.cz/index.html</code>.</li>
+  <li>Prohlížeč (klient) pošle přes protokol <strong>HTTP/HTTPS</strong> požadavek na <strong>webový server</strong>.</li>
+  <li>Server pošle zpět HTML soubor.</li>
+  <li>Prohlížeč HTML čte (tzv. parsování) a postaví z něj stromovou strukturu <a href="#dom">DOM</a>. Když narazí na odkaz na CSS, obrázek nebo skript, stáhne i ty.</li>
+  <li>Prohlížeč spojí DOM se styly z CSS a stránku <strong>vykreslí</strong> (renderuje).</li>
+  <li>JavaScript pak může DOM za běhu měnit a stránka se překreslí.</li>
+</ol>
+<p>HTML i CSS jsou obyčejné <strong>textové soubory</strong> (přípony <code>.html</code> a <code>.css</code>). Napsat je jde v jakémkoli textovém editoru, a nepotřebují překladač: přímo je čte prohlížeč.</p>
+</section>
+
+<section id="historie">
+<h2>Historie HTML a CSS</h2>
+<p>HTML vymyslel britský fyzik a informatik <strong>Tim Berners-Lee</strong> v evropském centru jaderného výzkumu <strong>CERN</strong> ve Švýcarsku. Chtěl, aby si vědci mohli snadno sdílet dokumenty a propojovat je odkazy. Kromě HTML navrhl i protokol HTTP, první webový prohlížeč a první webový server. Je tedy „otcem“ celého webu (World Wide Web).</p>
+<ol class="timeline">
+  <li><span class="yr">1989</span> <span class="ev">Návrh webu v CERN</span><span class="d">Berners-Lee sepsal návrh systému propojených dokumentů (hypertextu).</span></li>
+  <li><span class="yr">1991</span> <span class="ev">První popis HTML</span><span class="d">Dokument „HTML Tags“ s 18 značkami. Zveřejněna první webová stránka.</span></li>
+  <li><span class="yr">1993</span> <span class="ev">Návrh HTML u IETF</span><span class="d">Takzvané „HTML 1.0“ zůstalo jen návrhem, oficiálním standardem se nikdy nestalo. Vzniká prohlížeč Mosaic, který umí zobrazit obrázky v textu.</span></li>
+  <li><span class="yr">1994</span> <span class="ev">Vzniká W3C</span><span class="d">Konsorcium World Wide Web Consortium, které založil Berners-Lee, začíná webové standardy spravovat.</span></li>
+  <li><span class="yr">1995</span> <span class="ev">HTML 2.0 – první oficiální standard</span><span class="d">Vydán organizací IETF (RFC 1866). Přináší formuláře. Ve stejném roce vzniká JavaScript (Brendan Eich, Netscape).</span></li>
+  <li><span class="yr">1996</span> <span class="ev">CSS1</span><span class="d">První verze CSS od W3C. Autory jsou Håkon Wium Lie a Bert Bos (návrh už z roku 1994).</span></li>
+  <li><span class="yr">1997</span> <span class="ev">HTML 3.2</span><span class="d">Standard W3C. Tabulky, obtékání obrázků, applety. Prohlížeče soupeří (Netscape × Internet Explorer) a přidávají vlastní značky.</span></li>
+  <li><span class="yr">1997–1999</span> <span class="ev">HTML 4.0 a 4.01</span><span class="d">Hlavní myšlenka: <strong>oddělit obsah od vzhledu</strong>. Vzhled se má psát v CSS, značky jako <code>&lt;font&gt;</code> jsou zastaralé. Lepší podpora skriptů. CSS2 vychází v roce 1998.</span></li>
+  <li><span class="yr">2000</span> <span class="ev">XHTML 1.0</span><span class="d">HTML přepsané podle přísných pravidel jazyka XML (každá značka musí být uzavřena, malá písmena). Nakonec se neprosadilo.</span></li>
+  <li><span class="yr">2004</span> <span class="ev">Vzniká WHATWG</span><span class="d">Skupina výrobců prohlížečů (Apple, Mozilla, Opera) začíná vyvíjet nové HTML místo XHTML 2.</span></li>
+  <li><span class="yr">2014</span> <span class="ev">HTML5</span><span class="d">Oficiální doporučení W3C. Sémantické prvky (<code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;article&gt;</code>…), nativní <code>&lt;video&gt;</code> a <code>&lt;audio&gt;</code>, <code>&lt;canvas&gt;</code>, nové typy polí ve formulářích. Konec pluginu Flash.</span></li>
+  <li><span class="yr">2019 →</span> <span class="ev">HTML Living Standard</span><span class="d">W3C a WHATWG se dohodly, že HTML bude jeden „živý standard“, který spravuje WHATWG a průběžně se doplňuje. Číslované verze (HTML6) už nebudou.</span></li>
+</ol>
+<p><strong>CSS</strong> se po verzi CSS2 (2.1) přestalo vydávat jako celek. Od „CSS3“ se dělí na samostatné <strong>moduly</strong> (barvy, selektory, Flexbox, Grid, animace…), které se vyvíjejí každý zvlášť.</p>
+<div class="note mat"><b class="lbl">K maturitě</b><p>Zapamatuj si hlavně: Tim Berners-Lee, CERN, 1989–1991; HTML 2.0 (1995) jako první standard; HTML 4 a oddělení vzhledu do CSS; HTML5 (2014); dnes Living Standard od WHATWG. Organizace: <strong>W3C</strong> (CSS a dříve HTML), <strong>WHATWG</strong> (dnešní HTML), <strong>IETF</strong> (internetové protokoly, HTML 2.0).</p></div>
+</section>
+
+<p class="part">HTML</p>
+
+<section id="syntaxe">
+<h2>Syntaxe HTML: značky, prvky, atributy</h2>
+<p>HTML označuje části textu pomocí <dfn>značek</dfn> (anglicky <em>tags</em>) ve špičatých závorkách. Počáteční značka, obsah a koncová značka dohromady tvoří <dfn>prvek</dfn> (element).</p>
+<pre><code class="language-html">&lt;a href="https://www.w3.org" target="_blank"&gt;Web W3C&lt;/a&gt;
+&lt;!-- │  └─ atribut="hodnota"         │          │
+     │                              obsah    koncová značka
+     počáteční značka (tag) --&gt;</code></pre>
+<ul>
+  <li><strong>Počáteční značka</strong> <code>&lt;a&gt;</code>, <strong>koncová značka</strong> <code>&lt;/a&gt;</code> (s lomítkem).</li>
+  <li><strong>Atribut</strong> upřesňuje prvek: zapisuje se do počáteční značky jako <code>název="hodnota"</code>. Prvek může mít více atributů oddělených mezerou.</li>
+  <li><strong>Komentář</strong> <code>&lt;!-- … --&gt;</code> prohlížeč nezobrazí; slouží pro poznámky autora.</li>
+  <li>Názvy značek se píšou malými písmeny. Na velikosti písmen v HTML nezáleží, ale je to zvyk.</li>
+</ul>
+
+<h3>Párové a nepárové prvky</h3>
+<pre><code class="language-html">&lt;!-- Párové prvky: mají počáteční i koncovou značku --&gt;
+&lt;p&gt;Toto je odstavec.&lt;/p&gt;
+&lt;strong&gt;Důležitý text&lt;/strong&gt;
+
+&lt;!-- Nepárové (prázdné) prvky: nemají obsah ani koncovou značku --&gt;
+&lt;br&gt;
+&lt;img src="pes.jpg" alt="Hnědý pes na louce"&gt;
+&lt;input type="text" name="jmeno"&gt;
+&lt;meta charset="UTF-8"&gt;</code></pre>
+<p>Nepárové prvky (<code>&lt;br&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;meta&gt;</code>, <code>&lt;link&gt;</code>, <code>&lt;hr&gt;</code>) nemají obsah. V XHTML se psaly s lomítkem na konci (<code>&lt;br /&gt;</code>); v HTML5 to jde, ale není to nutné.</p>
+
+<h3>Vnořování</h3>
+<p>Prvky se do sebe vnořují. Vnořený prvek se musí zavřít dřív než ten, který ho obsahuje:</p>
+<pre><code class="language-html">&lt;!-- Správně: co se otevře poslední, zavře se první --&gt;
+&lt;p&gt;Text je &lt;strong&gt;velmi &lt;em&gt;důležitý&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;!-- Špatně: značky se kříží --&gt;
+&lt;p&gt;Text je &lt;strong&gt;velmi &lt;em&gt;důležitý&lt;/strong&gt;&lt;/em&gt;.&lt;/p&gt;</code></pre>
+
+<h3>Důležité globální atributy</h3>
+<p>Tyto atributy může mít skoro každý prvek:</p>
+<div class="tbl"><table>
+<thead><tr><th>Atribut</th><th>K čemu slouží</th></tr></thead>
+<tbody>
+<tr><td><code>id</code></td><td>Jedinečný identifikátor prvku. Na stránce smí být jen jednou. Používá ho CSS, JavaScript i odkazy (<code>#kontakt</code>).</td></tr>
+<tr><td><code>class</code></td><td>Zařazení do třídy. Víc prvků může mít stejnou třídu, jeden prvek může mít více tříd. Hlavní „háček“ pro CSS.</td></tr>
+<tr><td><code>style</code></td><td>Inline CSS přímo u prvku (používat výjimečně).</td></tr>
+<tr><td><code>title</code></td><td>Text bubliny, která se ukáže po najetí myší.</td></tr>
+<tr><td><code>lang</code></td><td>Jazyk obsahu (<code>cs</code>, <code>en</code>). Důležitý pro čtečky a vyhledávače.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="kostra">
+<h2>Kostra HTML dokumentu</h2>
+<p>Každá HTML stránka má stejnou základní strukturu. Tuhle kostru bys měl umět napsat zpaměti a vysvětlit každý řádek.</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="cs"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;meta name="description" content="Krátký popis stránky pro vyhledávače"&gt;
+  &lt;title&gt;Název stránky v záložce&lt;/title&gt;
+  &lt;link rel="stylesheet" href="styl.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hlavní nadpis&lt;/h1&gt;
+  &lt;p&gt;Obsah, který uvidí uživatel.&lt;/p&gt;
+  &lt;script src="skript.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Řádek</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>Deklarace typu dokumentu. <strong>Musí být úplně první.</strong> Říká prohlížeči, že jde o HTML5, a zapne standardní režim zobrazení. Není to HTML prvek.</td></tr>
+<tr><td><code>&lt;html lang="cs"&gt;</code></td><td>Kořenový prvek, obaluje celý dokument. <code>lang</code> určuje jazyk.</td></tr>
+<tr><td><code>&lt;head&gt;</code></td><td>Hlavička: informace <em>o</em> stránce (metadata), které se přímo nezobrazují.</td></tr>
+<tr><td><code>&lt;meta charset="UTF-8"&gt;</code></td><td>Kódování znaků. Bez něj se mohou rozbít česká písmena s háčky a čárkami.</td></tr>
+<tr><td><code>&lt;meta name="viewport" …&gt;</code></td><td>Nastaví šířku stránky podle šířky zařízení. Nutné pro správné zobrazení na mobilu.</td></tr>
+<tr><td><code>&lt;meta name="description"&gt;</code></td><td>Popis stránky, který se zobrazuje ve výsledcích vyhledávání (SEO).</td></tr>
+<tr><td><code>&lt;title&gt;</code></td><td>Název stránky v záložce prohlížeče, v záložkách a ve výsledcích vyhledávání.</td></tr>
+<tr><td><code>&lt;link rel="stylesheet"&gt;</code></td><td>Připojení externího CSS souboru.</td></tr>
+<tr><td><code>&lt;body&gt;</code></td><td>Tělo: všechno, co se uživateli zobrazí.</td></tr>
+<tr><td><code>&lt;script&gt;</code></td><td>JavaScript. Často se dává na konec <code>body</code>, aby se nejdřív načetl obsah.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="prvky">
+<h2>Přehled HTML prvků podle kategorií</h2>
+
+<h3>Text</h3>
+<div class="tbl"><table>
+<thead><tr><th>Prvek</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;h1&gt;</code> až <code>&lt;h6&gt;</code></td><td>Nadpisy 1. až 6. úrovně. <code>h1</code> by měl být na stránce jeden (hlavní téma). Úrovně se nepřeskakují.</td></tr>
+<tr><td><code>&lt;p&gt;</code></td><td>Odstavec.</td></tr>
+<tr><td><code>&lt;br&gt;</code>, <code>&lt;hr&gt;</code></td><td>Zalomení řádku; tematický předěl (vodorovná čára).</td></tr>
+<tr><td><code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code></td><td>Důležitost (zobrazí se tučně); důraz (kurzívou). Mají <em>význam</em>, ne jen vzhled.</td></tr>
+<tr><td><code>&lt;b&gt;</code>, <code>&lt;i&gt;</code></td><td>Tučně / kurzívou bez zvláštního významu.</td></tr>
+<tr><td><code>&lt;blockquote&gt;</code>, <code>&lt;q&gt;</code></td><td>Delší citace; krátká citace v textu.</td></tr>
+<tr><td><code>&lt;code&gt;</code>, <code>&lt;pre&gt;</code></td><td>Ukázka kódu; předformátovaný text (zachová mezery a řádky).</td></tr>
+<tr><td><code>&lt;sub&gt;</code>, <code>&lt;sup&gt;</code></td><td>Dolní a horní index (H₂O, x²).</td></tr>
+</tbody></table></div>
+<p>Speciální znaky se zapisují jako <dfn>entity</dfn>: <code>&amp;lt;</code> pro &lt;, <code>&amp;gt;</code> pro &gt;, <code>&amp;amp;</code> pro &amp;, <code>&amp;nbsp;</code> pro nezlomitelnou mezeru, <code>&amp;copy;</code> pro ©.</p>
+
+<h3>Seznamy</h3>
+<pre><code class="language-html">&lt;ul&gt;                      &lt;!-- nečíslovaný seznam (odrážky) --&gt;
+  &lt;li&gt;Mléko&lt;/li&gt;
+  &lt;li&gt;Chléb&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;                      &lt;!-- číslovaný seznam --&gt;
+  &lt;li&gt;Zapni počítač&lt;/li&gt;
+  &lt;li&gt;Otevři editor&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;dl&gt;                      &lt;!-- definiční seznam (pojem + vysvětlení) --&gt;
+  &lt;dt&gt;HTML&lt;/dt&gt;
+  &lt;dd&gt;Značkovací jazyk pro strukturu stránky&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+
+<h3>Odkazy a obrázky</h3>
+<p>Odkazy jsou podstatou <em>hypertextu</em> (odtud „HyperText“ v názvu HTML). Cesty k souborům mohou být absolutní nebo relativní:</p>
+<pre><code class="language-html">&lt;!-- Absolutní adresa: celá URL --&gt;
+&lt;a href="https://www.seznam.cz"&gt;Seznam&lt;/a&gt;
+
+&lt;!-- Relativní adresa: vzhledem k aktuálnímu souboru --&gt;
+&lt;a href="kontakt.html"&gt;Kontakt&lt;/a&gt;
+&lt;a href="clanky/clanek1.html"&gt;Článek ve složce clanky&lt;/a&gt;
+&lt;a href="../index.html"&gt;O složku výš&lt;/a&gt;
+
+&lt;!-- Odkaz na místo na stránce (kotva) a na e-mail --&gt;
+&lt;a href="#kontakt"&gt;Skok na sekci s id="kontakt"&lt;/a&gt;
+&lt;a href="mailto:info@skola.cz"&gt;Napište nám&lt;/a&gt;
+
+&lt;!-- Obrázek: alt je povinný popis pro nevidomé a pro případ, že se obrázek nenačte --&gt;
+&lt;img src="obrazky/skola.jpg" alt="Budova gymnázia" width="600" height="400"&gt;</code></pre>
+<p>Atribut <code>target="_blank"</code> otevře odkaz v nové záložce. U obrázku je atribut <code>alt</code> povinný: čtečka obrazovky ho přečte nevidomému uživateli a zobrazí se, když se obrázek nenačte. Běžné formáty obrázků na webu: JPG (fotky), PNG (průhlednost), SVG (vektorová grafika), WebP (moderní, menší soubory), GIF (jednoduché animace).</p>
+
+<h3>Multimédia</h3>
+<pre><code class="language-html">&lt;video src="video.mp4" controls width="640"&gt;
+  Váš prohlížeč nepodporuje video.
+&lt;/video&gt;
+
+&lt;audio src="hudba.mp3" controls&gt;&lt;/audio&gt;
+
+&lt;!-- Vložení cizí stránky (např. mapy nebo videa z YouTube) --&gt;
+&lt;iframe src="https://www.openstreetmap.org/export/embed.html" width="400" height="300"&gt;&lt;/iframe&gt;</code></pre>
+<p>Před HTML5 šlo video přehrát jen pomocí pluginu (Adobe Flash). Atribut <code>controls</code> zobrazí ovládací prvky přehrávače. <code>&lt;iframe&gt;</code> vloží do stránky jinou stránku.</p>
+
+<h3>Obecné kontejnery</h3>
+<p><code>&lt;div&gt;</code> (blokový) a <code>&lt;span&gt;</code> (řádkový) nemají žádný význam. Slouží jen k seskupení obsahu, aby ho šlo stylovat přes CSS nebo ovládat JavaScriptem. Pokud existuje prvek s významem (<code>&lt;nav&gt;</code>, <code>&lt;article&gt;</code>), má přednost.</p>
+</section>
+
+<section id="tabulky">
+<h2>Tabulky</h2>
+<pre><code class="language-html">&lt;table&gt;
+  &lt;caption&gt;Rozvrh – pondělí&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Hodina&lt;/th&gt;
+      &lt;th&gt;Předmět&lt;/th&gt;
+      &lt;th&gt;Učebna&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1.&lt;/td&gt;
+      &lt;td&gt;Informatika&lt;/td&gt;
+      &lt;td rowspan="2"&gt;U12&lt;/td&gt;   &lt;!-- buňka přes 2 řádky --&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2.&lt;/td&gt;
+      &lt;td&gt;Informatika&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3.&lt;/td&gt;
+      &lt;td colspan="2"&gt;Tělocvik (v tělocvičně)&lt;/td&gt;  &lt;!-- buňka přes 2 sloupce --&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Prvek</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;table&gt;</code></td><td>Celá tabulka</td></tr>
+<tr><td><code>&lt;caption&gt;</code></td><td>Popisek (titulek) tabulky</td></tr>
+<tr><td><code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;tfoot&gt;</code></td><td>Hlavička, tělo a patička tabulky (seskupení řádků)</td></tr>
+<tr><td><code>&lt;tr&gt;</code></td><td>Řádek (table row)</td></tr>
+<tr><td><code>&lt;th&gt;</code></td><td>Záhlavní buňka (table header), standardně tučně a na střed</td></tr>
+<tr><td><code>&lt;td&gt;</code></td><td>Běžná buňka s daty (table data)</td></tr>
+<tr><td><code>colspan</code>, <code>rowspan</code></td><td>Atributy pro sloučení buněk přes více sloupců / řádků</td></tr>
+</tbody></table></div>
+<div class="note warn"><b class="lbl">Pozor</b><p>Tabulky slouží pro <strong>tabulková data</strong>, ne pro rozložení stránky. Kdysi se celé weby skládaly z tabulek; dnes se na rozložení používá CSS (Flexbox, Grid). Výjimkou jsou HTML e-maily, viz <a href="#vyuziti">Využití</a>.</p></div>
+</section>
+
+<section id="formulare">
+<h2>Formuláře</h2>
+<p>Formuláře umožňují uživateli <strong>posílat data</strong> na server: přihlášení, registrace, vyhledávání, objednávka.</p>
+<pre><code class="language-html">&lt;form action="/prihlaska" method="post"&gt;
+  &lt;label for="jmeno"&gt;Jméno:&lt;/label&gt;
+  &lt;input type="text" id="jmeno" name="jmeno" required&gt;
+
+  &lt;label for="email"&gt;E-mail:&lt;/label&gt;
+  &lt;input type="email" id="email" name="email" placeholder="jan@novak.cz"&gt;
+
+  &lt;label for="trida"&gt;Třída:&lt;/label&gt;
+  &lt;select id="trida" name="trida"&gt;
+    &lt;option value="1A"&gt;1.A&lt;/option&gt;
+    &lt;option value="2B"&gt;2.B&lt;/option&gt;
+  &lt;/select&gt;
+
+  &lt;p&gt;Pohlaví:&lt;/p&gt;
+  &lt;label&gt;&lt;input type="radio" name="pohlavi" value="m"&gt; muž&lt;/label&gt;
+  &lt;label&gt;&lt;input type="radio" name="pohlavi" value="z"&gt; žena&lt;/label&gt;
+
+  &lt;label&gt;&lt;input type="checkbox" name="souhlas"&gt; Souhlasím s podmínkami&lt;/label&gt;
+
+  &lt;label for="zprava"&gt;Zpráva:&lt;/label&gt;
+  &lt;textarea id="zprava" name="zprava" rows="4"&gt;&lt;/textarea&gt;
+
+  &lt;button type="submit"&gt;Odeslat&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+<ul>
+  <li><code>action</code> je adresa, kam se data odešlou (zpracuje je server, např. v PHP nebo Pythonu).</li>
+  <li><code>method</code> je způsob odeslání. <strong>GET</strong> přidá data do URL (<code>?jmeno=Jan</code>): hodí se pro vyhledávání, adresu jde uložit. <strong>POST</strong> je pošle v těle požadavku: pro hesla, citlivá a větší data.</li>
+  <li><code>name</code> je název pole, pod kterým server hodnotu dostane. Bez něj se pole neodešle.</li>
+  <li><code>&lt;label&gt;</code> je popisek pole. Propojený přes <code>for</code> a <code>id</code>: kliknutím na popisek se aktivuje pole a čtečka ví, co pole znamená.</li>
+  <li><code>required</code>, <code>type="email"</code>, <code>min</code>, <code>max</code> zajišťují základní <strong>kontrolu (validaci)</strong> přímo v prohlížeči.</li>
+</ul>
+<p>Typy pole <code>&lt;input&gt;</code>: <code>text</code>, <code>password</code>, <code>email</code>, <code>number</code>, <code>tel</code>, <code>date</code>, <code>checkbox</code> (zaškrtávací pole, více možností), <code>radio</code> (přepínač, jedna možnost ze skupiny se stejným <code>name</code>), <code>file</code>, <code>range</code>, <code>color</code>, <code>submit</code>, <code>hidden</code>.</p>
+</section>
+
+<section id="semantika">
+<h2>Sémantické HTML5</h2>
+<p><dfn>Sémantika</dfn> znamená <em>význam</em>. Sémantický prvek neříká jen „tady je nějaký blok“, ale „tady je navigace“ nebo „tady je článek“. HTML5 přidalo prvky, které popisují části stránky:</p>
+<pre><code class="language-html">&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Gymnázium Navis&lt;/h1&gt;
+    &lt;nav&gt;
+      &lt;a href="/"&gt;Úvod&lt;/a&gt;
+      &lt;a href="/aktuality"&gt;Aktuality&lt;/a&gt;
+      &lt;a href="/kontakt"&gt;Kontakt&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;
+    &lt;article&gt;
+      &lt;h2&gt;Den otevřených dveří&lt;/h2&gt;
+      &lt;p&gt;Přijďte se podívat 15. listopadu…&lt;/p&gt;
+    &lt;/article&gt;
+
+    &lt;aside&gt;
+      &lt;h3&gt;Rychlé odkazy&lt;/h3&gt;
+      &lt;p&gt;Rozvrh, jídelna, suplování&lt;/p&gt;
+    &lt;/aside&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Gymnázium Navis&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Prvek</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>&lt;header&gt;</code></td><td>Záhlaví stránky nebo sekce (logo, nadpis)</td></tr>
+<tr><td><code>&lt;nav&gt;</code></td><td>Hlavní navigace (menu)</td></tr>
+<tr><td><code>&lt;main&gt;</code></td><td>Hlavní obsah stránky, jen jednou</td></tr>
+<tr><td><code>&lt;article&gt;</code></td><td>Samostatný celek, který dává smysl i vytržený (článek, příspěvek, recenze)</td></tr>
+<tr><td><code>&lt;section&gt;</code></td><td>Tematická část s vlastním nadpisem</td></tr>
+<tr><td><code>&lt;aside&gt;</code></td><td>Doplňkový obsah vedle hlavního (boční panel)</td></tr>
+<tr><td><code>&lt;footer&gt;</code></td><td>Zápatí (kontakty, copyright)</td></tr>
+<tr><td><code>&lt;figure&gt;</code>, <code>&lt;figcaption&gt;</code></td><td>Obrázek nebo graf s popiskem</td></tr>
+</tbody></table></div>
+<p>Pro srovnání stejná stránka bez sémantiky:</p>
+<pre><code class="language-html">&lt;!-- Totéž bez sémantiky: funguje, ale prohlížeč ani čtečka nevědí, co je co --&gt;
+&lt;div class="hlavicka"&gt;
+  &lt;div class="menu"&gt;…&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="obsah"&gt;…&lt;/div&gt;
+&lt;div class="paticka"&gt;…&lt;/div&gt;</code></pre>
+<h3>Proč na sémantice záleží</h3>
+<ul>
+  <li><strong>Přístupnost:</strong> čtečky obrazovky pro nevidomé umí skočit rovnou na <code>&lt;main&gt;</code> nebo <code>&lt;nav&gt;</code>.</li>
+  <li><strong>SEO:</strong> vyhledávače lépe pochopí, co je na stránce hlavní obsah.</li>
+  <li><strong>Čitelnost kódu:</strong> vývojář hned vidí strukturu.</li>
+</ul>
+</section>
+
+<section id="blok-radek">
+<h2>Blokové a řádkové prvky</h2>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Blokové (block)</th><th>Řádkové (inline)</th></tr></thead>
+<tbody>
+<tr><td>Chování</td><td>Začínají na novém řádku, zaberou celou dostupnou šířku</td><td>Jsou součástí řádku textu, jsou jen tak široké jako obsah</td></tr>
+<tr><td>Rozměry</td><td>Lze nastavit <code>width</code>, <code>height</code>, všechny okraje</td><td><code>width</code> a <code>height</code> nefungují, svislé okraje neodsunou okolí</td></tr>
+<tr><td>Příklady</td><td><code>div</code>, <code>p</code>, <code>h1</code>–<code>h6</code>, <code>ul</code>, <code>li</code>, <code>table</code>, <code>form</code>, <code>section</code></td><td><code>span</code>, <code>a</code>, <code>strong</code>, <code>em</code>, <code>code</code>, <code>label</code></td></tr>
+</tbody></table></div>
+<p>Toto chování je jen výchozí. V CSS ho lze změnit vlastností <code>display</code> (viz <a href="#layout">Rozložení</a>).</p>
+</section>
+
+<section id="dom">
+<h2>DOM: stránka jako strom</h2>
+<p>Prohlížeč si HTML převede na <dfn>DOM</dfn> (Document Object Model), stromovou strukturu objektů. Každý prvek je <strong>uzel</strong>; prvek uvnitř jiného prvku je jeho <strong>potomek</strong> (dítě), obalující prvek je <strong>rodič</strong>, prvky na stejné úrovni jsou <strong>sourozenci</strong>.</p>
+<pre><code>document
+└─ html
+   ├─ head
+   │  └─ title ─ "Moje stránka"
+   └─ body
+      ├─ h1 ─ "Nadpis"
+      └─ p ─ "Text s "
+         └─ a ─ "odkazem"</code></pre>
+<p>DOM je důležitý pro obě další vrstvy. <strong>CSS</strong> vybírá prvky podle jejich místa ve stromu (<code>nav a</code> = odkazy uvnitř navigace) a vlastnosti se po stromu dědí. <strong>JavaScript</strong> ve stromu prvky hledá a mění (<code>document.getElementById(…)</code>).</p>
+</section>
+
+<p class="part">CSS</p>
+
+<section id="css-princip">
+<h2>CSS: princip a syntaxe</h2>
+<p><strong>CSS</strong> (Cascading Style Sheets, kaskádové styly) určuje vzhled HTML prvků. Hlavní myšlenka je <strong>oddělení obsahu od vzhledu</strong>: HTML říká, <em>co</em> na stránce je, CSS říká, <em>jak</em> to vypadá. Výhody:</p>
+<ul>
+  <li>Jeden CSS soubor může stylovat celý web. Změna barvy na jednom místě se projeví na stovkách stránek.</li>
+  <li>HTML je kratší a přehlednější.</li>
+  <li>Stejný obsah může mít různý vzhled: pro mobil, počítač, tisk.</li>
+  <li>Prohlížeč CSS soubor uloží do mezipaměti (cache), takže další stránky se načítají rychleji.</li>
+</ul>
+<p>Styl se skládá z <dfn>pravidel</dfn>. Každé pravidlo má <strong>selektor</strong> (komu styl platí) a <strong>deklarace</strong> (vlastnost a hodnota):</p>
+<pre><code class="language-css">h1 {
+  color: navy;
+  font-size: 32px;
+}
+/*
+h1          → selektor (KOMU styl platí)
+{ … }       → deklarační blok
+color       → vlastnost
+navy        → hodnota
+color: navy; → jedna deklarace (končí středníkem)
+*/</code></pre>
+</section>
+
+<section id="pripojeni">
+<h2>Tři způsoby připojení CSS</h2>
+<pre><code class="language-html">&lt;!-- 1) Inline styl – přímo v atributu style. Platí jen pro tento jeden prvek. --&gt;
+&lt;p style="color: red; font-weight: bold;"&gt;Červený text&lt;/p&gt;
+
+&lt;!-- 2) Interní styl – v hlavičce dokumentu. Platí pro celou tuto stránku. --&gt;
+&lt;head&gt;
+  &lt;style&gt;
+    p { color: red; }
+  &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;!-- 3) Externí styl – samostatný soubor. Jeden soubor může stylovat celý web. --&gt;
+&lt;head&gt;
+  &lt;link rel="stylesheet" href="styl.css"&gt;
+&lt;/head&gt;</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Způsob</th><th>Kde</th><th>Výhody</th><th>Nevýhody</th></tr></thead>
+<tbody>
+<tr><td><strong>Inline</strong></td><td>atribut <code>style</code></td><td>Nejvyšší priorita, rychlá úprava jednoho prvku</td><td>Míchá obsah se vzhledem, nedá se znovu použít</td></tr>
+<tr><td><strong>Interní</strong></td><td><code>&lt;style&gt;</code> v <code>&lt;head&gt;</code></td><td>Vše v jednom souboru</td><td>Platí jen pro jednu stránku</td></tr>
+<tr><td><strong>Externí</strong></td><td>soubor <code>.css</code> přes <code>&lt;link&gt;</code></td><td>Jeden styl pro celý web, cache, přehlednost</td><td>Další soubor ke stažení</td></tr>
+</tbody></table></div>
+<div class="note tip"><b class="lbl">Doporučení</b><p>V praxi se používá hlavně <strong>externí</strong> styl. Inline jen výjimečně (a v e-mailech).</p></div>
+</section>
+
+<section id="selektory">
+<h2>Selektory</h2>
+<p>Selektor určuje, <strong>na které prvky</strong> se pravidlo použije.</p>
+<pre><code class="language-css">*            { box-sizing: border-box; }   /* univerzální – všechny prvky        */
+p            { line-height: 1.6; }         /* typový – všechny &lt;p&gt;                */
+.upozorneni  { color: red; }               /* třídní – prvky s class="upozorneni" */
+#hlavicka    { height: 80px; }             /* ID – prvek s id="hlavicka"          */
+h1, h2, h3   { font-family: Georgia; }     /* skupina – více selektorů najednou   */
+nav a        { color: white; }             /* potomek – &lt;a&gt; kdekoli uvnitř &lt;nav&gt;  */
+ul &gt; li      { margin: 4px; }              /* přímý potomek – jen děti &lt;ul&gt;       */
+input[type="email"] { width: 100%; }       /* atributový                         */
+a:hover      { text-decoration: none; }    /* pseudotřída – stav prvku            */
+li:first-child { font-weight: bold; }      /* pseudotřída – pozice prvku          */
+p::first-line  { font-variant: small-caps; } /* pseudoelement – část prvku       */</code></pre>
+<p>Třídy a ID se v HTML zapisují takto; v CSS se třída píše s tečkou (<code>.upozorneni</code>), ID s mřížkou (<code>#hlavicka</code>):</p>
+<pre><code class="language-html">&lt;p class="upozorneni"&gt;Zítra se neučí.&lt;/p&gt;
+&lt;p class="upozorneni velky"&gt;Prvek může mít více tříd oddělených mezerou.&lt;/p&gt;
+&lt;div id="hlavicka"&gt;ID musí být na stránce jen jednou.&lt;/div&gt;</code></pre>
+<p><dfn>Pseudotřídy</dfn> (jedna dvojtečka) vybírají prvek v určitém <strong>stavu</strong> nebo na určité pozici: <code>:hover</code> (myš nad prvkem), <code>:focus</code> (prvek je aktivní, např. pole, do kterého se píše), <code>:visited</code> (navštívený odkaz), <code>:first-child</code>, <code>:nth-child(2n)</code> (každý sudý). <dfn>Pseudoelementy</dfn> (dvě dvojtečky) vybírají <strong>část</strong> prvku: <code>::first-letter</code>, <code>::before</code>, <code>::after</code>.</p>
+</section>
+
+<section id="kaskada">
+<h2>Kaskáda, specificita a dědičnost</h2>
+<p>Na jeden prvek často míří více pravidel, která si odporují. <dfn>Kaskáda</dfn> je postup, kterým prohlížeč rozhodne, které pravidlo vyhraje. Odtud slovo „Cascading“ v názvu CSS. Rozhoduje se v tomto pořadí:</p>
+<ol>
+  <li><strong>Důležitost:</strong> deklarace s <code>!important</code> přebije ostatní. Používat jen výjimečně, dělá styl nepřehledným.</li>
+  <li><strong>Původ:</strong> styl autora stránky přebije výchozí styl prohlížeče (proto jde změnit např. modrou barvu odkazů). Inline styl v atributu <code>style</code> přebije styly v <code>&lt;style&gt;</code> i v souboru.</li>
+  <li><strong>Specificita:</strong> konkrétnější selektor vyhrává nad obecnějším.</li>
+  <li><strong>Pořadí:</strong> při stejné specificitě vyhrává pravidlo, které je zapsané <strong>později</strong>.</li>
+</ol>
+
+<h3>Jak se počítá specificita</h3>
+<p>Specificita je trojice čísel <span class="spec"><span>ID</span><span>třídy</span><span>prvky</span></span>. Porovnává se zleva: jedno ID vždy přebije libovolný počet tříd.</p>
+<div class="tbl"><table>
+<thead><tr><th>Selektor</th><th>ID</th><th>Třídy, atributy, pseudotřídy</th><th>Prvky, pseudoelementy</th><th>Výsledek</th></tr></thead>
+<tbody>
+<tr><td><code>p</code></td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0-0-1</td></tr>
+<tr><td><code>ul li</code></td><td class="num">0</td><td class="num">0</td><td class="num">2</td><td class="num">0-0-2</td></tr>
+<tr><td><code>.menu</code></td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0-1-0</td></tr>
+<tr><td><code>.menu li a</code></td><td class="num">0</td><td class="num">1</td><td class="num">2</td><td class="num">0-1-2</td></tr>
+<tr><td><code>a:hover</code></td><td class="num">0</td><td class="num">1</td><td class="num">1</td><td class="num">0-1-1</td></tr>
+<tr><td><code>#hlavicka</code></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1-0-0</td></tr>
+<tr><td><code>#menu .polozka a</code></td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">1-1-1</td></tr>
+</tbody></table></div>
+<pre><code class="language-css">p              { color: black; }   /* specificita 0-0-1 */
+.text          { color: blue;  }   /* specificita 0-1-0 → vyhrává nad p     */
+#uvod          { color: green; }   /* specificita 1-0-0 → vyhrává nad .text */
+
+/* HTML: &lt;p id="uvod" class="text"&gt;Jakou budu mít barvu?&lt;/p&gt;
+   Odpověď: zelenou – ID má nejvyšší specificitu. */
+
+p { color: red; }
+p { color: orange; }   /* stejná specificita → vyhrává pozdější: oranžová */</code></pre>
+
+<h3>Dědičnost</h3>
+<p>Některé vlastnosti se automaticky <dfn>dědí</dfn> z rodiče na potomky v DOM stromu. Stačí nastavit písmo na <code>body</code> a platí pro celou stránku.</p>
+<ul>
+  <li><strong>Dědí se</strong> hlavně vlastnosti textu: <code>color</code>, <code>font-family</code>, <code>font-size</code>, <code>line-height</code>, <code>text-align</code>.</li>
+  <li><strong>Nedědí se</strong> vlastnosti „krabice“: <code>margin</code>, <code>padding</code>, <code>border</code>, <code>background</code>, <code>width</code>, <code>height</code>.</li>
+</ul>
+<pre><code class="language-css">body {
+  font-family: Arial, sans-serif;  /* zdědí všechny prvky uvnitř body */
+  color: #333;                     /* zdědí se */
+  border: 1px solid red;           /* NEzdědí se – rámeček bude jen kolem body */
+}</code></pre>
+</section>
+
+<section id="box-model">
+<h2>Box model</h2>
+<p>Pro CSS je <strong>každý prvek obdélník (krabice)</strong>. Krabice má čtyři vrstvy, od středu ven:</p>
+<div class="box" role="img" aria-label="Box model: margin obsahuje border, border obsahuje padding, padding obsahuje content">
+  <div class="bm-margin"><span class="lab">margin – vnější okraj (průhledný)</span>
+    <div class="bm-border"><span class="lab">border – rámeček</span>
+      <div class="bm-padding"><span class="lab">padding – vnitřní okraj</span>
+        <div class="bm-content">content – obsah (width × height)</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Vrstva</th><th>Vlastnost</th><th>Popis</th></tr></thead>
+<tbody>
+<tr><td>Obsah</td><td><code>width</code>, <code>height</code></td><td>Text, obrázek, vnořené prvky</td></tr>
+<tr><td>Vnitřní okraj</td><td><code>padding</code></td><td>Mezera mezi obsahem a rámečkem. Má barvu pozadí prvku.</td></tr>
+<tr><td>Rámeček</td><td><code>border</code></td><td>Čára kolem prvku: tloušťka, styl, barva (<code>2px solid black</code>)</td></tr>
+<tr><td>Vnější okraj</td><td><code>margin</code></td><td>Průhledná mezera mezi prvkem a sousedy</td></tr>
+</tbody></table></div>
+<h3>Jak se počítá šířka: box-sizing</h3>
+<pre><code class="language-css">.krabice {
+  width: 200px;
+  padding: 20px;
+  border: 5px solid black;
+  margin: 10px;
+}
+/* box-sizing: content-box (výchozí):
+   skutečná šířka = 200 + 2·20 + 2·5 = 250 px  (+ okraje 2·10 kolem)
+
+   box-sizing: border-box:
+   skutečná šířka = 200 px, obsah se zúží na 200 − 40 − 10 = 150 px */
+
+* { box-sizing: border-box; }   /* běžné nastavení na začátku stylu */</code></pre>
+<p>Zkrácené zápisy okrajů (platí pro <code>margin</code> i <code>padding</code>):</p>
+<pre><code class="language-css">margin: 10px;                 /* všechny 4 strany                          */
+margin: 10px 20px;            /* nahoře+dole 10, vlevo+vpravo 20           */
+margin: 10px 20px 30px 40px;  /* ve směru hodin: nahoře, vpravo, dole, vlevo */
+margin: 0 auto;               /* vycentrování bloku s danou šířkou         */</code></pre>
+<div class="note warn"><b class="lbl">Pozor</b><p>Svislé vnější okraje dvou bloků pod sebou se nesčítají, ale <strong>slévají</strong> (margin collapsing): mezi odstavci s <code>margin: 20px</code> bude mezera 20&nbsp;px, ne 40&nbsp;px.</p></div>
+</section>
+
+<section id="jednotky">
+<h2>Jednotky, barvy a písmo</h2>
+<div class="tbl"><table>
+<thead><tr><th>Jednotka</th><th>Typ</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>px</code></td><td>absolutní</td><td>Pixel. Pevná velikost.</td></tr>
+<tr><td><code>%</code></td><td>relativní</td><td>Procento z rozměru rodiče</td></tr>
+<tr><td><code>em</code></td><td>relativní</td><td>Násobek velikosti písma (prvku, u <code>font-size</code> rodiče)</td></tr>
+<tr><td><code>rem</code></td><td>relativní</td><td>Násobek velikosti písma kořene <code>html</code> (obvykle 16 px, takže 1.5rem = 24 px)</td></tr>
+<tr><td><code>vw</code>, <code>vh</code></td><td>relativní</td><td>1 % šířky / výšky okna prohlížeče (viewport)</td></tr>
+<tr><td><code>fr</code></td><td>relativní</td><td>Podíl volného místa v CSS Gridu</td></tr>
+</tbody></table></div>
+<p>Relativní jednotky jsou základem responzivního webu: stránka se přizpůsobí velikosti obrazovky i nastavení písma uživatele.</p>
+<pre><code class="language-css">color: red;                       /* název barvy               */
+color: #ff0000;                   /* hexadecimálně RRGGBB       */
+color: #f00;                      /* zkrácený hex               */
+color: rgb(255, 0, 0);            /* červená, zelená, modrá 0–255 */
+color: rgba(255, 0, 0, 0.5);      /* + průhlednost 0–1          */
+color: hsl(0, 100%, 50%);         /* odstín, sytost, světlost   */
+
+font-family: "Open Sans", Arial, sans-serif;  /* záložní písma, když první chybí */
+font-size: 1.125rem;
+font-weight: 700;          /* tučné */
+font-style: italic;
+line-height: 1.5;          /* výška řádku */
+text-align: center;
+text-decoration: underline;</code></pre>
+</section>
+
+<section id="layout">
+<h2>Rozložení stránky</h2>
+<h3>Vlastnost display</h3>
+<div class="tbl"><table>
+<thead><tr><th>Hodnota</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>block</code></td><td>Blokový prvek (nový řádek, celá šířka)</td></tr>
+<tr><td><code>inline</code></td><td>Řádkový prvek</td></tr>
+<tr><td><code>inline-block</code></td><td>V řádku, ale lze nastavit šířku a výšku (tlačítka)</td></tr>
+<tr><td><code>none</code></td><td>Prvek se nezobrazí a nezabírá místo</td></tr>
+<tr><td><code>flex</code></td><td>Z prvku se stane flex kontejner</td></tr>
+<tr><td><code>grid</code></td><td>Z prvku se stane mřížka</td></tr>
+</tbody></table></div>
+
+<h3>Pozicování: position</h3>
+<ul>
+  <li><code>static</code>: výchozí, prvek je v normálním toku dokumentu.</li>
+  <li><code>relative</code>: posunutí vůči své původní pozici (<code>top</code>, <code>left</code>…). Původní místo zůstane volné.</li>
+  <li><code>absolute</code>: vyjmutý z toku, umístěný vůči nejbližšímu předkovi s nastaveným <code>position</code> (jinak vůči stránce).</li>
+  <li><code>fixed</code>: pevně vůči oknu prohlížeče, při rolování se nehýbe.</li>
+  <li><code>sticky</code>: chová se normálně, dokud nedojde k okraji okna, pak se „přilepí“.</li>
+</ul>
+<pre><code class="language-css">.rodic   { position: relative; }            /* stane se „kotvou“ pro absolutní potomky */
+.stitek  { position: absolute; top: 0; right: 0; }  /* pravý horní roh rodiče   */
+.menu    { position: sticky; top: 0; }       /* při rolování se přilepí nahoru      */
+.chat    { position: fixed; bottom: 20px; right: 20px; } /* stále v rohu okna    */</code></pre>
+
+<h3>Flexbox: rozložení v jednom směru</h3>
+<p>Flexbox rozmisťuje prvky <strong>v jedné řadě</strong> (řádek nebo sloupec). Hodí se pro menu, lišty, zarovnání na střed, karty v řadě.</p>
+<pre><code class="language-css">.menu {
+  display: flex;               /* z rodiče se stane flex kontejner  */
+  flex-direction: row;         /* hlavní osa: řádek (nebo column)   */
+  justify-content: space-between; /* rozložení na hlavní ose        */
+  align-items: center;         /* zarovnání na příčné ose           */
+  gap: 16px;                   /* mezery mezi položkami             */
+  flex-wrap: wrap;             /* když se nevejdou, zalomí se       */
+}
+.menu .logo { flex: 1; }       /* logo zabere zbylé místo           */</code></pre>
+
+<h3>Grid: rozložení ve dvou směrech</h3>
+<p>CSS Grid rozvrhne prvky do <strong>mřížky řádků a sloupců</strong>. Hodí se pro rozvržení celé stránky nebo galerie.</p>
+<pre><code class="language-css">.galerie {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* 3 stejně široké sloupce */
+  gap: 20px;
+}
+
+.stranka {
+  display: grid;
+  grid-template-columns: 250px 1fr;       /* boční panel + obsah */
+  grid-template-areas:
+    "hlavicka hlavicka"
+    "panel    obsah"
+    "paticka  paticka";
+}
+header { grid-area: hlavicka; }</code></pre>
+<div class="note mat"><b class="lbl">K maturitě</b><p>Rozdíl jednou větou: <strong>Flexbox je jednorozměrný</strong> (řada), <strong>Grid dvourozměrný</strong> (řádky i sloupce). Dříve se rozložení řešilo tabulkami a později vlastností <code>float</code>; obojí je pro layout zastaralé.</p></div>
+</section>
+
+<section id="responzivita">
+<h2>Responzivní design</h2>
+<p><dfn>Responzivní</dfn> stránka se přizpůsobí velikosti obrazovky: na mobilu má jeden sloupec a velká tlačítka, na počítači víc sloupců. Dnes přichází většina návštěv webů z mobilů. Nástroje:</p>
+<ul>
+  <li><strong>Meta viewport</strong> v hlavičce (viz <a href="#kostra">kostra</a>). Bez něj mobil stránku jen zmenší.</li>
+  <li><strong>Relativní jednotky</strong> (<code>%</code>, <code>rem</code>, <code>fr</code>) místo pevných pixelů.</li>
+  <li><strong>Pružné rozložení</strong> pomocí Flexboxu a Gridu.</li>
+  <li><strong>Media queries</strong>: styly, které platí jen za určité podmínky (šířka okna, tisk, tmavý režim).</li>
+  <li><strong>Pružné obrázky</strong>: <code>img { max-width: 100%; }</code>.</li>
+</ul>
+<pre><code class="language-css">/* Mobile first: základní styl je pro mobil … */
+.galerie { display: grid; grid-template-columns: 1fr; }
+
+/* … a pro širší obrazovky se přidává */
+@media (min-width: 600px) {
+  .galerie { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1000px) {
+  .galerie { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Styl jen pro tisk */
+@media print {
+  nav, footer { display: none; }
+}</code></pre>
+<p>Přístup <dfn>mobile first</dfn> znamená, že se nejdřív napíše styl pro mobil a pro větší obrazovky se postupně přidávají úpravy (<code>min-width</code>).</p>
+</section>
+
+<section id="animace">
+<h2>Přechody, animace a proměnné</h2>
+<pre><code class="language-css">/* Přechod: plynulá změna při změně stavu (např. najetí myší) */
+.tlacitko {
+  background: #2451d6;
+  transition: background 0.3s ease, transform 0.3s;
+}
+.tlacitko:hover {
+  background: #163a9e;
+  transform: scale(1.05);
+}
+
+/* Animace: vlastní průběh definovaný klíčovými snímky */
+@keyframes pulzovani {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+.nacitani { animation: pulzovani 1.5s infinite; }</code></pre>
+<pre><code class="language-css">/* CSS proměnné (custom properties) – barva se definuje jednou a používá všude */
+:root {
+  --hlavni-barva: #2451d6;
+  --mezera: 16px;
+}
+a      { color: var(--hlavni-barva); }
+.karta { padding: var(--mezera); border: 2px solid var(--hlavni-barva); }</code></pre>
+</section>
+
+<p class="part">Praxe</p>
+
+<section id="priklad">
+<h2>Celý příklad s komentáři</h2>
+<p>Stránka, na které jsou vidět všechny tři vrstvy: HTML (struktura), CSS (vzhled v <code>&lt;style&gt;</code>) a JavaScript (reakce na kliknutí).</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="cs"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Ukázka HTML, CSS a JavaScriptu&lt;/title&gt;
+  &lt;style&gt;
+    /* ===== CSS: vzhled ===== */
+    body {
+      font-family: Arial, sans-serif;   /* písmo pro celou stránku (dědí se) */
+      background-color: #f4f4f4;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    button {
+      display: block;                   /* tlačítko jako blok…               */
+      margin: 20px auto;                /* …aby šlo vycentrovat pomocí auto  */
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;               /* zaoblené rohy                     */
+      cursor: pointer;                  /* kurzor ve tvaru ruky              */
+      transition: background-color 0.2s;
+    }
+    button:hover {                      /* pseudotřída: myš je nad tlačítkem */
+      background-color: #45a049;
+    }
+    p {
+      text-align: center;
+      color: #555;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- ===== HTML: obsah a struktura ===== --&gt;
+  &lt;h1&gt;Ukázka HTML, CSS a JavaScriptu&lt;/h1&gt;
+  &lt;p id="zprava"&gt;Klikni na tlačítko pro zobrazení zprávy.&lt;/p&gt;
+  &lt;button onclick="zobrazZpravu()"&gt;Klikni na mě&lt;/button&gt;
+
+  &lt;script&gt;
+    // ===== JavaScript: chování =====
+    function zobrazZpravu() {
+      const prvek = document.getElementById('zprava');  // najde prvek v DOM podle id
+      prvek.textContent = "Gratuluji! Právě jsi spustil JavaScript.";
+      prvek.style.color = '#4CAF50';                    // změní styl za běhu
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Co se děje: prohlížeč vykreslí nadpis, odstavec a zelené tlačítko. Při najetí myší tlačítko ztmavne (pseudotřída <code>:hover</code> a <code>transition</code>). Po kliknutí se zavolá funkce <code>zobrazZpravu()</code>, ta v DOM najde odstavec s <code>id="zprava"</code> a změní jeho text a barvu. Stránka se nemusí znovu načítat.</p>
+</section>
+
+<section id="zkus">
+<h2>Vyzkoušej si</h2>
+<p>Uprav kód vlevo a vpravo hned uvidíš výsledek. Zkus třeba změnit barvu <code>#2451d6</code>, odsazení <code>padding</code> nebo přidat další odstavec.</p>
+<div class="editor">
+  <div class="left">
+    <div class="pane-h"><label for="ed-src">Kód</label><button class="reset" id="ed-reset" type="button">Obnovit příklad</button></div>
+    <textarea id="ed-src" spellcheck="false" autocomplete="off">&lt;!DOCTYPE html&gt;
+&lt;html lang="cs"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;style&gt;
+  body { font-family: Arial, sans-serif; margin: 16px; background: #f4f6fb; }
+  .karta {
+    background: white;
+    border: 2px solid #2451d6;
+    border-radius: 8px;
+    padding: 16px;          /* zkus změnit na 40px */
+    max-width: 320px;
+  }
+  .karta h2 { margin-top: 0; color: #2451d6; }
+  .tlacitko {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #2451d6;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: transform 0.2s;
+  }
+  .tlacitko:hover { transform: scale(1.1); }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="karta"&gt;
+    &lt;h2&gt;Moje první karta&lt;/h2&gt;
+    &lt;p&gt;Změň text, barvu nebo odsazení vlevo a sleduj výsledek.&lt;/p&gt;
+    &lt;a class="tlacitko" href="#"&gt;Tlačítko&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+  </div>
+  <div>
+    <div class="pane-h"><span>Výsledek</span></div>
+    <iframe id="ed-out" title="Náhled kódu" sandbox="allow-scripts"></iframe>
+  </div>
+</div>
+<p style="color: var(--muted); font-size: .9rem;">Doma stačí kód uložit do souboru s příponou <code>.html</code> a otevřít ho v prohlížeči.</p>
+</section>
+
+<section id="nastroje">
+<h2>Nástroje pro tvorbu webu</h2>
+<ul>
+  <li><strong>Textový editor:</strong> stačí i Poznámkový blok. V praxi se používají editory se zvýrazněním syntaxe a našeptáváním: <strong>Visual Studio Code</strong>, Sublime Text, WebStorm.</li>
+  <li><strong>Prohlížeč a vývojářské nástroje (DevTools, klávesa F12):</strong> zobrazí DOM, umožní měnit CSS naživo, ukáže chyby, simuluje mobil.</li>
+  <li><strong>Validátor W3C</strong> (validator.w3.org): zkontroluje, jestli je HTML napsané správně.</li>
+  <li><strong>Can I use</strong> (caniuse.com): ukáže, které prohlížeče podporují danou vlastnost.</li>
+  <li><strong>CSS preprocesory</strong> (Sass, Less): rozšiřují CSS o vnořování, funkce a další. Překládají se do obyčejného CSS.</li>
+  <li><strong>CSS frameworky</strong> (Bootstrap, Tailwind CSS): hotové styly a komponenty, rychlejší vývoj.</li>
+</ul>
+<h3>Jak vzniká web bez psaní kódu</h3>
+<ul>
+  <li><strong>WYSIWYG editory</strong> (What You See Is What You Get): uživatel upravuje stránku vizuálně jako v textovém editoru a HTML se vytvoří samo. Např. Adobe Dreamweaver, editor v e-mailu nebo v CMS.</li>
+  <li><strong>Redakční systémy (CMS)</strong>: aplikace na správu obsahu webu, kde obsah přidávají běžní uživatelé přes administraci. Např. <strong>WordPress</strong> (pohání zhruba 40 % webů), Joomla, Drupal.</li>
+  <li><strong>Webové stavebnice</strong> (site builders): Wix, Squarespace, Webnode. Web se skládá z hotových bloků přetahováním myší.</li>
+</ul>
+<h3>Statický a dynamický web</h3>
+<p><strong>Statický</strong> web tvoří hotové HTML soubory, každý návštěvník dostane totéž. <strong>Dynamický</strong> web generuje HTML až na serveru podle situace (přihlášený uživatel, data z databáze), pomocí serverových jazyků jako PHP, Python nebo JavaScript (Node.js). Prohlížeč ale vždy nakonec dostane HTML a CSS.</p>
+</section>
+
+<section id="vyuziti">
+<h2>Využití HTML a CSS</h2>
+<ul>
+  <li><strong>Webové stránky</strong> všeho druhu: prezentace, e-shopy, zpravodajství, blogy.</li>
+  <li><strong>Webové aplikace:</strong> Gmail, Google Dokumenty, online hry. Uživatelské rozhraní je HTML a CSS, logika v JavaScriptu. <strong>PWA</strong> (progresivní webové aplikace) se dají „nainstalovat“ jako aplikace a fungují i offline.</li>
+  <li><strong>HTML e-maily:</strong> newslettery, potvrzení objednávek. Zvláštnost: poštovní programy (hlavně Outlook) podporují CSS jen omezeně, proto se v e-mailech dodnes používají <strong>tabulky na rozložení a inline styly</strong>.</li>
+  <li><strong>Desktopové aplikace</strong> přes framework <strong>Electron</strong>: Visual Studio Code, Discord, Slack jsou uvnitř vlastně webové stránky.</li>
+  <li><strong>Mobilní aplikace</strong> přes frameworky Ionic a Capacitor (dříve Cordova a PhoneGap). <dfn>Framework</dfn> je předpřipravená sada nástrojů a knihoven, která usnadňuje vývoj.</li>
+  <li><strong>Dokumenty a tisk:</strong> převod HTML do PDF (faktury, reporty), e-knihy ve formátu EPUB jsou uvnitř HTML a CSS.</li>
+  <li><strong>SEO</strong> (Search Engine Optimization, optimalizace pro vyhledávače): správné nadpisy, sémantické prvky, <code>title</code>, <code>meta description</code> a <code>alt</code> u obrázků pomáhají, aby byla stránka výš ve výsledcích vyhledávání.</li>
+  <li><strong>Přístupnost</strong> (accessibility): správně napsané HTML umožňuje používat web i lidem se zrakovým nebo pohybovým postižením.</li>
+</ul>
+</section>
+
+<section id="chyby">
+<h2>Časté chyby</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Správně</th></tr></thead>
+<tbody>
+<tr><td>Chybí <code>&lt;!DOCTYPE html&gt;</code> nebo <code>&lt;meta charset&gt;</code></td><td>Kostra vždy kompletní; jinak se rozbije čeština nebo zobrazení</td></tr>
+<tr><td>Neuzavřené nebo křížené značky</td><td>Co se otevře poslední, zavře se první</td></tr>
+<tr><td>Obrázek bez <code>alt</code></td><td>Vždy popsat, co je na obrázku</td></tr>
+<tr><td>Stejné <code>id</code> u více prvků</td><td>Pro opakování používat <code>class</code></td></tr>
+<tr><td>Nadpis vybraný podle velikosti (<code>h4</code>, protože je malý)</td><td>Nadpis vybírat podle úrovně v osnově, velikost řeší CSS</td></tr>
+<tr><td>Tabulky na rozložení stránky</td><td>Flexbox a Grid</td></tr>
+<tr><td>Všechno v <code>style="…"</code></td><td>Externí CSS soubor a třídy</td></tr>
+<tr><td>Chybějící středník v CSS</td><td>Každá deklarace končí <code>;</code>, jinak se ignoruje i následující</td></tr>
+<tr><td>Špatná relativní cesta k souboru</td><td>Cesta se počítá od souboru, ve kterém je odkaz</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">K maturitě</p>
+
+<section id="osnova">
+<h2>Jak odpovídat u maturity</h2>
+<p>Doporučená osnova odpovědi na 10–15 minut. U každého bodu si připrav jeden krátký příklad kódu, který umíš napsat na tabuli.</p>
+<ol class="plan">
+  <li><b>Úvod:</b> tři vrstvy webu (HTML, CSS, JS) a jejich role. HTML je značkovací jazyk, ne programovací.</li>
+  <li><b>Historie:</b> Berners-Lee, CERN, HTML 2.0, HTML 4 a CSS, HTML5, Living Standard. W3C a WHATWG.</li>
+  <li><b>HTML syntaxe:</b> značka, prvek, atribut, párové a nepárové, vnořování.</li>
+  <li><b>Kostra dokumentu:</b> napsat ji a vysvětlit <code>DOCTYPE</code>, <code>head</code>, <code>body</code>, <code>meta</code>.</li>
+  <li><b>Prvky podle kategorií:</b> text, seznamy, odkazy a obrázky, tabulky, formuláře, multimédia, sémantické HTML5.</li>
+  <li><b>CSS princip:</b> oddělení vzhledu, syntaxe pravidla, tři způsoby připojení.</li>
+  <li><b>Selektory a kaskáda:</b> typ, třída, ID, pseudotřídy; specificita a dědičnost.</li>
+  <li><b>Box model a rozložení:</b> nakreslit box model; Flexbox × Grid; responzivita a media queries.</li>
+  <li><b>Využití a nástroje:</b> weby, aplikace, e-maily, Electron; editor, DevTools, validátor, CMS.</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Proč HTML není programovací jazyk?</summary><div class="a"><p>Je to značkovací jazyk: jen popisuje strukturu a význam obsahu. Nemá proměnné, podmínky, cykly ani funkce, takže v něm nejde zapsat algoritmus.</p></div></details>
+<details class="q"><summary>Kdo vytvořil HTML, kde a kdy?</summary><div class="a"><p>Tim Berners-Lee v CERN. Návrh webu 1989, první popis HTML 1991. První oficiální standard je HTML 2.0 z roku 1995.</p></div></details>
+<details class="q"><summary>Kdo dnes spravuje HTML a kdo CSS?</summary><div class="a"><p>HTML spravuje WHATWG jako HTML Living Standard (od dohody s W3C v roce 2019). CSS spravuje W3C, po modulech.</p></div></details>
+<details class="q"><summary>Co dělá <code>&lt;!DOCTYPE html&gt;</code> a kde musí být?</summary><div class="a"><p>Úplně na začátku dokumentu. Říká prohlížeči, že jde o HTML5, a přepne ho do standardního režimu zobrazení.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi <code>&lt;head&gt;</code> a <code>&lt;header&gt;</code>?</summary><div class="a"><p><code>&lt;head&gt;</code> je hlavička dokumentu s metadaty, nezobrazuje se. <code>&lt;header&gt;</code> je viditelné záhlaví stránky nebo sekce (logo, nadpis, menu) uvnitř <code>&lt;body&gt;</code>.</p></div></details>
+<details class="q"><summary>Co je sémantické HTML a proč ho používat?</summary><div class="a"><p>Používání prvků podle jejich významu (<code>nav</code>, <code>main</code>, <code>article</code>, <code>footer</code>…) místo obecných <code>div</code>. Pomáhá přístupnosti (čtečky), SEO a čitelnosti kódu.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi metodami GET a POST?</summary><div class="a"><p>GET posílá data v URL (viditelná, dají se uložit do záložky, omezená délka), hodí se pro vyhledávání. POST je posílá v těle požadavku, hodí se pro hesla a větší data.</p></div></details>
+<details class="q"><summary>Jaké jsou tři způsoby připojení CSS? Který má nejvyšší prioritu?</summary><div class="a"><p>Inline (<code>style</code> u prvku), interní (<code>&lt;style&gt;</code> v hlavičce), externí (soubor přes <code>&lt;link&gt;</code>). Nejvyšší prioritu má inline, pokud nepočítáme <code>!important</code>.</p></div></details>
+<details class="q"><summary>Který selektor vyhraje: <code>#menu a</code>, nebo <code>.nav .polozka a</code>?</summary><div class="a"><p><code>#menu a</code> má specificitu 1-0-1, <code>.nav .polozka a</code> má 0-2-1. Vyhrává <code>#menu a</code>, protože jedno ID přebije libovolný počet tříd.</p></div></details>
+<details class="q"><summary>Jak široký bude prvek s <code>width: 300px; padding: 10px; border: 2px solid;</code>?</summary><div class="a"><p>Při výchozím <code>box-sizing: content-box</code>: 300 + 2·10 + 2·2 = <strong>324 px</strong>. Při <code>border-box</code> přesně 300 px.</p></div></details>
+<details class="q"><summary>Které vlastnosti se dědí a které ne?</summary><div class="a"><p>Dědí se hlavně textové (<code>color</code>, <code>font-*</code>, <code>line-height</code>, <code>text-align</code>). Nedědí se vlastnosti krabice (<code>margin</code>, <code>padding</code>, <code>border</code>, <code>background</code>, <code>width</code>).</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi Flexboxem a Gridem?</summary><div class="a"><p>Flexbox rozmisťuje prvky v jednom směru (řádek nebo sloupec). Grid ve dvou směrech (řádky a sloupce zároveň).</p></div></details>
+<details class="q"><summary>Co je responzivní design a jak se dělá?</summary><div class="a"><p>Přizpůsobení stránky různým velikostem obrazovky. Meta viewport, relativní jednotky, Flexbox a Grid, media queries, <code>max-width: 100%</code> u obrázků.</p></div></details>
+<details class="q"><summary>Proč se v HTML e-mailech používají tabulky?</summary><div class="a"><p>Poštovní klienti (hlavně Outlook) podporují moderní CSS jen omezeně, takže rozložení pomocí Flexboxu a Gridu by se rozpadlo. Tabulky a inline styly fungují všude.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>HTML</dt><dd>HyperText Markup Language, značkovací jazyk pro strukturu webové stránky</dd>
+  <dt>CSS</dt><dd>Cascading Style Sheets, kaskádové styly pro vzhled stránky</dd>
+  <dt>Hypertext</dt><dd>Text s odkazy na jiné dokumenty</dd>
+  <dt>Značka (tag)</dt><dd>Zápis ve špičatých závorkách, např. <code>&lt;p&gt;</code></dd>
+  <dt>Prvek (element)</dt><dd>Počáteční značka + obsah + koncová značka</dd>
+  <dt>Atribut</dt><dd>Doplňující údaj prvku, <code>název="hodnota"</code></dd>
+  <dt>DOM</dt><dd>Document Object Model, stromová reprezentace stránky v prohlížeči</dd>
+  <dt>Selektor</dt><dd>Část CSS pravidla určující, na které prvky se použije</dd>
+  <dt>Kaskáda</dt><dd>Pravidla, podle kterých se rozhoduje mezi konfliktními styly</dd>
+  <dt>Specificita</dt><dd>„Váha“ selektoru (ID &gt; třída &gt; prvek)</dd>
+  <dt>Box model</dt><dd>Model prvku jako krabice: content, padding, border, margin</dd>
+  <dt>Responzivita</dt><dd>Přizpůsobení stránky velikosti zařízení</dd>
+  <dt>Media query</dt><dd>Podmínka v CSS (<code>@media</code>), kdy mají styly platit</dd>
+  <dt>W3C</dt><dd>World Wide Web Consortium, organizace pro webové standardy</dd>
+  <dt>WHATWG</dt><dd>Skupina výrobců prohlížečů, spravuje HTML Living Standard</dd>
+  <dt>SEO</dt><dd>Optimalizace stránky pro vyhledávače</dd>
+  <dt>CMS</dt><dd>Redakční systém pro správu obsahu webu (WordPress)</dd>
+  <dt>WYSIWYG</dt><dd>What You See Is What You Get, vizuální editor bez psaní kódu</dd>
+  <dt>Framework</dt><dd>Předpřipravená sada nástrojů a knihoven pro rychlejší vývoj</dd>
+</dl>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce z Informatiky „Programování – HTML a CSS“. Ukázky kódu si můžeš zkopírovat a vyzkoušet v souboru <code>.html</code>.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  var src = document.getElementById('ed-src');
+  var out = document.getElementById('ed-out');
+  var reset = document.getElementById('ed-reset');
+  var initial = src.value;
+  var t;
+  function render() { out.srcdoc = src.value; }
+  src.addEventListener('input', function () { clearTimeout(t); t = setTimeout(render, 250); });
+  reset.addEventListener('click', function () { src.value = initial; render(); });
+  render();
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    var d = document.querySelector('.toc details'); if (d) d.open = false;
+  }
+})();
+</script>
+
+</body>
+</html>
