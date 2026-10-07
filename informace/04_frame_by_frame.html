@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Snímek po snímku</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <!-- 0 : hero + flipbook -->
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Kódování videa</div>
+        <h1>Video je jen rychle měněné obrázky</h1>
+        <p class="lede">Žádný pohyb tam ve skutečnosti není. Klikej na snímky, nebo je nech přehrát:</p>
+        <canvas class="stage-canvas" id="flipCanvas" width="64" height="40"></canvas>
+        <div class="film" id="film"></div>
+        <button class="calc-btn" id="flipPlay">▶ Přehrát</button>
+      </div>
+    </section>
+
+    <!-- 1 : fps -->
+    <section class="slide" data-index="1" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Snímková frekvence</div>
+        <h2 class="slide-title">Kolik snímků za sekundu?</h2>
+        <p class="lede"><b>FPS</b> (frames per second) říká, kolik snímků se za sekundu zobrazí. Tentýž pohyb, jiný počet snímků — přepínej a sleduj, kdy začne být pohyb plynulý.</p>
+        <canvas class="wide-canvas" id="fpsCanvas" width="480" height="160"></canvas>
+        <div class="seg" id="fpsBtns">
+          <button class="calc-btn" data-fps="5">5 fps</button>
+          <button class="calc-btn" data-fps="12">12 fps</button>
+          <button class="calc-btn is-active" data-fps="24">24 fps</button>
+          <button class="calc-btn" data-fps="60">60 fps</button>
+        </div>
+        <div class="lookup-chips">
+          <div class="chip"><b>snímků za sekundu</b><span id="fpsVal">24</span></div>
+          <div class="chip"><b>pauza mezi snímky</b><span id="fpsMs">41,7 ms</span></div>
+        </div>
+        <p class="compare-note">Film se klasicky točí na 24 fps, televize a běžná videa na 25–30 fps, hry a sport často na 60 fps.</p>
+      </div>
+    </section>
+
+    <!-- 2 : raw size -->
+    <section class="slide" data-index="2" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Vzorec</div>
+        <h2 class="slide-title">Kolik video zabírá syrové?</h2>
+        <div class="formula">šířka × výška × 24 b × fps = data za sekundu</div>
+        <div class="ctrl"><div class="ctrl-label">rozlišení</div>
+          <div class="seg" id="resBtns">
+            <button class="calc-btn" data-w="1280" data-h="720">HD 720p</button>
+            <button class="calc-btn is-active" data-w="1920" data-h="1080">Full HD 1080p</button>
+            <button class="calc-btn" data-w="3840" data-h="2160">4K</button>
+          </div></div>
+        <div class="ctrl"><div class="ctrl-label">snímků za sekundu</div>
+          <div class="seg" id="rawFpsBtns">
+            <button class="calc-btn" data-fps="24">24</button>
+            <button class="calc-btn is-active" data-fps="30">30</button>
+            <button class="calc-btn" data-fps="60">60</button>
+          </div></div>
+        <div class="formula f-sm stat" id="rawPerSec"></div>
+        <div class="formula f-sm stat" id="rawPerHour"></div>
+      </div>
+    </section>
+
+    <!-- 3 : otázka -->
+    <section class="slide pause-slide" data-index="3" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Otázka k zamyšlení</div>
+        <div class="qmark">?</div>
+        <h2>Jak to zmenšit?</h2>
+        <p class="lede">Hodinový film by zabral stovky gigabajtů. Přesto se vejde do mobilu a jde streamovat. Čeho si můžeme všimnout na dvou po sobě jdoucích snímcích?</p>
+      </div>
+    </section>
+
+    <!-- 4 : časová redundance -->
+    <section class="slide" data-index="4" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Řešení</div>
+        <h2 class="slide-title">Většina obrazu se nemění</h2>
+        <p class="lede">Porovnej dva po sobě jdoucí snímky. Třetí obrázek ukazuje jen pixely, které se změnily (v jejich nových barvách) — jen ty je potřeba uložit.</p>
+        <div class="tri">
+          <figure><canvas id="rdA" width="64" height="40"></canvas><figcaption>snímek 1</figcaption></figure>
+          <figure><canvas id="rdB" width="64" height="40"></canvas><figcaption>snímek 2</figcaption></figure>
+          <figure><canvas id="rdD" width="64" height="40"></canvas><figcaption>změny</figcaption></figure>
+        </div>
+        <div class="ctrl"><div class="ctrl-label">rychlost pohybu míče</div><input type="range" id="rdSpeed" min="1" max="10" value="2"></div>
+        <div class="seg" id="camBtns">
+          <button class="calc-btn is-active" data-cam="0">Statická kamera</button>
+          <button class="calc-btn" data-cam="1">Kamera sleduje míč</button>
+        </div>
+        <div class="formula f-sm stat" id="rdStat"></div>
+        <p class="compare-note">Zbytek obrazu se jen zopakuje z minulého snímku — nic dalšího se neukládá.</p>
+      </div>
+    </section>
+
+    <!-- 5 : I P B -->
+    <section class="slide" data-index="5" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Klíčové snímky</div>
+        <h2 class="slide-title">Celý obrázek jen občas</h2>
+        <p class="lede">Video ukládá občas <b>celý</b> snímek (I) a mezi nimi jen rozdíly (P, B). Zvol, jak často se celý snímek opakuje, a klikni na snímek pro popis. Výška sloupečku = velikost dat.</p>
+        <div class="ctrl"><div class="ctrl-label">celý snímek každých</div>
+          <div class="seg" id="gopBtns">
+            <button class="calc-btn" data-n="1">1</button>
+            <button class="calc-btn" data-n="6">6</button>
+            <button class="calc-btn is-active" data-n="12">12</button>
+            <button class="calc-btn" data-n="30">30 snímků</button>
+          </div></div>
+        <div class="gop" id="gopRow"></div>
+        <div class="compare-col"><div class="compare-head" id="gopHead">Snímek I</div><div class="compare-body" id="gopDesc"></div></div>
+        <div class="formula f-xs stat" id="gopStat"></div>
+        <p class="compare-note note-fixed" id="gopNote"></p>
+      </div>
+    </section>
+
+    <!-- 6 : vnímání / chroma -->
+    <section class="slide" data-index="6" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Ztrátová komprese</div>
+        <h2 class="slide-title">Oko je líné na barvu, ne na jas</h2>
+        <p class="lede">Obraz se dá rozdělit na <b>jas</b> a <b>barvu</b>. Zkus zhrubit jedno nebo druhé a porovnat výsledek s originálem — a sleduj, kolik dat zbude.</p>
+        <div class="duo">
+          <figure><canvas id="chA" width="64" height="48"></canvas><figcaption>originál</figcaption></figure>
+          <figure><canvas id="chB" width="64" height="48"></canvas><figcaption id="chCap">zhrubená barva</figcaption></figure>
+        </div>
+        <div class="seg" id="chModes">
+          <button class="calc-btn is-active" data-mode="chroma">Zhrubit barvu</button>
+          <button class="calc-btn" data-mode="luma">Zhrubit jas</button>
+        </div>
+        <div class="ctrl"><div class="ctrl-label">velikost bloku: <span id="chBlockLbl">2</span> × <span id="chBlockLbl2">2</span> pixelů</div><input type="range" id="chBlock" min="1" max="8" value="2"></div>
+        <div class="formula f-xs stat" id="chStat"></div>
+        <p class="compare-note note-fixed" id="chNote"></p>
+      </div>
+    </section>
+
+    <!-- 7 : otázka -->
+    <section class="slide pause-slide" data-index="7" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Otázka k zamyšlení</div>
+        <div class="qmark">?</div>
+        <h2>Je MP4 kodek?</h2>
+        <p class="lede">Soubor „video.mp4“ zná každý. Říká ale přípona, jak je video zkomprimované?</p>
+      </div>
+    </section>
+
+    <!-- 8 : kodek vs kontejner -->
+    <section class="slide" data-index="8" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Řešení</div>
+        <h2 class="slide-title">Kodek a kontejner</h2>
+        <div class="compare-grid">
+          <div class="compare-col"><div class="compare-head">Kodek</div><div class="compare-body"><b>Jak</b> se data zmenší. Algoritmus, který obraz a zvuk komprimuje a zase rozbaluje. Příklady: H.264, H.265, AV1, VP9.</div></div>
+          <div class="compare-col"><div class="compare-head">Kontejner</div><div class="compare-body"><b>Do čeho</b> se to zabalí. Krabice, ve které leží obraz, zvuk i titulky pohromadě. Příklady: MP4, MKV, WebM.</div></div>
+        </div>
+        <div class="ctrl"><div class="ctrl-label">vyber kontejner</div>
+          <div class="seg" id="ctBtns">
+            <button class="calc-btn is-active" data-ct="mp4">.mp4</button>
+            <button class="calc-btn" data-ct="mkv">.mkv</button>
+            <button class="calc-btn" data-ct="webm">.webm</button>
+          </div></div>
+        <div class="table-wrap ct-table">
+          <table class="datatable">
+            <thead><tr><th>uvnitř krabice</th><th>typicky</th></tr></thead>
+            <tbody id="ctBody"></tbody>
+          </table>
+        </div>
+        <p class="compare-note">Přípona .mp4 tedy neříká, jaký kodek uvnitř je — dva soubory .mp4 mohou být zkomprimované úplně jinak.</p>
+      </div>
+    </section>
+
+    <!-- 9 : bitrate -->
+    <section class="slide" data-index="9" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Streamování</div>
+        <h2 class="slide-title">Kvalita podle tvého internetu</h2>
+        <p class="lede"><b>Bitrate</b> je počet bitů, které video potřebuje za sekundu. Přehrávač vybere nejvyšší kvalitu, která se do tvé rychlosti vejde. Posuň rychlost připojení:</p>
+        <canvas class="stage-canvas" id="brCanvas" width="64" height="40"></canvas>
+        <div class="ctrl"><div class="ctrl-label">rychlost internetu: <span><span id="brSpeedLbl">10</span> Mb/s</span></div><input type="range" id="brSpeed" min="0.5" max="40" step="0.5" value="10"></div>
+        <div class="table-wrap">
+          <table class="datatable">
+            <thead><tr><th>kvalita</th><th>bitrate</th><th>dat za hodinu</th></tr></thead>
+            <tbody id="brBody"></tbody>
+          </table>
+        </div>
+        <p class="compare-note" id="brNote">Hodnoty jsou orientační — skutečný bitrate závisí na kodeku a službě. Pamatuješ si rozdíl Mb/s a MB/s? Tady se počítá v bitech.</p>
+      </div>
+    </section>
+
+    <!-- 10 : shrnutí -->
+    <section class="slide summary-slide" data-index="10" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Shrnutí</div>
+        <h2 class="slide-title">Co jsme se naučili</h2>
+        <ul class="summary-list">
+          <li>Video je <b>posloupnost snímků</b>; počet za sekundu je <b>fps</b>.</li>
+          <li>Syrové video je obří: <b>šířka × výška × 24 b × fps</b> — hodina ve Full HD jde do stovek GB.</li>
+          <li>Většina obrazu se mezi snímky nemění, proto se ukládají <b>rozdíly</b> a jen občas celý <b>klíčový snímek</b>.</li>
+          <li>Ztrátová komprese zahazuje to, co oko nepozná — hlavně detaily <b>barev</b>, ne jasu.</li>
+          <li><b>Kodek</b> data zmenšuje, <b>kontejner</b> je balí dohromady; <b>bitrate</b> určuje kvalitu streamu.</li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="navbar">
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 11</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- navigation ----------
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total = slides.length, current = 0;
+  var dotsEl = document.getElementById("dots"), counterEl = document.getElementById("counter");
+  var prevBtn = document.getElementById("prevBtn"), nextBtn = document.getElementById("nextBtn");
+  slides.forEach(function(_, i){
+    var d = document.createElement("button");
+    d.className = "dot" + (i === 0 ? " is-active" : "");
+    d.setAttribute("aria-label", "Snímek " + (i+1));
+    d.addEventListener("click", function(){ goTo(i); });
+    dotsEl.appendChild(d);
+  });
+  var dotEls = Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if (i < 0 || i >= total) return;
+    slides[current].hidden = true; current = i; slides[current].hidden = false;
+    dotEls.forEach(function(d, idx){ d.classList.toggle("is-active", idx === current); });
+    counterEl.textContent = (current+1) + " / " + total;
+    prevBtn.disabled = current === 0; nextBtn.disabled = current === total - 1;
+  }
+  prevBtn.addEventListener("click", function(){ goTo(current - 1); });
+  nextBtn.addEventListener("click", function(){ goTo(current + 1); });
+  document.addEventListener("keydown", function(e){
+    if (e.target && (e.target.tagName === "INPUT")) return;
+    if (e.key === "ArrowRight") goTo(current + 1);
+    if (e.key === "ArrowLeft") goTo(current - 1);
+  });
+  goTo(0);
+
+  // ---------- helpers ----------
+  function fmt(n, dec){ return n.toLocaleString("cs-CZ", {maximumFractionDigits: dec == null ? 1 : dec}); }
+  function fmt1(n){ return n.toLocaleString("cs-CZ", {minimumFractionDigits: 1, maximumFractionDigits: 1}); }
+  function fmtBytes(b){
+    if (b >= 1e12) return fmt(b/1e12, 1) + " TB";
+    if (b >= 1e9) return fmt(b/1e9, 1) + " GB";
+    if (b >= 1e6) return fmt(b/1e6, 1) + " MB";
+    return fmt(b/1e3, 1) + " kB";
+  }
+  function css(name){ return getComputedStyle(document.body).getPropertyValue(name).trim(); }
+  function segGroup(id, onPick){
+    var btns = Array.prototype.slice.call(document.querySelectorAll("#" + id + " .calc-btn"));
+    btns.forEach(function(b){
+      b.addEventListener("click", function(){
+        btns.forEach(function(x){ x.classList.remove("is-active"); });
+        b.classList.add("is-active");
+        onPick(b);
+      });
+    });
+  }
+
+  // shared bouncing path of the ball (x from 8 to 56 on a 64x40 scene)
+  function ballY(x){ var t = Math.max(0, Math.min(1, (x - 8) / 48)); return Math.round(24 - Math.sin(t*Math.PI)*16); }
+
+  // deterministic pixel scene: sky gradient, sun, striped ground, ball
+  function scene(W, H, bx, by, off){
+    var d = new Uint8ClampedArray(W*H*4), gy = Math.floor(H*0.7), R = 4;
+    for (var y = 0; y < H; y++){
+      for (var x = 0; x < W; x++){
+        var wx = x + off, r, g, b;
+        if (y < gy){
+          var t = y / gy; r = 70 + t*110; g = 120 + t*90; b = 200 + t*30;
+          var sx = wx - 50, sy = y - 9;
+          if (sx*sx + sy*sy <= 25){ r = 250; g = 224; b = 120; }
+        } else {
+          var alt = ((wx % 8) + 8) % 8 < 4;
+          r = alt ? 50 : 62; g = alt ? 135 : 152; b = alt ? 70 : 82;
+        }
+        var dx = x - bx, dy = y - by;
+        if (dx*dx + dy*dy <= R*R){ r = 232; g = 90; b = 61; }
+        var i = (y*W + x)*4; d[i] = r; d[i+1] = g; d[i+2] = b; d[i+3] = 255;
+      }
+    }
+    return d;
+  }
+  function paint(canvas, data, W, H){
+    var ctx = canvas.getContext("2d"), img = ctx.createImageData(W, H);
+    img.data.set(data); ctx.putImageData(img, 0, 0);
+  }
+
+  // ---------- slide 0 : flipbook ----------
+  var FW = 64, FH = 40, FRAMES = 8, frameData = [];
+  for (var fi = 0; fi < FRAMES; fi++){
+    var tt = fi / (FRAMES - 1);
+    frameData.push(scene(FW, FH, Math.round(8 + tt*48), ballY(8 + tt*48), 0));
+  }
+  var flipCanvas = document.getElementById("flipCanvas");
+  var film = document.getElementById("film"), filmBtns = [], flipIdx = 0, flipTimer = null;
+  frameData.forEach(function(data, i){
+    var b = document.createElement("button");
+    b.setAttribute("aria-label", "Snímek " + (i+1));
+    var c = document.createElement("canvas"); c.width = FW; c.height = FH;
+    paint(c, data, FW, FH);
+    b.appendChild(c);
+    b.addEventListener("click", function(){ stopFlip(); showFlip(i); });
+    film.appendChild(b); filmBtns.push(b);
+  });
+  function showFlip(i){
+    flipIdx = i; paint(flipCanvas, frameData[i], FW, FH);
+    filmBtns.forEach(function(b, k){ b.classList.toggle("is-active", k === i); });
+  }
+  var flipPlay = document.getElementById("flipPlay");
+  function stopFlip(){ if (flipTimer){ clearInterval(flipTimer); flipTimer = null; } flipPlay.textContent = "▶ Přehrát"; }
+  flipPlay.addEventListener("click", function(){
+    if (flipTimer){ stopFlip(); return; }
+    flipPlay.textContent = "❚❚ Zastavit";
+    flipTimer = setInterval(function(){ showFlip((flipIdx + 1) % FRAMES); }, 160);
+  });
+  showFlip(0);
+
+  // ---------- slide 1 : fps ----------
+  var fpsCanvas = document.getElementById("fpsCanvas"), fctx = fpsCanvas.getContext("2d");
+  var fps = 24;
+  document.getElementById("fpsVal").textContent = fps;
+  segGroup("fpsBtns", function(b){
+    fps = parseInt(b.getAttribute("data-fps"), 10);
+    document.getElementById("fpsVal").textContent = fps;
+    document.getElementById("fpsMs").textContent = fmt(1000/fps, 1) + " ms";
+  });
+  function drawFps(now){
+    if (current === 1){
+      var W = fpsCanvas.width, H = fpsCanvas.height;
+      var n = Math.floor(now/1000*fps), tq = n / fps;
+      fctx.fillStyle = css("--surface-alt") || "#E9F1FA"; fctx.fillRect(0, 0, W, H);
+      fctx.fillStyle = css("--border") || "#CADCFC"; fctx.fillRect(0, H-18, W, 18);
+      var x = 30 + ((tq*0.45) % 1) * (W - 60);
+      var y = H - 18 - 16 - Math.abs(Math.sin(tq*3.2)) * 80;
+      fctx.fillStyle = css("--accent-strong") || "#E8A33D";
+      fctx.beginPath(); fctx.arc(x, y, 16, 0, Math.PI*2); fctx.fill();
+      fctx.fillStyle = css("--ink-muted") || "#5A6B85"; fctx.font = "12px monospace";
+      fctx.fillText("snímek " + n, 10, 18);
+    }
+    requestAnimationFrame(drawFps);
+  }
+  requestAnimationFrame(drawFps);
+
+  // ---------- slide 2 : raw size ----------
+  var rawW = 1920, rawH = 1080, rawFps = 30;
+  function updateRaw(){
+    var perSec = rawW * rawH * 24 * rawFps / 8; // bytes
+    document.getElementById("rawPerSec").textContent = rawW + " × " + rawH + " × 24 b × " + rawFps + " ≈ " + fmtBytes(perSec) + " za sekundu";
+    document.getElementById("rawPerHour").textContent = "1 hodina ≈ " + fmtBytes(perSec * 3600);
+  }
+  segGroup("resBtns", function(b){ rawW = parseInt(b.getAttribute("data-w"), 10); rawH = parseInt(b.getAttribute("data-h"), 10); updateRaw(); });
+  segGroup("rawFpsBtns", function(b){ rawFps = parseInt(b.getAttribute("data-fps"), 10); updateRaw(); });
+  updateRaw();
+
+  // ---------- slide 4 : temporal redundancy ----------
+  var rdA = document.getElementById("rdA"), rdB = document.getElementById("rdB"), rdD = document.getElementById("rdD");
+  var rdSpeed = document.getElementById("rdSpeed"), rdCam = 0;
+  function updateRd(){
+    var sp = parseInt(rdSpeed.value, 10), W = 64, H = 40, bx = 24;
+    var a = scene(W, H, bx, ballY(bx), 0);
+    var b = rdCam ? scene(W, H, bx, ballY(bx + sp), sp) : scene(W, H, bx + sp, ballY(bx + sp), 0);
+    var diff = new Uint8ClampedArray(W*H*4), changed = 0;
+    for (var i = 0; i < W*H; i++){
+      var p = i*4, ch = a[p] !== b[p] || a[p+1] !== b[p+1] || a[p+2] !== b[p+2];
+      if (ch){ changed++; diff[p] = b[p]; diff[p+1] = b[p+1]; diff[p+2] = b[p+2]; }
+      else { diff[p] = 27; diff[p+1] = 42; diff[p+2] = 74; }
+      diff[p+3] = 255;
+    }
+    paint(rdA, a, W, H); paint(rdB, b, W, H); paint(rdD, diff, W, H);
+    var pct = changed / (W*H) * 100;
+    document.getElementById("rdStat").textContent = "změněno " + changed + " z " + (W*H) + " pixelů (" + fmt1(pct) + " %)";
+  }
+  rdSpeed.addEventListener("input", updateRd);
+  segGroup("camBtns", function(b){ rdCam = parseInt(b.getAttribute("data-cam"), 10); updateRd(); });
+  updateRd();
+
+  // ---------- slide 5 : GOP ----------
+  var SIZE = {I: 100, P: 30, B: 12};
+  var DESC = {
+    I: ["Snímek I — celý obrázek", "Uloží se celý, nezávisle na ostatních (podobně jako JPEG). Dá se dekódovat sám, proto se od něj dá začít přehrávat."],
+    P: ["Snímek P — rozdíl oproti minulému", "Uloží jen změny oproti předchozímu snímku. Menší, ale potřebuje, aby předchozí snímek už byl rozbalený."],
+    B: ["Snímek B — z obou stran", "Vychází z předchozího i následujícího snímku, takže je nejmenší. Potřebuje oba sousedy."]
+  };
+  var gopN = 12, gopSel = 0, gopRow = document.getElementById("gopRow");
+  function renderGop(){
+    gopRow.innerHTML = "";
+    var sum = 0;
+    for (var i = 0; i < gopN; i++){
+      var t = i === 0 ? "I" : (i % 3 === 0 ? "P" : "B");
+      sum += SIZE[t];
+      var b = document.createElement("button");
+      b.className = "gop-frame t-" + t + (i === gopSel ? " is-sel" : "");
+      b.setAttribute("aria-label", "Snímek " + (i+1) + " typu " + t);
+      var bar = document.createElement("span"); bar.className = "bar"; bar.style.height = (SIZE[t] / 100 * 2.2) + "rem";
+      var lab = document.createElement("span"); lab.textContent = t;
+      b.appendChild(bar); b.appendChild(lab);
+      (function(idx, tt2){ b.addEventListener("click", function(){ gopSel = idx; renderGop(); }); })(i, t);
+      gopRow.appendChild(b);
+    }
+    var selT = gopSel === 0 ? "I" : (gopSel % 3 === 0 ? "P" : "B");
+    document.getElementById("gopHead").textContent = DESC[selT][0];
+    document.getElementById("gopDesc").textContent = DESC[selT][1];
+    var pct = sum / (gopN * 100) * 100;
+    document.getElementById("gopStat").textContent = "oproti samým celým snímkům jen " + fmt1(pct) + " % dat";
+    document.getElementById("gopNote").textContent = "Při 30 fps čeká přehrávač po skoku v čase na klíčový snímek nejvýš " + fmt(gopN / 30, 1) + " s.";
+  }
+  segGroup("gopBtns", function(b){ gopN = parseInt(b.getAttribute("data-n"), 10); gopSel = 0; renderGop(); });
+  renderGop();
+
+  // ---------- slide 6 : luma vs chroma ----------
+  var chA = document.getElementById("chA"), chB = document.getElementById("chB");
+  var CW = 64, CH = 48, chSrc = scene(CW, CH, 32, 28, 0), chMode = "chroma";
+  paint(chA, chSrc, CW, CH);
+  function renderCh(b){
+    var out = new Uint8ClampedArray(CW*CH*4);
+    var Y = new Float32Array(CW*CH), U = new Float32Array(CW*CH), V = new Float32Array(CW*CH);
+    for (var i = 0; i < CW*CH; i++){
+      var r = chSrc[i*4], g = chSrc[i*4+1], bl = chSrc[i*4+2];
+      Y[i] = 0.299*r + 0.587*g + 0.114*bl; U[i] = bl - Y[i]; V[i] = r - Y[i];
+    }
+    for (var by = 0; by < CH; by += b){
+      for (var bx = 0; bx < CW; bx += b){
+        var sy = 0, su = 0, sv = 0, n = 0;
+        for (var y = by; y < Math.min(by+b, CH); y++) for (var x = bx; x < Math.min(bx+b, CW); x++){
+          var k = y*CW + x; sy += Y[k]; su += U[k]; sv += V[k]; n++;
+        }
+        for (var y2 = by; y2 < Math.min(by+b, CH); y2++) for (var x2 = bx; x2 < Math.min(bx+b, CW); x2++){
+          var k2 = y2*CW + x2;
+          var yy = chMode === "luma" ? sy/n : Y[k2];
+          var uu = chMode === "chroma" ? su/n : U[k2];
+          var vv = chMode === "chroma" ? sv/n : V[k2];
+          var R = yy + vv, B = yy + uu, G = (yy - 0.299*R - 0.114*B) / 0.587;
+          out[k2*4] = R; out[k2*4+1] = G; out[k2*4+2] = B; out[k2*4+3] = 255;
+        }
+      }
+    }
+    paint(chB, out, CW, CH);
+  }
+  var chBlock = document.getElementById("chBlock");
+  function updateCh(){
+    var b = parseInt(chBlock.value, 10);
+    document.getElementById("chBlockLbl").textContent = b; document.getElementById("chBlockLbl2").textContent = b;
+    renderCh(b);
+    var kept = chMode === "chroma" ? (1 + 2/(b*b)) / 3 : (1/(b*b) + 2) / 3;
+    document.getElementById("chStat").textContent = "ponechaných dat: " + fmt(kept*100, 0) + " %";
+    document.getElementById("chCap").textContent = chMode === "chroma" ? "zhrubená barva" : "zhrubený jas";
+    document.getElementById("chNote").textContent = chMode === "chroma"
+      ? "Barvu zhrubíš klidně na bloky 2×2 (to dělá běžné video, „4:2:0“) a oko skoro nic nepozná — a ušetříš polovinu dat."
+      : "Stejně velký zásah do jasu je vidět hned, a přitom ušetří míň dat. Proto se zhrubuje barva, ne jas.";
+  }
+  chBlock.addEventListener("input", updateCh);
+  segGroup("chModes", function(b){ chMode = b.getAttribute("data-mode"); updateCh(); });
+  updateCh();
+
+  // ---------- slide 8 : container ----------
+  var CT = {
+    mp4: [["video (kodek)", "H.264, H.265, AV1"], ["zvuk", "AAC, MP3"], ["titulky a metadata", "ano"]],
+    mkv: [["video (kodek)", "téměř jakýkoli"], ["zvuk", "téměř jakýkoli, i více stop"], ["titulky a metadata", "ano, i více jazyků"]],
+    webm: [["video (kodek)", "VP9, AV1"], ["zvuk", "Opus, Vorbis"], ["titulky a metadata", "ano"]]
+  };
+  function renderCt(k){
+    var body = document.getElementById("ctBody"); body.innerHTML = "";
+    CT[k].forEach(function(r){
+      var tr = document.createElement("tr");
+      r.forEach(function(c){ var td = document.createElement("td"); td.textContent = c; tr.appendChild(td); });
+      body.appendChild(tr);
+    });
+  }
+  segGroup("ctBtns", function(b){ renderCt(b.getAttribute("data-ct")); });
+  renderCt("mp4");
+
+  // ---------- slide 9 : bitrate ----------
+  var TIERS = [
+    {n: "360p", mbps: 1, block: 8}, {n: "480p", mbps: 2.5, block: 5},
+    {n: "720p", mbps: 5, block: 3}, {n: "1080p", mbps: 8, block: 2}, {n: "4K", mbps: 20, block: 1}
+  ];
+  var brScene = scene(64, 40, 32, 22, 0), brCanvas = document.getElementById("brCanvas");
+  function blockAvg(data, W, H, b){
+    var out = new Uint8ClampedArray(W*H*4);
+    for (var by = 0; by < H; by += b) for (var bx = 0; bx < W; bx += b){
+      var s = [0,0,0], n = 0, x, y;
+      for (y = by; y < Math.min(by+b, H); y++) for (x = bx; x < Math.min(bx+b, W); x++){
+        var i = (y*W+x)*4; s[0] += data[i]; s[1] += data[i+1]; s[2] += data[i+2]; n++;
+      }
+      for (y = by; y < Math.min(by+b, H); y++) for (x = bx; x < Math.min(bx+b, W); x++){
+        var j = (y*W+x)*4; out[j] = s[0]/n; out[j+1] = s[1]/n; out[j+2] = s[2]/n; out[j+3] = 255;
+      }
+    }
+    return out;
+  }
+  var brBody = document.getElementById("brBody"), brRows = [];
+  TIERS.forEach(function(t){
+    var tr = document.createElement("tr");
+    [t.n, fmt(t.mbps, 1) + " Mb/s", "≈ " + fmt(t.mbps*0.45, 1) + " GB"].forEach(function(c){
+      var td = document.createElement("td"); td.textContent = c; tr.appendChild(td);
+    });
+    brBody.appendChild(tr); brRows.push(tr);
+  });
+  var brSpeed = document.getElementById("brSpeed");
+  function updateBr(){
+    var sp = parseFloat(brSpeed.value), pick = 0;
+    document.getElementById("brSpeedLbl").textContent = fmt(sp, 1);
+    TIERS.forEach(function(t, i){ if (t.mbps <= sp) pick = i; });
+    brRows.forEach(function(r, i){ r.classList.toggle("is-pick", i === pick); });
+    paint(brCanvas, blockAvg(brScene, 64, 40, TIERS[pick].block), 64, 40);
+  }
+  brSpeed.addEventListener("input", updateBr);
+  updateBr();
+})();
+</script>
+
+</body></html>
+</body>
+</html>
