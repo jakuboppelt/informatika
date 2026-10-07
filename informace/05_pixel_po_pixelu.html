@@ -1,164 +1,12 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Pixel po pixelu</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
-<style>
-  :root{
-    --bg:#F5F8FC;
-    --surface:#FFFFFF;
-    --surface-alt:#E9F1FA;
-    --border:#CADCFC;
-    --ink:#1B2A4A;
-    --ink-muted:#5A6B85;
-    --accent:#C4841F;
-    --accent-strong:#E8A33D;
-    --accent-ink:#3A2A0A;
-    --pause-bg:#1B2A4A;
-    --pause-ink:#F5F8FC;
-    --pause-ink-muted:#AEC0DD;
-    --off:#D7E2F3;
-    --off-ink:#8298BC;
-    --bad:#C6524A;
-    --good:#3FA765;
-    --shadow:0 1px 2px rgba(27,42,74,.06),0 8px 24px rgba(27,42,74,.08);
-    --font-head:'Source Serif 4',Georgia,'Times New Roman',serif;
-    --font-body:'Public Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
-    --font-mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      color-scheme: dark;
-      --bg:#0F1626; --surface:#182444; --surface-alt:#1F2E54; --border:#2E3E66;
-      --ink:#EAF1FB; --ink-muted:#9BB0D1; --accent:#F2B34D; --accent-strong:#F2B34D;
-      --accent-ink:#241A05; --pause-bg:#0B1220; --pause-ink:#EAF1FB; --pause-ink-muted:#8FA3C4;
-      --off:#26325A; --off-ink:#7C8FB4; --bad:#E17A72; --good:#5FC488;
-      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.4);
-    }
-  }
-  :root[data-theme="dark"]{
-    color-scheme: dark;
-    --bg:#0F1626; --surface:#182444; --surface-alt:#1F2E54; --border:#2E3E66;
-    --ink:#EAF1FB; --ink-muted:#9BB0D1; --accent:#F2B34D; --accent-strong:#F2B34D;
-    --accent-ink:#241A05; --pause-bg:#0B1220; --pause-ink:#EAF1FB; --pause-ink-muted:#8FA3C4;
-    --off:#26325A; --off-ink:#7C8FB4; --bad:#E17A72; --good:#5FC488;
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.4);
-  }
-
-  *{box-sizing:border-box;}
-  html,body{height:100%;}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);overflow:hidden;}
-  h1,h2,h3{font-family:var(--font-head);text-wrap:balance;margin:0;}
-  p{margin:0;}
-  button{font-family:inherit;}
-
-  .app{height:100%;display:flex;flex-direction:column;}
-  .stage{flex:1;position:relative;min-height:0;}
-  .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:2.2rem 1.25rem;overflow-y:auto;}
-  .slide-inner{width:100%;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:1.2rem;}
-  .slide[hidden]{display:none;}
-
-  .eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;}
-  .title-slide .eyebrow{color:var(--accent-strong);}
-  h2.slide-title{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:700;line-height:1.15;}
-  .lede{color:var(--ink-muted);font-size:1.02rem;line-height:1.55;max-width:64ch;}
-
-  .title-slide{text-align:center;}
-  .title-slide .slide-inner{align-items:center;gap:1.1rem;}
-  .title-slide h1{font-size:clamp(2rem,6.5vw,3.1rem);font-weight:700;}
-  .title-slide .lede{max-width:48ch;margin:0 auto;}
-
-  /* ---------- pixel grid ---------- */
-  .pixel-grid{display:grid;gap:2px;background:var(--border);border:1px solid var(--border);border-radius:8px;padding:2px;margin:0 auto;}
-  .pixel-cell{width:1.7rem;height:1.7rem;background:var(--surface);cursor:pointer;border:none;padding:0;}
-  .pixel-cell.is-on{background:var(--ink);}
-  @media (max-width:520px){.pixel-cell{width:1.15rem;height:1.15rem;}}
-  .pixel-stats{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;font-family:var(--font-mono);font-size:.88rem;color:var(--ink-muted);}
-  .pixel-stats b{color:var(--ink);}
-
-  /* ---------- sliders / chips ---------- */
-  .lookup{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.2rem;box-shadow:var(--shadow);}
-  .lookup-chips{display:flex;gap:.6rem;flex-wrap:wrap;flex:1;}
-  .chip{font-family:var(--font-mono);font-size:.85rem;background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;color:var(--ink);}
-  .chip b{display:block;font-size:.65rem;font-weight:600;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em;}
-  .swatch{width:3.4rem;height:3.4rem;border-radius:10px;border:1px solid var(--border);flex:none;}
-  input[type=range]{width:100%;accent-color:var(--accent-strong);}
-  .slider-row{display:flex;align-items:center;gap:.7rem;}
-  .slider-row label{width:1.4rem;flex:none;font-family:var(--font-mono);font-weight:700;color:var(--ink-muted);}
-  .slider-col{display:flex;flex-direction:column;gap:.6rem;flex:1;min-width:180px;}
-
-  /* ---------- compare grid ---------- */
-  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-  @media (max-width:520px){.compare-grid{grid-template-columns:1fr;}}
-  .compare-col{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
-  .compare-head{padding:.7rem 1rem;background:var(--surface-alt);font-weight:600;font-size:.85rem;border-bottom:1px solid var(--border);}
-  .compare-row{display:flex;justify-content:space-between;align-items:baseline;padding:.5rem 1rem;font-family:var(--font-mono);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--border);font-size:.9rem;}
-  .compare-row:last-child{border-bottom:none;}
-  .compare-row span:first-child{color:var(--ink-muted);}
-  .compare-row span:last-child{font-weight:600;text-align:right;}
-  .compare-note{font-size:.85rem;color:var(--ink-muted);font-style:italic;}
-  .compare-body{padding:.85rem 1rem;font-size:.92rem;line-height:1.5;color:var(--ink-muted);}
-  .video-link{display:flex;align-items:center;gap:.9rem;text-decoration:none;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.9rem 1.1rem;box-shadow:var(--shadow);transition:border-color .2s ease;}
-  .video-link:hover{border-color:var(--accent-strong);}
-  .video-link-play{flex:none;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--accent-strong);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;}
-  .video-link-text{display:flex;flex-direction:column;gap:.15rem;}
-  .video-link-title{font-weight:600;color:var(--ink);font-size:.98rem;}
-  .video-link-sub{font-family:var(--font-mono);font-size:.76rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.04em;}
-  .compare-body b{color:var(--ink);}
-
-  table.datatable{width:100%;border-collapse:collapse;font-size:.88rem;}
-  table.datatable th,table.datatable td{padding:.55rem .6rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;}
-  table.datatable th{color:var(--ink-muted);font-weight:600;font-size:.72rem;letter-spacing:.03em;text-transform:uppercase;font-family:var(--font-mono);}
-  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px;background:var(--surface);}
-
-  /* ---------- calculator ---------- */
-  .calc-row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;}
-  .calc-btn{appearance:none;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:10px;padding:.5rem .9rem;font-weight:600;font-size:.85rem;}
-  .calc-btn.is-active{background:var(--ink);color:var(--bg);border-color:var(--ink);}
-  .calc-field{display:flex;flex-direction:column;gap:.3rem;}
-  .calc-field label{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;}
-  .calc-field input{width:5.5rem;font-family:var(--font-mono);font-size:1rem;font-weight:700;border:1px solid var(--border);border-radius:8px;padding:.4rem .5rem;background:var(--bg);color:var(--ink);}
-  .formula{font-family:var(--font-mono);font-weight:700;text-align:center;font-size:clamp(.95rem,3.6vw,1.3rem);background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.1rem;color:var(--ink);}
-
-  /* ---------- raster vs vector zoom demo ---------- */
-  .zoom-demo{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;}
-  .zoom-panel{display:flex;flex-direction:column;align-items:center;gap:.5rem;}
-  .zoom-frame{width:9rem;height:9rem;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-  .zoom-frame canvas{image-rendering:pixelated;image-rendering:crisp-edges;}
-  .zoom-frame svg{width:100%;height:100%;}
-  .zoom-panel-label{font-family:var(--font-mono);font-size:.78rem;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.04em;}
-
-  /* ---------- jpeg quality demo ---------- */
-  .jpeg-demo{display:flex;flex-direction:column;align-items:center;gap:.8rem;}
-  .jpeg-frame{width:12rem;height:12rem;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);}
-  .jpeg-frame canvas{width:100%;height:100%;image-rendering:pixelated;}
-
-  /* ---------- pause / question ---------- */
-  .pause-slide{background:var(--pause-bg);color:var(--pause-ink);}
-  .pause-slide .eyebrow{color:var(--accent-strong);}
-  .qmark{width:4.2rem;height:4.2rem;border-radius:50%;background:var(--accent-strong);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:700;font-size:1.9rem;margin:0 auto;}
-  .pause-slide h2{font-size:clamp(1.5rem,5vw,2.2rem);font-style:italic;text-align:center;font-weight:600;}
-  .pause-slide .slide-inner{align-items:center;text-align:center;gap:1.3rem;}
-
-  /* ---------- summary ---------- */
-  .summary-slide{background:var(--pause-bg);color:var(--pause-ink);}
-  .summary-slide .eyebrow{color:var(--accent-strong);}
-  .summary-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.85rem;}
-  .summary-list li{position:relative;padding-left:1.2rem;line-height:1.5;font-size:1rem;}
-  .summary-list li::before{content:"";position:absolute;left:0;top:.55rem;width:.5rem;height:.5rem;border-radius:50%;background:var(--accent-strong);}
-  .summary-list b{color:var(--accent-strong);}
-
-  /* ---------- nav bar ---------- */
-  .navbar{flex:none;display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.7rem 1rem;padding-bottom:calc(.7rem + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--border);}
-  .nav-btn{appearance:none;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:10px;padding:.5rem .9rem;font-weight:600;font-size:.88rem;display:flex;align-items:center;gap:.3rem;flex:none;}
-  .nav-btn:disabled{opacity:.35;cursor:default;}
-  .dots{display:flex;gap:.4rem;flex:1 1 auto;min-width:0;overflow-x:auto;justify-content:center;scrollbar-width:none;-ms-overflow-style:none;}
-  .dots::-webkit-scrollbar{display:none;}
-  .dot{flex:none;width:.5rem;height:.5rem;border-radius:50%;background:var(--off);border:none;cursor:pointer;padding:0;}
-  .dot.is-active{background:var(--accent);width:1.15rem;border-radius:.3rem;transition:width .2s ease;}
-  .counter{flex:none;font-family:var(--font-mono);font-size:.78rem;color:var(--ink-muted);min-width:3.4rem;text-align:center;}
-
-  @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important;}}
-</style>
-
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
 <div class="app">
   <div class="stage" id="stage">
 
@@ -168,7 +16,7 @@
         <div class="eyebrow">Kódování obrazu</div>
         <h1>Co počítač vidí, když se dívá na obrázek?</h1>
         <p class="lede">Žádný "obrázek" — jen mřížku čísel. Zkus si nakreslit vlastní černobílý obrázek kliknutím:</p>
-        <div class="pixel-grid" id="bwGrid" style="grid-template-columns:repeat(12,1fr);"></div>
+        <div class="pixel-grid cols-12" id="bwGrid"></div>
         <div class="pixel-stats">
           <span>pixelů: <b id="bwCount">96</b></span>
           <span>bitů (1 na pixel): <b id="bwBits">96</b></span>
@@ -186,13 +34,13 @@
         <div class="compare-grid">
           <div class="compare-col">
             <div class="compare-head">Málo pixelů</div>
-            <div class="pixel-grid" style="grid-template-columns:repeat(8,1fr);padding:8px;margin:.8rem auto;" id="lowResGrid"></div>
-            <div class="compare-body" style="text-align:center;">8 × 8 = <b>64</b> pixelů</div>
+            <div class="pixel-grid cols-8 framed" id="lowResGrid"></div>
+            <div class="compare-body center">8 × 8 = <b>64</b> pixelů</div>
           </div>
           <div class="compare-col">
             <div class="compare-head">Hodně pixelů</div>
-            <div class="pixel-grid" style="grid-template-columns:repeat(16,1fr);padding:8px;margin:.8rem auto;" id="hiResGrid"></div>
-            <div class="compare-body" style="text-align:center;">16 × 16 = <b>256</b> pixelů</div>
+            <div class="pixel-grid cols-16 framed" id="hiResGrid"></div>
+            <div class="compare-body center">16 × 16 = <b>256</b> pixelů</div>
           </div>
         </div>
         <p class="lede">Běžná fotka z mobilu má klidně 4000 × 3000 = <b>12 milionů</b> pixelů.</p>
@@ -206,7 +54,7 @@
         <h2 class="slide-title">Šedá potřebuje celý bajt</h2>
         <p class="lede">Černá, nebo bílá nestačí, když chceš i odstíny mezi tím. Klasické řešení: 1 bajt (8 bitů) na pixel = 2⁸ = <b>256 odstínů</b> šedi (0 = černá, 255 = bílá).</p>
         <div class="lookup">
-          <div class="swatch" id="graySwatch" style="background:rgb(128,128,128);"></div>
+          <div class="swatch" id="graySwatch"></div>
           <div class="slider-col">
             <input type="range" id="grayRange" min="0" max="255" value="128">
           </div>
@@ -225,7 +73,7 @@
         <h2 class="slide-title">Model RGB — tři bajty na pixel</h2>
         <p class="lede">Barevný pixel je poskládaný ze tří kanálů — <b>R</b>ed, <b>G</b>reen, <b>B</b>lue — každý 0–255. Dohromady: 256×256×256 = přes <b>16,7 milionu</b> barev, ze 3 bajtů (24 bitů) na pixel.</p>
         <div class="lookup">
-          <div class="swatch" id="rgbSwatch" style="background:rgb(196,132,31);"></div>
+          <div class="swatch" id="rgbSwatch"></div>
           <div class="slider-col">
             <div class="slider-row"><label>R</label><input type="range" id="rRange" min="0" max="255" value="196"></div>
             <div class="slider-row"><label>G</label><input type="range" id="gRange" min="0" max="255" value="132"></div>
@@ -244,7 +92,7 @@
       <div class="slide-inner">
         <div class="eyebrow">Vzorec</div>
         <h2 class="slide-title">Kolik to vlastně zabírá místa?</h2>
-        <div class="formula">šířka × výška × bitů na pixel = velikost</div>
+        <div class="formula f-xs">šířka × výška × bitů na pixel = velikost</div>
         <div class="calc-row">
           <div class="calc-field"><label>šířka (px)</label><input type="number" id="calcW" value="100" min="1" max="8000"></div>
           <div class="calc-field"><label>výška (px)</label><input type="number" id="calcH" value="100" min="1" max="8000"></div>
@@ -254,7 +102,7 @@
           <button class="calc-btn" data-bits="8">šedá (8 b)</button>
           <button class="calc-btn is-active" data-bits="24">RGB (24 b)</button>
         </div>
-        <div class="formula" id="calcResult" style="font-size:clamp(1rem,4vw,1.4rem);">30 000 bajtů ≈ 29,3 kB</div>
+        <div class="formula f-sm" id="calcResult">30 000 bajtů ≈ 29,3 kB</div>
       </div>
     </section>
 
@@ -271,7 +119,7 @@
           </div>
           <div class="compare-col">
             <div class="compare-head">Vektor</div>
-            <div class="compare-body">Uloží tvar jako vzorec. Příklad zápisu: <span style="font-family:var(--font-mono);">kruh(střed=50,50; poloměr=20; barva=červená)</span></div>
+            <div class="compare-body">Uloží tvar jako vzorec. Příklad zápisu: <span class="mono">kruh(střed=50,50; poloměr=20; barva=červená)</span></div>
           </div>
         </div>
         <a class="video-link" href="https://www.youtube.com/watch?v=p2thSkOa_Xg" target="_blank" rel="noopener">
@@ -299,12 +147,12 @@
           <div class="zoom-panel">
             <div class="zoom-panel-label">Vektor (SVG)</div>
             <div class="zoom-frame" id="zoomSvgFrame">
-              <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="var(--accent-strong)"/></svg>
+              <svg viewBox="0 0 100 100"><circle class="zoom-circle" cx="50" cy="50" r="38"/></svg>
             </div>
           </div>
         </div>
         <input type="range" id="zoomRange" min="1" max="10" value="1">
-        <p class="lede" style="text-align:center;">Rastr se při přiblížení rozpixeluje — vektor se jen přepočítá znovu a zůstává ostrý.</p>
+        <p class="lede center">Rastr se při přiblížení rozpixeluje — vektor se jen přepočítá znovu a zůstává ostrý.</p>
       </div>
     </section>
 
@@ -333,7 +181,7 @@
         <div class="eyebrow">Problém</div>
         <h2 class="slide-title">Syrová data jsou obří</h2>
         <p class="lede">Fotka z mobilu, řekněme 4000 × 3000 pixelů, v barvě (24 bitů na pixel):</p>
-        <div class="formula">4000 × 3000 × 24 b ≈ <b>36 MB</b> na jednu fotku</div>
+        <div class="formula f-xs">4000 × 3000 × 24 b ≈ <b>36 MB</b> na jednu fotku</div>
         <p class="lede">Bez komprese by ti stovka fotek nezabrala do telefonu. Potřebujeme stejný trik jako u textu — jen aplikovaný na pixely.</p>
       </div>
     </section>
@@ -364,8 +212,8 @@
         <p class="lede">Lidské oko je citlivější na jas než na jemné barevné detaily. JPEG proto bloky pixelů zjednoduší — čím nižší kvalita, tím větší bloky se zprůměrují. Vyzkoušej posuvník:</p>
         <div class="jpeg-demo">
           <div class="jpeg-frame"><canvas id="jpegCanvas" width="64" height="64"></canvas></div>
-          <input type="range" id="jpegRange" min="0" max="100" value="100" style="max-width:20rem;">
-          <p class="lede" style="text-align:center;">kvalita: <b id="jpegQualityLabel">100</b> %</p>
+          <input class="narrow" type="range" id="jpegRange" min="0" max="100" value="100">
+          <p class="lede center">kvalita: <b id="jpegQualityLabel">100</b> %</p>
         </div>
       </div>
     </section>
@@ -376,7 +224,7 @@
         <div class="eyebrow">Otázka k zamyšlení</div>
         <div class="qmark">?</div>
         <h2>PNG, nebo JPEG?</h2>
-        <p class="lede" style="text-align:center;color:var(--pause-ink-muted);margin:0 auto;">Proč se screenshot s textem a grafy ukládá lépe jako PNG, ale fotka z dovolené jako JPEG?</p>
+        <p class="lede">Proč se screenshot s textem a grafy ukládá lépe jako PNG, ale fotka z dovolené jako JPEG?</p>
       </div>
     </section>
 
@@ -394,7 +242,7 @@
     <section class="slide summary-slide" data-index="13" hidden>
       <div class="slide-inner">
         <div class="eyebrow">Shrnutí</div>
-        <h2 class="slide-title" style="color:var(--pause-ink)">Co jsme se naučili</h2>
+        <h2 class="slide-title">Co jsme se naučili</h2>
         <ul class="summary-list">
           <li>Obrázek je pro počítač mřížka <b>pixelů</b> — černobílý potřebuje 1 bit, šedý 1 bajt, barevný (RGB) 3 bajty na pixel.</li>
           <li>Velikost spočítáš vzorcem <b>šířka × výška × bitů na pixel</b>.</li>
@@ -491,7 +339,6 @@
     for (var i = 0; i < cols * rows; i++){
       var c = document.createElement("div");
       c.className = "pixel-cell" + (onIdx.indexOf(i) !== -1 ? " is-on" : "");
-      c.style.width = c.style.height = (cols > 10 ? ".55rem" : "1rem");
       el.appendChild(c);
     }
   }
@@ -564,9 +411,10 @@
   var zoomRange = document.getElementById("zoomRange");
   var zctx = zoomCanvas.getContext("2d");
   // draw a small low-res circle once
-  zctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--surface") || "#fff";
+  var deckStyle = getComputedStyle(document.body);
+  zctx.fillStyle = deckStyle.getPropertyValue("--surface").trim() || "#1C1C1C";
   zctx.fillRect(0,0,16,16);
-  zctx.fillStyle = "#E8A33D";
+  zctx.fillStyle = deckStyle.getPropertyValue("--accent").trim() || "#7DD3E8";
   for (var zy = 0; zy < 16; zy++){
     for (var zx = 0; zx < 16; zx++){
       var dx = zx - 7.5, dy = zy - 7.5;
@@ -637,5 +485,5 @@
   renderJpeg(100);
 })();
 </script>
-
-</body></html>
+</body>
+</html>

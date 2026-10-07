@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cvičení HTML a CSS</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open><summary>Obsah</summary><h2>Úkoly</h2>
+  <ol><li class="grp">HTML</li><li><a href="#u1">1 · Najdi a oprav chyby</a></li><li><a href="#u2">2 · Doplň kostru</a></li><li><a href="#u3">3 · Seznam a odkazy</a></li><li><a href="#u4">4 · Postav tabulku</a></li><li class="grp">CSS</li><li><a href="#u5">5 · První pravidla</a></li><li><a href="#u6">6 · Třída a ID</a></li><li><a href="#u7">7 · Kdo vyhraje?</a></li><li><a href="#u8">8 · Krabice přesně na míru</a></li><li><a href="#u9">9 · Karty vedle sebe</a></li><li class="grp">Bonus</li><li><a href="#u10">10 · Na mobilu pod sebou</a></li></ol></details>
+</aside>
+<main>
+<header class="hero">
+  <p class="back"><a href="../">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Cvičení</p>
+  <h1>Cvičení: HTML a CSS v praxi <span class="t">&lt;/&gt;</span></h1>
+  <p class="lead">Deset krátkých úkolů. Každý má vlastní editor: nahoře píšeš kód, pod ním hned vidíš výsledek. Nic se neinstaluje a nic se nikam neodesílá.</p>
+  <div class="facts">
+    <div><span class="k">Úkolů</span><span class="v">9 + 1 bonus, od nejlehčího</span></div>
+    <div><span class="k">Čas</span><span class="v">zhruba 40 minut</span></div>
+    <div><span class="k">Když se zasekneš</span><span class="v">nejdřív Nápověda, až potom Řešení</span></div>
+  </div>
+</header>
+<section>
+<h2>Jak pracovat</h2>
+<ul>
+  <li>Úkoly dělej popořadě, každý navazuje na předchozí.</li>
+  <li>Výsledek se mění, jak píšeš. Když se něco rozbije, <kbd>Ctrl</kbd> + <kbd>Z</kbd> vrátí poslední změnu a tlačítko <em>Začít znovu</em> vrátí celý úkol na začátek.</li>
+  <li>Řešení si otevři až <strong>po</strong> vlastním pokusu. Je jen jedno z možných, tvoje může vypadat jinak a být správně.</li>
+  <li>Všechno potřebné najdeš ve <a href="03_HTML_a_CSS_studijni_text.html">studijním textu</a>.</li>
+</ul>
+<div class="note warn"><b class="lbl">Neuloží se</b><p>Po zavření nebo obnovení stránky se tvůj kód smaže. Co si chceš nechat, zkopíruj si.</p></div>
+</section>
+<p class="part">HTML</p><section id="u1" class="task">
+<div class="task-head"><h2><span class="num">1</span> Najdi a oprav chyby</h2><span class="time">3 min</span></div>
+<p>Stránka pod editorem vypadá divně: půlka textu je tučná a obrázek nemá popis. V kódu jsou <strong>tři chyby</strong>. Najdi je a oprav.</p>
+<details class="hint"><summary>Nápověda</summary><div><p>Hledej neuzavřenou značku, značky, které se kříží, a obrázek bez atributu, který čte čtečka pro nevidomé.</p></div></details>
+<div class="ed" data-ed>
+  <div class="bar"><label for="ed-u1">Kód</label><span class="btns"><button type="button" class="reset" data-reset>Začít znovu</button></span></div>
+  <textarea id="ed-u1" rows="6" spellcheck="false" autocomplete="off">&lt;h1&gt;Můj oblíbený hrad&lt;/h1&gt;
+&lt;p&gt;Karlštejn založil &lt;strong&gt;Karel IV. v roce 1348.&lt;/p&gt;
+&lt;p&gt;Je to &lt;em&gt;jeden z &lt;strong&gt;nejnavštěvovanějších&lt;/em&gt;&lt;/strong&gt; hradů.&lt;/p&gt;
+&lt;img src="https://picsum.photos/300/150"&gt;</textarea>
+  <div class="prev"><iframe title="Výsledek úkolu 1" sandbox="allow-scripts"></iframe></div>
+</div>
+<details class="sol"><summary>Řešení</summary><div><pre><code class="language-html">&lt;h1&gt;Můj oblíbený hrad&lt;/h1&gt;
+&lt;p&gt;Karlštejn založil &lt;strong&gt;Karel IV.&lt;/strong&gt; v roce 1348.&lt;/p&gt;
+&lt;p&gt;Je to &lt;em&gt;jeden z &lt;strong&gt;nejnavštěvovanějších&lt;/strong&gt;&lt;/em&gt; hradů.&lt;/p&gt;
+&lt;img src="https://picsum.photos/300/150" alt="Fotografie hradu"&gt;</code></pre><p>1) Chyběla koncová značka <code>&lt;/strong&gt;</code>. 2) Značky se křížily: co se otevře poslední (<code>strong</code>), musí se zavřít první. 3) Obrázku chyběl <code>alt</code>.</p></div></details>
+</section><section id="u2" class="task">
+<div class="task-head"><h2><span class="num">2</span> Doplň kostru</h2><span class="time">3 min</span></div>
+<p>Kód funguje, ale chybí mu kostra. Doplň <code>DOCTYPE</code>, <code>html</code> s jazykem, <code>head</code> s kódováním a názvem stránky a <code>body</code>.</p>
+<details class="hint"><summary>Nápověda</summary><div><p>Pořadí: DOCTYPE → html → head (meta charset, title) → body. Obsah stránky patří do body.</p></div></details>
+<div class="ed" data-ed>
+  <div class="bar"><label for="ed-u2">Kód</label><span class="btns"><button type="button" class="reset" data-reset>Začít znovu</button></span></div>
+  <textarea id="ed-u2" rows="6" spellcheck="false" autocomplete="off">&lt;h1&gt;Ahoj&lt;/h1&gt;
+&lt;p&gt;Tohle je stránka bez kostry.&lt;/p&gt;</textarea>
+  <div class="prev"><iframe title="Výsledek úkolu 2" sandbox="allow-scripts"></iframe></div>
+</div>
+<details class="sol"><summary>Řešení</summary><div><pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="cs"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Moje stránka&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Ahoj&lt;/h1&gt;
+  &lt;p&gt;Tohle je stránka bez kostry.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><p>Vzhled se nezmění, prohlížeč je tolerantní. Bez <code>meta charset</code> by se ale mohla rozbít čeština a bez <code>title</code> nemá stránka název v záložce.</p></div></details>
+</section><section id="u3" class="task">
+<div class="task-head"><h2><span class="num">3</span> Seznam a odkazy</h2><span class="time">4 min</span></div>
+<p>Z obyčejného textu udělej <strong>nečíslovaný seznam</strong> tří předmětů. Pod něj přidej odkaz na <code>https://cs.wikipedia.org</code> s textem „Wikipedie“, který se otevře v nové záložce.</p>
+<details class="hint"><summary>Nápověda</summary><div><p>Seznam: ul obaluje, každá položka je li. Odkaz: a s atributy href a target="_blank".</p></div></details>
+<div class="ed" data-ed>
+  <div class="bar"><label for="ed-u3">Kód</label><span class="btns"><button type="button" class="reset" data-reset>Začít znovu</button></span></div>
+  <textarea id="ed-u3" rows="6" spellcheck="false" autocomplete="off">&lt;h2&gt;Moje oblíbené předměty&lt;/h2&gt;
+Informatika, Matematika, Fyzika</textarea>
+  <div class="prev"><iframe title="Výsledek úkolu 3" sandbox="allow-scripts"></iframe></div>
+</div>
+<details class="sol"><summary>Řešení</summary><div><pre><code class="language-html">&lt;h2&gt;Moje oblíbené předměty&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Informatika&lt;/li&gt;
+  &lt;li&gt;Matematika&lt;/li&gt;
+  &lt;li&gt;Fyzika&lt;/li&gt;
+&lt;/ul&gt;
+&lt;a href="https://cs.wikipedia.org" target="_blank"&gt;Wikipedie&lt;/a&gt;</code></pre><p><code>ul</code> je seznam s odrážkami, <code>ol</code> by byl číslovaný. Každá položka musí být v <code>li</code> uvnitř seznamu.</p></div></details>
+</section><section id="u4" class="task">
+<div class="task-head"><h2><span class="num">4</span> Postav tabulku</h2><span class="time">5 min</span></div>
+<p>Převeď rozvrh na tabulku: záhlaví <em>Den | Předmět | Učebna</em> a tři řádky dat. Záhlaví dej do <code>thead</code> a buňky <code>th</code>, data do <code>tbody</code>.</p>
+<details class="hint"><summary>Nápověda</summary><div><p>Řádek je tr. Buňka záhlaví th, buňka dat td. Atribut border="1" na table zatím nahradí CSS, ať tabulku vidíš.</p></div></details>
+<div class="ed" data-ed>
+  <div class="bar"><label for="ed-u4">Kód</label><span class="btns"><button type="button" class="reset" data-reset>Začít znovu</button></span></div>
+  <textarea id="ed-u4" rows="9" spellcheck="false" autocomplete="off">&lt;!-- Rozvrh:
+Pondělí – Informatika – U12
+Úterý – Matematika – 204
+Středa – Fyzika – Laboratoř --&gt;
+
+&lt;table border="1"&gt;
+
+&lt;/table&gt;</textarea>
+  <div class="prev"><iframe title="Výsledek úkolu 4" sandbox="allow-scripts"></iframe></div>
+</div>
+<details class="sol"><summary>Řešení</summary><div><pre><code class="language-html">&lt;table border="1"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;Den&lt;/th&gt;&lt;th&gt;Předmět&lt;/th&gt;&lt;th&gt;Učebna&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Pondělí&lt;/td&gt;&lt;td&gt;Informatika&lt;/td&gt;&lt;td&gt;U12&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Úterý&lt;/td&gt;&lt;td&gt;Matematika&lt;/td&gt;&lt;td&gt;204&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Středa&lt;/td&gt;&lt;td&gt;Fyzika&lt;/td&gt;&lt;td&gt;Laboratoř&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre><p>Tabulky jsou na data, ne na rozložení stránky. <code>th</code> prohlížeč sám zobrazí tučně a na střed.</p></div></details>
+</section><p class="part">CSS</p><section id="u5" class="task">
+<div class="task-head"><h2><span class="num">5</span> První pravidla</h2><span class="time">4 min</span></div>
+<p>V <code>&lt;style&gt;</code> napiš pravidla tak, aby: celá stránka měla písmo <code>Arial</code> a světle šedé pozadí <code>#f2f2f2</code>, nadpis byl tmavě modrý (<code>navy</code>) a na střed.</p>
+<details class="hint"><summary>Nápověda</summary><div><p>Selektor body pro celou stránku, h1 pro nadpis. Vlastnosti font-family, background, color, text-align.</p></div></details>
+<div class="ed" data-ed>
+  <div class="bar"><label for="ed-u5">Kód</label><span class="btns"><button type="button" class="reset" data-reset>Začít znovu</button></span></div>
+  <textarea id="ed-u5" rows="7" spellcheck="false" autocomplete="off">&lt;style&gt;
+
+&lt;/style&gt;
+
+&lt;h1&gt;Výlet na Sněžku&lt;/h1&gt;
+&lt;p&gt;V sobotu jsme vyrazili na nejvyšší horu Česka.&lt;/p&gt;</textarea>
+  <div class="prev"><iframe title="Výsledek úkolu 5" sandbox="allow-scripts"></iframe></div>
+</div>
+<details class="sol"><summary>Řešení</summary><div><pre><code class="language-html">&lt;style&gt;
+  body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+  }
+  h1 {
+    color: navy;
+    text-align: center;
+  }
+&lt;/style&gt;</code></pre><p>Písmo stačí nastavit na <code>body</code>, zdědí ho všechny prvky uvnitř. Za čárkou je záložní písmo pro případ, že Arial chybí.</p></div></details>
+</section><section id="u6" class="task">
+<div class="task-head"><h2><span class="num">6</span> Třída a ID</h2><span class="time">4 min</span></div>
+<p>Zvýrazni jen <strong>druhý a čtvrtý</strong> odstavec žlutým pozadím (použij třídu). Poslední odstavec udělej červeně a kurzívou (použij ID). Ostatní odstavce se nesmí změnit.</p>
+<details class="hint"><summary>Nápověda</summary><div><p>V HTML: class="…" a id="…". V CSS: třída s tečkou, ID s mřížkou.</p></div></details>
+<div class="ed" data-ed>
+  <div class="bar"><label for="ed-u6">Kód</label><span class="btns"><button type="button" class="reset" data-reset>Začít znovu</button></span></div>
+  <textarea id="ed-u6" rows="10" spellcheck="false" autocomplete="off">&lt;style&gt;
+
+&lt;/style&gt;
+
+&lt;p&gt;První odstavec.&lt;/p&gt;
+&lt;p&gt;Druhý odstavec.&lt;/p&gt;
+&lt;p&gt;Třetí odstavec.&lt;/p&gt;
+&lt;p&gt;Čtvrtý odstavec.&lt;/p&gt;
+&lt;p&gt;Poslední odstavec.&lt;/p&gt;</textarea>
+  <div class="prev"><iframe title="Výsledek úkolu 6" sandbox="allow-scripts"></iframe></div>
+</div>
+<details class="sol"><summary>Řešení</summary><div><pre><code class="language-html">&lt;style&gt;
+  .zvyrazneny { background: yellow; }
+  #posledni   { color: red; font-style: italic; }
+&lt;/style&gt;
+
+&lt;p&gt;První odstavec.&lt;/p&gt;
+&lt;p class="zvyrazneny"&gt;Druhý odstavec.&lt;/p&gt;
+&lt;p&gt;Třetí odstavec.&lt;/p&gt;
+&lt;p class="zvyrazneny"&gt;Čtvrtý odstavec.&lt;/p&gt;
+&lt;p id="posledni"&gt;Poslední odstavec.&lt;/p&gt;</code></pre><p>Třídu může mít víc prvků, ID jen jeden. Proto je třída na dva odstavce a ID na jeden.</p></div></details>
+</section><section id="u7" class="task">
+<div class="task-head"><h2><span class="num">7</span> Kdo vyhraje?</h2><span class="time">4 min</span></div>
+<p><strong>Nejdřív bez spouštění tipni</strong>, jakou barvu bude mít text. Pak klikni na <em>Ukázat výsledek</em>. Potom uprav <em>jen CSS</em> tak, aby byl text modrý, a nepoužij <code>!important</code>.</p>
+<details class="hint"><summary>Nápověda</summary><div><p>Specificita: ID › třída › prvek. Aby vyhrála modrá, musí mít její selektor vyšší specificitu než ten se zelenou.</p></div></details>
+<div class="ed" data-ed>
+  <div class="bar"><label for="ed-u7">Kód</label><span class="btns"><button type="button" class="reset" data-reset>Začít znovu</button></span></div>
+  <textarea id="ed-u7" rows="8" spellcheck="false" autocomplete="off">&lt;style&gt;
+  #zprava     { color: green; }
+  .dulezita   { color: blue; }
+  p           { color: red; }
+&lt;/style&gt;
+
+&lt;p id="zprava" class="dulezita"&gt;Jakou mám barvu?&lt;/p&gt;</textarea>
+  <div class="revealbox"><button type="button" class="reset" data-reveal>Ukázat výsledek</button></div><div class="prev" hidden><iframe title="Výsledek úkolu 7" sandbox="allow-scripts"></iframe></div>
+</div>
+<details class="sol"><summary>Řešení</summary><div><pre><code class="language-html">&lt;style&gt;
+  #zprava           { color: green; }
+  #zprava.dulezita  { color: blue; }   /* ID + třída = 1-1-0 &gt; 1-0-0 */
+  p                 { color: red; }
+&lt;/style&gt;</code></pre><p>Text je zelený, protože ID (1-0-0) přebije třídu (0-1-0) i prvek (0-0-1), bez ohledu na pořadí. Modrá vyhraje, když jí dáš selektor se stejným ID a navíc třídou. Jiné řešení: smazat pravidlo s ID.</p></div></details>
+</section><section id="u8" class="task">
+<div class="task-head"><h2><span class="num">8</span> Krabice přesně na míru</h2><span class="time">5 min</span></div>
+<p>Krabice má mít <code>padding: 20px</code> a rámeček <code>5px</code>, ale celková šířka na obrazovce má být <strong>přesně 300 px</strong>, stejně jako šedý pruh nad ní. Nastav <code>width</code>. Pak zkus druhý způsob s <code>box-sizing</code>.</p>
+<details class="hint"><summary>Nápověda</summary><div><p>Celková šířka = width + 2 · padding + 2 · border. Nebo box-sizing: border-box, pak width zahrnuje padding i rámeček.</p></div></details>
+<div class="ed" data-ed>
+  <div class="bar"><label for="ed-u8">Kód</label><span class="btns"><button type="button" class="reset" data-reset>Začít znovu</button></span></div>
+  <textarea id="ed-u8" rows="12" spellcheck="false" autocomplete="off">&lt;style&gt;
+  .pravitko { width: 300px; height: 8px; background: #bbb; }
+  .krabice {
+    padding: 20px;
+    border: 5px solid navy;
+    width: 300px;   /* uprav */
+  }
+&lt;/style&gt;
+
+&lt;div class="pravitko"&gt;&lt;/div&gt;
+&lt;div class="krabice"&gt;Jsem krabice.&lt;/div&gt;</textarea>
+  <div class="prev"><iframe title="Výsledek úkolu 8" sandbox="allow-scripts"></iframe></div>
+</div>
+<details class="sol"><summary>Řešení</summary><div><pre><code class="language-css">.krabice {
+  padding: 20px;
+  border: 5px solid navy;
+  width: 250px;   /* 250 + 2·20 + 2·5 = 300 */
+}
+
+/* nebo: */
+.krabice {
+  box-sizing: border-box;
+  padding: 20px;
+  border: 5px solid navy;
+  width: 300px;
+}</code></pre><p>Výchozí <code>content-box</code> přičítá padding a rámeček k šířce. <code>border-box</code> je do ní započítá, proto se mu v praxi dává přednost.</p></div></details>
+</section><section id="u9" class="task">
+<div class="task-head"><h2><span class="num">9</span> Karty vedle sebe</h2><span class="time">5 min</span></div>
+<p>Postav tři karty <strong>vedle sebe</strong> s mezerou 16 px a vycentruj je na stránce. Použij Flexbox na prvek, který karty obaluje.</p>
+<details class="hint"><summary>Nápověda</summary><div><p>display: flex dáváš rodiči (.rada), ne kartám. Mezera: gap. Na střed: justify-content: center.</p></div></details>
+<div class="ed" data-ed>
+  <div class="bar"><label for="ed-u9">Kód</label><span class="btns"><button type="button" class="reset" data-reset>Začít znovu</button></span></div>
+  <textarea id="ed-u9" rows="20" spellcheck="false" autocomplete="off">&lt;style&gt;
+  .karta {
+    width: 120px;
+    padding: 16px;
+    background: white;
+    border: 2px solid navy;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .rada {
+    /* doplň */
+  }
+&lt;/style&gt;
+
+&lt;div class="rada"&gt;
+  &lt;div class="karta"&gt;HTML&lt;/div&gt;
+  &lt;div class="karta"&gt;CSS&lt;/div&gt;
+  &lt;div class="karta"&gt;JS&lt;/div&gt;
+&lt;/div&gt;</textarea>
+  <div class="prev"><iframe title="Výsledek úkolu 9" sandbox="allow-scripts"></iframe></div>
+</div>
+<details class="sol"><summary>Řešení</summary><div><pre><code class="language-css">.rada {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}</code></pre><p>Flexbox se nastavuje <strong>rodiči</strong> a ten pak rozmisťuje své děti. Zkus i <code>space-between</code> nebo <code>flex-direction: column</code>.</p></div></details>
+</section><p class="part">Bonus</p><section id="u10" class="task">
+<div class="task-head"><h2><span class="num">10</span> Na mobilu pod sebou</h2><span class="time">4 min</span></div>
+<p>Vezmi karty z minulého úkolu. Přidej <strong>media query</strong>, aby na obrazovce užší než 500 px byly karty pod sebou. Ověř to přepínačem šířky náhledu (320 px a 700 px).</p>
+<details class="hint"><summary>Nápověda</summary><div><p>@media (max-width: 500px) { … } a uvnitř pro .rada změň flex-direction.</p></div></details>
+<div class="ed" data-ed>
+  <div class="bar"><label for="ed-u10">Kód</label><span class="btns"><button type="button" class="reset w" data-w="narrow" aria-pressed="false">320 px</button><button type="button" class="reset w" data-w="wide" aria-pressed="true">700 px</button><button type="button" class="reset" data-reset>Začít znovu</button></span></div>
+  <textarea id="ed-u10" rows="13" spellcheck="false" autocomplete="off">&lt;style&gt;
+  .karta { width: 120px; padding: 16px; border: 2px solid navy; border-radius: 8px; text-align: center; }
+  .rada { display: flex; gap: 16px; justify-content: center; }
+
+  /* doplň media query */
+&lt;/style&gt;
+
+&lt;div class="rada"&gt;
+  &lt;div class="karta"&gt;HTML&lt;/div&gt;
+  &lt;div class="karta"&gt;CSS&lt;/div&gt;
+  &lt;div class="karta"&gt;JS&lt;/div&gt;
+&lt;/div&gt;</textarea>
+  <div class="prev wide"><iframe title="Výsledek úkolu 10" sandbox="allow-scripts"></iframe></div>
+</div>
+<details class="sol"><summary>Řešení</summary><div><pre><code class="language-css">@media (max-width: 500px) {
+  .rada {
+    flex-direction: column;
+    align-items: center;
+  }
+}</code></pre><p>Media query platí jen za podmínky. Tady se pravidla uvnitř uplatní, jen když je okno užší než 500 px. Takhle se dělá responzivní web.</p></div></details>
+</section>
+<p class="foot">Hotovo? Pusť se do <a href="03_ukol.html">samostatného úkolu</a>, ve kterém postavíš vlastní stránku. Teorie je ve <a href="03_HTML_a_CSS_studijni_text.html">studijním textu</a>.</p>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  Array.prototype.slice.call(document.querySelectorAll('[data-ed]')).forEach(function (ed) {
+    var ta = ed.querySelector('textarea'), fr = ed.querySelector('iframe'), prev = ed.querySelector('.prev');
+    var initial = ta.value, t;
+    function render() { fr.srcdoc = ta.value; }
+    ta.addEventListener('input', function () { clearTimeout(t); t = setTimeout(render, 250); });
+    ed.querySelector('[data-reset]').addEventListener('click', function () { ta.value = initial; render(); });
+    Array.prototype.slice.call(ed.querySelectorAll('button.w')).forEach(function (b) {
+      b.addEventListener('click', function () {
+        prev.classList.remove('narrow', 'wide'); prev.classList.add(b.getAttribute('data-w'));
+        Array.prototype.slice.call(ed.querySelectorAll('button.w')).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      });
+    });
+    var rv = ed.querySelector('[data-reveal]');
+    if (rv) rv.addEventListener('click', function () { prev.hidden = false; rv.parentNode.hidden = true; render(); });
+    render();
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

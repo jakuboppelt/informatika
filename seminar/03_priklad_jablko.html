@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jablko ve vektoru</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open><summary>Obsah</summary><h2>Postup</h2>
+  <ol><li class="grp">Úvod</li><li><a href="#proc">Proč vektor</a></li><li><a href="#nastroje">Nástroje</a></li><li><a href="#priprava">Příprava</a></li><li class="grp">Kroky</li><li><a href="#k1">1 · Základ je kruh</a></li><li><a href="#k2">2 · Tvar jablka</a></li><li><a href="#k3">3 · Barva výplně</a></li><li><a href="#k4">4 · Přechod</a></li><li><a href="#k5">5 · Stopka</a></li><li><a href="#k6">6 · List nástrojem Bezier</a></li><li><a href="#k7">7 · Odlesk</a></li><li><a href="#k8">8 · Stín</a></li><li><a href="#k9">9 · Seskup a exportuj</a></li><li class="grp">Na konec</li><li><a href="#kod">Pod kapotou</a></li><li><a href="#kontrola">Zkontroluj se</a></li><li><a href="#vyzvy">Výzvy navíc</a></li></ol></details>
+</aside>
+<main>
+<header class="hero">
+  <p class="back"><a href="../">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Příklad</p>
+  <h1>Příklad: Jablko ve vektoru <span class="t">&lt;svg&gt;</span></h1>
+  <p class="lead">Z jednoho kruhu uděláš v Boxy SVG jablko se stopkou, listem, odleskem a stínem. Cestou se naučíš nástroje, které budeš potřebovat na logo, ikonu nebo ilustraci do ročníkové práce.</p>
+  <div class="facts">
+    <div><span class="k">Čas</span><span class="v">45–60 minut</span></div>
+    <div><span class="k">Úroveň</span><span class="v">začátečník</span></div>
+    <div><span class="k">Odevzdáš</span><span class="v">jablko.svg a jablko.png</span></div>
+  </div>
+</header>
+
+<section id="proc">
+<h2>Proč vektor?</h2>
+<div class="themes">
+  <div><b>Rastr (PNG, JPG)</b><span>Obrázek je mřížka pixelů. Když ho zvětšíš, uvidíš kostičky a rozmazané hrany.</span></div>
+  <div><b>Vektor (SVG)</b><span>Obrázek je popis tvarů: kruh se středem a poloměrem, křivka s body. Zvětšíš ho na billboard a hrany zůstanou ostré.</span></div>
+  <div><b>SVG je text</b><span>Boxy SVG ti ho kreslí myší, ale kdykoli se můžeš podívat, jaký kód vzniká. Na konci to uděláme.</span></div>
+</div>
+</section>
+
+<section id="nastroje">
+<h2>Nástroje, které použiješ</h2>
+<div class="tbl"><table>
+  <thead><tr><th>Nástroj / panel</th><th>K čemu slouží</th></tr></thead>
+  <tbody>
+    <tr><td><span class="ui">Ellipse</span></td><td>Kruhy a elipsy (se Shiftem dokonalý kruh)</td></tr>
+    <tr><td><span class="ui">Rectangle</span></td><td>Obdélníky, i se zaoblenými rohy</td></tr>
+    <tr><td><span class="ui">Bezier</span></td><td>Vlastní křivky klikáním a tažením</td></tr>
+    <tr><td><span class="ui">Edit</span></td><td>Posouvání uzlů a úchytů křivky</td></tr>
+    <tr><td><span class="ui">Fill</span> / <span class="ui">Stroke</span></td><td>Výplň a obrys: barva, přechod, tloušťka</td></tr>
+    <tr><td><span class="ui">Geometry</span></td><td>Přesná poloha a velikost v číslech</td></tr>
+    <tr><td><span class="ui">Elements</span></td><td>Seznam objektů (vrstvy) a jejich kód</td></tr>
+  </tbody>
+</table></div>
+<div class="note mat"><b class="lbl">Tip</b><p>Názvy menu se mezi verzemi trochu liší. Když něco nenajdeš, klikni pravým tlačítkem na objekt nebo použij vyhledávání příkazů v aplikaci.</p></div>
+</section>
+
+<section id="priprava">
+<h2>Příprava</h2>
+<ol>
+  <li>Otevři <a href="https://boxy-svg.com" target="_blank" rel="noopener">boxy-svg.com</a> a spusť aplikaci.</li>
+  <li>Vytvoř nový dokument a v panelu <span class="ui">Geometry</span> nastav velikost plátna <code>400 × 400</code>.</li>
+  <li>Hned ho ulož jako <code>jablko.svg</code>. Ukládej průběžně.</li>
+</ol>
+</section>
+
+<section class="task" id="k1">
+<div class="task-head"><span class="num">Krok 1</span><h2>Základ je kruh</h2></div>
+<div class="step">
+  <div class="preview">
+    <svg viewBox="0 0 200 200" role="img" aria-label="Kruh se čtyřmi uzly">
+      <circle cx="100" cy="107" r="70" fill="#c9ced6" stroke="#5b6472" stroke-width="1.5"/>
+      <g fill="#ffffff" stroke="#0e9fb5" stroke-width="2">
+        <rect x="96" y="33" width="8" height="8"/><rect x="166" y="103" width="8" height="8"/>
+        <rect x="96" y="173" width="8" height="8"/><rect x="26" y="103" width="8" height="8"/>
+      </g>
+    </svg>
+  </div>
+  <div>
+    <ol>
+      <li>Vyber nástroj <span class="ui">Ellipse</span>.</li>
+      <li>Táhni myší po plátně a drž <kbd>Shift</kbd>, ať vznikne kruh, ne elipsa.</li>
+      <li>V panelu <span class="ui">Geometry</span> dolaď střed <code>cx 200, cy 214</code> a poloměr <code>r 140</code>.</li>
+    </ol>
+    <p class="small-muted">Jablko není nic jiného než trochu pomačkaný kruh. Spodní část plátna necháváme volnou pro stín.</p>
+  </div>
+</div>
+</section>
+
+<section class="task" id="k2">
+<div class="task-head"><span class="num">Krok 2</span><h2>Ze kruhu tvar jablka</h2></div>
+<div class="step">
+  <div class="preview">
+    <svg viewBox="0 0 200 200" role="img" aria-label="Kruh upravený do tvaru jablka">
+      <path d="M100 62 C120 40 168 50 168 104 C168 150 130 172 100 172 C70 172 32 150 32 104 C32 50 80 40 100 62 Z" fill="#c9ced6" stroke="#5b6472" stroke-width="1.5"/>
+      <g stroke="#0e9fb5" stroke-width="1.2"><line x1="100" y1="62" x2="120" y2="40"/><line x1="100" y1="62" x2="80" y2="40"/></g>
+      <g fill="#0e9fb5"><circle cx="120" cy="40" r="3.2"/><circle cx="80" cy="40" r="3.2"/></g>
+      <g fill="#ffffff" stroke="#0e9fb5" stroke-width="2">
+        <rect x="96" y="58" width="8" height="8"/><rect x="164" y="100" width="8" height="8"/>
+        <rect x="96" y="168" width="8" height="8"/><rect x="28" y="100" width="8" height="8"/>
+      </g>
+    </svg>
+  </div>
+  <div>
+    <ol>
+      <li>Klikni pravým na kruh a zvol <span class="ui">Convert to Path</span>. Z kruhu se stane křivka se 4 uzly.</li>
+      <li>Vyber nástroj <span class="ui">Edit</span>. Uzly se ukážou jako malé čtverečky.</li>
+      <li>Horní uzel stáhni dolů zhruba o <code>50 px</code>. Vznikne důlek pro stopku.</li>
+      <li>Úchyty horního uzlu (kulaté body na čárkách) natoč šikmo nahoru, každý na svou stranu. Uzel musí být <strong>ostrý</strong>, úchyty se nehýbou spolu.</li>
+      <li>Boční uzly posuň mírně ven, dolní uzel trochu nahoru. Jablko je širší než vyšší.</li>
+    </ol>
+  </div>
+</div>
+<div class="note warn"><b class="lbl">Pozor</b><p>Pokud se při tažení jednoho úchytu hýbe i druhý, je uzel hladký. Přepni ho v nastavení nástroje Edit na ostrý (cusp / corner).</p></div>
+</section>
+
+<section class="task" id="k3">
+<div class="task-head"><span class="num">Krok 3</span><h2>Barva výplně</h2></div>
+<div class="step">
+  <div class="preview">
+    <svg viewBox="0 0 200 200" role="img" aria-label="Červené jablko bez obrysu">
+      <path d="M100 62 C120 40 168 50 168 104 C168 150 130 172 100 172 C70 172 32 150 32 104 C32 50 80 40 100 62 Z" fill="#d62839"/>
+    </svg>
+  </div>
+  <div>
+    <ol>
+      <li>S vybraným jablkem otevři panel <span class="ui">Fill</span>.</li>
+      <li>Zvol plnou barvu <span class="swatch sw-red"></span><code>#d62839</code>.</li>
+      <li>V panelu <span class="ui">Stroke</span> obrys vypni (none).</li>
+    </ol>
+    <p class="small-muted">Barvy se v SVG zapisují šestnáctkově jako <code>#RRGGBB</code>. Znáš to z materiálu Pixel po pixelu.</p>
+  </div>
+</div>
+</section>
+
+<section class="task" id="k4">
+<div class="task-head"><span class="num">Krok 4</span><h2>Přechod dodá objem</h2></div>
+<div class="step">
+  <div class="preview">
+    <svg viewBox="0 0 200 200" role="img" aria-label="Jablko s kruhovým přechodem">
+      <defs><radialGradient id="g4" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#ff7a7a"/><stop offset="1" stop-color="#a3121f"/></radialGradient></defs>
+      <path d="M100 62 C120 40 168 50 168 104 C168 150 130 172 100 172 C70 172 32 150 32 104 C32 50 80 40 100 62 Z" fill="url(#g4)"/>
+    </svg>
+  </div>
+  <div>
+    <ol>
+      <li>V panelu <span class="ui">Fill</span> přepni typ z plné barvy na <span class="ui">Radial gradient</span>.</li>
+      <li>První zarážku nastav na světlou <span class="swatch sw-redlight"></span><code>#ff7a7a</code>, druhou na tmavou <span class="swatch sw-reddark"></span><code>#a3121f</code>.</li>
+      <li>Na plátně přetáhni střed přechodu vlevo nahoru. Tam bude dopadat světlo.</li>
+    </ol>
+    <p class="small-muted">Plochá barva působí jako nálepka. Přechod ze světlé do tmavé napodobí kouli osvětlenou zleva shora.</p>
+  </div>
+</div>
+</section>
+
+<section class="task" id="k5">
+<div class="task-head"><span class="num">Krok 5</span><h2>Stopka</h2></div>
+<div class="step">
+  <div class="preview">
+    <svg viewBox="0 0 200 200" role="img" aria-label="Jablko se stopkou">
+      <defs><radialGradient id="g5" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#ff7a7a"/><stop offset="1" stop-color="#a3121f"/></radialGradient></defs>
+      <rect x="96" y="26" width="8" height="42" rx="4" fill="#6b4226" transform="rotate(12 100 66)"/>
+      <path d="M100 62 C120 40 168 50 168 104 C168 150 130 172 100 172 C70 172 32 150 32 104 C32 50 80 40 100 62 Z" fill="url(#g5)"/>
+    </svg>
+  </div>
+  <div>
+    <ol>
+      <li>Nástrojem <span class="ui">Rectangle</span> nakresli úzký obdélník, asi <code>16 × 84</code>.</li>
+      <li>Zaobli rohy na maximum: v <span class="ui">Geometry</span> poloměr rohu <code>rx 8</code>.</li>
+      <li>Barva výplně <span class="swatch sw-brown"></span><code>#6b4226</code>, bez obrysu.</li>
+      <li>Pootoč ji o <code>10–15°</code> doprava (úchyt rotace nad objektem).</li>
+      <li>Posuň ji do důlku a dej ji <strong>pod</strong> jablko: pravým tlačítkem <span class="ui">Lower</span> / <span class="ui">Send to back</span>, nebo přetáhni v panelu <span class="ui">Elements</span>.</li>
+    </ol>
+  </div>
+</div>
+</section>
+
+<section class="task" id="k6">
+<div class="task-head"><span class="num">Krok 6</span><h2>List nástrojem Bezier</h2></div>
+<div class="step">
+  <div class="preview">
+    <svg viewBox="0 0 200 200" role="img" aria-label="Jablko se stopkou a listem">
+      <defs><radialGradient id="g6" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#ff7a7a"/><stop offset="1" stop-color="#a3121f"/></radialGradient></defs>
+      <rect x="96" y="26" width="8" height="42" rx="4" fill="#6b4226" transform="rotate(12 100 66)"/>
+      <path d="M100 62 C120 40 168 50 168 104 C168 150 130 172 100 172 C70 172 32 150 32 104 C32 50 80 40 100 62 Z" fill="url(#g6)"/>
+      <path d="M108 48 C114 26 140 20 158 28 C148 46 128 56 108 48 Z" fill="#4caf50"/>
+      <path d="M110 47 C126 40 140 34 154 30" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round"/>
+      <g fill="#ffffff" stroke="#0e9fb5" stroke-width="2"><rect x="104" y="44" width="8" height="8"/><rect x="154" y="24" width="8" height="8"/></g>
+    </svg>
+  </div>
+  <div>
+    <ol>
+      <li>Vyber nástroj <span class="ui">Bezier</span>.</li>
+      <li>U stopky <strong>klikni a táhni</strong> nahoru doprava. Tažením vznikají zakřivené úseky, pouhým klikem rovné.</li>
+      <li>Na špičce listu znovu klikni a táhni dolů. Tvar se ohne.</li>
+      <li>Klikni na první bod. Křivka se uzavře.</li>
+      <li>Výplň <span class="swatch sw-green"></span><code>#4caf50</code>, bez obrysu. Nástrojem <span class="ui">Edit</span> dolaď tvar.</li>
+      <li><strong>Bonus:</strong> žilka listu jako otevřená křivka bez výplně s tmavě zeleným obrysem <code>2 px</code>.</li>
+    </ol>
+  </div>
+</div>
+<div class="note tip"><b class="lbl">Neboj se</b><p>List nemusí vyjít napoprvé. Bezier je nejtěžší nástroj celého příkladu. Klidně ho nakresli třikrát a nech si ten nejhezčí.</p></div>
+</section>
+
+<section class="task" id="k7">
+<div class="task-head"><span class="num">Krok 7</span><h2>Odlesk</h2></div>
+<div class="step">
+  <div class="preview">
+    <svg viewBox="0 0 200 200" role="img" aria-label="Jablko s odleskem">
+      <defs><radialGradient id="g7" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#ff7a7a"/><stop offset="1" stop-color="#a3121f"/></radialGradient></defs>
+      <rect x="96" y="26" width="8" height="42" rx="4" fill="#6b4226" transform="rotate(12 100 66)"/>
+      <path d="M100 62 C120 40 168 50 168 104 C168 150 130 172 100 172 C70 172 32 150 32 104 C32 50 80 40 100 62 Z" fill="url(#g7)"/>
+      <path d="M108 48 C114 26 140 20 158 28 C148 46 128 56 108 48 Z" fill="#4caf50"/>
+      <path d="M110 47 C126 40 140 34 154 30" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="62" cy="92" rx="9" ry="20" fill="#ffffff" opacity="0.5" transform="rotate(25 62 92)"/>
+    </svg>
+  </div>
+  <div>
+    <ol>
+      <li>Nástrojem <span class="ui">Ellipse</span> nakresli úzkou elipsu vlevo nahoře, tam kde je přechod nejsvětlejší.</li>
+      <li>Výplň <span class="swatch sw-white"></span><code>#ffffff</code>, bez obrysu.</li>
+      <li>Průhlednost (opacity) nastav na <code>50 %</code>.</li>
+      <li>Pootoč ji tak, aby kopírovala zakřivení jablka.</li>
+    </ol>
+    <p class="small-muted">Malý detail, velký rozdíl. Jablko teď vypadá lesklé.</p>
+  </div>
+</div>
+</section>
+
+<section class="task" id="k8">
+<div class="task-head"><span class="num">Krok 8</span><h2>Stín pod jablkem</h2></div>
+<div class="step">
+  <div class="preview">
+    <svg viewBox="0 0 200 200" role="img" aria-label="Jablko se stínem">
+      <defs><radialGradient id="g8" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#ff7a7a"/><stop offset="1" stop-color="#a3121f"/></radialGradient></defs>
+      <ellipse cx="100" cy="182" rx="58" ry="8" fill="#000000" opacity="0.22"/>
+      <rect x="96" y="26" width="8" height="42" rx="4" fill="#6b4226" transform="rotate(12 100 66)"/>
+      <path d="M100 62 C120 40 168 50 168 104 C168 150 130 172 100 172 C70 172 32 150 32 104 C32 50 80 40 100 62 Z" fill="url(#g8)"/>
+      <path d="M108 48 C114 26 140 20 158 28 C148 46 128 56 108 48 Z" fill="#4caf50"/>
+      <path d="M110 47 C126 40 140 34 154 30" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="62" cy="92" rx="9" ry="20" fill="#ffffff" opacity="0.5" transform="rotate(25 62 92)"/>
+    </svg>
+  </div>
+  <div>
+    <ol>
+      <li>Pod jablkem nakresli plochou elipsu, asi <code>230 × 32</code>.</li>
+      <li>Výplň <span class="swatch sw-black"></span><code>#000000</code>, průhlednost <code>20–25 %</code>.</li>
+      <li>Pošli ji úplně dospod (<span class="ui">Send to back</span>).</li>
+    </ol>
+    <p class="small-muted">Stín jablko položí na stůl. Bez něj se vznáší ve vzduchu.</p>
+  </div>
+</div>
+</section>
+
+<section class="task" id="k9">
+<div class="task-head"><span class="num">Krok 9</span><h2>Seskup, ulož, exportuj</h2></div>
+<div class="step">
+  <div class="preview">
+    <svg viewBox="0 0 200 200" role="img" aria-label="Hotové jablko">
+      <defs><radialGradient id="g9" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="#ff7a7a"/><stop offset="1" stop-color="#a3121f"/></radialGradient></defs>
+      <ellipse cx="100" cy="182" rx="58" ry="8" fill="#000000" opacity="0.22"/>
+      <rect x="96" y="26" width="8" height="42" rx="4" fill="#6b4226" transform="rotate(12 100 66)"/>
+      <path d="M100 62 C120 40 168 50 168 104 C168 150 130 172 100 172 C70 172 32 150 32 104 C32 50 80 40 100 62 Z" fill="url(#g9)"/>
+      <path d="M108 48 C114 26 140 20 158 28 C148 46 128 56 108 48 Z" fill="#4caf50"/>
+      <path d="M110 47 C126 40 140 34 154 30" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="62" cy="92" rx="9" ry="20" fill="#ffffff" opacity="0.5" transform="rotate(25 62 92)"/>
+    </svg>
+  </div>
+  <div>
+    <ol>
+      <li>Označ všechny části (<kbd>Ctrl</kbd> + <kbd>A</kbd>) a seskup je (<kbd>Ctrl</kbd> + <kbd>G</kbd>). Jablko teď posouváš jako jeden celek.</li>
+      <li>V panelu <span class="ui">Elements</span> přejmenuj skupinu na <code>jablko</code>.</li>
+      <li>Ulož jako <code>jablko.svg</code>.</li>
+      <li>Přes <span class="ui">File → Export</span> vytvoř <code>jablko.png</code>, třeba 800 × 800 px.</li>
+    </ol>
+  </div>
+</div>
+<div class="note tip"><b class="lbl">Hotovo</b><p>Zvětši SVG i PNG na 400 % a porovnej hrany. Teď víš, proč se loga dělají ve vektoru.</p></div>
+</section>
+
+<section id="kod">
+<h2>Podívej se pod kapotu</h2>
+<p>Otevři panel <span class="ui">Elements</span>, nebo <code>jablko.svg</code> v Poznámkovém bloku. Celé jablko je pár řádků textu. Najdi v kódu:</p>
+<div class="tbl"><table>
+  <thead><tr><th>Značka</th><th>Co to je</th></tr></thead>
+  <tbody>
+    <tr><td><code>&lt;path d="…"&gt;</code></td><td>Tělo a list. Písmena <code>M</code> a <code>C</code> v atributu <code>d</code> znamenají „přesuň se“ a „nakresli křivku“.</td></tr>
+    <tr><td><code>&lt;radialGradient&gt;</code></td><td>Přechod, uložený v sekci <code>&lt;defs&gt;</code>. Jablko na něj odkazuje přes <code>url(#…)</code>.</td></tr>
+    <tr><td><code>&lt;ellipse&gt;</code></td><td>Odlesk a stín. Má jen střed a dva poloměry.</td></tr>
+    <tr><td><code>&lt;g&gt;</code></td><td>Skupina. Vše uvnitř se posouvá a otáčí společně.</td></tr>
+  </tbody>
+</table></div>
+<p class="small-muted">Pořadí prvků v kódu je pořadí vrstev. Co je v souboru dřív, je vykreslené vespod.</p>
+</section>
+
+<section id="kontrola">
+<h2>Zkontroluj se</h2>
+<ul class="check-list must-list">
+  <li>Tělo jablka je <b>jedna křivka</b> vzniklá z kruhu, ne několik slepených tvarů.</li>
+  <li>Nahoře je důlek s <b>ostrým uzlem</b>.</li>
+  <li>Jablko má <b>kruhový přechod</b> se světlem vlevo nahoře.</li>
+  <li>Stopka je <b>pod</b> jablkem, ne přes něj.</li>
+  <li>List je nakreslený nástrojem <b>Bezier</b> a je uzavřený.</li>
+  <li>Odlesk i stín jsou <b>poloprůhledné</b>.</li>
+  <li>Vše je ve <b>skupině</b> pojmenované „jablko“.</li>
+  <li>Odevzdávám <b>jablko.svg</b> i <b>jablko.png</b>.</li>
+</ul>
+</section>
+
+<section id="vyzvy">
+<h2>Výzvy navíc</h2>
+<div class="themes">
+  <div><b>Zelené jablko</b><span>Lehká. Duplikuj jablko a změň jen barvy přechodu. Kolik práce ti to dalo?</span></div>
+  <div><b>Hruška</b><span>Střední. Stejný postup, jiný tvar. Které uzly musíš posunout?</span></div>
+  <div><b>Nakousnuté jablko</b><span>Těžší. Vykousni z jablka kruh logickou operací odečtení (Difference / Subtract).</span></div>
+</div>
+<div class="note mat"><b class="lbl">Pro ročníkovou práci</b><p>Stejnými nástroji nakresli ikonu nebo logo své ročníkové práce.</p></div>
+</section>
+
+<p class="foot">Informatika · Seminář · Vektorová grafika v Boxy SVG</p>
+</main>
+</div>
+</body>
+</html>

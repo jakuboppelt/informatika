@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Phishing</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Bezpečnost · 1. materiál</div>
+        <h1>Phishing</h1>
+        <p class="lede">Podvodná zpráva, která se tváří důvěryhodně. Naučíš se ji poznat dřív, než na ni klikneš. Všechny firmy a adresy v materiálu jsou vymyšlené.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="1"><div class="slide-inner">
+      <div class="eyebrow">Co to je</div>
+      <h2 class="slide-title">Návnada, na kterou se chytí člověk, ne počítač</h2>
+      <p class="lede">Phishing je podvod, při kterém někdo předstírá důvěryhodný zdroj. Cílem je vylákat heslo, peníze nebo instalaci škodlivého programu. Název vznikl z anglického <i>fishing</i>, rybaření. Klikni na jednotlivé kroky útoku.</p>
+      <div class="chain" id="chain"></div>
+      <div class="panel" id="chainPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="2"><div class="slide-inner">
+      <div class="eyebrow">Proč to funguje</div>
+      <h2 class="slide-title">Podvodník nehackuje počítač, hackuje emoce</h2>
+      <p class="lede">Dobrý phishing tě vyvede z rozvahy. Poznáš ho podle toho, že tlačí na jednu z těchto věcí.</p>
+      <div class="cards4" id="psyCards"></div>
+      <div class="panel" id="psyPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="3"><div class="slide-inner">
+      <div class="eyebrow">Druhy útoků</div>
+      <h2 class="slide-title">Nejen e-mail</h2>
+      <div class="seg" id="typeSeg"></div>
+      <div class="panel" id="typePanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="4"><div class="slide-inner">
+      <div class="eyebrow">Anatomie podvodného e-mailu</div>
+      <h2 class="slide-title">Najdi všech 6 varovných znamení</h2>
+      <p class="note">Klikej na označená místa. <span id="mailCount">Nalezeno 0 z 6</span></p>
+      <div class="mail">
+        <div class="mail-h">
+          <div><span class="k">Od</span><button class="hs" data-h="0">Lipová banka – Podpora &lt;podpora@lipovabanka.cz.overeni-uctu.top&gt;</button></div>
+          <div><span class="k">Předmět</span><button class="hs" data-h="1">Důležité: váš účet bude do 24 hodin zablokován</button></div>
+        </div>
+        <div class="mail-b">
+          <div><button class="hs" data-h="2">Vážený zákazníku,</button></div>
+          <div>zaznamenali jsme neobvyklou aktivitu. <button class="hs" data-h="3">Vaše účet</button> je dočasně omezen. Pro zachování přístupu ověřte své údaje.</div>
+          <div><button class="hs" data-h="4"><span class="fakebtn">Ověřit účet</span></button></div>
+          <div class="attach"><button class="hs" data-h="5">příloha: overeni_uctu.html</button></div>
+        </div>
+      </div>
+      <div class="panel p-mail" id="mailPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="5"><div class="slide-inner">
+      <div class="eyebrow">Adresa</div>
+      <h2 class="slide-title">Kde je skutečná doména?</h2>
+      <p class="lede">Doménu čti odzadu: najdi první lomítko za adresou, od něj jdi doleva a vezmi poslední dvě části oddělené tečkou. Co je vlevo, může napsat kdokoli.</p>
+      <div class="seg" id="urlSeg"></div>
+      <div class="urlbox" id="urlBox"></div>
+      <div class="verdict tall" id="urlVerdict"></div>
+    </div></section>
+
+    <section class="slide" data-index="6"><div class="slide-inner">
+      <div class="eyebrow">Zdánlivě stejné</div>
+      <h2 class="slide-title">Která adresa je podvodná?</h2>
+      <p class="note" id="lkRound">Kolo 1 z 3</p>
+      <div class="pair" id="lkPair"></div>
+      <div class="feedback" id="lkFb"></div>
+      <div class="seg"><button class="calc-btn is-ghost" id="lkNext">Další kolo →</button></div>
+    </div></section>
+
+    <section class="slide" data-index="7"><div class="slide-inner">
+      <div class="eyebrow">Odkaz</div>
+      <h2 class="slide-title">Text odkazu a jeho cíl jsou dvě různé věci</h2>
+      <p class="lede">Na počítači najeď na odkaz myší a podívej se do levého dolního rohu okna. Na telefonu odkaz podrž prstem. Vyber příklad.</p>
+      <div class="seg" id="lnkSeg"></div>
+      <div class="linkdemo">
+        <div><span class="lbl note">Co vidíš ve zprávě</span><br><a class="fakelink" id="lnkText" href="#" onclick="return false">&nbsp;</a></div>
+        <div><span class="note">Co se ukáže po najetí</span><div class="statusbar" id="lnkStatus"></div></div>
+      </div>
+      <div class="panel" id="lnkPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="8"><div class="slide-inner">
+      <div class="eyebrow">Mýtus</div>
+      <h2 class="slide-title">Zámeček neznamená „důvěryhodné“</h2>
+      <p class="lede">Obě stránky mají https a zámeček. Která patří opravdové knihovně?</p>
+      <div class="pair" id="lockPair"></div>
+      <div class="feedback" id="lockFb"></div>
+    </div></section>
+
+    <section class="slide" data-index="9"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Podvod, nebo v pořádku?</h2>
+      <p class="score" id="qScore">Zpráva 1 z 6 · správně 0</p>
+      <div class="msg"><div class="who" id="qWho"></div><div class="text" id="qText"></div></div>
+      <div class="seg"><button class="calc-btn" id="qBad">Podvod</button><button class="calc-btn" id="qOk">V pořádku</button><button class="calc-btn" id="qNext" hidden>Další →</button></div>
+      <div class="feedback" id="qFb"></div>
+    </div></section>
+
+    <section class="slide" data-index="10"><div class="slide-inner">
+      <div class="eyebrow">Když se to stane</div>
+      <h2 class="slide-title">Klikl jsem. Co teď?</h2>
+      <div class="seg" id="oopsSeg"></div>
+      <div class="panel" id="oopsPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="11"><div class="slide-inner">
+      <div class="eyebrow">Obrana</div>
+      <h2 class="slide-title">Čtyři návyky, které zastaví většinu útoků</h2>
+      <div class="cards4" id="defCards"></div>
+      <div class="panel" id="defPanel"></div>
+    </div></section>
+
+    <section class="slide pause-slide" data-index="12"><div class="slide-inner">
+      <div class="eyebrow">Pravidlo na zapamatování</div>
+      <div class="rule3">
+        <div><b>Zastav se</b><span>Spěch je signál. Nic neklikej a nic neposílej hned.</span></div>
+        <div><b>Podívej se</b><span>Kdo píše, odkud, kam odkaz opravdu vede.</span></div>
+        <div><b>Ověř jinak</b><span>Otevři aplikaci ručně nebo zavolej na číslo, které znáš.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="13"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li><b>Phishing</b> útočí na lidi: spěch, strach, lákadlo, autorita.</li>
+        <li>Skutečnou <b>doménu</b> poznáš odzadu, od prvního lomítka doleva.</li>
+        <li>Podobné adresy zaměňují znaky a <b>zámeček</b> o důvěryhodnosti nic neříká.</li>
+        <li>Útok chodí e-mailem, SMS, telefonem, přes QR kód i od „kamaráda“.</li>
+        <li>Chrání <b>správce hesel</b>, dvoufázové ověření a ověření jinou cestou.</li>
+        <li>Když se to stane, <b>řekni to hned</b>. Rychlost zachrání nejvíc.</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 14</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=document.getElementById("dots"),counterEl=document.getElementById("counter");
+  var prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=document.createElement("button");d.className="dot"+(i===0?" is-active":"");
+    d.setAttribute("aria-label","Snímek "+(i+1));d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    if(typeof runFits==="function")runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+  goTo(0);
+
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  /* generic "pick one of N" renderer: buttons + panel */
+  function picker(btnHost,items,mk,panel,showFn){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;showFn(it,i);
+      });btnHost.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");showFn(items[0],0);
+    fits.push({slide:btnHost.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){showFn(it,i);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";showFn(items[act],act);
+    }});
+  }
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function panelHtml(p,title,text,extra){
+    p.innerHTML="<h3>"+title+"</h3><p>"+text+"</p>"+(extra||"");
+  }
+
+  /* ---- 1: attack chain ---- */
+  var chain=[
+    {n:"Návnada",s:"krok 1",t:"Zpráva přijde e-mailem, SMS nebo přes sociální síť",d:"Útočník rozešle tisíce stejných zpráv, protože stačí, aby se chytilo pár lidí. Zpráva se tváří jako banka, pošta, škola nebo kamarád."},
+    {n:"Odkaz",s:"krok 2",t:"Zpráva tě pošle na jinou adresu",d:"Chce, abys klikl na odkaz, otevřel přílohu nebo naskenoval QR kód. Odkaz vypadá důvěryhodně, ale vede jinam."},
+    {n:"Falešná stránka",s:"krok 3",t:"Stránka vypadá jako původní",d:"Kopie přihlašovací stránky se dá vytvořit za minuty. Jediný rozdíl bývá adresa v řádku prohlížeče."},
+    {n:"Zneužití",s:"krok 4",t:"Údaje se okamžitě použijí",d:"Heslo se zkusí na jiných službách, z účtu se odešlou další podvodné zprávy a z karty zmizí peníze. Často do několika minut."}
+  ];
+  picker($("chain"),chain,function(c){var b=el("button","",esc(c.n)+"<span>"+c.s+"</span>");return b;},$("chainPanel"),function(c){panelHtml($("chainPanel"),c.t,c.d);});
+
+  /* ---- 2: psychology ---- */
+  var psy=[
+    {n:"Spěch",s:"„Do 24 hodin“",d:"Kdo spěchá, nepřemýšlí. Termín slouží jen k tomu, abys přeskočil kontrolu.",q:"Poslední upozornění. Pokud do 2 hodin neuhradíte poplatek 29 Kč, zásilka bude vrácena."},
+    {n:"Strach",s:"„Účet bude zablokován“",d:"Hrozba ztráty nebo trestu. Strach vypíná zdravý rozum a zvyšuje klikání.",q:"Zaznamenali jsme podezřelé přihlášení z Vietnamu. Pokud jste to nebyli vy, ihned potvrďte identitu."},
+    {n:"Lákadlo",s:"„Vyhrál jsi“",d:"Výhra, sleva nebo dárek zdarma. Zadáš jen malý údaj, třeba adresu nebo číslo karty na poštovné.",q:"Gratulujeme! Byl jste vybrán k získání nového telefonu. Zaplaťte jen poštovné 49 Kč."},
+    {n:"Autorita",s:"„Tady ředitel / policie“",d:"Zpráva od někoho nad tebou: vedení, učitel, správce sítě. Takovým lidem se neodporuje.",q:"Dobrý den, tady správce školní sítě. Vaše heslo vyprší. Zašlete mi ho pro kontrolu."}
+  ];
+  picker($("psyCards"),psy,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("psyPanel"),function(c){panelHtml($("psyPanel"),c.n,c.d,'<div class="quote">'+esc(c.q)+"</div>");});
+
+  /* ---- 3: types ---- */
+  var types=[
+    {n:"E-mail",d:"Nejstarší a nejběžnější forma. Hromadně rozeslané zprávy se tváří jako banka, e-shop nebo služba.",q:"Vaše faktura č. 20481 je připravena. Stáhněte ji v příloze."},
+    {n:"SMS",d:"Podvodné SMS se jmenují smishing. Jsou krátké, mají odkaz a tváří se jako dopravce nebo banka.",q:"Balík nelze doručit. Zadejte adresu: balikovna-doruceni.top/4821"},
+    {n:"Telefon",d:"Vishing. Volající se představí jako banka nebo technická podpora a chce po telefonu kód nebo instalaci programu. Číslo na displeji jde zfalšovat.",q:"Volám z bezpečnostního oddělení banky. Diktujte mi kód z SMS, který právě přišel."},
+    {n:"QR kód",d:"Quishing. QR kód nelze přečíst očima, vede kamkoli. Nalepený přes pravý kód na parkovacím automatu nebo v e-mailu.",q:"Naskenujte kód pro ověření účtu."},
+    {n:"Cílený",d:"Spear phishing. Útočník o tobě předem zjistí údaje a napíše osobně. Využívá jména učitelů, spolužáků nebo zaměstnavatele.",q:"Ahoj Honzo, to je paní učitelka z kroužku. Pošli mi rychle číslo dárkové karty, pak ti vrátím peníze."}
+  ];
+  picker($("typeSeg"),types,function(c){var b=el("button","calc-btn",esc(c.n));return b;},$("typePanel"),function(c){panelHtml($("typePanel"),c.n,c.d,'<div class="quote">'+esc(c.q)+"</div>");});
+
+  /* ---- 4: mail hotspots ---- */
+  var hs=[
+    {t:"Cizí adresa odesílatele",d:"Jméno „Lipová banka“ může napsat kdokoli. Skutečná doména je <b>overeni-uctu.top</b>, vše před ní je jen cizí text. Banka by psala z vlastní domény."},
+    {t:"Tlak na čas a hrozba",d:"Zablokování do 24 hodin má vyvolat strach a spěch. Skutečná banka tě nenutí jednat do hodiny."},
+    {t:"Obecné oslovení",d:"Banka tě zná jménem. „Vážený zákazníku“ znamená, že stejná zpráva letí tisícům lidí."},
+    {t:"Chyba v češtině",d:"„Vaše účet“. Překlady strojem a překlepy se v podvodech objevují často, ale ne vždy. Dnes už je ladí i umělá inteligence, proto na ně nespoléhej."},
+    {t:"Tlačítko s jiným cílem",d:"Najetím zjistíš, že míří na <b>lipovabanka.cz.overeni-uctu.top</b>. Pravá doména je <b>overeni-uctu.top</b>."},
+    {t:"Nečekaná příloha .html",d:"Banka neposílá přihlašovací formuláře v příloze. Soubor .html otevřený v prohlížeči může zobrazit falešné přihlášení přímo z tvého počítače."}
+  ];
+  var found={};
+  function mailCount(){var n=Object.keys(found).length;$("mailCount").textContent="Nalezeno "+n+" z 6"+(n===6?". Všechno máš.":"");}
+  $("mailPanel").innerHTML="<p>Vyber označené místo a uvidíš, proč je podezřelé.</p>";
+  Array.prototype.forEach.call(document.querySelectorAll(".hs"),function(b){
+    b.addEventListener("click",function(){
+      var i=+b.dataset.h;found[i]=1;b.classList.add("is-found");
+      Array.prototype.forEach.call(document.querySelectorAll(".hs"),function(x){x.classList.remove("is-active");});
+      b.classList.add("is-active");panelHtml($("mailPanel"),hs[i].t,hs[i].d);mailCount();
+    });
+  });
+
+  /* ---- 5: url anatomy ---- */
+  var urls=[
+    {n:"Příklad 1",p:[["https://",0],["www.",0],["lipovabanka.cz",1],["/prihlaseni",0]],ok:true,v:"Skutečná doména je <b>lipovabanka.cz</b>. Předpona www je jen poddoména banky."},
+    {n:"Příklad 2",p:[["https://",0],["lipovabanka.cz.",0],["overeni-uctu.top",1],["/prihlaseni",0]],ok:false,v:"Doména je <b>overeni-uctu.top</b>. Název banky je jen poddoména, kterou si útočník pojmenoval."},
+    {n:"Příklad 3",p:[["https://",0],["lipovabanka.cz@",0],["prihlaseni-lb.xyz",1],["/",0]],ok:false,v:"Vše před <b>@</b> je jen přihlašovací jméno. Skutečný server je <b>prihlaseni-lb.xyz</b>."},
+    {n:"Příklad 4",p:[["https://",0],["moje.",0],["lipovabanka.cz",1],["/ucet",0]],ok:true,v:"Skutečná doména je <b>lipovabanka.cz</b>. Poddoména <b>moje</b> patří bance."},
+    {n:"Příklad 5",p:[["https://",0],["lipova-banka-overeni.cz",1],["/",0]],ok:false,v:"Doména <b>lipova-banka-overeni.cz</b> je cizí. Jen obsahuje slova z názvu banky. Pomlčka v názvu je častý trik."}
+  ];
+  picker($("urlSeg"),urls,function(c){return el("button","calc-btn",esc(c.n));},$("urlBox"),function(c){
+    var h="";c.p.forEach(function(x){h+='<span class="'+(x[1]?"u-real":"u-dim")+'">'+esc(x[0])+"</span>";});
+    $("urlBox").innerHTML=h;
+    $("urlVerdict").innerHTML='<span class="badge '+(c.ok?"good":"bad")+'">'+(c.ok?"patří bance":"podvod")+'</span><span class="note grow">'+c.v+"</span>";
+  });
+
+  /* ---- 6: lookalikes ---- */
+  var lk=[
+    {a:"mamutposta.cz",b:"rnamutposta.cz",fake:"b",diff:[0,1],fb:"Dvojice <b>r + n</b> vypadá skoro jako <b>m</b>. Na malém displeji se rozdíl ztrácí."},
+    {a:"vlakovyportal.cz",b:"vlakovyportaI.cz",fake:"b",diff:[12],fb:"Na konci je velké <b>I</b> místo malého <b>l</b>. V běžném písmu vypadají stejně."},
+    {a:"knihovna-online.cz",b:"knihovna-оnline.cz",fake:"b",diff:[9],fb:"Tady rozdíl okem neuvidíš. Písmeno <b>о</b> je cyrilice, vypadá jako latinské <b>o</b>. Prohlížeč ji často přepíše na kód začínající <b>xn--</b>."}
+  ];
+  var lkI=0;
+  function lkRender(){
+    var r=lk[lkI];
+    $("lkRound").textContent="Kolo "+(lkI+1)+" z "+lk.length;
+    $("lkFb").innerHTML="";$("lkNext").classList.add("is-ghost");
+    var pair=$("lkPair");pair.innerHTML="";
+    var order=lkI%2===0?["a","b"]:["b","a"];
+    order.forEach(function(k){
+      var b=el("button","opt",esc(r[k]));b.dataset.k=k;
+      b.addEventListener("click",function(){lkAnswer(k);});pair.appendChild(b);
+    });
+  }
+  function lkAnswer(k){
+    var r=lk[lkI],ok=k===r.fake;
+    Array.prototype.forEach.call($("lkPair").children,function(b){
+      b.disabled=true;b.classList.add(b.dataset.k===r.fake?"is-fake":"is-real");
+      if(b.dataset.k===r.fake){
+        var s=r.b,h="";
+        for(var i=0;i<s.length;i++){h+=(r.diff.indexOf(i)>=0?'<span class="diff">'+esc(s[i])+"</span>":esc(s[i]));}
+        b.innerHTML=h;
+      }
+    });
+    var extra="";
+    if(lkI===2){try{extra='<div class="mono-s extra">Skutečný zápis: '+esc(new URL("https://"+r.b).hostname)+"</div>";}catch(e){}}
+    $("lkFb").innerHTML=(ok?"<b>Správně.</b> ":"<b>Je to druhá možnost.</b> ")+r.fb+extra;
+    $("lkNext").classList.remove("is-ghost");$("lkNext").textContent=lkI===lk.length-1?"Znovu od začátku":"Další kolo →";
+  }
+  $("lkNext").addEventListener("click",function(){lkI=(lkI+1)%lk.length;lkRender();});
+  lkRender();
+
+  /* ---- 7: link vs target ---- */
+  var links=[
+    {n:"Banka",t:"www.lipovabanka.cz/prihlaseni",h:"https://lipovabanka.cz.overeni-uctu.top/prihlaseni",ok:false,v:"Text vypadá jako adresa banky, ale cíl je jiná doména (<b>overeni-uctu.top</b>). Text odkazu může napsat kdokoli."},
+    {n:"Zkrácený odkaz",t:"Sledovat zásilku",h:"https://zkr.example/x7Qa2",ok:false,v:"Zkrácené odkazy skrývají cíl. Kam vedou, nevidíš. U nečekané zprávy je neotvírej."},
+    {n:"Poctivý odkaz",t:"Zobrazit objednávku",h:"https://moje.lipovabanka.cz/objednavky/1043",ok:true,v:"Cíl je poddoména banky. Přesto otevři raději aplikaci ručně, pokud jsi zprávu nečekal."}
+  ];
+  picker($("lnkSeg"),links,function(c){return el("button","calc-btn",esc(c.n));},$("lnkPanel"),function(c){
+    $("lnkText").textContent=c.t;
+    $("lnkStatus").innerHTML="<b>"+esc(c.h)+"</b>";
+    $("lnkPanel").innerHTML='<div class="verdict"><span class="badge '+(c.ok?"good":"bad")+'">'+(c.ok?"cíl sedí":"nesedí")+'</span></div><p>'+c.v+"</p>";
+  });
+
+  /* ---- 8: lock myth ---- */
+  var lockPair=$("lockPair");
+  [["knihovna-mesta.cz",false],["knihovna-mesta-prihlaseni.top",true]].forEach(function(x){
+    var wrap=el("div","",""),b=el("button","opt","");
+    b.classList.add("addr-opt");
+    b.innerHTML='<div class="addr"><span class="lock"></span><span>https://'+x[0]+"</span></div>";
+    b.addEventListener("click",function(){
+      var all=lockPair.querySelectorAll("button");
+      Array.prototype.forEach.call(all,function(a){a.disabled=true;});
+      Array.prototype.forEach.call(all,function(a,i){a.classList.add(i===0?"is-real":"is-fake");});
+      $("lockFb").innerHTML=(x[1]?"<b>To je podvod.</b> ":"<b>Správně.</b> ")+"Zámeček říká jen to, že spojení je šifrované. Neříká, komu patří web na druhé straně. Certifikát dnes získá zdarma i podvodník. Rozhoduje <b>doména</b>: knihovna-mesta.cz je první, druhá je cizí.";
+    });
+    wrap.appendChild(b);lockPair.appendChild(wrap);
+  });
+  $("lockFb").innerHTML="Vyber jednu možnost.";
+
+  /* ---- 9: quiz ---- */
+  var qs=[
+    {w:"SMS · +420 7xx xxx xxx",t:"Balík č. 4821 nelze doručit. Doplaťte 29 Kč do 24 hodin: balikovna-doruceni.top/4821",bad:true,fb:"Cizí doména, spěch a malá částka, která má uspat obezřetnost. Skutečný dopravce vede doručení v aplikaci nebo na vlastním webu."},
+    {w:"Banka · SMS, kterou jsi sám vyvolal přihlášením",t:"Kód pro přihlášení: 482913. Nikomu ho nesdělujte. Pokud jste to nebyli vy, změňte heslo v aplikaci.",bad:false,fb:"Je v pořádku, protože ses právě přihlašoval. Neobsahuje odkaz, ani po tobě nic nechce. Kód ale nikdy nikomu nediktuj."},
+    {w:"E-mail · podpora@gymnazium-it.cz.heslo-reset.top",t:"Platnost vašeho hesla končí dnes. Přihlaste se zde a heslo prodlužte, jinak přijdete o přístup k Office.",bad:true,fb:"Doména je <b>heslo-reset.top</b>, ne školní. Spěch a hrozba ztráty přístupu. Hesla se ve škole nemění přes odkaz v e-mailu."},
+    {w:"E-mail · potvrzeni@kniharna.example",t:"Děkujeme za objednávku č. 1043, kterou jste dnes provedl. Stav najdete v účtu na webu knihárny po přihlášení.",bad:false,fb:"Objednávku jsi opravdu dělal, zpráva po tobě nic nechce a neobsahuje podezřelý odkaz. Přesto stav otevři ručně, ne přes odkaz."},
+    {w:"Instagram · zpráva od neznámého účtu",t:"Gratulujeme! Vyhrál jsi nový telefon. Vyplň adresu a číslo karty na zaplacení poštovného 49 Kč.",bad:true,fb:"Výhra v soutěži, kterou jsi nehrál, plus platební údaje. Číslo karty slouží k obrácené věci: o peníze přijdeš."},
+    {w:"WhatsApp · neznámé číslo",t:"Ahoj, to jsem já, mám nové číslo. Můžeš mi rychle poslat 2 000 Kč? Zítra ti je vrátím.",bad:true,fb:"Klasika: útočník předstírá známého s novým číslem. Zavolej na staré číslo nebo se zeptej na něco, co zná jen skutečný kamarád."}
+  ];
+  var qI=0,qOk=0,qAns=false;
+  function qRender(){
+    var q=qs[qI];qAns=false;
+    $("qWho").textContent=q.w;$("qText").textContent=q.t;
+    $("qScore").textContent="Zpráva "+(qI+1)+" z "+qs.length+" · správně "+qOk;
+    $("qFb").innerHTML="";$("qNext").hidden=true;$("qBad").hidden=false;$("qOk").hidden=false;
+  }
+  function qAnswer(isBad){
+    if(qAns)return;qAns=true;
+    var q=qs[qI],ok=isBad===q.bad;if(ok)qOk++;
+    $("qScore").textContent="Zpráva "+(qI+1)+" z "+qs.length+" · správně "+qOk;
+    $("qFb").innerHTML='<span class="badge '+(q.bad?"bad":"good")+'">'+(q.bad?"podvod":"v pořádku")+"</span> <b>"+(ok?"Správně.":"Tentokrát ne.")+"</b> "+q.fb;
+    $("qBad").hidden=true;$("qOk").hidden=true;$("qNext").hidden=false;
+    $("qNext").textContent=qI===qs.length-1?"Výsledek":"Další →";
+  }
+  $("qBad").addEventListener("click",function(){qAnswer(true);});
+  $("qOk").addEventListener("click",function(){qAnswer(false);});
+  $("qNext").addEventListener("click",function(){
+    if(qI===qs.length-1){
+      $("qFb").innerHTML="<b>Výsledek: "+qOk+" z "+qs.length+".</b> "+(qOk>=5?"Dobrá práce. Pamatuj, že skutečné útoky bývají lépe napsané.":"Projdi si ještě anatomii e-mailu a pravidlo ze závěru.");
+      $("qNext").textContent="Znovu";qI=-1;qOk=0;
+      return;
+    }
+    qI++;qRender();
+  });
+  qRender();
+
+  /* ---- 10: oops ---- */
+  var oops=[
+    {n:"Jen jsem klikl",s:["Zavři stránku a nic na ní nevyplňuj.","Nestahuj nic a nic nepotvrzuj.","Projeď antivirem, pokud se něco stahovalo.","Řekni to rodiči nebo učiteli, pro jistotu."]},
+    {n:"Zadal jsem heslo",s:["Okamžitě změň heslo na původní službě (z aplikace nebo z ručně zadané adresy).","Změň heslo všude, kde jsi ho používal.","Zapni dvoufázové ověření.","Odhlas ostatní zařízení v nastavení účtu.","Řekni to učiteli nebo správci, hlavně u školního účtu."]},
+    {n:"Zadal jsem kartu",s:["Hned zavolej do banky a kartu zablokuj.","Zkontroluj poslední platby a nahlas ty cizí.","Řekni to rodičům, platí se jejich peníze.","Uschovej zprávu jako důkaz, nemaž ji."]},
+    {n:"Stáhl jsem přílohu",s:["Odpoj zařízení od internetu.","Neotvírej soubor znovu.","Spusť kontrolu antivirem a požádej o pomoc dospělého nebo správce.","Změň hesla z jiného, čistého zařízení."]}
+  ];
+  picker($("oopsSeg"),oops,function(c){return el("button","calc-btn",esc(c.n));},$("oopsPanel"),function(c){
+    var h="<h3>Postup</h3><ol class=\"steps\">";c.s.forEach(function(x){h+="<li>"+esc(x)+"</li>";});$("oopsPanel").innerHTML=h+"</ol>";
+  });
+
+  /* ---- 11: defence ---- */
+  var def=[
+    {n:"Správce hesel",s:"Pozná falešnou doménu",d:"Správce hesel vyplní heslo jen na webu, který zná. Na podvodné stránce mlčí, a to je varování, které ti pomůže, i když ses nepodíval na adresu."},
+    {n:"Dvoufázové ověření",s:"Heslo samo nestačí",d:"I když heslo vyzradíš, útočník potřebuje druhý krok. Nejlepší jsou přístupové klíče (passkeys) nebo aplikace s kódem. SMS kód je slabší a nikdy ho nikomu nediktuj."},
+    {n:"Ověř jinak",s:"Druhý kanál",d:"Nikdy neklikej na odkaz ve zprávě. Otevři aplikaci nebo web ručně, zavolej na číslo z oficiálního webu, zeptej se kamaráda jinou cestou."},
+    {n:"Nahlas to",s:"Pomůžeš i ostatním",d:"Podvodnou zprávu přepošli správci nebo učiteli, nahlas ji ve službě a smaž. Bez nahlášení se stejný útok dostane k dalším lidem."}
+  ];
+  picker($("defCards"),def,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("defPanel"),function(c){panelHtml($("defPanel"),c.n,c.d);});
+})();
+</script>
+
+</body>
+</html>

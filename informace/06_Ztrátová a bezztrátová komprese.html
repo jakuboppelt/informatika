@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ztrátová a bezztrátová komprese</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck-wide">
+<main class="viewport">
+<div class="stage" id="stage">
+
+<section class="slide s-title" data-title="Úvod">
+  <p class="eyebrow">Informatika · Kódování informace</p>
+  <h1>Ztrátová a bezztrátová komprese</h1>
+  <p class="lead">Jak se vejde film do mobilu a proč fotka v JPEG nikdy není úplně přesná kopie.</p>
+  <div class="row">
+    <div class="tiles" aria-label="AAAAABBBCCCCCCCCD">
+      <span class="a">A</span><span class="a">A</span><span class="a">A</span><span class="a">A</span><span class="a">A</span><span class="b">B</span><span class="b">B</span><span class="b">B</span><span class="c">C</span><span class="c">C</span><span class="c">C</span><span class="c">C</span><span class="c">C</span><span class="c">C</span><span class="c">C</span><span class="c">C</span><span class="d">D</span>
+    </div>
+    <span class="arrow">→</span>
+    <div class="tiles" aria-label="5A 3B 8C 1D"><span class="a">5A</span><span class="b">3B</span><span class="c">8C</span><span class="d">1D</span></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Proč komprimovat">
+  <div class="head"><p class="eyebrow">Proč to řešíme</p><h2>Nekomprimovaná data jsou obrovská</h2></div>
+  <div class="cols">
+    <div class="card"><p class="big">11,2 GB</p><p class="txt">Jedna minuta videa ve Full HD, kdyby se uložil každý pixel každého snímku.</p></div>
+    <div class="card ll"><p class="big ll-t">≈ 37 MB</p><p class="txt">Stejná minuta po kompresi při běžném streamování. To je asi <b>300× méně</b>.</p></div>
+  </div>
+  <div class="spacer"></div>
+  <p class="lead">Bez komprese by nešlo streamovat filmy, posílat fotky ani rychle načítat web.</p>
+</section>
+
+<section class="slide" data-title="Co je komprese">
+  <div class="head"><p class="eyebrow">Základní myšlenka</p><h2>Komprese: zabalit a zase rozbalit</h2></div>
+  <div class="flow">
+    <div class="box"><p class="small">Původní soubor</p><p class="big">100 kB</p></div>
+    <div class="step"><span class="arrow">→</span>komprese</div>
+    <div class="box"><p class="small">Menší soubor</p><p class="big ll-t">25 kB</p></div>
+    <div class="step"><span class="arrow">→</span>dekomprese</div>
+    <div class="box"><p class="small">Rozbalený soubor</p><p class="big">100 kB</p></div>
+  </div>
+  <div class="cols">
+    <div class="card"><h3>Kompresní poměr</h3><p class="txt">původní velikost : nová velikost<br><b>100 : 25 = 4 : 1</b></p></div>
+    <div class="card"><h3>Jako kufr</h3><p class="txt">Oblečení poskládané úhledně zabere méně místa než hromada. Věcí je pořád stejně.</p></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Dva druhy">
+  <div class="head"><p class="eyebrow">Přehled</p><h2>Dva druhy komprese</h2></div>
+  <div class="cols">
+    <div class="card ll">
+      <span class="tag ll-t">Bezztrátová</span>
+      <p class="lead">Po rozbalení dostaneš přesně totéž, do posledního bitu.</p>
+      <dl class="kv"><dt>Na co</dt><dd>texty, programy, tabulky</dd><dt>Formáty</dt><dd class="mono">ZIP · PNG · FLAC</dd></dl>
+    </div>
+    <div class="card ly">
+      <span class="tag ly-t">Ztrátová</span>
+      <p class="lead">Něco se zahodí. Vybírá se to, čeho si člověk nevšimne.</p>
+      <dl class="kv"><dt>Na co</dt><dd>fotky, hudba, video</dd><dt>Formáty</dt><dd class="mono">JPEG · MP3 · MP4</dd></dl>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <p class="txt"><b>Zamysli se:</b> proč by nešlo ztrátově zkomprimovat program nebo slohovou práci?</p>
+</section>
+
+<section class="slide" data-title="Trik 1: opakování">
+  <div class="head"><p class="eyebrow ll">Bezztrátová · trik 1</p><h2>Spočítej, co se opakuje</h2></div>
+  <div class="cols wide-left">
+    <div class="demo">
+      <label for="rle-in">Napiš řetězec písmen a sleduj výsledek</label>
+      <input type="text" id="rle-in" value="AAAAABBBCCCCCCCCD" maxlength="28" autocomplete="off" spellcheck="false">
+      <div class="chips">
+        <button class="chip" data-v="AAAAABBBCCCCCCCCD">AAAAABBBCCCCCCCCD</button>
+        <button class="chip" data-v="WWWWWWWWWWBWWWW">WWWWWWWWWWBWWWW</button>
+        <button class="chip" data-v="ABCD">ABCD</button>
+      </div>
+      <p class="out" id="rle-out" aria-live="polite">5A3B8C1D</p>
+      <p class="verdict good" id="rle-stat">17 znaků → 8 znaků. Ušetřeno 9.</p>
+    </div>
+    <div class="card">
+      <h3>Takhle i obrázky</h3>
+      <p class="txt">Řádek černobílého obrázku:</p>
+      <div class="pixels" aria-label="tři bílé a pět černých pixelů"><i></i><i></i><i></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i><i class="k"></i></div>
+      <p class="txt">uložíme jako <b class="mono">3 bílé, 5 černých</b>.</p>
+      <p class="small">Tento postup se jmenuje RLE (run-length encoding).</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-title="Trik 2: krátké kódy">
+  <div class="head"><p class="eyebrow ll">Bezztrátová · trik 2</p><h2>Častá písmena dostanou krátký kód</h2></div>
+  <div class="cols">
+    <div class="card">
+      <h3>Morseovka to dělá taky</h3>
+      <dl class="kv mono"><dt>E</dt><dd>·</dd><dt>T</dt><dd>−</dd><dt>Q</dt><dd>− − · −</dd></dl>
+      <p class="txt">E je v angličtině nejčastější písmeno, a tak má nejkratší značku. Vzácné Q má dlouhou.</p>
+    </div>
+    <div class="card">
+      <h3>Slovo ABRAKADABRA</h3>
+      <p class="txt">A je tam 5×, dostane kód <b class="mono">0</b>. Ostatní písmena mají kód o 3 bitech.</p>
+      <div class="bars">
+        <div class="bar"><div class="lbl"><span>každé písmeno 8 bitů</span><b>88 b</b></div><div class="track"><div class="fill"></div></div></div>
+        <div class="bar win"><div class="lbl"><span>chytrý kód</span><b class="ll-t">23 b</b></div><div class="track"><div class="fill w26"></div></div></div>
+      </div>
+    </div>
+  </div>
+  <p class="small">Tento postup se jmenuje Huffmanovo kódování.</p>
+</section>
+
+<section class="slide" data-title="Trik 3: odkazy">
+  <div class="head"><p class="eyebrow ll">Bezztrátová · trik 3</p><h2>Opakuje se kus textu? Odkaž na něj.</h2></div>
+  <div class="card">
+    <div class="tiles" aria-label="ABRAKADABRA, poslední čtyři písmena opakují první čtyři"><span class="hi">A</span><span class="hi">B</span><span class="hi">R</span><span class="hi">A</span><span>K</span><span>A</span><span>D</span><span class="a">A</span><span class="a">B</span><span class="a">R</span><span class="a">A</span></div>
+    <p class="txt">Konec slova „ABRA“ už jednou byl na začátku.</p>
+    <div class="row">
+      <div class="tiles"><span>A</span><span>B</span><span>R</span><span>A</span><span>K</span><span>A</span><span>D</span><span class="ref">zpět 7, opiš 4</span></div>
+    </div>
+  </div>
+  <p class="lead">Takhle pracuje <b>ZIP</b>: najde opakující se kousky, nahradí je odkazy a pak ještě použije trik 2.</p>
+  <p class="txt">Nejlépe to funguje u textu, kde se slova a fráze stále opakují.</p>
+</section>
+
+<section class="slide" data-title="Hranice">
+  <div class="head"><p class="eyebrow ll">Bezztrátová · hranice</p><h2>Proč ZIP podruhé nepomůže</h2></div>
+  <div class="cols">
+    <div class="card">
+      <h3>Už se nic neopakuje</h3>
+      <p class="txt">Zkomprimovaný soubor vypadá jako náhodná změť bitů. Všechna opakování už jsou pryč, takže není co dál zkracovat.</p>
+    </div>
+    <div class="card">
+      <h3>Všechno zmenšit nejde</h3>
+      <p class="txt">Kdyby šel každý soubor zkrátit aspoň o jeden bit, mohli bychom ho zkracovat pořád dokola, až by nezbylo nic. Krátkých souborů je prostě méně než dlouhých.</p>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <p class="lead">Bezztrátová komprese pomáhá jen tam, kde se v datech něco opakuje nebo je něco častější.</p>
+</section>
+
+<section class="slide" data-title="Zaokrouhlení">
+  <div class="head"><p class="eyebrow ly">Ztrátová · hlavní trik</p><h2>Zaokrouhli, co oko nepozná</h2></div>
+  <div class="demo">
+    <div class="qlabels"><span>originál, 8 bitů na pixel</span></div>
+    <canvas id="q-canvas" width="960" height="180" aria-label="Nahoře plynulý přechod, dole tentýž přechod po zaokrouhlení na méně odstínů"></canvas>
+    <div class="qlabels"><span>po zaokrouhlení</span></div>
+    <div class="slider">
+      <label for="q-bits">Bitů na pixel</label>
+      <input type="range" id="q-bits" min="1" max="8" step="1" value="3">
+      <output id="q-out" for="q-bits">3 b = 8 odstínů · 38 %</output>
+    </div>
+  </div>
+  <p class="txt">Posuň jezdcem. Při 6 bitech rozdíl skoro nevidíš, a soubor je přitom o čtvrtinu menší. Pod 4 bity se objeví pruhy.</p>
+</section>
+
+<section class="slide" data-title="Co se zahazuje">
+  <div class="head"><p class="eyebrow ly">Ztrátová · co se zahazuje</p><h2>Každý druh dat má své slabé místo</h2></div>
+  <div class="cols n3">
+    <div class="card ly"><span class="tag ly-t">Obrázky · JPEG</span><p class="txt">Oko si víc všímá jasu než barev a hrubých tvarů víc než drobných detailů. Barvy a detaily se proto ukládají hruběji.</p></div>
+    <div class="card ly"><span class="tag ly-t">Zvuk · MP3</span><p class="txt">Tichý tón hned vedle hlasitého neslyšíme. Velmi vysoké tóny také ne. Ty se vůbec neukládají.</p></div>
+    <div class="card ly"><span class="tag ly-t">Video · MP4</span><p class="txt">Mezi dvěma snímky se většina obrazu nemění. Uloží se celý snímek jen občas, jinak jen to, co se pohnulo.</p></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Cena za ztrátu">
+  <div class="head"><p class="eyebrow ly">Ztrátová · cena</p><h2>Co se zahodí, už se nevrátí</h2></div>
+  <div class="cols n3">
+    <div class="card"><h3>Kostičky a pruhy</h3><p class="txt">Při silné kompresi jsou v obrázku vidět čtverečky a pruhy v přechodech barev.</p></div>
+    <div class="card"><h3>Každé uložení horší</h3><p class="txt">Když JPEG upravíš a znovu uložíš, ztratí se další informace. Upravuj vždy originál.</p></div>
+    <div class="card"><h3>„Zvětšit a zaostřit“</h3><p class="txt">Ve filmech to jde, ve skutečnosti ne. Chybějící detail se dá jen odhadnout.</p></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Kdy co použít">
+  <div class="head"><p class="eyebrow">Shrnutí</p><h2>Kterou kompresi kdy použít</h2></div>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Co ukládám</th><th>Komprese</th><th>Formát</th></tr></thead>
+    <tbody>
+      <tr><td>Referát, program, tabulka</td><td class="kind ll-t">bezztrátová</td><td class="mono">ZIP</td></tr>
+      <tr><td>Fotka z výletu</td><td class="kind ly-t">ztrátová</td><td class="mono">JPEG</td></tr>
+      <tr><td>Screenshot, logo</td><td class="kind ll-t">bezztrátová</td><td class="mono">PNG</td></tr>
+      <tr><td>Hudba do sluchátek</td><td class="kind ly-t">ztrátová</td><td class="mono">MP3, AAC</td></tr>
+      <tr><td>Film</td><td class="kind ly-t">ztrátová</td><td class="mono">MP4</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="slide" data-title="Vyzkoušej si">
+  <div class="head"><p class="eyebrow">Procvičení</p><h2>Vyzkoušej si</h2></div>
+  <div class="cols">
+    <details><summary><span class="q">1. Zakóduj pomocí RLE: <span class="mono">WWWWBBBWWWWWW</span></span><span class="hint">Klikni pro řešení</span></summary><p class="ans mono">4W3B6W</p></details>
+    <details><summary><span class="q">2. Ztrátově, nebo bez ztráty? Fotka z výletu, slohová práce, písnička do mobilu.</span><span class="hint">Klikni pro řešení</span></summary><p class="ans">ztrátově · bez ztráty · ztrátově</p></details>
+    <details><summary><span class="q">3. Zazipuješ soubor, který už je zazipovaný. Zmenší se?</span><span class="hint">Klikni pro řešení</span></summary><p class="ans">Skoro vůbec. Už se v něm nic neopakuje.</p></details>
+    <details><summary><span class="q">4. Proč je na screenshot s textem lepší PNG než JPEG?</span><span class="hint">Klikni pro řešení</span></summary><p class="ans">Velké jednobarevné plochy se dobře zkomprimují bez ztráty a písmena zůstanou ostrá.</p></details>
+  </div>
+</section>
+
+</div>
+</main>
+
+<nav class="bar-nav" aria-label="Ovládání prezentace">
+  <button id="prev" aria-label="Předchozí slide">‹</button>
+  <span class="counter" id="counter">1 / 13</span>
+  <button id="next" aria-label="Další slide">›</button>
+  <span class="stitle" id="stitle">Úvod</span>
+  <div class="progress"><i id="progress"></i></div>
+  <span class="keys">šipky ← →</span>
+  <button id="fs" aria-label="Celá obrazovka" title="Celá obrazovka">⛶</button>
+</nav>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const counter=document.getElementById('counter'), stitle=document.getElementById('stitle'),
+        progress=document.getElementById('progress'), prev=document.getElementById('prev'), next=document.getElementById('next');
+  const mobile=window.matchMedia('(max-width:720px)');
+  let cur=0;
+  function show(n){
+    cur=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+    counter.textContent=(cur+1)+' / '+slides.length;
+    stitle.textContent=slides[cur].dataset.title||'';
+    progress.style.width=((cur+1)/slides.length*100)+'%';
+    prev.disabled=cur===0; next.disabled=cur===slides.length-1;
+    try{history.replaceState(null,'','#s'+(cur+1))}catch(e){}
+  }
+  const m=location.hash.match(/^#s(\d+)$/);
+  show(m?parseInt(m[1],10)-1:0);
+  prev.addEventListener('click',()=>show(cur-1));
+  next.addEventListener('click',()=>show(cur+1));
+  document.getElementById('fs').addEventListener('click',()=>{
+    try{
+      if(document.fullscreenElement){document.exitFullscreen().catch(()=>{})}
+      else{const p=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen(); if(p&&p.catch)p.catch(()=>{})}
+    }catch(e){}
+  });
+  document.addEventListener('keydown',e=>{
+    if(mobile.matches)return;
+    const t=e.target;
+    if(t.matches&&t.matches('input,textarea'))return;
+    if(['ArrowRight','PageDown'].includes(e.key)||(e.key===' '&&!t.matches('button,summary'))){e.preventDefault();show(cur+1)}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(cur-1)}
+    else if(e.key==='Home'){show(0)} else if(e.key==='End'){show(slides.length-1)}
+  });
+  let tx=null;
+  const stage=document.getElementById('stage');
+  stage.addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+  stage.addEventListener('touchend',e=>{
+    if(tx===null||mobile.matches)return;
+    const dx=e.changedTouches[0].clientX-tx; tx=null;
+    if(e.target.closest('input'))return;
+    if(Math.abs(dx)>50)show(cur+(dx<0?1:-1));
+  });
+
+  // RLE demo
+  const inp=document.getElementById('rle-in'), out=document.getElementById('rle-out'), stat=document.getElementById('rle-stat');
+  function rle(s){let o='';for(let i=0;i<s.length;){let j=i;while(j<s.length&&s[j]===s[i])j++;o+=(j-i)+s[i];i=j}return o}
+  function cz(n){return n===1?'znak':(n>=2&&n<=4?'znaky':'znaků')}
+  function updRle(){
+    const clean=inp.value.toUpperCase().replace(/[^A-ZÁ-Ž]/g,'');
+    if(clean!==inp.value){const p=inp.selectionStart;inp.value=clean;try{inp.setSelectionRange(p,p)}catch(e){}}
+    if(!clean){out.textContent='…';stat.textContent='Napiš aspoň jedno písmeno.';stat.className='verdict';return}
+    const r=rle(clean); out.textContent=r;
+    const a=clean.length,b=r.length;
+    if(b<a){stat.textContent=a+' '+cz(a)+' → '+b+' '+cz(b)+'. Ušetřeno '+(a-b)+'.';stat.className='verdict good'}
+    else if(b===a){stat.textContent=a+' '+cz(a)+' → '+b+' '+cz(b)+'. Nic jsme neušetřili.';stat.className='verdict bad'}
+    else{stat.textContent=a+' '+cz(a)+' → '+b+' '+cz(b)+'. Výsledek je delší! Bez opakování RLE nepomůže.';stat.className='verdict bad'}
+  }
+  inp.addEventListener('input',updRle);
+  document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{inp.value=c.dataset.v;updRle()}));
+  updRle();
+
+  // quantization demo
+  const cv=document.getElementById('q-canvas'), ctx=cv.getContext('2d'), rng=document.getElementById('q-bits'), qo=document.getElementById('q-out');
+  const A=[22,38,72], B=[246,170,104];
+  function col(t){return 'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')+')'}
+  function draw(){
+    const bits=parseInt(rng.value,10), lv=2**bits, w=cv.width, h=cv.height, half=h/2-4;
+    ctx.clearRect(0,0,w,h);
+    for(let x=0;x<w;x++){
+      const t=x/(w-1);
+      ctx.fillStyle=col(t); ctx.fillRect(x,0,1,half);
+      const q=Math.round(t*(lv-1))/(lv-1);
+      ctx.fillStyle=col(q); ctx.fillRect(x,h-half,1,half);
+    }
+    const pct=Math.round(bits/8*100);
+    qo.textContent=bits+' b = '+lv+' odstínů · '+pct+' %';
+  }
+  rng.addEventListener('input',draw);
+  draw();
+})();
+</script>
+</body>
+</html>
