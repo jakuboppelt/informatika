@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Od sálu do kapsy</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Hardware a operační systémy · 1. materiál</div>
+      <h1>Od sálu do kapsy</h1>
+      <p class="lede">Za osmdesát let se počítač zmenšil z místnosti velké jako tělocvična na čip menší než nehet. Projdeme hlavní milníky a uvidíme je na dobových záběrech.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Před elektronikou</div>
+      <h2 class="slide-title">Počítání bez elektřiny</h2>
+      <p class="lede">Stroje na počítání jsou starší než elektřina. Všimni si, kde se poprvé objeví děrný štítek. Vydrží přes sto let.</p>
+      <div class="cards4" id="mechCards"></div>
+      <div class="panel" id="mechPanel"></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Generace počítačů</div>
+      <h2 class="slide-title">Každá generace má svou <b>součástku</b></h2>
+      <div class="gens" id="gens"></div>
+      <div class="split">
+        <div class="panel p-tall" id="genPanel"></div>
+        <div id="genVideo"></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">1946 · ENIAC</div>
+      <h2 class="slide-title">Počítač, který zabral celou místnost</h2>
+      <div class="split">
+        <div class="stack">
+          <p class="lede">ENIAC počítal dělostřelecké tabulky pro americkou armádu. Program se nezapisoval, ale <b>zapojoval kabely</b> a přepínači. Přeprogramování trvalo i několik dní.</p>
+          <dl class="facts">
+            <dt>Elektronky</dt><dd>17 468</dd>
+            <dt>Hmotnost</dt><dd>asi 27 tun</dd>
+            <dt>Plocha</dt><dd>asi 167 m², jako tělocvična</dd>
+            <dt>Příkon</dt><dd>asi 150 kW</dd>
+            <dt>Rychlost</dt><dd>5 000 sčítání za sekundu</dd>
+            <dt>Soustava</dt><dd>desítková, ne dvojková</dd>
+          </dl>
+          <p class="fun">Programovalo ho šest žen, například Jean Jennings a Kathleen McNulty. Na slavných fotkách je dlouho nikdo nejmenoval.</p>
+        </div>
+        <div class="vid" data-yt="r2SCpzXqmP8" data-title="ENIAC v provozu" data-sub="dobové záběry · 1946"></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Děrný štítek</div>
+      <h2 class="slide-title">Jeden řádek programu = jeden kus papíru</h2>
+      <p class="lede">Štítek IBM má 80 sloupců a 12 řádků, každý sloupec nese jeden znak. Napiš text a klikni na sloupec.</p>
+      <input class="punch-in" id="punchIn" type="text" maxlength="40" value="PRINT 2+2" aria-label="Text na štítek" spellcheck="false" autocomplete="off">
+      <div class="punch-wrap"><div class="punch" id="punch"></div></div>
+      <p class="punch-info" id="punchInfo"></p>
+      <div class="split r-small">
+        <p class="note">Písmena se kódují dvěma dírkami: zóna (12, 11 nebo 0) a číslice. A = 12 + 1, J = 11 + 1, S = 0 + 2. Háčky a čárky štítek neznal. Program o 1 000 řádcích byla krabice 1 000 štítků. Kdo ji upustil, řadil je ručně.</p>
+        <div class="vid" data-yt="YnnGbcM-H8c" data-title="Děrovač IBM 029" data-sub="ukázka děrování · 1964"></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Sálový počítač</div>
+      <h2 class="slide-title">Jeden počítač pro celou firmu</h2>
+      <div class="split">
+        <div class="stack">
+          <p class="lede">Sálový počítač (anglicky <i>mainframe</i>) stál v klimatizované místnosti se zdviženou podlahou pro kabely. Obsluhovali ho <b>operátoři</b>, běžný uživatel se k němu nedostal.</p>
+          <dl class="facts">
+            <dt>Příklad</dt><dd>IBM 1401 (1959), prodalo se ho přes 10 000 kusů</dd>
+            <dt>Paměť</dt><dd>od 1 400 do 16 000 znaků</dd>
+            <dt>Cena</dt><dd>pronájem kolem 2 500 dolarů měsíčně</dd>
+            <dt>Vstup</dt><dd>děrné štítky a magnetická páska</dd>
+            <dt>Výstup</dt><dd>řádková tiskárna, 600 řádků za minutu</dd>
+          </dl>
+          <p class="note">Programy se zpracovávaly v dávkách, jeden po druhém. Odsud se vyvinuly první operační systémy: měly počítači ušetřit čekání na člověka.</p>
+        </div>
+        <div class="vid" data-yt="MTbbMc4bX_k" data-title="IBM 1401 v chodu" data-sub="Computer History Museum"></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Den programátora</div>
+      <h2 class="slide-title">Jedna chyba v programu: 1965 a dnes</h2>
+      <div class="tl2">
+        <div class="tl-col old"><h3>1965 <span class="tl-clock" id="clkOld">0 h</span></h3><div id="tlOld"></div></div>
+        <div class="tl-col"><h3>Dnes <span class="tl-clock" id="clkNew">0 s</span></h3><div id="tlNew"></div></div>
+      </div>
+      <div class="seg"><button class="calc-btn" id="tlNext">Další krok →</button><button class="calc-btn" id="tlReset">Znovu</button></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Porovnání</div>
+      <h2 class="slide-title">Kolikrát menší, kolikrát rychlejší?</h2>
+      <div class="pick-row">
+        <span class="lbl a">Stroj A</span><div class="seg sa" id="pickA"></div>
+        <span class="lbl b">Stroj B</span><div class="seg" id="pickB"></div>
+      </div>
+      <div class="mbars" id="mbars"></div>
+      <p class="ratio" id="ratio"></p>
+      <p class="note">Řádové hodnoty. Délka pruhu je v logaritmickém měřítku: každý dílek navíc znamená desetkrát víc.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Moorův zákon</div>
+      <h2 class="slide-title">Počet tranzistorů se zdvojnásobí zhruba každé dva roky</h2>
+      <p class="lede">Gordon Moore to odhadl v roce 1965, v roce 1975 tempo upřesnil na dva roky. Platilo to přes padesát let. Svislá osa je logaritmická. Klikni na procesor.</p>
+      <svg class="chart fit" id="moore" viewBox="0 0 760 330" role="img" aria-label="Graf počtu tranzistorů v procesorech od roku 1971"></svg>
+      <div class="panel" id="moorePanel"></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Počítač pro každého</div>
+      <h2 class="slide-title">Od myši po telefon</h2>
+      <div class="seg" id="pcSeg"></div>
+      <div class="split">
+        <div class="panel p-tall" id="pcPanel"></div>
+        <div id="pcVideo"></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">A u nás?</div>
+      <h2 class="slide-title">Československé počítače</h2>
+      <div class="cards4" id="czCards"></div>
+      <div class="panel" id="czPanel"></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Dnes</div>
+      <h2 class="slide-title">Sály jsou zpátky. Jmenují se datová centra.</h2>
+      <div class="split">
+        <div class="stack">
+          <p class="lede">Když posíláš zprávu, ukládáš fotku nebo se ptáš umělé inteligence, výpočet často běží na serverech v obří hale. Tisíce počítačů, chlazení, záložní napájení, obsluha. Princip sálu se vrátil.</p>
+          <div class="panel">
+            <h3>K diskusi</h3>
+            <p>Čím se cloud podobá sálovému počítači z roku 1965 a čím se liší? Mysli na to, kdo počítač vlastní, kdo k němu má přístup a co se stane, když spojení vypadne.</p>
+          </div>
+        </div>
+        <div class="vid" data-yt="zDAYZU4A3w0" data-title="Datové centrum Google" data-sub="prohlídka ve 360°"></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Seřaď od nejstaršího</h2>
+      <p class="score" id="ordScore">Klikej v pořadí od nejstaršího.</p>
+      <div class="order-pool" id="ordPool"></div>
+      <div class="seg"><button class="calc-btn" id="ordNew">Nové kolo</button></div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Generace počítačů se dělí podle součástky: <b>elektronka</b>, <b>tranzistor</b>, <b>integrovaný obvod</b>, <b>mikroprocesor</b>.</li>
+        <li><b>Děrný štítek</b> se používal od tkalcovského stavu (1804) až do 70. let 20. století.</li>
+        <li><b>Sálový počítač</b> sdílela celá firma, programy se zpracovávaly v dávkách.</li>
+        <li><b>Moorův zákon</b>: počet tranzistorů na čipu se zhruba každé dva roky zdvojnásobí.</li>
+        <li>Osobní počítač přinesl myš, okna a grafické rozhraní, telefon z něj udělal věc do kapsy.</li>
+        <li>Dnešní cloud je v jistém smyslu návrat k sálům.</li>
+      </ul>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud informace a videa jsou</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Videa</h3><ul class="src-list">
+          <li><a href="https://www.youtube.com/watch?v=r2SCpzXqmP8" target="_blank" rel="noopener">ENIAC v provozu, 1946</a></li>
+          <li><a href="https://www.youtube.com/watch?v=1yem8k1jrTs" target="_blank" rel="noopener">Z archivu: ENIAC</a></li>
+          <li><a href="https://www.youtube.com/watch?v=YnnGbcM-H8c" target="_blank" rel="noopener">Děrovač IBM 029, 1964</a></li>
+          <li><a href="https://www.youtube.com/watch?v=MTbbMc4bX_k" target="_blank" rel="noopener">IBM 1401, Computer History Museum</a></li>
+          <li><a href="https://www.youtube.com/watch?v=ZBZnSteT72A" target="_blank" rel="noopener">Od elektronky k čipu (dokument)</a></li>
+          <li><a href="https://www.youtube.com/watch?v=yJDv-zdhzMY" target="_blank" rel="noopener">The Mother of All Demos, 1968</a></li>
+          <li><a href="https://www.youtube.com/watch?v=vrE-6FJpZkc" target="_blank" rel="noopener">Reklama na IBM PC, 1981</a></li>
+          <li><a href="https://www.youtube.com/watch?v=MnrJzXM7a6o" target="_blank" rel="noopener">Představení iPhonu, 2007</a></li>
+          <li><a href="https://www.youtube.com/watch?v=zDAYZU4A3w0" target="_blank" rel="noopener">Datové centrum Google ve 360°</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Fakta a čísla</h3><ul class="src-list">
+          <li><a href="https://www.computerhistory.org/timeline/" target="_blank" rel="noopener">Computer History Museum: Timeline of Computer History</a></li>
+          <li><a href="https://ibm1401.computerhistory.org" target="_blank" rel="noopener">IBM 1401 Demo Lab, Computer History Museum</a></li>
+          <li><a href="https://ethw.org/Archives:The_Computer_Pioneers:_ENIAC" target="_blank" rel="noopener">Engineering and Technology History Wiki: ENIAC</a></li>
+          <li><a href="https://ethw.org/Milestones:Public_Demonstration_of_Online_Systems_and_Personal_Computing,_1968" target="_blank" rel="noopener">Engelbartova ukázka 1968 (IEEE Milestone)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/ENIAC" target="_blank" rel="noopener">Wikipedia: ENIAC</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Transistor_count" target="_blank" rel="noopener">Wikipedia: Transistor count (data k Moorovu zákonu)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Apollo_Guidance_Computer" target="_blank" rel="noopener">Wikipedia: Apollo Guidance Computer</a></li>
+          <li><a href="https://cs.wikipedia.org/wiki/V%C3%BDzkumn%C3%BD_%C3%BAstav_matematick%C3%BDch_stroj%C5%AF" target="_blank" rel="noopener">Wikipedie: Výzkumný ústav matematických strojů (SAPO, EPOS)</a></li>
+          <li><a href="https://cs.wikipedia.org/wiki/Historie_po%C4%8D%C3%ADta%C4%8Dov%C3%A9ho_hardwaru_v_zem%C3%ADch_sov%C4%9Btsk%C3%A9ho_bloku" target="_blank" rel="noopener">Wikipedie: Historie počítačového hardwaru v zemích sovětského bloku</a></li>
+          <li><a href="https://cs.wikipedia.org/wiki/D%C4%9Bjiny_po%C4%8D%C3%ADta%C4%8D%C5%AF" target="_blank" rel="noopener">Wikipedie: Dějiny počítačů</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Punched_card" target="_blank" rel="noopener">Wikipedia: Punched card</a></li>
+        </ul></div>
+      </div>
+      <p class="note">Videa jsou na YouTube, práva patří jejich autorům. Stav k říjnu 2026.</p>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function fmt(n){return n.toLocaleString("cs-CZ");}
+
+  /* ---------- videa: náhled → přehrávač ---------- */
+  function videoHtml(v){
+    return '<div class="vid" data-yt="'+v.id+'" data-title="'+esc(v.t)+'" data-sub="'+esc(v.s)+'"></div>';
+  }
+  function mountVideo(box){
+    var id=box.dataset.yt;
+    box.innerHTML='<button class="vid-btn" aria-label="Přehrát video: '+esc(box.dataset.title)+'"><img class="vid-thumb" alt="" loading="lazy" src="https://i.ytimg.com/vi/'+id+'/hqdefault.jpg"><span class="vid-play">▶</span></button>'+
+      '<div class="vid-meta"><span><span class="vid-title">'+esc(box.dataset.title)+'</span><br><span class="vid-sub">'+esc(box.dataset.sub)+'</span></span>'+
+      '<a class="vid-link" href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener">otevřít na YouTube ↗</a></div>';
+    box.querySelector(".vid-btn").addEventListener("click",function(){
+      var f=document.createElement("iframe");
+      f.className="vid-frame";f.title=box.dataset.title;
+      f.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&rel=0";
+      f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";
+      f.allowFullscreen=true;f.referrerPolicy="strict-origin-when-cross-origin";
+      this.replaceWith(f);
+    });
+  }
+  function mountAll(root){Array.prototype.forEach.call(root.querySelectorAll(".vid[data-yt]"),mountVideo);}
+
+  /* ---------- navigace ---------- */
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    if(slides[current].querySelector("iframe"))mountAll(slides[current]); /* zastaví video */
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+
+  function picker(host,items,mk,panel,show){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;show(it,i);
+      });host.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");show(items[0],0);
+    if(panel)fits.push({slide:host.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){show(it,i,true);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";show(items[act],act);
+    }});
+  }
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+
+  /* ---------- 1: před elektronikou ---------- */
+  var mech=[
+    {n:"Pascalina",y:"1642",t:"Blaise Pascal: mechanická sčítačka",d:"Devatenáctiletý Pascal ji sestrojil pro otce, výběrčího daní. Ozubená kolečka s deseti zuby sčítala a odčítala a uměla přenést jedničku do vyššího řádu."},
+    {n:"Jacquardův stav",y:"1804",t:"Tkalcovský stav řízený děrnými štítky",d:"Joseph Marie Jacquard řídil vzor látky řetězem děrných štítků. Kde byla dírka, nit se zvedla. Vyměníš štítky a stroj tká jiný vzor, tedy jiný <b>program</b>."},
+    {n:"Analytický stroj",y:"1837",t:"Charles Babbage: první návrh univerzálního počítače",d:"Měl <b>mlýn</b> (dnes procesor), <b>sklad</b> (dnes paměť) a vstup z děrných štítků. Nikdy nebyl dostavěn, přesto Ada Lovelace napsala program pro něj."},
+    {n:"Hollerithův stroj",y:"1890",t:"Sčítání lidu pomocí štítků a elektřiny",d:"Sčítání lidu v USA v roce 1880 se zpracovávalo osm let. Hollerith každého obyvatele zakódoval do děrného štítku a jeho stroj je četl elektricky. Výsledky z roku 1890 byly hotové za zlomek času. Z jeho firmy později vzniklo <b>IBM</b>."}
+  ];
+  picker($("mechCards"),mech,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.y+"</span>");},$("mechPanel"),function(c){
+    $("mechPanel").innerHTML='<span class="meta">'+c.y+'</span><h3>'+c.t+'</h3><p>'+c.d+'</p>';
+  });
+
+  /* ---------- 2: generace ---------- */
+  var gens=[
+    {n:"1. generace",y:"1945–1956",part:"elektronka",t:"Elektronky",
+     d:"Elektronka je skleněná baňka, která funguje jako vypínač. Je velká, hřeje a často se pálí. Počítače zabíraly celé sály a programovaly se ve strojovém kódu nebo zapojováním kabelů.",
+     f:[["Příklad","ENIAC (1946), UNIVAC I (1951)"],["Rychlost","tisíce operací za sekundu"],["Paměť","zpožďovací linky, magnetické bubny"]],
+     v:{id:"1yem8k1jrTs",t:"Z archivu: ENIAC",s:"dobový film"}},
+    {n:"2. generace",y:"1956–1964",part:"tranzistor",t:"Tranzistory",
+     d:"Tranzistor (vynalezen 1947) dělá totéž co elektronka, ale je malý, levný a vydrží. Objevují se první programovací jazyky FORTRAN a COBOL a feritové paměti.",
+     f:[["Příklad","IBM 1401 (1959)"],["Rychlost","desítky tisíc operací za sekundu"],["Práce","dávkové zpracování, děrné štítky"]],
+     v:{id:"ZBZnSteT72A",t:"Od elektronky k čipu",s:"dokument · anglicky"}},
+    {n:"3. generace",y:"1964–1971",part:"integrovaný obvod",t:"Integrované obvody",
+     d:"Integrovaný obvod (čip) spojí mnoho tranzistorů na jeden kousek křemíku. Počítače se zmenšují, objevují se terminály, sdílení času mezi více uživateli a skutečné operační systémy.",
+     f:[["Příklad","IBM System/360 (1964), PDP-8 (1965)"],["Novinka","rodina kompatibilních počítačů"],["Práce","terminál s obrazovkou, více uživatelů naráz"]],
+     v:{id:"yJDv-zdhzMY",t:"„Matka všech ukázek“",s:"Douglas Engelbart · 1968"}},
+    {n:"4. generace",y:"od 1971",part:"mikroprocesor",t:"Mikroprocesor",
+     d:"Celý procesor na jediném čipu. První byl Intel 4004 s 2 300 tranzistory. Díky tomu vznikají osobní počítače, které si koupí domácnost nebo škola.",
+     f:[["Příklad","Apple II (1977), IBM PC (1981)"],["Novinka","počítač na stole, myš, okna"],["OS","MS-DOS, Mac OS, později Windows a Linux"]],
+     v:{id:"vrE-6FJpZkc",t:"Reklama na IBM PC",s:"televizní spot · 1981"}},
+    {n:"Dnes",y:"od 2007",part:"mobil a cloud",t:"Mobil, cloud, umělá inteligence",
+     d:"Procesor má desítky miliard tranzistorů a více jader, telefon je výkonnější než superpočítače 90. let. Velkou část výpočtů obstarávají datová centra.",
+     f:[["Příklad","iPhone (2007), Android (2008)"],["Novinka","dotyk, stálé připojení, specializované čipy na AI"],["OS","iOS, Android, serverový Linux"]],
+     v:{id:"MnrJzXM7a6o",t:"Představení prvního iPhonu",s:"Steve Jobs · 2007"}}
+  ];
+  picker($("gens"),gens,function(g){return el("button","","<b>"+g.n+"</b><span>"+g.y+"</span>");},$("genPanel"),function(g,i,measure){
+    var f="";g.f.forEach(function(x){f+="<dt>"+x[0]+"</dt><dd>"+x[1]+"</dd>";});
+    $("genPanel").innerHTML='<span class="meta">součástka: '+g.part+'</span><h3>'+g.t+'</h3><p>'+g.d+'</p><dl class="facts">'+f+'</dl>';
+    if(!measure){$("genVideo").innerHTML=videoHtml(g.v);mountAll($("genVideo"));}
+  });
+
+  /* ---------- 4: děrný štítek ---------- */
+  var ROWS=["12","11","0","1","2","3","4","5","6","7","8","9"];
+  var punc={"&":["12"],"-":["11"],"/":["0","1"],".":["12","3","8"],"<":["12","4","8"],"(":["12","5","8"],"+":["12","6","8"],"$":["11","3","8"],"*":["11","4","8"],")":["11","5","8"],";":["11","6","8"],",":["0","3","8"],"%":["0","4","8"],"_":["0","5","8"],">":["0","6","8"],"?":["0","7","8"],":":["2","8"],"#":["3","8"],"@":["4","8"],"'":["5","8"],"=":["6","8"],"\"":["7","8"]};
+  function holes(ch){
+    if(ch===" ")return [];
+    if(/[0-9]/.test(ch))return [ch];
+    var c=ch.charCodeAt(0);
+    if(c>=65&&c<=73)return ["12",String(c-64)];
+    if(c>=74&&c<=82)return ["11",String(c-73)];
+    if(c>=83&&c<=90)return ["0",String(c-81)];
+    return punc[ch]||null;
+  }
+  var selCol=-1;
+  function punchRender(){
+    var raw=$("punchIn").value.toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+    var txt=raw.slice(0,40),h="",cols=[];
+    for(var i=0;i<40;i++){var ch=i<txt.length?txt[i]:" ";var ho=holes(ch);cols.push({c:ch,h:ho||[]});}
+    h+='<span class="pc-lab"></span>';
+    cols.forEach(function(c){h+='<span class="pc-char">'+(c.c===" "?"":esc(c.c))+'</span>';});
+    ROWS.forEach(function(r){
+      h+='<span class="pc-lab">'+r+'</span>';
+      cols.forEach(function(c,i){
+        var on=c.h.indexOf(r)>=0;
+        h+='<button class="pc-cell'+(on?" is-hole":"")+(i===selCol?" is-col":"")+'" data-c="'+i+'" tabindex="-1" aria-hidden="true">'+(/^[0-9]$/.test(r)?r:"")+'</button>';
+      });
+    });
+    $("punch").innerHTML=h;
+    var info="";
+    if(selCol>=0){
+      var c=cols[selCol];
+      info=c.c===" "?"Sloupec "+(selCol+1)+": mezera, žádná dírka.":"Sloupec "+(selCol+1)+": znak <b>"+esc(c.c)+"</b> = dírky v řádcích <b>"+(c.h.length?c.h.join(" + "):"?")+"</b>";
+      if(holes(c.c)===null)info="Znak <b>"+esc(c.c)+"</b> štítek neumí, zůstane bez dírek.";
+    } else {
+      var n=0;cols.forEach(function(c){n+=c.h.length;});
+      info="Vyděrováno <b>"+n+"</b> dírek ve "+txt.length+" sloupcích. Klikni na sloupec.";
+    }
+    $("punchInfo").innerHTML=info;
+  }
+  $("punchIn").addEventListener("input",function(){selCol=-1;punchRender();});
+  $("punch").addEventListener("click",function(e){var b=e.target.closest(".pc-cell");if(!b)return;selCol=+b.dataset.c;punchRender();});
+  punchRender();
+
+  /* ---------- 6: den programátora ---------- */
+  var tlOld=[["Po 8:00","Píšeš program tužkou do kódovacího formuláře. Každý řádek má nejvýš 80 znaků.",0],["Po 10:00","U děrovače přepíšeš každý řádek na jeden štítek.",2],["Po 11:00","Balík štítků odevzdáš do okénka výpočetního střediska.",3],["Po 16:00","Tvůj program je konečně na řadě. Počítač ho zpracuje za pár sekund.",8],["Út 8:00","Vyzvedneš výpis z tiskárny: chyba na řádku 37.",24],["Út 8:15","Opravíš jeden štítek a stoupneš si znovu do fronty.",24.25]];
+  var tlNew=[["0:00","Píšeš program v editoru, chyby se podtrhávají už při psaní.",0],["10:00","Uložíš a spustíš.",600],["10:01","Chyba na řádku 37, editor na ni skočí.",601],["10:20","Opravíš a spustíš znovu.",620],["10:21","Funguje.",621],["","",621]];
+  var tlI=0;
+  function tlRender(){
+    var o="",n="";
+    tlOld.forEach(function(s,i){o+='<div class="tl-step'+(i<tlI?" is-shown":"")+'"><span class="t">'+s[0]+'</span><span>'+s[1]+'</span></div>';});
+    tlNew.forEach(function(s,i){if(s[0])n+='<div class="tl-step'+(i<tlI?" is-shown":"")+'"><span class="t">'+s[0]+'</span><span>'+s[1]+'</span></div>';});
+    $("tlOld").innerHTML=o;$("tlNew").innerHTML=n;
+    var ho=tlI?tlOld[tlI-1][2]:0,sn=tlI?tlNew[tlI-1][2]:0;
+    $("clkOld").textContent=(ho>=24?"1 den "+(ho>24?"a "+Math.round((ho-24)*60)+" min":""):Math.round(ho)+" h");
+    $("clkNew").textContent=sn<60?sn+" s":Math.floor(sn/60)+" min "+(sn%60?(sn%60)+" s":"");
+    $("tlNext").disabled=tlI>=tlOld.length;
+  }
+  $("tlNext").addEventListener("click",function(){if(tlI<tlOld.length){tlI++;tlRender();}});
+  $("tlReset").addEventListener("click",function(){tlI=0;tlRender();});
+  tlRender();
+
+  /* ---------- 7: srovnání strojů ---------- */
+  var machines=[
+    {n:"ENIAC",y:1946,m:27000,p:150000,o:5000,mem:80,memT:"≈ 80 B (20 čísel)"},
+    {n:"Apollo AGC",y:1966,m:32,p:55,o:40000,mem:4096,memT:"≈ 4 KB"},
+    {n:"IBM PC",y:1981,m:10,p:65,o:330000,mem:16384,memT:"16 KB"},
+    {n:"Mobil",y:2025,m:0.2,p:5,o:1e11,mem:8e9,memT:"8 GB"}
+  ];
+  var metrics=[
+    {k:"m",n:"Hmotnost",u:function(v){return v>=1000?fmt(v/1000)+" t":fmt(v)+" kg";},less:"lehčí",more:"těžší"},
+    {k:"p",n:"Příkon",u:function(v){return v>=1000?fmt(v/1000)+" kW":fmt(v)+" W";},less:"úspornější",more:"žravější"},
+    {k:"o",n:"Operací za s",u:function(v){return v>=1e9?fmt(v/1e9)+" mld.":v>=1e6?fmt(v/1e6)+" mil.":fmt(v);},less:"pomalejší",more:"rychlejší"},
+    {k:"mem",n:"Paměť",u:null,less:"menší paměť",more:"větší paměť"}
+  ];
+  var A=0,B=3;
+  function ratioTxt(r){if(r>=1e6)return fmt(Math.round(r/1e5)/10)+" mil.";return fmt(r>=100?Math.round(r):Math.round(r*10)/10);}
+  function cmpRender(){
+    var h="",a=machines[A],b=machines[B];
+    metrics.forEach(function(mt){
+      var vals=machines.map(function(x){return Math.log10(x[mt.k]);});
+      var lo=Math.min.apply(null,vals)-0.6,hi=Math.max.apply(null,vals);
+      function w(v){return (Math.log10(v)-lo)/(hi-lo)*100;}
+      function val(x){return mt.u?mt.u(x[mt.k]):x.memT;}
+      h+='<div class="mbar"><span class="mbar-lab">'+mt.n+'</span>'+
+        '<div class="mbar-track"><span class="mbar-fill" data-w="'+w(a[mt.k])+'"></span><span class="mbar-val">'+val(a)+'</span></div>'+
+        '<div class="mbar-track"><span class="mbar-fill b" data-w="'+w(b[mt.k])+'"></span><span class="mbar-val">'+val(b)+'</span></div></div>';
+    });
+    $("mbars").innerHTML=h;
+    Array.prototype.forEach.call($("mbars").querySelectorAll(".mbar-fill"),function(f){f.style.width="calc("+f.dataset.w+"% - 6rem)";});
+    if(A===B){$("ratio").innerHTML="Vyber dva různé stroje.";return;}
+    var parts=[];
+    metrics.forEach(function(mt){
+      var r=b[mt.k]/a[mt.k];
+      if(mt.k==="o"||mt.k==="mem"){parts.push("<b>"+ratioTxt(r>=1?r:1/r)+"×</b> "+(r>=1?mt.more:mt.less));}
+      else parts.push("<b>"+ratioTxt(r>=1?r:1/r)+"×</b> "+(r>=1?mt.more:mt.less));
+    });
+    $("ratio").innerHTML=b.n+" ("+b.y+") je oproti stroji "+a.n+" ("+a.y+"): "+parts.join(", ")+".";
+  }
+  function machineSeg(host,get,set){
+    var btns=[];
+    machines.forEach(function(m,i){
+      var bt=el("button","calc-btn",m.n+" · "+m.y);
+      bt.addEventListener("click",function(){set(i);btns.forEach(function(x,j){x.classList.toggle("is-active",j===i);});cmpRender();});
+      host.appendChild(bt);btns.push(bt);
+    });
+    btns[get()].classList.add("is-active");
+  }
+  machineSeg($("pickA"),function(){return A;},function(i){A=i;});
+  machineSeg($("pickB"),function(){return B;},function(i){B=i;});
+  cmpRender();
+
+  /* ---------- 8: Moorův zákon ---------- */
+  var chips=[
+    {y:1971,n:"Intel 4004",t:2300,d:"První mikroprocesor na světě. Byl určený pro japonskou kalkulačku Busicom. Takt 740 kHz."},
+    {y:1978,n:"Intel 8086",t:29000,d:"Předek architektury x86, kterou má většina dnešních notebooků a stolních počítačů."},
+    {y:1985,n:"Intel 80386",t:275000,d:"První 32bitový procesor Intelu. Umožnil skutečný multitasking na PC."},
+    {y:1993,n:"Pentium",t:3100000,d:"Zvládal dvě instrukce v jednom taktu. Jméno místo čísla, protože čísla nejdou chránit jako značka."},
+    {y:2000,n:"Pentium 4",t:42000000,d:"Honba za vysokým taktem. Narazila na limit: čip se příliš hřál."},
+    {y:2006,n:"Core 2 Duo",t:291000000,d:"Místo vyššího taktu víc jader. Dvě jádra na jednom čipu se stala běžnými."},
+    {y:2013,n:"Apple A7",t:1000000000,d:"Čip v telefonu iPhone 5s, přes miliardu tranzistorů a 64 bitů v kapse."},
+    {y:2020,n:"Apple M1",t:16000000000,d:"Čip pro notebooky, který spojuje procesor, grafiku i paměť v jednom pouzdře."},
+    {y:2023,n:"Apple M3 Max",t:92000000000,d:"92 miliard tranzistorů. Na jeden tranzistor v Intel 4004 připadá 40 milionů dnešních."}
+  ];
+  var X0=70,X1=740,Y0=290,Y1=20,yrMin=1970,yrMax=2025,lgMin=3,lgMax=11;
+  function cx(y){return X0+(y-yrMin)/(yrMax-yrMin)*(X1-X0);}
+  function cy(v){return Y0-(Math.log10(v)-lgMin)/(lgMax-lgMin)*(Y0-Y1);}
+  var NS="http://www.w3.org/2000/svg";
+  function sv(tag,attrs,txt){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(txt!=null)e.textContent=txt;return e;}
+  var svg=$("moore");
+  for(var lg=lgMin;lg<=lgMax;lg++){
+    svg.appendChild(sv("line",{"class":"ch-grid",x1:X0,x2:X1,y1:cy(Math.pow(10,lg)),y2:cy(Math.pow(10,lg))}));
+    var lbl=lg<6?fmt(Math.pow(10,lg)):lg<9?fmt(Math.pow(10,lg-6))+" mil.":fmt(Math.pow(10,lg-9))+" mld.";
+    svg.appendChild(sv("text",{"class":"ch-axis",x:X0-8,y:cy(Math.pow(10,lg))+4,"text-anchor":"end"},lbl));
+  }
+  for(var yr=1970;yr<=2020;yr+=10)svg.appendChild(sv("text",{"class":"ch-axis",x:cx(yr),y:Y0+22,"text-anchor":"middle"},yr));
+  var tp="";for(var yy=1971;yy<=2024;yy++){tp+=(yy===1971?"M":"L")+cx(yy).toFixed(1)+","+cy(2300*Math.pow(2,(yy-1971)/2)).toFixed(1);}
+  svg.appendChild(sv("path",{"class":"ch-trend",d:tp}));
+  svg.appendChild(sv("text",{"class":"ch-axis",x:cx(2009),y:cy(2300*Math.pow(2,19))-10,"text-anchor":"end"},"zdvojení každé 2 roky"));
+  var pts=[];
+  chips.forEach(function(c,i){
+    var p=sv("circle",{"class":"ch-pt",cx:cx(c.y),cy:cy(c.t),r:7,tabindex:0,role:"button","aria-label":c.n});
+    var lx=cx(c.y)+(i>=7?-10:10),anchor=i>=7?"end":"start";
+    var t=sv("text",{"class":"ch-lab",x:lx,y:cy(c.t)+(i%2?16:-10),"text-anchor":anchor},c.n);
+    function act(){pts.forEach(function(q){q.classList.remove("is-active");});p.classList.add("is-active");showChip(c);}
+    p.addEventListener("click",act);p.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();act();}});
+    svg.appendChild(p);svg.appendChild(t);pts.push(p);
+  });
+  function showChip(c){$("moorePanel").innerHTML='<span class="meta">'+c.y+' · '+fmt(c.t)+' tranzistorů</span><h3>'+c.n+'</h3><p>'+c.d+'</p>';}
+  pts[0].classList.add("is-active");showChip(chips[0]);
+  fits.push({slide:svg.closest(".slide"),fn:function(){var p=$("moorePanel");p.style.minHeight="0px";var m=0;chips.forEach(function(c){showChip(c);m=Math.max(m,p.offsetHeight);});p.style.minHeight=m+"px";var a=0;pts.forEach(function(q,i){if(q.classList.contains("is-active"))a=i;});showChip(chips[a]);}});
+
+  /* ---------- 9: počítač pro každého ---------- */
+  var pcs=[
+    {n:"1968 Myš",t:"Douglas Engelbart: „Matka všech ukázek“",d:"Na jediné prezentaci předvedl myš, okna, odkazy mezi texty, sdílenou úpravu dokumentu na dálku i videohovor. Většina z toho se do běžných počítačů dostala až o 15 až 25 let později.",v:{id:"yJDv-zdhzMY",t:"The Mother of All Demos",s:"San Francisco · 1968"}},
+    {n:"1977 Apple II",t:"Hotový počítač do domácnosti",d:"V roce 1977 vyšly tři počítače, které stačilo zapojit do zásuvky: Apple II, Commodore PET a TRS-80. Důvodem koupit si Apple II byl tabulkový procesor VisiCalc (1979)."},
+    {n:"1981 IBM PC",t:"Počítač, podle kterého se jmenují všechny PC",d:"IBM použilo běžné součástky (procesor Intel 8088, 4,77 MHz) a operační systém MS-DOS od Microsoftu. Ostatní firmy ho mohly napodobit, a tak vznikly klony. Standard „PC“ platí dodnes.",v:{id:"vrE-6FJpZkc",t:"Reklama na IBM PC",s:"televizní spot · 1981"}},
+    {n:"1984 Macintosh",t:"Grafické rozhraní pro každého",d:"Okna, ikony, myš a koš. Nápad pochází z laboratoře Xerox PARC (počítač Alto, 1973), Apple ho dotáhl do prodejného výrobku. Microsoft odpověděl systémem Windows."},
+    {n:"1991 Web",t:"World Wide Web",d:"Tim Berners-Lee v CERNu vymyslel adresy URL, jazyk HTML a protokol HTTP. Internet existoval už dřív, web z něj udělal místo pro každého."},
+    {n:"2007 iPhone",t:"Počítač v kapse",d:"Dotyková obrazovka místo klávesnice, internet všude. V roce 2008 přichází Android. Dnes je mobil nejpoužívanější počítač na světě.",v:{id:"MnrJzXM7a6o",t:"Představení iPhonu",s:"Steve Jobs · 2007"}}
+  ];
+  picker($("pcSeg"),pcs,function(c){return el("button","calc-btn",c.n);},$("pcPanel"),function(c,i,measure){
+    $("pcPanel").innerHTML='<span class="meta">'+c.n.split(" ")[0]+'</span><h3>'+c.t+'</h3><p>'+c.d+'</p>';
+    if(!measure){
+      if(c.v){$("pcVideo").innerHTML=videoHtml(c.v);mountAll($("pcVideo"));}
+      else $("pcVideo").innerHTML='<div class="panel"><p>K tomuto milníku video nemáme. Zkus se zeptat doma: jaký byl váš první počítač?</p></div>';
+    }
+  });
+
+  /* ---------- 10: Československo ---------- */
+  var cz=[
+    {n:"SAPO",y:"1957",t:"První československý počítač",d:"Postavil ho tým Antonína Svobody. Byl reléový a měl tři aritmetické jednotky, které počítaly totéž a hlasovaly o výsledku. Tak se bránil chybám. V roce 1960 shořel."},
+    {n:"EPOS",y:"60. léta",t:"Nástupce SAPO",d:"Elektronický počítač, který uměl střídat několik programů současně. Myšlenka, na které stojí dnešní operační systémy."},
+    {n:"PMD 85",y:"1985",t:"Školní osmibitový počítač",d:"Vyráběla ho Tesla Piešťany a stál v mnoha školách. Programovalo se v BASICu a programy se nahrávaly z magnetofonové kazety."},
+    {n:"Didaktik Gama",y:"1987",t:"Domácí počítač ze Skalice",d:"Napodobenina britského ZX Spectrum. Hrály se na něm hry a mnoho dnešních programátorů na něm začínalo."}
+  ];
+  picker($("czCards"),cz,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.y+"</span>");},$("czPanel"),function(c){
+    $("czPanel").innerHTML='<span class="meta">'+c.y+'</span><h3>'+c.t+'</h3><p>'+c.d+'</p>';
+  });
+
+  /* ---------- 12: řazení ---------- */
+  var events=[
+    ["Pascalina",1642],["Jacquardův stav",1804],["Babbageův analytický stroj",1837],["Hollerithův stroj na sčítání lidu",1890],
+    ["ENIAC",1946],["Vynález tranzistoru",1947],["Integrovaný obvod",1958],["Intel 4004",1971],["IBM PC",1981],["World Wide Web",1991],["iPhone",2007]
+  ];
+  var round=[],next=0,ok=0;
+  function ordNew(){
+    var pool=events.slice();round=[];
+    while(round.length<6){round.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);}
+    var sorted=round.slice().sort(function(a,b){return a[1]-b[1];});
+    next=0;ok=0;
+    var host=$("ordPool");host.innerHTML="";
+    round.forEach(function(ev){
+      var b=el("button","ord",'<span class="k"></span><span>'+ev[0]+'</span><span class="yr"></span>');
+      b.addEventListener("click",function(){
+        if(b.classList.contains("is-done")||b.classList.contains("is-wrong"))return;
+        var right=sorted[next]===ev;
+        b.querySelector(".k").textContent=String(next+1);
+        if(right){b.classList.add("is-done");ok++;}else{b.classList.add("is-wrong");}
+        b.querySelector(".yr").textContent=ev[1];
+        next++;
+        $("ordScore").textContent=next<6?"Krok "+next+" z 6 · správně "+ok:"Hotovo: "+ok+" z 6 na správném místě. Správné pořadí: "+sorted.map(function(x){return x[1];}).join(" → ");
+      });
+      host.appendChild(b);
+    });
+    $("ordScore").textContent="Klikej v pořadí od nejstaršího.";
+  }
+  $("ordNew").addEventListener("click",ordNew);
+  ordNew();
+
+  mountAll(document);
+  goTo(0);
+})();
+</script>
+</body>
+</html>

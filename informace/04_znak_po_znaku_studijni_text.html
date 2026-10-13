@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Znak po znaku – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Kódování</li>
+    <li><a href="#kodovani">Co je kódování</a></li>
+    <li><a href="#morse">Morseova abeceda</a></li>
+    <li class="grp">Kódování textu</li>
+    <li><a href="#ascii">ASCII</a></li>
+    <li><a href="#ridici">Řídicí znaky a mezery</a></li>
+    <li><a href="#cestina">Čeština a kódové stránky</a></li>
+    <li><a href="#unicode">Unicode</a></li>
+    <li><a href="#utf8">UTF-8</a></li>
+    <li><a href="#prakticky">Kódování v praxi</a></li>
+    <li class="grp">Komprese textu</li>
+    <li><a href="#komprese">Časté znaky, krátký kód</a></li>
+    <li><a href="#prefix">Prefixový kód</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#zkus">Vyzkoušej si</a></li>
+    <li><a href="#chyby">Časté chyby</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Informace · Studijní text k lekci 04</p>
+  <h1>Znak po znaku <span class="t">A → 65</span></h1>
+  <p class="lead">Jak počítač ukládá text, když umí jen nuly a jedničky. Kódování, tabulka ASCII, proč se kdysi rozsypávala čeština, Unicode a UTF-8 a jak se dá text zmenšit. Text je psaný tak, abys ho zvládl sám, i když jsi na hodině chyběl.</p>
+  <a class="deck-link" href="04_Znak_po_znaku.html"><span class="ic">▶</span><span class="tx"><b>Prezentace k lekci: Znak po znaku</b><span>Interaktivní slajdy z hodiny, s tabulkou ASCII a převodníkem do UTF-8</span></span></a>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit, co je kódování a dekódování</li>
+      <li>popsat tabulku ASCII a její omezení</li>
+      <li>vyhledat kód znaku desítkově, šestnáctkově i dvojkově</li>
+      <li>vysvětlit, proč se rozsypávala diakritika</li>
+      <li>rozlišit Unicode a UTF-8</li>
+      <li>určit, kolik bajtů zabere znak v UTF-8</li>
+      <li>vysvětlit princip komprese textu kratšími kódy</li>
+      <li>zdůvodnit, proč musí být kód prefixový</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Kódování</p>
+
+<section id="kodovani">
+<h2>Co je kódování</h2>
+<p>Počítač neumí uložit písmeno. Umí uložit jen bity (viz <a href="03_bit_byte_studijni_text.html">lekce 03</a>). Aby mohl pracovat s textem, potřebuje <strong>dohodnuté pravidlo</strong>, které každému znaku přiřadí jedinečnou kombinaci bitů.</p>
+<p><dfn>Kódování</dfn> je převod symbolů (písmen, číslic, barev…) na posloupnosti bitů podle takového pravidla. <dfn>Dekódování</dfn> je převod opačným směrem. Funguje jen tehdy, když odesílatel i příjemce používají <strong>stejnou tabulku</strong>.</p>
+<div class="formula">A → [tabulka] → 01000001 → [stejná tabulka] → A</div>
+<div class="note warn"><b class="lbl">Kódování není šifrování</b><p>Kódovací tabulka je veřejná a jejím cílem je, aby si data přečetl kdokoli. Šifrování naopak data záměrně skrývá a bez tajného klíče je přečíst nejde.</p></div>
+</section>
+
+<section id="morse">
+<h2>Morseova abeceda</h2>
+<p>Jedno z prvních kódování pro přenos textu na dálku vzniklo kolem roku 1840 pro elektrický telegraf (Samuel Morse a Alfred Vail). Písmena se kódují krátkými a dlouhými signály, tečkami a čárkami.</p>
+<div class="formula">.- .... --- .---<small>A H O J</small></div>
+<p>Morseovka má jeden chytrý nápad: <strong>častá písmena mají krátký kód</strong>. Nejčastější anglické písmeno E je jediná tečka <code>.</code>, vzácné Q je <code>--.-</code>. Zprávy jsou díky tomu kratší. K tomuhle triku se vrátíme u komprese.</p>
+</section>
+
+<p class="part">Kódování textu</p>
+
+<section id="ascii">
+<h2>ASCII</h2>
+<p><dfn>ASCII</dfn> (American Standard Code for Information Interchange) je první široce rozšířená kódovací tabulka pro text. Vznikla v USA v roce 1963. Používá <strong>7 bitů</strong>, takže má 2⁷ = <strong>128 pozic</strong> s čísly 0 až 127.</p>
+<div class="tbl"><table>
+<thead><tr><th>pozice</th><th>obsah</th></tr></thead>
+<tbody>
+<tr><td class="num">0–31, 127</td><td>řídicí znaky (konec řádku, tabulátor…), netisknou se</td></tr>
+<tr><td class="num">32</td><td>mezera</td></tr>
+<tr><td class="num">48–57</td><td>číslice 0–9</td></tr>
+<tr><td class="num">65–90</td><td>velká písmena A–Z</td></tr>
+<tr><td class="num">97–122</td><td>malá písmena a–z</td></tr>
+<tr><td class="num">ostatní</td><td>interpunkce a symboly <code>! " # $ % &amp; ( ) * + , - . / : ; &lt; = &gt; ? @ [ ] { }</code>…</td></tr>
+</tbody></table></div>
+<h3>Ukázky kódů</h3>
+<div class="tbl"><table>
+<thead><tr><th>znak</th><th>desítkově</th><th>šestnáctkově</th><th>dvojkově</th></tr></thead>
+<tbody>
+<tr><td><code>A</code></td><td class="num">65</td><td class="num">41</td><td class="num">0100 0001</td></tr>
+<tr><td><code>B</code></td><td class="num">66</td><td class="num">42</td><td class="num">0100 0010</td></tr>
+<tr><td><code>a</code></td><td class="num">97</td><td class="num">61</td><td class="num">0110 0001</td></tr>
+<tr><td><code>0</code></td><td class="num">48</td><td class="num">30</td><td class="num">0011 0000</td></tr>
+<tr><td><code>9</code></td><td class="num">57</td><td class="num">39</td><td class="num">0011 1001</td></tr>
+<tr><td>mezera</td><td class="num">32</td><td class="num">20</td><td class="num">0010 0000</td></tr>
+</tbody></table></div>
+<div class="note tip"><b class="lbl">Chytré vlastnosti tabulky</b><p>Písmena jdou po sobě, takže abecední řazení odpovídá řazení podle čísel. Malé písmeno je o 32 větší než velké (a = A + 32): liší se jediným bitem. A číslice 0–9 mají kódy 48–57, takže hodnotu číslice dostaneš odečtením 48.</p></div>
+<p>Do 128 pozic se vešla anglická abeceda, číslice a interpunkce. Na <strong>diakritiku</strong> (háčky, čárky, přehlásky) ani na jiná písma ale místo nezbylo.</p>
+</section>
+
+<section id="ridici">
+<h2>Řídicí znaky a mezery</h2>
+<p>Kromě viditelných znaků obsahuje text i znaky, které nic nekreslí, ale něco řídí:</p>
+<ul>
+  <li><strong>LF</strong> (10, „line feed“): konec řádku v Linuxu a macOS.</li>
+  <li><strong>CR LF</strong> (13 a 10): konec řádku ve Windows. Pochází z psacích strojů: návrat vozíku (CR) a posun papíru (LF).</li>
+  <li><strong>TAB</strong> (9): tabulátor.</li>
+</ul>
+<h3>Nezalomitelná mezera</h3>
+<p>Obyčejná mezera (kód 32) dovolí v místě mezery zalomit řádek. Někdy to nechceme, třeba mezi „10“ a „kg“ nebo mezi předložkou „v“ a dalším slovem. K tomu slouží <dfn>nezalomitelná mezera</dfn> s kódem <strong>160</strong>. V HTML se píše jako <code>&amp;nbsp;</code>, ve Wordu klávesami <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>mezera</kbd>.</p>
+<p>Všimni si, že 160 je mimo původní ASCII (0–127). Tabulku bylo potřeba rozšířit.</p>
+</section>
+
+<section id="cestina">
+<h2>Čeština a kódové stránky</h2>
+<p>Počítače ukládají text po bajtech (8 bitů), ASCII ale využívá jen 7 z nich. Zbylých 128 pozic (128–255) proto výrobci využili pro národní znaky. Každý si je ale obsadil po svém. Takovým rozšířeným tabulkám se říká <dfn>kódové stránky</dfn>. Jen pro češtinu jich bylo několik:</p>
+<div class="tbl"><table>
+<thead><tr><th>kódování</th><th>kde se používalo</th></tr></thead>
+<tbody>
+<tr><td>Kamenických (1985)</td><td>české programy pro DOS</td></tr>
+<tr><td>CP852 (Latin 2)</td><td>DOS od IBM a Microsoftu</td></tr>
+<tr><td>Windows-1250</td><td>Windows</td></tr>
+<tr><td>ISO-8859-2</td><td>Unix, Linux, internet</td></tr>
+</tbody></table></div>
+<p>Stejné číslo znamenalo v každé tabulce jiný znak. Když text napsaný v jedné tabulce otevřel program, který předpokládal jinou, diakritika se rozsypala:</p>
+<div class="cols2">
+  <div class="card"><h3>Odesláno</h3><p>Dobrý den, žluťoučký kůň</p></div>
+  <div class="card"><h3>Zobrazeno se špatnou tabulkou</h3><p class="bits">DobrÃ½ den, Å¾luÅ¥ouÄký kÅ¯Å</p></div>
+</div>
+<p>Tomuhle jevu se říká <dfn>mojibake</dfn> (z japonštiny) nebo lidově „hex guláš“. Bity jsou pořád stejné, jen se čtou podle jiné tabulky.</p>
+</section>
+
+<section id="unicode">
+<h2>Unicode: jedno číslo pro každý znak</h2>
+<p><dfn>Unicode</dfn> je celosvětový standard (verze 1.0 vyšla v roce 1991), který přiřazuje <strong>jedno jediné číslo každému znaku všech písem světa</strong>: latinka, azbuka, řečtina, arabština, čínské znaky, matematické symboly i emoji. Toto číslo se jmenuje <dfn>kódový bod</dfn> a zapisuje se jako <code>U+</code> a šestnáctkové číslo.</p>
+<div class="tbl"><table>
+<thead><tr><th>znak</th><th>kódový bod</th><th>poznámka</th></tr></thead>
+<tbody>
+<tr><td><code>A</code></td><td class="num">U+0041</td><td>prvních 128 bodů je shodných s ASCII</td></tr>
+<tr><td><code>č</code></td><td class="num">U+010D</td><td>rozšířená latinka</td></tr>
+<tr><td><code>€</code></td><td class="num">U+20AC</td><td>symboly měn</td></tr>
+<tr><td><code>😀</code></td><td class="num">U+1F600</td><td>emoji</td></tr>
+</tbody></table></div>
+<p>Prostor Unicode má přes <strong>1,1 milionu</strong> pozic (přesně 1 114 112). Číslo znaku je všude stejné, takže kolize jako u kódových stránek nehrozí.</p>
+<div class="note mat"><b class="lbl">Důležité rozlišení</b><p>Unicode říká, <em>jaké číslo</em> znak má. Neříká, <em>jak toto číslo zapsat do bajtů</em>. To řeší kódování jako UTF-8, UTF-16 nebo UTF-32.</p></div>
+</section>
+
+<section id="utf8">
+<h2>UTF-8</h2>
+<p><dfn>UTF-8</dfn> (Unicode Transformation Format, 8bitový) je dnes nejrozšířenější způsob zápisu Unicode. Navrhli ho Ken Thompson a Rob Pike v roce 1992. Používá ho naprostá většina webových stránek.</p>
+<p>Znaky mají <strong>proměnnou délku</strong>, 1 až 4 bajty:</p>
+<div class="tbl"><table>
+<thead><tr><th>kódové body</th><th>bajtů</th><th>příklady</th></tr></thead>
+<tbody>
+<tr><td class="num">U+0000 – U+007F</td><td class="num">1</td><td>ASCII: anglická písmena, číslice</td></tr>
+<tr><td class="num">U+0080 – U+07FF</td><td class="num">2</td><td>diakritika (č, ř, ž), řečtina, azbuka</td></tr>
+<tr><td class="num">U+0800 – U+FFFF</td><td class="num">3</td><td>€, čínské a japonské znaky</td></tr>
+<tr><td class="num">U+10000 a výš</td><td class="num">4</td><td>emoji, historická písma</td></tr>
+</tbody></table></div>
+<div class="tbl"><table>
+<thead><tr><th>znak</th><th>kódový bod</th><th>bajty v UTF-8</th></tr></thead>
+<tbody>
+<tr><td><code>A</code></td><td class="num">U+0041</td><td class="num">41</td></tr>
+<tr><td><code>č</code></td><td class="num">U+010D</td><td class="num">C4 8D</td></tr>
+<tr><td><code>€</code></td><td class="num">U+20AC</td><td class="num">E2 82 AC</td></tr>
+<tr><td><code>😀</code></td><td class="num">U+1F600</td><td class="num">F0 9F 98 80</td></tr>
+</tbody></table></div>
+<h3>Proč se UTF-8 prosadilo</h3>
+<ul>
+  <li><strong>Zpětná kompatibilita s ASCII.</strong> Anglický text v ASCII je zároveň platný text v UTF-8, bajt po bajtu.</li>
+  <li><strong>Úspornost.</strong> Běžný text v latince zabere skoro stejně jako v ASCII. Čeština má diakritiku jen u části písmen.</li>
+  <li><strong>Pozná se, kde znak začíná.</strong> První bajt vícebajtového znaku začíná bity <code>110</code>, <code>1110</code> nebo <code>11110</code>, další bajty vždy <code>10</code>. Když se část dat poškodí, rozsype se jen jeden znak, ne zbytek textu.</li>
+</ul>
+<p>Hex guláš z předchozí kapitoly vzniká často právě takhle: text uložený v UTF-8 se přečte jako Windows-1250 nebo ISO-8859-2. Z dvoubajtového „ž“ (<code>C5 BE</code>) se tak stanou dva nesmyslné znaky.</p>
+</section>
+
+<section id="prakticky">
+<h2>Kódování v praxi</h2>
+<p>V HTML stránce se kódování uvádí v hlavičce, aby ho prohlížeč nemusel hádat:</p>
+<pre><code>&lt;meta charset="UTF-8"&gt;</code></pre>
+<ul>
+  <li>Ukládej soubory vždy v <strong>UTF-8</strong> (v editoru bývá volba dole na stavovém řádku).</li>
+  <li>Když se v souboru objeví <code>Ã½</code> nebo <code>Å¾</code>, soubor je v UTF-8, ale čte se jinou tabulkou. Oprava je otevřít ho znovu s kódováním UTF-8, ne přepisovat text.</li>
+  <li>Excel ve Windows někdy otevře CSV soubor ve Windows-1250. U importu lze kódování zvolit ručně.</li>
+</ul>
+</section>
+
+<p class="part">Komprese textu</p>
+
+<section id="komprese">
+<h2>Časté znaky, krátký kód</h2>
+<p>V UTF-8 zabere každé anglické písmeno 8 bitů, ať je časté, nebo vzácné. Slovo <strong>ABRAKADABRA</strong> má 11 písmen, tedy 11 × 8 = <strong>88 bitů</strong>. Přitom písmeno A se v něm opakuje pětkrát.</p>
+<div class="tbl"><table>
+<thead><tr><th>písmeno</th><th>kolikrát</th><th>kód</th><th>bitů celkem</th></tr></thead>
+<tbody>
+<tr><td>A</td><td class="num">5</td><td class="num">0</td><td class="num">5 × 1 = 5</td></tr>
+<tr><td>B</td><td class="num">2</td><td class="num">100</td><td class="num">2 × 3 = 6</td></tr>
+<tr><td>R</td><td class="num">2</td><td class="num">101</td><td class="num">2 × 3 = 6</td></tr>
+<tr><td>K</td><td class="num">1</td><td class="num">110</td><td class="num">1 × 3 = 3</td></tr>
+<tr><td>D</td><td class="num">1</td><td class="num">111</td><td class="num">1 × 3 = 3</td></tr>
+<tr><td colspan="3"><strong>celkem</strong></td><td class="num"><strong>23</strong></td></tr>
+</tbody></table></div>
+<p>Místo 88 bitů stačí 23, tedy asi o <strong>74 % méně</strong>. Stejný princip jako u Morseovky: čím častější znak, tím kratší kód. Systematický postup, jak takové kódy najít optimálně, je <dfn>Huffmanovo kódování</dfn> (David Huffman, 1952). Používá se uvnitř formátu ZIP, PNG i JPEG.</p>
+<div class="note warn"><b class="lbl">Háček</b><p>Kódovací tabulku (slovník) je nutné uložit spolu s daty, jinak by příjemce nevěděl, co znamená <code>100</code>. U krátkých textů může tabulka sníst většinu úspory. Komprese se vyplatí hlavně u delších dat.</p></div>
+<p>Podrobněji se kompresi věnuje <a href="08_komprese_studijni_text.html">lekce 08</a>.</p>
+</section>
+
+<section id="prefix">
+<h2>Prefixový kód</h2>
+<p>Kódy mají různou délku a v datech nejsou mezery. Jak pak poznat, kde jeden kód končí a druhý začíná? Musí platit podmínka: <strong>žádný kód není začátkem (prefixem) jiného kódu</strong>. Takovému kódu se říká <dfn>prefixový</dfn>.</p>
+<p>V našem příkladu začíná A jedinou nulou a všechny ostatní kódy začínají jedničkou. Čtení je proto jednoznačné:</p>
+<div class="formula">0 100 101 0 110 0 111 0 100 101 0<small>A B R A K A D A B R A</small></div>
+<p>Kdyby A mělo kód <code>1</code> a B kód <code>10</code>, nešlo by po přečtení <code>1</code> rozhodnout, jestli jde o A, nebo o začátek B.</p>
+<p>Morseovka prefixová není, a proto potřebuje mezi písmeny pauzu. Pauza je vlastně třetí symbol.</p>
+</section>
+
+<p class="part">Opakování</p>
+
+<section id="zkus">
+<h2>Vyzkoušej si</h2>
+<details class="sol"><summary>1. Jaký kód má v ASCII písmeno D? A písmeno d?</summary><div><p>D = 68 (A je 65, D je o 3 dál). d = 68 + 32 = <strong>100</strong>.</p></div></details>
+<details class="sol"><summary>2. Dekóduj zprávu v ASCII: 65 72 79 74 33</summary><div><p>„<strong>AHOJ!</strong>“ (65 = A, 72 = H, 79 = O, 74 = J, 33 = vykřičník).</p></div></details>
+<details class="sol"><summary>3. Zapiš písmeno K v ASCII dvojkově a šestnáctkově.</summary><div><p>K = 75 = 64 + 8 + 2 + 1 → <span class="bits">0100 1011</span> → <strong>4B</strong>.</p></div></details>
+<details class="sol"><summary>4. Kolik bajtů zabere v UTF-8 slovo „řeka“? A „river“?</summary><div><p>„řeka“: ř = 2 B, e, k, a = 1 B → <strong>5 bajtů</strong>. „river“: 5 × 1 B = <strong>5 bajtů</strong>.</p></div></details>
+<details class="sol"><summary>5. Proč ASCII nestačilo pro češtinu?</summary><div><p>Má jen 128 pozic (7 bitů) a ty obsadila anglická abeceda, číslice, interpunkce a řídicí znaky. Na znaky s diakritikou nezbylo místo.</p></div></details>
+<details class="sol"><summary>6. Je kód A = 0, B = 01, C = 10 prefixový?</summary><div><p><strong>Není.</strong> Kód A (0) je začátkem kódu B (01). Zpráva <code>010</code> může znamenat „AC“ (0 + 10) i „BA“ (01 + 0).</p></div></details>
+<details class="sol"><summary>7. Kolik bitů ušetří chytrý kód u slova MAMA, když M = 0 a A = 1?</summary><div><p>V UTF-8: 4 × 8 = 32 bitů. Chytře: 4 × 1 = 4 bity. Ušetří 28 bitů, ale slovník stojí další bity.</p></div></details>
+</section>
+
+<section id="chyby">
+<h2>Časté chyby</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Správně</th></tr></thead>
+<tbody>
+<tr><td>„Unicode a UTF-8 je totéž“</td><td>Unicode přiřazuje čísla znakům, UTF-8 je způsob, jak je zapsat do bajtů</td></tr>
+<tr><td>„ASCII má 256 znaků“</td><td>ASCII má 128 znaků (7 bitů). 256 mají až rozšířené kódové stránky</td></tr>
+<tr><td>„V UTF-8 má každý znak 1 bajt“</td><td>1 až 4 bajty podle znaku</td></tr>
+<tr><td>Rozsypaný text opravovat ručním přepsáním</td><td>Otevřít soubor znovu se správným kódováním</td></tr>
+<tr><td>Zaměňovat kódování a šifrování</td><td>Kódování je veřejné, šifrování skrývá obsah</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<details class="q"><summary>Co je kódování a co je k němu potřeba?</summary><div class="a"><p>Dohodnuté pravidlo, které přiřazuje symbolům posloupnosti bitů. Odesílatel i příjemce musí používat stejnou tabulku.</p></div></details>
+<details class="q"><summary>Kolik bitů a kolik znaků má ASCII?</summary><div class="a"><p>7 bitů, 128 znaků (0–127). Vzniklo v roce 1963.</p></div></details>
+<details class="q"><summary>Co jsou kódové stránky a jaký s nimi byl problém?</summary><div class="a"><p>Rozšíření ASCII na 8 bitů, kde se horních 128 pozic využilo pro národní znaky. Každý výrobce měl jinou tabulku (Kamenických, CP852, Windows-1250, ISO-8859-2), takže stejný bajt znamenal různé znaky a diakritika se rozsypávala.</p></div></details>
+<details class="q"><summary>Co je kódový bod?</summary><div class="a"><p>Číslo, které Unicode přiřazuje znaku, např. U+010D pro „č“.</p></div></details>
+<details class="q"><summary>Proč je UTF-8 zpětně kompatibilní s ASCII?</summary><div class="a"><p>Prvních 128 znaků zapisuje jedním bajtem se stejnou hodnotou jako ASCII.</p></div></details>
+<details class="q"><summary>Proč musí být kód s proměnnou délkou prefixový?</summary><div class="a"><p>Mezi kódy nejsou oddělovače. Pokud žádný kód není začátkem jiného, jde zprávu přečíst jednoznačně.</p></div></details>
+<details class="q"><summary>Proč se u komprese ukládá i tabulka kódů?</summary><div class="a"><p>Bez ní by příjemce nevěděl, který kód znamená které písmeno, a nemohl by data dekódovat.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Kódování</dt><dd>Převod symbolů na bity podle dohodnutého pravidla</dd>
+  <dt>Dekódování</dt><dd>Převod bitů zpět na symboly</dd>
+  <dt>ASCII</dt><dd>7bitová tabulka znaků z roku 1963, 128 pozic</dd>
+  <dt>Kódová stránka</dt><dd>Rozšíření ASCII o národní znaky na pozicích 128–255</dd>
+  <dt>Mojibake</dt><dd>Rozsypaný text čtený podle špatné tabulky</dd>
+  <dt>Unicode</dt><dd>Standard, který přiřazuje číslo každému znaku všech písem</dd>
+  <dt>Kódový bod</dt><dd>Číslo znaku v Unicode, zápis U+XXXX</dd>
+  <dt>UTF-8</dt><dd>Zápis Unicode do 1 až 4 bajtů, zpětně kompatibilní s ASCII</dd>
+  <dt>Nezalomitelná mezera</dt><dd>Mezera s kódem 160, v jejímž místě se nezalomí řádek (<code>&amp;nbsp;</code>)</dd>
+  <dt>Prefixový kód</dt><dd>Žádný kód není začátkem jiného, čtení je jednoznačné</dd>
+  <dt>Huffmanovo kódování</dt><dd>Metoda, která dává častým znakům kratší kódy</dd>
+</dl>
+</section>
+
+<p class="foot">Studijní text k lekci „Znak po znaku“ z bloku Informace. Interaktivní verzi najdeš v <a href="04_Znak_po_znaku.html">prezentaci</a>.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    var d = document.querySelector('.toc details'); if (d) d.open = false;
+  }
+})();
+</script>
+</body>
+</html>

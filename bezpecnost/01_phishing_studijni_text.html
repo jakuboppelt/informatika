@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phishing – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Co to je</li>
+    <li><a href="#co">Phishing</a></li>
+    <li><a href="#prubeh">Jak útok probíhá</a></li>
+    <li><a href="#psychologie">Proč to funguje</a></li>
+    <li><a href="#druhy">Druhy útoků</a></li>
+    <li class="grp">Jak ho poznat</li>
+    <li><a href="#anatomie">Anatomie podvodného e-mailu</a></li>
+    <li><a href="#domena">Jak číst adresu</a></li>
+    <li><a href="#podobne">Podobné adresy</a></li>
+    <li><a href="#odkaz">Text odkazu a jeho cíl</a></li>
+    <li><a href="#zamecek">Mýtus o zámečku</a></li>
+    <li class="grp">Obrana</li>
+    <li><a href="#navyky">Čtyři návyky</a></li>
+    <li><a href="#stalo">Když se to stane</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#zkus">Vyzkoušej si</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Bezpečnost · Studijní text k lekci 01</p>
+  <h1>Phishing <span class="t">@?</span></h1>
+  <p class="lead">Podvodná zpráva, která se tváří důvěryhodně. Jak útok probíhá, proč funguje, jak poznat podvodnou adresu a co dělat, když se to stane. Text je psaný tak, abys ho zvládl sám, i když jsi na hodině chyběl.</p>
+  <a class="deck-link" href="01_phishing.html"><span class="ic">▶</span><span class="tx"><b>Prezentace k lekci: Phishing</b><span>Interaktivní slajdy z hodiny: hledání varovných znamení, podobné adresy, kvíz podvod / v pořádku</span></span></a>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit, co je phishing a jaký má cíl</li>
+      <li>popsat kroky typického útoku</li>
+      <li>vyjmenovat psychologické triky útočníků</li>
+      <li>rozlišit smishing, vishing, quishing a spear phishing</li>
+      <li>najít v adrese skutečnou doménu</li>
+      <li>poznat podobně vypadající adresy</li>
+      <li>ověřit, kam odkaz opravdu vede</li>
+      <li>vysvětlit, proč zámeček neznamená důvěryhodnost</li>
+      <li>popsat, jak se bránit a co dělat po kliknutí</li>
+    </ul>
+  </div>
+</header>
+
+<div class="note warn"><b class="lbl">Upozornění</b><p>Všechny firmy, banky a adresy v tomto textu jsou vymyšlené. Slouží jen jako příklady.</p></div>
+
+<p class="part">Co to je</p>
+
+<section id="co">
+<h2>Phishing</h2>
+<p><dfn>Phishing</dfn> (čti „fišing“) je podvod, při kterém útočník předstírá důvěryhodný zdroj, třeba banku, dopravce, školu nebo kamaráda. Cílem je vylákat z oběti:</p>
+<ul>
+  <li><strong>přihlašovací údaje</strong> (heslo, kód z SMS),</li>
+  <li><strong>peníze</strong> nebo údaje platební karty,</li>
+  <li><strong>instalaci škodlivého programu</strong> (otevření přílohy, aplikace „pro vzdálenou pomoc“).</li>
+</ul>
+<p>Název vznikl z anglického <em>fishing</em>, rybaření: útočník nahodí návnadu a čeká, kdo se chytí. Písmena „ph“ odkazují na starší hackerskou kulturu (<em>phreaking</em>). Výraz se ujal v polovině 90. let mezi uživateli služby AOL.</p>
+<div class="note mat"><b class="lbl">Hlavní myšlenka</b><p>Phishing neútočí na počítač, ale na <strong>člověka</strong>. Nepotřebuje prolomit žádné zabezpečení. Stačí, když mu oběť sama dá heslo. Proto ho žádný antivirus úplně nezastaví a obrana stojí hlavně na pozornosti.</p></div>
+</section>
+
+<section id="prubeh">
+<h2>Jak útok probíhá</h2>
+<ol class="plan">
+  <li><b>Návnada.</b> Zpráva přijde e-mailem, SMS nebo přes sociální síť. Útočník rozešle tisíce stejných zpráv, stačí, aby se chytilo pár lidí.</li>
+  <li><b>Odkaz.</b> Zpráva chce, abys klikl na odkaz, otevřel přílohu nebo naskenoval QR kód. Odkaz vypadá důvěryhodně, ale vede jinam.</li>
+  <li><b>Falešná stránka.</b> Kopie přihlašovací stránky se dá vytvořit za pár minut. Vypadá stejně jako originál, jediný rozdíl bývá adresa v řádku prohlížeče.</li>
+  <li><b>Zneužití.</b> Zadané údaje se použijí okamžitě, často do několika minut: heslo se zkusí i na jiných službách, z účtu se rozešlou další podvodné zprávy, z karty zmizí peníze.</li>
+</ol>
+</section>
+
+<section id="psychologie">
+<h2>Proč to funguje</h2>
+<p>Dobrý phishing tě vyvede z rozvahy, abys jednal dřív, než začneš přemýšlet. Téměř vždy tlačí na jednu z těchto věcí:</p>
+<div class="tbl"><table>
+<thead><tr><th>trik</th><th>jak působí</th><th>příklad</th></tr></thead>
+<tbody>
+<tr><td><strong>Spěch</strong></td><td>Kdo spěchá, nepřemýšlí. Termín slouží jen k tomu, abys přeskočil kontrolu.</td><td>„Pokud do 2 hodin neuhradíte poplatek 29 Kč, zásilka bude vrácena.“</td></tr>
+<tr><td><strong>Strach</strong></td><td>Hrozba ztráty nebo trestu vypíná zdravý rozum.</td><td>„Zaznamenali jsme podezřelé přihlášení. Ihned potvrďte identitu.“</td></tr>
+<tr><td><strong>Lákadlo</strong></td><td>Výhra, sleva nebo dárek. Chce jen „malý“ údaj.</td><td>„Vyhrál jste telefon. Zaplaťte jen poštovné 49 Kč.“</td></tr>
+<tr><td><strong>Autorita</strong></td><td>Zpráva od někoho nad tebou: vedení, učitel, správce, policie.</td><td>„Tady správce školní sítě. Zašlete mi heslo pro kontrolu.“</td></tr>
+</tbody></table></div>
+<p>Často se triky kombinují: autorita + spěch („ředitel potřebuje hned“), strach + spěch („do 24 hodin zablokováno“). Malé částky (29 Kč, 49 Kč) mají uspat obezřetnost, ale cílem je číslo karty, ne těch pár korun.</p>
+</section>
+
+<section id="druhy">
+<h2>Druhy útoků</h2>
+<div class="tbl"><table>
+<thead><tr><th>druh</th><th>kanál</th><th>typický příklad</th></tr></thead>
+<tbody>
+<tr><td><strong>phishing</strong></td><td>e-mail</td><td>Hromadná zpráva jako od banky nebo e-shopu, s odkazem nebo přílohou „faktury“.</td></tr>
+<tr><td><strong>smishing</strong></td><td>SMS</td><td>„Balík nelze doručit, doplaťte 29 Kč“ s odkazem.</td></tr>
+<tr><td><strong>vishing</strong></td><td>telefon</td><td>„Volám z bezpečnostního oddělení banky, nadiktujte mi kód z SMS.“ Číslo na displeji jde zfalšovat.</td></tr>
+<tr><td><strong>quishing</strong></td><td>QR kód</td><td>Kód nalepený přes pravý na parkovacím automatu nebo v e-mailu. Očima ho nepřečteš.</td></tr>
+<tr><td><strong>spear phishing</strong></td><td>cílená zpráva</td><td>Útočník o tobě předem zjistí údaje (jména učitelů, kroužek, zaměstnavatel) a napíše osobně.</td></tr>
+<tr><td><strong>„kamarád s novým číslem“</strong></td><td>WhatsApp, SMS</td><td>„Ahoj, mám nové číslo, pošli mi rychle 2 000 Kč.“</td></tr>
+</tbody></table></div>
+<p>Cílený útok na vedení firmy se někdy nazývá <em>whaling</em> (lov velryb). Dnes navíc pomáhá útočníkům umělá inteligence: píše zprávy bez chyb a umí napodobit i hlas známého člověka.</p>
+</section>
+
+<p class="part">Jak ho poznat</p>
+
+<section id="anatomie">
+<h2>Anatomie podvodného e-mailu</h2>
+<div class="card">
+  <p><strong>Od:</strong> Lipová banka – Podpora &lt;podpora@lipovabanka.cz.overeni-uctu.top&gt;<br>
+  <strong>Předmět:</strong> Důležité: váš účet bude do 24 hodin zablokován</p>
+  <p>Vážený zákazníku, zaznamenali jsme neobvyklou aktivitu. Vaše účet je dočasně omezen. Pro zachování přístupu ověřte své údaje. [Ověřit účet]</p>
+  <p>Příloha: overeni_uctu.html</p>
+</div>
+<p>Šest varovných znamení:</p>
+<ol>
+  <li><strong>Cizí adresa odesílatele.</strong> Jméno „Lipová banka“ může napsat kdokoli. Skutečná doména je <code>overeni-uctu.top</code>, vše před ní je jen text, který si útočník zvolil.</li>
+  <li><strong>Tlak na čas a hrozba.</strong> Zablokování do 24 hodin má vyvolat strach a spěch. Skutečná banka tě nenutí jednat do hodiny.</li>
+  <li><strong>Obecné oslovení.</strong> Banka tě zná jménem. „Vážený zákazníku“ znamená, že stejná zpráva letí tisícům lidí.</li>
+  <li><strong>Chyba v češtině.</strong> „Vaše účet“. Chyby se v podvodech objevují často, ale ne vždy. Umělá inteligence dnes píše bez chyb, takže na ně nespoléhej.</li>
+  <li><strong>Tlačítko s jiným cílem.</strong> Po najetí myší zjistíš, že míří na <code>lipovabanka.cz.overeni-uctu.top</code>.</li>
+  <li><strong>Nečekaná příloha .html.</strong> Banka neposílá přihlašovací formuláře v příloze. Soubor .html otevřený v prohlížeči může zobrazit falešné přihlášení přímo z tvého počítače.</li>
+</ol>
+</section>
+
+<section id="domena">
+<h2>Jak číst adresu: kde je skutečná doména</h2>
+<p>Webová adresa (URL) má několik částí. Pro bezpečnost je důležitá jen jedna: <dfn>doména</dfn>, tedy kdo web vlastní.</p>
+<div class="formula">https:// moje. lipovabanka.cz /ucet<small>protokol · poddoména · <strong>doména</strong> · cesta</small></div>
+<p><strong>Pravidlo:</strong> najdi první lomítko za <code>https://</code>. Od něj jdi doleva a vezmi <strong>poslední dvě části</strong> oddělené tečkou. To je skutečná doména. Co je vlevo od ní (poddomény), si může vlastník pojmenovat libovolně.</p>
+<div class="tbl"><table>
+<thead><tr><th>adresa</th><th>skutečná doména</th><th>verdikt</th></tr></thead>
+<tbody>
+<tr><td><code>https://www.lipovabanka.cz/prihlaseni</code></td><td><code>lipovabanka.cz</code></td><td>banka (www je poddoména)</td></tr>
+<tr><td><code>https://moje.lipovabanka.cz/ucet</code></td><td><code>lipovabanka.cz</code></td><td>banka</td></tr>
+<tr><td><code>https://lipovabanka.cz.overeni-uctu.top/prihlaseni</code></td><td><code>overeni-uctu.top</code></td><td>podvod: název banky je jen poddoména</td></tr>
+<tr><td><code>https://lipovabanka.cz@prihlaseni-lb.xyz/</code></td><td><code>prihlaseni-lb.xyz</code></td><td>podvod: vše před <code>@</code> je jen přihlašovací jméno</td></tr>
+<tr><td><code>https://lipova-banka-overeni.cz/</code></td><td><code>lipova-banka-overeni.cz</code></td><td>podvod: cizí doména, jen obsahuje slova z názvu</td></tr>
+</tbody></table></div>
+<div class="note tip"><b class="lbl">Výjimka</b><p>U některých zemí se doména skládá ze tří částí, třeba <code>bbc.co.uk</code>. Pravidlo „poslední dvě části“ je pomůcka pro běžné domény .cz, .com, .org, .eu.</p></div>
+</section>
+
+<section id="podobne">
+<h2>Podobné adresy</h2>
+<p>Útočníci registrují domény, které vypadají skoro stejně jako originál. Na malém displeji nebo při rychlém čtení rozdíl nepostřehneš.</p>
+<div class="tbl"><table>
+<thead><tr><th>pravá</th><th>falešná</th><th>trik</th></tr></thead>
+<tbody>
+<tr><td><code>mamutposta.cz</code></td><td><code>rnamutposta.cz</code></td><td><strong>r + n</strong> vypadá jako <strong>m</strong></td></tr>
+<tr><td><code>vlakovyportal.cz</code></td><td><code>vlakovyportaI.cz</code></td><td>velké <strong>I</strong> místo malého <strong>l</strong></td></tr>
+<tr><td><code>knihovna-online.cz</code></td><td><code>knihovna-оnline.cz</code></td><td>písmeno <strong>о</strong> z azbuky vypadá jako latinské <strong>o</strong></td></tr>
+<tr><td><code>mamutposta.cz</code></td><td><code>mamutposta.cz.com</code>, <code>mamut-posta.cz</code></td><td>přidaná koncovka nebo pomlčka</td></tr>
+</tbody></table></div>
+<p>Záměna písmen z jiné abecedy se jmenuje <dfn>homoglyfový útok</dfn>. Prohlížeč často takovou adresu přepíše do tvaru začínajícího <code>xn--</code> (tzv. punycode, viz <a href="../informace/04_znak_po_znaku_studijni_text.html#unicode">Unicode</a>). Když v adrese uvidíš <code>xn--</code>, zpozorni.</p>
+<p>Spolehlivá obrana není číst adresy pozorněji, ale <strong>nechodit na přihlašovací stránky přes odkazy</strong>. Otevři aplikaci nebo napiš adresu ručně, případně použij záložku.</p>
+</section>
+
+<section id="odkaz">
+<h2>Text odkazu a jeho cíl</h2>
+<p>Text odkazu a adresa, kam odkaz vede, jsou <strong>dvě různé věci</strong>. V HTML vypadá odkaz takhle:</p>
+<pre><code>&lt;a href="https://lipovabanka.cz.overeni-uctu.top/prihlaseni"&gt;www.lipovabanka.cz/prihlaseni&lt;/a&gt;</code></pre>
+<p>Uživatel vidí „www.lipovabanka.cz/prihlaseni“, ale klik ho pošle na <code>overeni-uctu.top</code>. Text odkazu může napsat kdokoli.</p>
+<ul>
+  <li><strong>Na počítači:</strong> najeď na odkaz myší (neklikej) a podívej se do levého dolního rohu okna prohlížeče nebo pošty. Tam je skutečný cíl.</li>
+  <li><strong>Na telefonu:</strong> odkaz podrž prstem, zobrazí se náhled adresy.</li>
+  <li><strong>Zkrácené odkazy</strong> (třeba <code>zkr.example/x7Qa2</code>) cíl skrývají. U nečekané zprávy je neotvírej.</li>
+</ul>
+</section>
+
+<section id="zamecek">
+<h2>Mýtus: zámeček znamená „důvěryhodné“</h2>
+<p>Zámeček a <code>https://</code> v adrese znamenají jen to, že <strong>spojení je šifrované</strong>: data mezi tebou a serverem nikdo po cestě nepřečte. Neříkají vůbec nic o tom, <em>komu</em> server patří.</p>
+<p>Certifikát pro HTTPS dnes získá každý zdarma během minuty (např. přes službu Let's Encrypt), tedy i podvodník. Většina podvodných stránek proto zámeček má. Šifrované spojení s podvodníkem je pořád spojení s podvodníkem.</p>
+<div class="note mat"><b class="lbl">Rozhoduje doména</b><p><code>https://knihovna-mesta.cz</code> i <code>https://knihovna-mesta-prihlaseni.top</code> mají zámeček. Knihovně patří jen ta první.</p></div>
+</section>
+
+<p class="part">Obrana</p>
+
+<section id="navyky">
+<h2>Čtyři návyky, které zastaví většinu útoků</h2>
+<div class="cols2">
+  <div class="card"><h3>Správce hesel</h3><p>Vyplní heslo jen na webu, který zná. Na podvodné stránce s jinou doménou mlčí. To je varování, které funguje, i když ses na adresu nepodíval.</p></div>
+  <div class="card"><h3>Dvoufázové ověření</h3><p>I když heslo vyzradíš, útočník potřebuje druhý krok. Nejlepší jsou přístupové klíče (passkeys) nebo aplikace s kódem. SMS kód je slabší a nikdy ho nikomu nediktuj.</p></div>
+  <div class="card"><h3>Ověř jinou cestou</h3><p>Neklikej na odkaz ve zprávě. Otevři aplikaci nebo web ručně, zavolej na číslo z oficiálního webu nebo z karty, kamaráda se zeptej jinou cestou.</p></div>
+  <div class="card"><h3>Nahlas to</h3><p>Podvodnou zprávu přepošli správci nebo učiteli, nahlas ji ve službě (tlačítko „Nahlásit phishing“) a smaž. Pomůžeš tím ostatním.</p></div>
+</div>
+<div class="formula">Zastav se → Podívej se → Ověř jinak<small>Spěch je signál. Kdo píše, odkud, kam odkaz opravdu vede? Ověř přes kanál, který znáš.</small></div>
+<p>Zlaté pravidlo: <strong>banka, škola ani policie po tobě nikdy nebude chtít heslo, PIN ani kód z SMS</strong>. Kdo o ně žádá, je podvodník.</p>
+</section>
+
+<section id="stalo">
+<h2>Klikl jsem. Co teď?</h2>
+<p>Stane se to i opatrným lidem. Rozhoduje rychlost: čím dřív zareaguješ, tím menší škoda.</p>
+<div class="tbl"><table>
+<thead><tr><th>co se stalo</th><th>co udělat</th></tr></thead>
+<tbody>
+<tr><td><strong>Jen jsem klikl</strong></td><td>Zavři stránku a nic nevyplňuj. Nic nestahuj a nepotvrzuj. Když se něco stáhlo, projeď zařízení antivirem. Řekni to rodiči nebo učiteli.</td></tr>
+<tr><td><strong>Zadal jsem heslo</strong></td><td>Okamžitě změň heslo na pravé službě (z aplikace nebo z ručně zadané adresy). Změň ho i všude, kde jsi ho používal. Zapni dvoufázové ověření. Odhlas ostatní zařízení. U školního účtu informuj správce.</td></tr>
+<tr><td><strong>Zadal jsem kartu</strong></td><td>Hned zavolej do banky a kartu zablokuj (číslo je na kartě nebo v aplikaci). Zkontroluj poslední platby a nahlas cizí. Řekni to rodičům. Zprávu nemaž, je to důkaz.</td></tr>
+<tr><td><strong>Stáhl jsem přílohu</strong></td><td>Odpoj zařízení od internetu. Soubor znovu neotvírej. Spusť antivirus a požádej o pomoc dospělého nebo správce. Hesla měň z jiného, čistého zařízení.</td></tr>
+</tbody></table></div>
+<p>Pokud přišly peníze, nahlas podvod také Policii ČR. Stydět se není za co, útoky jsou dělané profesionály.</p>
+</section>
+
+<p class="part">Opakování</p>
+
+<section id="zkus">
+<h2>Vyzkoušej si: podvod, nebo v pořádku?</h2>
+<details class="sol"><summary>1. SMS: „Balík č. 4821 nelze doručit. Doplaťte 29 Kč do 24 hodin: balikovna-doruceni.top/4821“</summary><div><p><strong>Podvod.</strong> Cizí doména, spěch a malá částka, která má uspat obezřetnost.</p></div></details>
+<details class="sol"><summary>2. SMS hned po tvém přihlášení: „Kód pro přihlášení: 482913. Nikomu ho nesdělujte.“</summary><div><p><strong>V pořádku.</strong> Sám jsi ho vyvolal, neobsahuje odkaz a nic po tobě nechce. Kód ale nikomu nediktuj.</p></div></details>
+<details class="sol"><summary>3. E-mail od podpora@gymnazium-it.cz.heslo-reset.top: „Platnost vašeho hesla končí dnes. Přihlaste se zde.“</summary><div><p><strong>Podvod.</strong> Doména je <code>heslo-reset.top</code>, ne školní. Spěch a hrozba ztráty přístupu.</p></div></details>
+<details class="sol"><summary>4. E-mail od potvrzeni@kniharna.example: „Děkujeme za objednávku č. 1043, kterou jste dnes provedl.“ Objednávku jsi opravdu dělal.</summary><div><p><strong>V pořádku.</strong> Odpovídá tvé akci a nic po tobě nechce. Stav objednávky přesto otevři ručně, ne přes odkaz.</p></div></details>
+<details class="sol"><summary>5. Instagram od neznámého účtu: „Vyhrál jsi telefon. Vyplň adresu a číslo karty na poštovné 49 Kč.“</summary><div><p><strong>Podvod.</strong> Výhra v soutěži, kterou jsi nehrál, a platební údaje.</p></div></details>
+<details class="sol"><summary>6. Zpráva z neznámého čísla: „Ahoj, to jsem já, mám nové číslo. Pošli mi rychle 2 000 Kč.“</summary><div><p><strong>Podvod.</strong> Zavolej kamarádovi na staré číslo nebo se zeptej na něco, co ví jen on.</p></div></details>
+<details class="sol"><summary>7. Jaká je skutečná doména: https://secure.login.mamutposta.cz.ucet-info.net/prihlaseni</summary><div><p><strong>ucet-info.net</strong>. Všechno vlevo jsou poddomény, které si útočník pojmenoval.</p></div></details>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<details class="q"><summary>Co je phishing a jaký má cíl?</summary><div class="a"><p>Podvod, kdy útočník předstírá důvěryhodný zdroj, aby vylákal přihlašovací údaje, peníze nebo instalaci škodlivého programu.</p></div></details>
+<details class="q"><summary>Na jaké emoce phishing nejčastěji tlačí?</summary><div class="a"><p>Spěch, strach, lákadlo (výhra, sleva) a autorita.</p></div></details>
+<details class="q"><summary>Co je smishing, vishing a quishing?</summary><div class="a"><p>Phishing přes SMS, přes telefonní hovor a přes QR kód.</p></div></details>
+<details class="q"><summary>Jak najdeš v URL skutečnou doménu?</summary><div class="a"><p>Najdu první lomítko za protokolem, jdu doleva a vezmu poslední dvě části oddělené tečkou. Pozor na <code>@</code>: vše před ním je jen jméno.</p></div></details>
+<details class="q"><summary>Proč zámeček neznamená, že je web důvěryhodný?</summary><div class="a"><p>Zámeček znamená jen šifrované spojení. Certifikát získá zdarma kdokoli, i podvodník. O vlastníkovi webu rozhoduje doména.</p></div></details>
+<details class="q"><summary>Jak zjistíš, kam vede odkaz?</summary><div class="a"><p>Najedu na něj myší a podívám se do levého dolního rohu, na telefonu ho podržím prstem.</p></div></details>
+<details class="q"><summary>Proč pomáhá správce hesel proti phishingu?</summary><div class="a"><p>Vyplní heslo jen na doméně, pro kterou je uložené. Na podvodné doméně nic nenabídne, což upozorní, že něco nesedí.</p></div></details>
+<details class="q"><summary>Co uděláš, když zadáš heslo na podvodné stránce?</summary><div class="a"><p>Hned změním heslo na pravé službě i všude, kde jsem ho používal, zapnu dvoufázové ověření, odhlásím ostatní zařízení a řeknu to správci nebo učiteli.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Phishing</dt><dd>Podvodná zpráva vylákávající údaje nebo peníze</dd>
+  <dt>Smishing</dt><dd>Phishing přes SMS</dd>
+  <dt>Vishing</dt><dd>Phishing přes telefonní hovor</dd>
+  <dt>Quishing</dt><dd>Phishing přes QR kód</dd>
+  <dt>Spear phishing</dt><dd>Cílený útok na konkrétního člověka</dd>
+  <dt>Sociální inženýrství</dt><dd>Manipulace lidmi místo útoku na techniku</dd>
+  <dt>Doména</dt><dd>Jméno webu, které určuje jeho vlastníka (lipovabanka.cz)</dd>
+  <dt>Poddoména</dt><dd>Část adresy vlevo od domény, volí ji vlastník domény</dd>
+  <dt>Homoglyf</dt><dd>Znak, který vypadá jako jiný (azbukové о a latinské o)</dd>
+  <dt>HTTPS</dt><dd>Šifrované spojení s webem, neříká nic o vlastníkovi</dd>
+  <dt>Dvoufázové ověření (2FA)</dt><dd>Přihlášení vyžaduje kromě hesla ještě druhý krok</dd>
+  <dt>Passkey</dt><dd>Přístupový klíč místo hesla, vázaný na doménu a zařízení</dd>
+  <dt>Správce hesel</dt><dd>Program, který ukládá a vyplňuje hesla jen na správných doménách</dd>
+</dl>
+</section>
+
+<p class="foot">Studijní text k lekci „Phishing“ z bloku Bezpečnost. Interaktivní verzi najdeš v <a href="01_phishing.html">prezentaci</a>.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    var d = document.querySelector('.toc details'); if (d) d.open = false;
+  }
+})();
+</script>
+</body>
+</html>

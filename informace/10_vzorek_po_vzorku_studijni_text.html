@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digitální zvuk – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Fyzika a sluch</li>
+    <li><a href="#zvuk">Co je zvuk</a></li>
+    <li><a href="#vlastnosti">Frekvence a amplituda</a></li>
+    <li><a href="#sluch">Co slyšíme</a></li>
+    <li><a href="#db">Decibely</a></li>
+    <li><a href="#barva">Barva tónu a spektrum</a></li>
+    <li class="grp">Záznam</li>
+    <li><a href="#historie">Historie</a></li>
+    <li><a href="#analog">Analog a digitál</a></li>
+    <li class="grp">Digitalizace</li>
+    <li><a href="#vzorkovani">Vzorkování</a></li>
+    <li><a href="#veta">Vzorkovací věta a aliasing</a></li>
+    <li><a href="#kvantovani">Kvantování</a></li>
+    <li><a href="#pcm">PCM a běžné hodnoty</a></li>
+    <li><a href="#velikost">Výpočet velikosti</a></li>
+    <li class="grp">Komprese</li>
+    <li><a href="#komprese">Bezztrátová a ztrátová</a></li>
+    <li><a href="#psycho">Psychoakustika</a></li>
+    <li><a href="#formaty">Formáty</a></li>
+    <li><a href="#midi">MIDI</a></li>
+    <li class="grp">K maturitě</li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#priklady">Příklady s řešením</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Informace · Studijní text</p>
+  <h1>Digitální zvuk <span class="t">f<sub>s</sub> · bity · kanály</span></h1>
+  <p class="lead">Co je zvuk a jak ho slyšíme, jak se převádí na čísla, proč má CD právě 44,1 kHz a 16 bitů, jak spočítat velikost nahrávky a jak ztrátová komprese využívá slabiny lidského sluchu. Interaktivní ukázky ke všemu najdeš v prezentaci <a href="10_vzorek_po_vzorku.html">Vzorek po vzorku</a>.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>popsat zvuk jako vlnění a jeho vlastnosti</li>
+      <li>převádět mezi frekvencí, periodou a vlnovou délkou</li>
+      <li>vysvětlit decibelovou stupnici</li>
+      <li>vysvětlit vzorkování a kvantování</li>
+      <li>formulovat vzorkovací větu a popsat aliasing</li>
+      <li>spočítat datový tok a velikost nekomprimovaného zvuku</li>
+      <li>vysvětlit vztah bitové hloubky a dynamiky</li>
+      <li>porovnat bezztrátovou a ztrátovou kompresi</li>
+      <li>popsat práh slyšení a maskování</li>
+      <li>vysvětlit rozdíl mezi zvukovým souborem a MIDI</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Fyzika a sluch</p>
+
+<section id="zvuk">
+<h2>Co je zvuk</h2>
+<p><dfn>Zvuk</dfn> je mechanické vlnění v pružném prostředí (vzduch, voda, pevné látky), které vnímáme sluchem. Zdroj zvuku kmitá (struna, hlasivky, membrána reproduktoru) a střídavě stlačuje a rozřeďuje okolní vzduch. Vzniklé <strong>zhuštění a zředění</strong> se šíří prostorem. Jednotlivé molekuly přitom jen kmitají kolem své polohy, neputují od zdroje k uchu. Ve vzduchu jde o <dfn>podélné vlnění</dfn>: molekuly kmitají ve směru šíření.</p>
+<p>Rychlost zvuku závisí na prostředí: ve vzduchu při 20 °C asi <strong>343 m/s</strong>, ve vodě asi 1 480 m/s, v oceli přes 5 000 m/s. Ve vakuu se zvuk nešíří vůbec, protože tam není co rozkmitat.</p>
+<p>Pro nás je důležité, že zvuk v jednom místě (třeba na membráně mikrofonu) je <strong>tlak, který se mění v čase</strong>. Mikrofon ho převede na elektrické napětí se stejným průběhem. Tenhle průběh, křivku hodnoty v čase, budeme ukládat.</p>
+</section>
+
+<section id="vlastnosti">
+<h2>Frekvence, perioda, amplituda</h2>
+<p>Nejjednodušší zvuk je <dfn>čistý tón</dfn>: tlak se mění podle sinusovky. Popisují ho tři veličiny.</p>
+<div class="tbl"><table>
+<thead><tr><th>Veličina</th><th>Značka, jednotka</th><th>Co znamená</th><th>Jak ji slyšíme</th></tr></thead>
+<tbody>
+<tr><td><strong>frekvence</strong></td><td><code>f</code>, hertz (Hz)</td><td>počet kmitů za sekundu</td><td>výška tónu</td></tr>
+<tr><td><strong>perioda</strong></td><td><code>T</code>, sekunda (s)</td><td>doba jednoho kmitu, <code>T = 1 / f</code></td><td>(převrácená frekvence)</td></tr>
+<tr><td><strong>amplituda</strong></td><td><code>A</code>, pascal (Pa)</td><td>největší výchylka tlaku od klidové hodnoty</td><td>hlasitost</td></tr>
+</tbody></table></div>
+<p>Vzdálenost, kterou vlna urazí za jednu periodu, je <dfn>vlnová délka</dfn> <code>λ = v / f</code>, kde <code>v</code> je rychlost zvuku. Tón 440 Hz (komorní A) má periodu 1/440 s ≈ 2,27 ms a vlnovou délku 343 / 440 ≈ 0,78 m.</p>
+<p>Dvojnásobná frekvence zní o <dfn>oktávu</dfn> výš. Oktáva se v evropské hudbě dělí na 12 půltónů, takže sousední půltóny mají poměr frekvencí ¹²√2 ≈ 1,059. Výšku tónu proto vnímáme <strong>logaritmicky</strong>: krok z 100 na 200 Hz zní stejně velký jako z 1 000 na 2 000 Hz.</p>
+</section>
+
+<section id="sluch">
+<h2>Co slyšíme</h2>
+<p>Zdravý mladý člověk slyší přibližně <strong>20 Hz až 20 000 Hz</strong>. Zvuk pod tímto pásmem je <dfn>infrazvuk</dfn> (zemětřesení, komunikace slonů), nad ním <dfn>ultrazvuk</dfn> (netopýři, sonografie v medicíně, ultrazvukové čističky). Horní hranice s věkem klesá: dospělí často neslyší nad 15–16 kHz.</p>
+<p>Pro digitální zvuk z toho plyne klíčové číslo: <strong>nejvyšší frekvence, kterou má smysl zaznamenat, je asi 20 kHz</strong>. Lidský hlas leží hlavně mezi 100 Hz a 4 kHz, proto telefon přenáší jen pásmo 300–3 400 Hz a pořád mu rozumíme.</p>
+</section>
+
+<section id="db">
+<h2>Hlasitost a decibely</h2>
+<p>Ucho zvládne obrovský rozsah: nejsilnější snesitelný zvuk má zhruba milionkrát větší tlak než nejslabší slyšitelný. Proto se <dfn>hladina akustického tlaku</dfn> udává v <dfn>decibelech</dfn> (dB), na <strong>logaritmické stupnici</strong> vztažené k prahu slyšení <code>p₀ = 20 µPa</code>:</p>
+<pre><code>L = 20 · log₁₀(p / p₀)  [dB]</code></pre>
+<ul>
+  <li>+20 dB = 10× větší tlak, +40 dB = 100×, +6 dB ≈ 2× (protože 20 · log₁₀ 2 ≈ 6,02).</li>
+  <li>Energie (intenzita) roste s druhou mocninou tlaku: +10 dB = 10× víc energie.</li>
+  <li>Vnímaná hlasitost se zhruba zdvojnásobí asi při +10 dB.</li>
+</ul>
+<div class="tbl"><table>
+<thead><tr><th>Hladina</th><th>Příklad (orientačně)</th></tr></thead>
+<tbody>
+<tr><td class="num">0 dB</td><td>práh slyšení</td></tr>
+<tr><td class="num">30 dB</td><td>šepot</td></tr>
+<tr><td class="num">60 dB</td><td>běžný rozhovor</td></tr>
+<tr><td class="num">85 dB</td><td>hranice, od které dlouhodobý poslech poškozuje sluch</td></tr>
+<tr><td class="num">110 dB</td><td>rockový koncert u pódia</td></tr>
+<tr><td class="num">130 dB</td><td>práh bolesti</td></tr>
+</tbody></table></div>
+<p>Decibely se používají i v digitálním zvuku: rozsah záznamu, odstup od šumu nebo zesílení se udávají v dB. V programech pro úpravu zvuku je 0 dBFS (decibely vůči plné škále) nejvyšší možná úroveň a všechno ostatní je záporné.</p>
+</section>
+
+<section id="barva">
+<h2>Barva tónu a spektrum</h2>
+<p>Stejný tón zahraný na housle a na flétnu má stejnou výšku i hlasitost, a přesto je poznáme. Skutečné tóny totiž nejsou čistá sinusovka. Obsahují <dfn>základní frekvenci</dfn> <code>f</code> a k ní <dfn>vyšší harmonické</dfn> <code>2f, 3f, 4f…</code> s různou silou. Jejich poměr určuje <dfn>barvu tónu</dfn> (témbr).</p>
+<p>Francouzský matematik Joseph Fourier ukázal (1822), že <strong>každý periodický průběh jde rozložit na součet sinusovek</strong>. Obdélníkový průběh například tvoří jen liché harmonické se sílou 1, 1/3, 1/5, 1/7… Přehled, které frekvence ve zvuku jsou a jak silné, se jmenuje <dfn>spektrum</dfn>. Spektrum měnící se v čase zobrazuje <dfn>spektrogram</dfn>: vodorovně čas, svisle frekvence, jasem síla.</p>
+<div class="note tip"><b class="lbl">Proč na tom záleží</b><p>Ztrátové kodeky (MP3, AAC, Opus) nepracují s křivkou v čase, ale se spektrem. Rozhodují, které frekvence uložit přesně a které vynechat.</p></div>
+</section>
+
+<p class="part">Záznam zvuku</p>
+
+<section id="historie">
+<h2>Historie záznamu</h2>
+<ol class="timeline">
+  <li><span class="yr">1857</span> <span class="ev">Fonautograf</span><span class="d">Édouard-Léon Scott de Martinville zapisoval zvuk jako vlnovku na začerněný papír. Přehrát ho neuměl. Jeho záznam z roku 1860 poprvé zazněl až v roce 2008, když ho vědci naskenovali a převedli počítačem.<sup class="ref"><a href="#z1">1</a></sup></span></li>
+  <li><span class="yr">1877</span> <span class="ev">Fonograf</span><span class="d">Thomas Edison: hrot vyrývá vlnu do cínové fólie na otáčejícím se válci. První přístroj, který zvuk nahrál i přehrál.<sup class="ref"><a href="#z2">2</a></sup></span></li>
+  <li><span class="yr">1887</span> <span class="ev">Gramofon</span><span class="d">Emil Berliner nahradil válec plochou deskou, kterou šlo lisovat ve velkém. Vinylové desky fungují na stejném principu.</span></li>
+  <li><span class="yr">1928</span> <span class="ev">Nyquist</span><span class="d">Harry Nyquist z Bell Labs ukázal, kolik nezávislých hodnot za sekundu jde přenést kanálem s danou šířkou pásma. Na tom stojí vzorkovací věta.<sup class="ref"><a href="#z3">3</a></sup></span></li>
+  <li><span class="yr">1937</span> <span class="ev">PCM</span><span class="d">Alec Reeves navrhl pulzně kódovou modulaci: signál pravidelně měřit a přenášet jako čísla. Tak se nekomprimovaný zvuk ukládá dodnes.</span></li>
+  <li><span class="yr">1949</span> <span class="ev">Shannon</span><span class="d">Claude Shannon vzorkovací větu přesně formuloval a dokázal. Nezávisle ji už v roce 1933 odvodil Vladimir Kotělnikov.<sup class="ref"><a href="#z3">3</a></sup></span></li>
+  <li><span class="yr">1963</span> <span class="ev">Kompaktní kazeta</span><span class="d">Philips: magnetický pásek v malé kazetě. Analogový záznam, který si mohl nahrát každý.</span></li>
+  <li><span class="yr">1982</span> <span class="ev">CD</span><span class="d">1. října 1982 začal v Japonsku prodej přehrávače Sony CDP-101. CD (Philips a Sony) nese 44,1 kHz, 16 bitů, stereo. Délka 74 minut byla zvolena, aby se vešla Beethovenova 9. symfonie.<sup class="ref"><a href="#z4">4</a></sup></span></li>
+  <li><span class="yr">1992–1995</span> <span class="ev">MP3</span><span class="d">Ztrátový formát MPEG-1 Audio Layer III, hlavně z Fraunhofer IIS (Karlheinz Brandenburg). Standard schválen v listopadu 1992, přípona <code>.mp3</code> zvolena 14. 7. 1995.<sup class="ref"><a href="#z5">5</a></sup></span></li>
+  <li><span class="yr">2001</span> <span class="ev">FLAC</span><span class="d">Volný formát bezztrátové komprese.<sup class="ref"><a href="#z6">6</a></sup></span></li>
+  <li><span class="yr">2012</span> <span class="ev">Opus</span><span class="d">Volný ztrátový kodek (RFC 6716), dnes standard pro hovory přes internet.<sup class="ref"><a href="#z7">7</a></sup></span></li>
+  <li><span class="yr">2025</span> <span class="ev">Bezztrátový stream</span><span class="d">Spotify od září nabízí poslech ve FLAC (24 bitů, 44,1 kHz).<sup class="ref"><a href="#z8">8</a></sup></span></li>
+</ol>
+</section>
+
+<section id="analog">
+<h2>Analogový a digitální záznam</h2>
+<p><dfn>Analogový</dfn> záznam ukládá zvuk jako fyzickou veličinu, která průběh vlny přímo napodobuje: tvar drážky v desce, sílu zmagnetování pásku. Je <strong>spojitý</strong> v čase i v hodnotách. Každá kopie a každé přehrání ale přidá šum a opotřebení.</p>
+<p><dfn>Digitální</dfn> záznam ukládá zvuk jako <strong>posloupnost čísel</strong>. Kopie jsou dokonale stejné, záznam se neopotřebí a čísla jde upravovat, posílat sítí a komprimovat. Cenou je, že průběh musíme zjednodušit, a to dvakrát: v čase (vzorkování) a v hodnotách (kvantování).</p>
+<div class="tbl"><table>
+<thead><tr><th>Krok</th><th>Zařízení</th><th>Co se děje</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>mikrofon</td><td>tlak vzduchu → elektrické napětí</td></tr>
+<tr><td>2</td><td>filtr dolní propust</td><td>odřízne frekvence nad polovinou vzorkovací frekvence (proti aliasingu)</td></tr>
+<tr><td>3</td><td><strong>A/D převodník</strong> (ADC)</td><td>vzorkuje a kvantuje: napětí → čísla</td></tr>
+<tr><td>4</td><td>počítač</td><td>ukládá, upravuje, komprimuje, posílá</td></tr>
+<tr><td>5</td><td><strong>D/A převodník</strong> (DAC)</td><td>čísla → napětí</td></tr>
+<tr><td>6</td><td>zesilovač, reproduktor</td><td>napětí → tlak vzduchu</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">Digitalizace</p>
+
+<section id="vzorkovani">
+<h2>Vzorkování</h2>
+<p><dfn>Vzorkování</dfn> (sampling) znamená měřit hodnotu signálu v pravidelných okamžicích. Jedno měření je <dfn>vzorek</dfn>. Počet vzorků za sekundu je <dfn>vzorkovací frekvence</dfn> <code>f<sub>s</sub></code> (Hz), čas mezi vzorky je <dfn>vzorkovací perioda</dfn> <code>T<sub>s</sub> = 1 / f<sub>s</sub></code>. Při 44 100 Hz je to asi 22,7 µs.</p>
+<figure class="fig">
+  <svg class="svgfig" viewBox="0 0 720 220" role="img" aria-label="Spojitý signál a jeho vzorky"><line class="svg-axis" x1="0" y1="110.0" x2="720" y2="110.0"/><path class="svg-wave" d="M0.0,95.1 L2.0,91.0 L4.0,87.1 L6.0,83.4 L8.0,79.9 L10.0,76.7 L12.0,73.8 L14.0,71.1 L16.0,68.8 L18.0,66.8 L20.0,65.0 L22.0,63.6 L24.0,62.5 L26.0,61.7 L28.0,61.2 L30.0,60.9 L32.0,61.0 L34.0,61.3 L36.0,61.8 L38.0,62.6 L40.0,63.5 L42.0,64.6 L44.0,65.9 L46.0,67.3 L48.0,68.7 L50.0,70.2 L52.0,71.8 L54.0,73.3 L56.0,74.8 L58.0,76.3 L60.0,77.7 L62.0,78.9 L64.0,80.1 L66.0,81.1 L68.0,81.9 L70.0,82.5 L72.0,83.0 L74.0,83.2 L76.0,83.2 L78.0,83.0 L80.0,82.6 L82.0,81.9 L84.0,81.1 L86.0,80.0 L88.0,78.7 L90.0,77.2 L92.0,75.6 L94.0,73.8 L96.0,71.9 L98.0,69.8 L100.0,67.7 L102.0,65.5 L104.0,63.3 L106.0,61.1 L108.0,58.9 L110.0,56.7 L112.0,54.7 L114.0,52.7 L116.0,50.9 L118.0,49.3 L120.0,47.8 L122.0,46.6 L124.0,45.7 L126.0,44.9 L128.0,44.5 L130.0,44.4 L132.0,44.6 L134.0,45.1 L136.0,45.9 L138.0,47.1 L140.0,48.6 L142.0,50.4 L144.0,52.6 L146.0,55.1 L148.0,57.9 L150.0,60.9 L152.0,64.3 L154.0,67.9 L156.0,71.7 L158.0,75.7 L160.0,79.9 L162.0,84.3 L164.0,88.7 L166.0,93.3 L168.0,97.9 L170.0,102.5 L172.0,107.2 L174.0,111.7 L176.0,116.2 L178.0,120.6 L180.0,124.9 L182.0,129.0 L184.0,132.9 L186.0,136.6 L188.0,140.1 L190.0,143.3 L192.0,146.2 L194.0,148.9 L196.0,151.2 L198.0,153.2 L200.0,155.0 L202.0,156.4 L204.0,157.5 L206.0,158.3 L208.0,158.8 L210.0,159.1 L212.0,159.0 L214.0,158.7 L216.0,158.2 L218.0,157.4 L220.0,156.5 L222.0,155.4 L224.0,154.1 L226.0,152.7 L228.0,151.3 L230.0,149.8 L232.0,148.2 L234.0,146.7 L236.0,145.2 L238.0,143.7 L240.0,142.3 L242.0,141.1 L244.0,139.9 L246.0,138.9 L248.0,138.1 L250.0,137.5 L252.0,137.0 L254.0,136.8 L256.0,136.8 L258.0,137.0 L260.0,137.4 L262.0,138.1 L264.0,138.9 L266.0,140.0 L268.0,141.3 L270.0,142.8 L272.0,144.4 L274.0,146.2 L276.0,148.1 L278.0,150.2 L280.0,152.3 L282.0,154.5 L284.0,156.7 L286.0,158.9 L288.0,161.1 L290.0,163.3 L292.0,165.3 L294.0,167.3 L296.0,169.1 L298.0,170.7 L300.0,172.2 L302.0,173.4 L304.0,174.3 L306.0,175.1 L308.0,175.5 L310.0,175.6 L312.0,175.4 L314.0,174.9 L316.0,174.1 L318.0,172.9 L320.0,171.4 L322.0,169.6 L324.0,167.4 L326.0,164.9 L328.0,162.1 L330.0,159.1 L332.0,155.7 L334.0,152.1 L336.0,148.3 L338.0,144.3 L340.0,140.1 L342.0,135.7 L344.0,131.3 L346.0,126.7 L348.0,122.1 L350.0,117.5 L352.0,112.8 L354.0,108.3 L356.0,103.8 L358.0,99.4 L360.0,95.1 L362.0,91.0 L364.0,87.1 L366.0,83.4 L368.0,79.9 L370.0,76.7 L372.0,73.8 L374.0,71.1 L376.0,68.8 L378.0,66.8 L380.0,65.0 L382.0,63.6 L384.0,62.5 L386.0,61.7 L388.0,61.2 L390.0,60.9 L392.0,61.0 L394.0,61.3 L396.0,61.8 L398.0,62.6 L400.0,63.5 L402.0,64.6 L404.0,65.9 L406.0,67.3 L408.0,68.7 L410.0,70.2 L412.0,71.8 L414.0,73.3 L416.0,74.8 L418.0,76.3 L420.0,77.7 L422.0,78.9 L424.0,80.1 L426.0,81.1 L428.0,81.9 L430.0,82.5 L432.0,83.0 L434.0,83.2 L436.0,83.2 L438.0,83.0 L440.0,82.6 L442.0,81.9 L444.0,81.1 L446.0,80.0 L448.0,78.7 L450.0,77.2 L452.0,75.6 L454.0,73.8 L456.0,71.9 L458.0,69.8 L460.0,67.7 L462.0,65.5 L464.0,63.3 L466.0,61.1 L468.0,58.9 L470.0,56.7 L472.0,54.7 L474.0,52.7 L476.0,50.9 L478.0,49.3 L480.0,47.8 L482.0,46.6 L484.0,45.7 L486.0,44.9 L488.0,44.5 L490.0,44.4 L492.0,44.6 L494.0,45.1 L496.0,45.9 L498.0,47.1 L500.0,48.6 L502.0,50.4 L504.0,52.6 L506.0,55.1 L508.0,57.9 L510.0,60.9 L512.0,64.3 L514.0,67.9 L516.0,71.7 L518.0,75.7 L520.0,79.9 L522.0,84.3 L524.0,88.7 L526.0,93.3 L528.0,97.9 L530.0,102.5 L532.0,107.2 L534.0,111.7 L536.0,116.2 L538.0,120.6 L540.0,124.9 L542.0,129.0 L544.0,132.9 L546.0,136.6 L548.0,140.1 L550.0,143.3 L552.0,146.2 L554.0,148.9 L556.0,151.2 L558.0,153.2 L560.0,155.0 L562.0,156.4 L564.0,157.5 L566.0,158.3 L568.0,158.8 L570.0,159.1 L572.0,159.0 L574.0,158.7 L576.0,158.2 L578.0,157.4 L580.0,156.5 L582.0,155.4 L584.0,154.1 L586.0,152.7 L588.0,151.3 L590.0,149.8 L592.0,148.2 L594.0,146.7 L596.0,145.2 L598.0,143.7 L600.0,142.3 L602.0,141.1 L604.0,139.9 L606.0,138.9 L608.0,138.1 L610.0,137.5 L612.0,137.0 L614.0,136.8 L616.0,136.8 L618.0,137.0 L620.0,137.4 L622.0,138.1 L624.0,138.9 L626.0,140.0 L628.0,141.3 L630.0,142.8 L632.0,144.4 L634.0,146.2 L636.0,148.1 L638.0,150.2 L640.0,152.3 L642.0,154.5 L644.0,156.7 L646.0,158.9 L648.0,161.1 L650.0,163.3 L652.0,165.3 L654.0,167.3 L656.0,169.1 L658.0,170.7 L660.0,172.2 L662.0,173.4 L664.0,174.3 L666.0,175.1 L668.0,175.5 L670.0,175.6 L672.0,175.4 L674.0,174.9 L676.0,174.1 L678.0,172.9 L680.0,171.4 L682.0,169.6 L684.0,167.4 L686.0,164.9 L688.0,162.1 L690.0,159.1 L692.0,155.7 L694.0,152.1 L696.0,148.3 L698.0,144.3 L700.0,140.1 L702.0,135.7 L704.0,131.3 L706.0,126.7 L708.0,122.1 L710.0,117.5 L712.0,112.8 L714.0,108.3 L716.0,103.8 L718.0,99.4 L720.0,95.1"/><line class="svg-stem" x1="0.0" y1="110.0" x2="0.0" y2="95.1"/><circle class="svg-dot-y" cx="0.0" cy="95.1" r="5"/><line class="svg-stem" x1="36.0" y1="110.0" x2="36.0" y2="61.8"/><circle class="svg-dot-y" cx="36.0" cy="61.8" r="5"/><line class="svg-stem" x1="72.0" y1="110.0" x2="72.0" y2="83.0"/><circle class="svg-dot-y" cx="72.0" cy="83.0" r="5"/><line class="svg-stem" x1="108.0" y1="110.0" x2="108.0" y2="58.9"/><circle class="svg-dot-y" cx="108.0" cy="58.9" r="5"/><line class="svg-stem" x1="144.0" y1="110.0" x2="144.0" y2="52.6"/><circle class="svg-dot-y" cx="144.0" cy="52.6" r="5"/><line class="svg-stem" x1="180.0" y1="110.0" x2="180.0" y2="124.9"/><circle class="svg-dot-y" cx="180.0" cy="124.9" r="5"/><line class="svg-stem" x1="216.0" y1="110.0" x2="216.0" y2="158.2"/><circle class="svg-dot-y" cx="216.0" cy="158.2" r="5"/><line class="svg-stem" x1="252.0" y1="110.0" x2="252.0" y2="137.0"/><circle class="svg-dot-y" cx="252.0" cy="137.0" r="5"/><line class="svg-stem" x1="288.0" y1="110.0" x2="288.0" y2="161.1"/><circle class="svg-dot-y" cx="288.0" cy="161.1" r="5"/><line class="svg-stem" x1="324.0" y1="110.0" x2="324.0" y2="167.4"/><circle class="svg-dot-y" cx="324.0" cy="167.4" r="5"/><line class="svg-stem" x1="360.0" y1="110.0" x2="360.0" y2="95.1"/><circle class="svg-dot-y" cx="360.0" cy="95.1" r="5"/><line class="svg-stem" x1="396.0" y1="110.0" x2="396.0" y2="61.8"/><circle class="svg-dot-y" cx="396.0" cy="61.8" r="5"/><line class="svg-stem" x1="432.0" y1="110.0" x2="432.0" y2="83.0"/><circle class="svg-dot-y" cx="432.0" cy="83.0" r="5"/><line class="svg-stem" x1="468.0" y1="110.0" x2="468.0" y2="58.9"/><circle class="svg-dot-y" cx="468.0" cy="58.9" r="5"/><line class="svg-stem" x1="504.0" y1="110.0" x2="504.0" y2="52.6"/><circle class="svg-dot-y" cx="504.0" cy="52.6" r="5"/><line class="svg-stem" x1="540.0" y1="110.0" x2="540.0" y2="124.9"/><circle class="svg-dot-y" cx="540.0" cy="124.9" r="5"/><line class="svg-stem" x1="576.0" y1="110.0" x2="576.0" y2="158.2"/><circle class="svg-dot-y" cx="576.0" cy="158.2" r="5"/><line class="svg-stem" x1="612.0" y1="110.0" x2="612.0" y2="137.0"/><circle class="svg-dot-y" cx="612.0" cy="137.0" r="5"/><line class="svg-stem" x1="648.0" y1="110.0" x2="648.0" y2="161.1"/><circle class="svg-dot-y" cx="648.0" cy="161.1" r="5"/><line class="svg-stem" x1="684.0" y1="110.0" x2="684.0" y2="167.4"/><circle class="svg-dot-y" cx="684.0" cy="167.4" r="5"/><line class="svg-stem" x1="720.0" y1="110.0" x2="720.0" y2="95.1"/><circle class="svg-dot-y" cx="720.0" cy="95.1" r="5"/><text class="svg-txt" x="8" y="212">čas →  (5 ms, f_s = 4 kHz, 21 vzorků)</text></svg>
+  <figcaption>Šedá křivka je spojitý signál, žluté body vzorky. Mezi body žádnou informaci nemáme.</figcaption>
+</figure>
+<p>Intuitivně by se zdálo, že mezi vzorky se ztrácí informace a čím víc vzorků, tím lépe. Překvapivě to neplatí: pokud signál neobsahuje příliš vysoké frekvence, jdou z dostatečně hustých vzorků zrekonstruovat <strong>přesně</strong>. Kolik je „dostatečně“, říká vzorkovací věta.</p>
+</section>
+
+<section id="veta">
+<h2>Vzorkovací věta a aliasing</h2>
+<div class="note mat"><b class="lbl">Vzorkovací (Nyquistova–Shannonova) věta</b><p>Signál, který neobsahuje frekvence vyšší než <code>f<sub>max</sub></code>, lze ze vzorků přesně zrekonstruovat, pokud <code>f<sub>s</sub> &gt; 2 · f<sub>max</sub></code>.</p></div>
+<p>Polovina vzorkovací frekvence <code>f<sub>s</sub> / 2</code> se jmenuje <dfn>Nyquistova frekvence</dfn>. Je to nejvyšší frekvence, kterou záznam s danou <code>f<sub>s</sub></code> dokáže zachytit. Názorně: na každý kmit potřebujeme víc než dva vzorky, aby bylo poznat, že vlna jde nahoru i dolů.</p>
+<h3>Aliasing</h3>
+<p>Když signál obsahuje frekvenci nad Nyquistovou frekvencí, neztratí se. Vzorky jsou totiž stejné jako vzorky jiné, <strong>nižší</strong> frekvence a při přehrání zazní tón, který v originále nebyl. Tomu se říká <dfn>aliasing</dfn> (z anglického alias, „falešné jméno“).</p>
+<p>Zdánlivá frekvence je vzdálenost od nejbližšího násobku <code>f<sub>s</sub></code>:</p>
+<pre><code>f_alias = | f − k · f_s |,  kde k je celé číslo, které výsledek udělá nejmenší</code></pre>
+<p>Příklad: při <code>f<sub>s</sub></code> = 1 000 Hz se tón 700 Hz zaznamená jako |700 − 1 000| = 300 Hz, tón 1 100 Hz jako 100 Hz.</p>
+<figure class="fig">
+  <svg class="svgfig" viewBox="0 0 720 220" role="img" aria-label="Aliasing: 900 Hz vypadá jako 100 Hz"><line class="svg-axis" x1="0" y1="110.0" x2="720" y2="110.0"/><path class="svg-wave" d="M0.0,110.0 L2.0,93.5 L4.0,77.6 L6.0,62.8 L8.0,49.8 L10.0,38.8 L12.0,30.4 L14.0,24.8 L16.0,22.2 L18.0,22.7 L20.0,26.3 L22.0,32.9 L24.0,42.2 L26.0,53.9 L28.0,67.6 L30.0,82.8 L32.0,99.0 L34.0,115.5 L36.0,131.9 L38.0,147.5 L40.0,161.7 L42.0,174.1 L44.0,184.3 L46.0,191.8 L48.0,196.4 L50.0,198.0 L52.0,196.4 L54.0,191.8 L56.0,184.3 L58.0,174.1 L60.0,161.7 L62.0,147.5 L64.0,131.9 L66.0,115.5 L68.0,99.0 L70.0,82.8 L72.0,67.6 L74.0,53.9 L76.0,42.2 L78.0,32.9 L80.0,26.3 L82.0,22.7 L84.0,22.2 L86.0,24.8 L88.0,30.4 L90.0,38.8 L92.0,49.8 L94.0,62.8 L96.0,77.6 L98.0,93.5 L100.0,110.0 L102.0,126.5 L104.0,142.4 L106.0,157.2 L108.0,170.2 L110.0,181.2 L112.0,189.6 L114.0,195.2 L116.0,197.8 L118.0,197.3 L120.0,193.7 L122.0,187.1 L124.0,177.8 L126.0,166.1 L128.0,152.4 L130.0,137.2 L132.0,121.0 L134.0,104.5 L136.0,88.1 L138.0,72.5 L140.0,58.3 L142.0,45.9 L144.0,35.7 L146.0,28.2 L148.0,23.6 L150.0,22.0 L152.0,23.6 L154.0,28.2 L156.0,35.7 L158.0,45.9 L160.0,58.3 L162.0,72.5 L164.0,88.1 L166.0,104.5 L168.0,121.0 L170.0,137.2 L172.0,152.4 L174.0,166.1 L176.0,177.8 L178.0,187.1 L180.0,193.7 L182.0,197.3 L184.0,197.8 L186.0,195.2 L188.0,189.6 L190.0,181.2 L192.0,170.2 L194.0,157.2 L196.0,142.4 L198.0,126.5 L200.0,110.0 L202.0,93.5 L204.0,77.6 L206.0,62.8 L208.0,49.8 L210.0,38.8 L212.0,30.4 L214.0,24.8 L216.0,22.2 L218.0,22.7 L220.0,26.3 L222.0,32.9 L224.0,42.2 L226.0,53.9 L228.0,67.6 L230.0,82.8 L232.0,99.0 L234.0,115.5 L236.0,131.9 L238.0,147.5 L240.0,161.7 L242.0,174.1 L244.0,184.3 L246.0,191.8 L248.0,196.4 L250.0,198.0 L252.0,196.4 L254.0,191.8 L256.0,184.3 L258.0,174.1 L260.0,161.7 L262.0,147.5 L264.0,131.9 L266.0,115.5 L268.0,99.0 L270.0,82.8 L272.0,67.6 L274.0,53.9 L276.0,42.2 L278.0,32.9 L280.0,26.3 L282.0,22.7 L284.0,22.2 L286.0,24.8 L288.0,30.4 L290.0,38.8 L292.0,49.8 L294.0,62.8 L296.0,77.6 L298.0,93.5 L300.0,110.0 L302.0,126.5 L304.0,142.4 L306.0,157.2 L308.0,170.2 L310.0,181.2 L312.0,189.6 L314.0,195.2 L316.0,197.8 L318.0,197.3 L320.0,193.7 L322.0,187.1 L324.0,177.8 L326.0,166.1 L328.0,152.4 L330.0,137.2 L332.0,121.0 L334.0,104.5 L336.0,88.1 L338.0,72.5 L340.0,58.3 L342.0,45.9 L344.0,35.7 L346.0,28.2 L348.0,23.6 L350.0,22.0 L352.0,23.6 L354.0,28.2 L356.0,35.7 L358.0,45.9 L360.0,58.3 L362.0,72.5 L364.0,88.1 L366.0,104.5 L368.0,121.0 L370.0,137.2 L372.0,152.4 L374.0,166.1 L376.0,177.8 L378.0,187.1 L380.0,193.7 L382.0,197.3 L384.0,197.8 L386.0,195.2 L388.0,189.6 L390.0,181.2 L392.0,170.2 L394.0,157.2 L396.0,142.4 L398.0,126.5 L400.0,110.0 L402.0,93.5 L404.0,77.6 L406.0,62.8 L408.0,49.8 L410.0,38.8 L412.0,30.4 L414.0,24.8 L416.0,22.2 L418.0,22.7 L420.0,26.3 L422.0,32.9 L424.0,42.2 L426.0,53.9 L428.0,67.6 L430.0,82.8 L432.0,99.0 L434.0,115.5 L436.0,131.9 L438.0,147.5 L440.0,161.7 L442.0,174.1 L444.0,184.3 L446.0,191.8 L448.0,196.4 L450.0,198.0 L452.0,196.4 L454.0,191.8 L456.0,184.3 L458.0,174.1 L460.0,161.7 L462.0,147.5 L464.0,131.9 L466.0,115.5 L468.0,99.0 L470.0,82.8 L472.0,67.6 L474.0,53.9 L476.0,42.2 L478.0,32.9 L480.0,26.3 L482.0,22.7 L484.0,22.2 L486.0,24.8 L488.0,30.4 L490.0,38.8 L492.0,49.8 L494.0,62.8 L496.0,77.6 L498.0,93.5 L500.0,110.0 L502.0,126.5 L504.0,142.4 L506.0,157.2 L508.0,170.2 L510.0,181.2 L512.0,189.6 L514.0,195.2 L516.0,197.8 L518.0,197.3 L520.0,193.7 L522.0,187.1 L524.0,177.8 L526.0,166.1 L528.0,152.4 L530.0,137.2 L532.0,121.0 L534.0,104.5 L536.0,88.1 L538.0,72.5 L540.0,58.3 L542.0,45.9 L544.0,35.7 L546.0,28.2 L548.0,23.6 L550.0,22.0 L552.0,23.6 L554.0,28.2 L556.0,35.7 L558.0,45.9 L560.0,58.3 L562.0,72.5 L564.0,88.1 L566.0,104.5 L568.0,121.0 L570.0,137.2 L572.0,152.4 L574.0,166.1 L576.0,177.8 L578.0,187.1 L580.0,193.7 L582.0,197.3 L584.0,197.8 L586.0,195.2 L588.0,189.6 L590.0,181.2 L592.0,170.2 L594.0,157.2 L596.0,142.4 L598.0,126.5 L600.0,110.0 L602.0,93.5 L604.0,77.6 L606.0,62.8 L608.0,49.8 L610.0,38.8 L612.0,30.4 L614.0,24.8 L616.0,22.2 L618.0,22.7 L620.0,26.3 L622.0,32.9 L624.0,42.2 L626.0,53.9 L628.0,67.6 L630.0,82.8 L632.0,99.0 L634.0,115.5 L636.0,131.9 L638.0,147.5 L640.0,161.7 L642.0,174.1 L644.0,184.3 L646.0,191.8 L648.0,196.4 L650.0,198.0 L652.0,196.4 L654.0,191.8 L656.0,184.3 L658.0,174.1 L660.0,161.7 L662.0,147.5 L664.0,131.9 L666.0,115.5 L668.0,99.0 L670.0,82.8 L672.0,67.6 L674.0,53.9 L676.0,42.2 L678.0,32.9 L680.0,26.3 L682.0,22.7 L684.0,22.2 L686.0,24.8 L688.0,30.4 L690.0,38.8 L692.0,49.8 L694.0,62.8 L696.0,77.6 L698.0,93.5 L700.0,110.0 L702.0,126.5 L704.0,142.4 L706.0,157.2 L708.0,170.2 L710.0,181.2 L712.0,189.6 L714.0,195.2 L716.0,197.8 L718.0,197.3 L720.0,193.7"/><path class="svg-wave-acc" d="M0.0,110.0 L2.0,111.8 L4.0,113.7 L6.0,115.5 L8.0,117.4 L10.0,119.2 L12.0,121.0 L14.0,122.9 L16.0,124.7 L18.0,126.5 L20.0,128.3 L22.0,130.1 L24.0,131.9 L26.0,133.7 L28.0,135.4 L30.0,137.2 L32.0,138.9 L34.0,140.7 L36.0,142.4 L38.0,144.1 L40.0,145.8 L42.0,147.5 L44.0,149.1 L46.0,150.8 L48.0,152.4 L50.0,154.0 L52.0,155.6 L54.0,157.2 L56.0,158.7 L58.0,160.2 L60.0,161.7 L62.0,163.2 L64.0,164.7 L66.0,166.1 L68.0,167.5 L70.0,168.9 L72.0,170.2 L74.0,171.6 L76.0,172.9 L78.0,174.1 L80.0,175.4 L82.0,176.6 L84.0,177.8 L86.0,179.0 L88.0,180.1 L90.0,181.2 L92.0,182.3 L94.0,183.3 L96.0,184.3 L98.0,185.3 L100.0,186.2 L102.0,187.1 L104.0,188.0 L106.0,188.8 L108.0,189.6 L110.0,190.4 L112.0,191.1 L114.0,191.8 L116.0,192.5 L118.0,193.1 L120.0,193.7 L122.0,194.2 L124.0,194.8 L126.0,195.2 L128.0,195.7 L130.0,196.1 L132.0,196.4 L134.0,196.8 L136.0,197.1 L138.0,197.3 L140.0,197.5 L142.0,197.7 L144.0,197.8 L146.0,197.9 L148.0,198.0 L150.0,198.0 L152.0,198.0 L154.0,197.9 L156.0,197.8 L158.0,197.7 L160.0,197.5 L162.0,197.3 L164.0,197.1 L166.0,196.8 L168.0,196.4 L170.0,196.1 L172.0,195.7 L174.0,195.2 L176.0,194.8 L178.0,194.2 L180.0,193.7 L182.0,193.1 L184.0,192.5 L186.0,191.8 L188.0,191.1 L190.0,190.4 L192.0,189.6 L194.0,188.8 L196.0,188.0 L198.0,187.1 L200.0,186.2 L202.0,185.3 L204.0,184.3 L206.0,183.3 L208.0,182.3 L210.0,181.2 L212.0,180.1 L214.0,179.0 L216.0,177.8 L218.0,176.6 L220.0,175.4 L222.0,174.1 L224.0,172.9 L226.0,171.6 L228.0,170.2 L230.0,168.9 L232.0,167.5 L234.0,166.1 L236.0,164.7 L238.0,163.2 L240.0,161.7 L242.0,160.2 L244.0,158.7 L246.0,157.2 L248.0,155.6 L250.0,154.0 L252.0,152.4 L254.0,150.8 L256.0,149.1 L258.0,147.5 L260.0,145.8 L262.0,144.1 L264.0,142.4 L266.0,140.7 L268.0,138.9 L270.0,137.2 L272.0,135.4 L274.0,133.7 L276.0,131.9 L278.0,130.1 L280.0,128.3 L282.0,126.5 L284.0,124.7 L286.0,122.9 L288.0,121.0 L290.0,119.2 L292.0,117.4 L294.0,115.5 L296.0,113.7 L298.0,111.8 L300.0,110.0 L302.0,108.2 L304.0,106.3 L306.0,104.5 L308.0,102.6 L310.0,100.8 L312.0,99.0 L314.0,97.1 L316.0,95.3 L318.0,93.5 L320.0,91.7 L322.0,89.9 L324.0,88.1 L326.0,86.3 L328.0,84.6 L330.0,82.8 L332.0,81.1 L334.0,79.3 L336.0,77.6 L338.0,75.9 L340.0,74.2 L342.0,72.5 L344.0,70.9 L346.0,69.2 L348.0,67.6 L350.0,66.0 L352.0,64.4 L354.0,62.8 L356.0,61.3 L358.0,59.8 L360.0,58.3 L362.0,56.8 L364.0,55.3 L366.0,53.9 L368.0,52.5 L370.0,51.1 L372.0,49.8 L374.0,48.4 L376.0,47.1 L378.0,45.9 L380.0,44.6 L382.0,43.4 L384.0,42.2 L386.0,41.0 L388.0,39.9 L390.0,38.8 L392.0,37.7 L394.0,36.7 L396.0,35.7 L398.0,34.7 L400.0,33.8 L402.0,32.9 L404.0,32.0 L406.0,31.2 L408.0,30.4 L410.0,29.6 L412.0,28.9 L414.0,28.2 L416.0,27.5 L418.0,26.9 L420.0,26.3 L422.0,25.8 L424.0,25.2 L426.0,24.8 L428.0,24.3 L430.0,23.9 L432.0,23.6 L434.0,23.2 L436.0,22.9 L438.0,22.7 L440.0,22.5 L442.0,22.3 L444.0,22.2 L446.0,22.1 L448.0,22.0 L450.0,22.0 L452.0,22.0 L454.0,22.1 L456.0,22.2 L458.0,22.3 L460.0,22.5 L462.0,22.7 L464.0,22.9 L466.0,23.2 L468.0,23.6 L470.0,23.9 L472.0,24.3 L474.0,24.8 L476.0,25.2 L478.0,25.8 L480.0,26.3 L482.0,26.9 L484.0,27.5 L486.0,28.2 L488.0,28.9 L490.0,29.6 L492.0,30.4 L494.0,31.2 L496.0,32.0 L498.0,32.9 L500.0,33.8 L502.0,34.7 L504.0,35.7 L506.0,36.7 L508.0,37.7 L510.0,38.8 L512.0,39.9 L514.0,41.0 L516.0,42.2 L518.0,43.4 L520.0,44.6 L522.0,45.9 L524.0,47.1 L526.0,48.4 L528.0,49.8 L530.0,51.1 L532.0,52.5 L534.0,53.9 L536.0,55.3 L538.0,56.8 L540.0,58.3 L542.0,59.8 L544.0,61.3 L546.0,62.8 L548.0,64.4 L550.0,66.0 L552.0,67.6 L554.0,69.2 L556.0,70.9 L558.0,72.5 L560.0,74.2 L562.0,75.9 L564.0,77.6 L566.0,79.3 L568.0,81.1 L570.0,82.8 L572.0,84.6 L574.0,86.3 L576.0,88.1 L578.0,89.9 L580.0,91.7 L582.0,93.5 L584.0,95.3 L586.0,97.1 L588.0,99.0 L590.0,100.8 L592.0,102.6 L594.0,104.5 L596.0,106.3 L598.0,108.2 L600.0,110.0 L602.0,111.8 L604.0,113.7 L606.0,115.5 L608.0,117.4 L610.0,119.2 L612.0,121.0 L614.0,122.9 L616.0,124.7 L618.0,126.5 L620.0,128.3 L622.0,130.1 L624.0,131.9 L626.0,133.7 L628.0,135.4 L630.0,137.2 L632.0,138.9 L634.0,140.7 L636.0,142.4 L638.0,144.1 L640.0,145.8 L642.0,147.5 L644.0,149.1 L646.0,150.8 L648.0,152.4 L650.0,154.0 L652.0,155.6 L654.0,157.2 L656.0,158.7 L658.0,160.2 L660.0,161.7 L662.0,163.2 L664.0,164.7 L666.0,166.1 L668.0,167.5 L670.0,168.9 L672.0,170.2 L674.0,171.6 L676.0,172.9 L678.0,174.1 L680.0,175.4 L682.0,176.6 L684.0,177.8 L686.0,179.0 L688.0,180.1 L690.0,181.2 L692.0,182.3 L694.0,183.3 L696.0,184.3 L698.0,185.3 L700.0,186.2 L702.0,187.1 L704.0,188.0 L706.0,188.8 L708.0,189.6 L710.0,190.4 L712.0,191.1 L714.0,191.8 L716.0,192.5 L718.0,193.1 L720.0,193.7"/><circle class="svg-dot-y" cx="0.0" cy="110.0" r="5"/><circle class="svg-dot-y" cx="60.0" cy="161.7" r="5"/><circle class="svg-dot-y" cx="120.0" cy="193.7" r="5"/><circle class="svg-dot-y" cx="180.0" cy="193.7" r="5"/><circle class="svg-dot-y" cx="240.0" cy="161.7" r="5"/><circle class="svg-dot-y" cx="300.0" cy="110.0" r="5"/><circle class="svg-dot-y" cx="360.0" cy="58.3" r="5"/><circle class="svg-dot-y" cx="420.0" cy="26.3" r="5"/><circle class="svg-dot-y" cx="480.0" cy="26.3" r="5"/><circle class="svg-dot-y" cx="540.0" cy="58.3" r="5"/><circle class="svg-dot-y" cx="600.0" cy="110.0" r="5"/><circle class="svg-dot-y" cx="660.0" cy="161.7" r="5"/><circle class="svg-dot-y" cx="720.0" cy="193.7" r="5"/><text class="svg-txt" x="8" y="18">900 Hz (šedá)</text><text class="svg-txt-acc" x="8" y="34">alias 100 Hz (cyan)</text></svg>
+  <figcaption>Šedý signál 900 Hz vzorkovaný frekvencí 1 000 Hz. Vzorky (žluté) leží přesně na cyan vlně 100 Hz. Ze vzorků samotných nejde poznat, která z nich to byla.</figcaption>
+</figure>
+<p>Proto má každý A/D převodník před sebou <dfn>antialiasingový filtr</dfn>, dolní propust, která frekvence nad <code>f<sub>s</sub> / 2</code> odřízne <strong>před</strong> vzorkováním. Potom už to nejde.</p>
+<div class="note tip"><b class="lbl">Aliasing v obraze</b><p>Kola aut a vrtule ve filmu se někdy zdánlivě točí pozpátku nebo stojí. Kamera snímá 24 snímků za sekundu, tedy obraz vzorkuje. Když se kolo mezi snímky otočí skoro o celou vzdálenost mezi paprsky, vypadá to jako malé otočení opačným směrem. Totéž je moiré na fotkách jemných vzorů.</p></div>
+</section>
+
+<section id="kvantovani">
+<h2>Kvantování</h2>
+<p>Naměřená hodnota je reálné číslo, ale uložit musíme číslo s pevným počtem bitů. <dfn>Kvantování</dfn> je zaokrouhlení každého vzorku na nejbližší z povolených <dfn>kvantovacích úrovní</dfn>. S <code>n</code> bity máme <code>2<sup>n</sup></code> úrovní. Počet bitů na vzorek se jmenuje <dfn>bitová hloubka</dfn> (rozlišení).</p>
+<figure class="fig">
+  <svg class="svgfig" viewBox="0 0 720 220" role="img" aria-label="Kvantování na 3 bity"><line class="svg-grid" x1="0" y1="206.8" x2="720" y2="206.8"/><text class="svg-txt" x="686" y="203.8">000</text><line class="svg-grid" x1="0" y1="179.1" x2="720" y2="179.1"/><text class="svg-txt" x="686" y="176.1">001</text><line class="svg-grid" x1="0" y1="151.5" x2="720" y2="151.5"/><text class="svg-txt" x="686" y="148.5">010</text><line class="svg-grid" x1="0" y1="123.8" x2="720" y2="123.8"/><text class="svg-txt" x="686" y="120.8">011</text><line class="svg-grid" x1="0" y1="96.2" x2="720" y2="96.2"/><text class="svg-txt" x="686" y="93.2">100</text><line class="svg-grid" x1="0" y1="68.5" x2="720" y2="68.5"/><text class="svg-txt" x="686" y="65.5">101</text><line class="svg-grid" x1="0" y1="40.9" x2="720" y2="40.9"/><text class="svg-txt" x="686" y="37.9">110</text><line class="svg-grid" x1="0" y1="13.2" x2="720" y2="13.2"/><text class="svg-txt" x="686" y="10.2">111</text><path class="svg-wave" d="M0.0,93.6 L2.0,89.1 L4.0,84.8 L6.0,80.7 L8.0,76.9 L10.0,73.4 L12.0,70.2 L14.0,67.3 L16.0,64.7 L18.0,62.4 L20.0,60.5 L22.0,59.0 L24.0,57.7 L26.0,56.8 L28.0,56.3 L30.0,56.0 L32.0,56.1 L34.0,56.4 L36.0,57.0 L38.0,57.8 L40.0,58.9 L42.0,60.1 L44.0,61.5 L46.0,63.0 L48.0,64.6 L50.0,66.2 L52.0,67.9 L54.0,69.6 L56.0,71.3 L58.0,72.9 L60.0,74.4 L62.0,75.8 L64.0,77.1 L66.0,78.2 L68.0,79.1 L70.0,79.8 L72.0,80.3 L74.0,80.5 L76.0,80.6 L78.0,80.3 L80.0,79.9 L82.0,79.1 L84.0,78.2 L86.0,77.0 L88.0,75.6 L90.0,74.0 L92.0,72.1 L94.0,70.2 L96.0,68.0 L98.0,65.8 L100.0,63.5 L102.0,61.0 L104.0,58.6 L106.0,56.2 L108.0,53.7 L110.0,51.4 L112.0,49.1 L114.0,47.0 L116.0,45.0 L118.0,43.2 L120.0,41.6 L122.0,40.3 L124.0,39.2 L126.0,38.4 L128.0,38.0 L130.0,37.8 L132.0,38.0 L134.0,38.6 L136.0,39.5 L138.0,40.8 L140.0,42.5 L142.0,44.5 L144.0,46.9 L146.0,49.6 L148.0,52.6 L150.0,56.0 L152.0,59.7 L154.0,63.7 L156.0,67.9 L158.0,72.3 L160.0,76.9 L162.0,81.7 L164.0,86.6 L166.0,91.6 L168.0,96.7 L170.0,101.8 L172.0,106.9 L174.0,111.9 L176.0,116.9 L178.0,121.7 L180.0,126.4 L182.0,130.9 L184.0,135.2 L186.0,139.3 L188.0,143.1 L190.0,146.6 L192.0,149.8 L194.0,152.7 L196.0,155.3 L198.0,157.6 L200.0,159.5 L202.0,161.0 L204.0,162.3 L206.0,163.2 L208.0,163.7 L210.0,164.0 L212.0,163.9 L214.0,163.6 L216.0,163.0 L218.0,162.2 L220.0,161.1 L222.0,159.9 L224.0,158.5 L226.0,157.0 L228.0,155.4 L230.0,153.8 L232.0,152.1 L234.0,150.4 L236.0,148.7 L238.0,147.1 L240.0,145.6 L242.0,144.2 L244.0,142.9 L246.0,141.8 L248.0,140.9 L250.0,140.2 L252.0,139.7 L254.0,139.5 L256.0,139.4 L258.0,139.7 L260.0,140.1 L262.0,140.9 L264.0,141.8 L266.0,143.0 L268.0,144.4 L270.0,146.0 L272.0,147.9 L274.0,149.8 L276.0,152.0 L278.0,154.2 L280.0,156.5 L282.0,159.0 L284.0,161.4 L286.0,163.8 L288.0,166.3 L290.0,168.6 L292.0,170.9 L294.0,173.0 L296.0,175.0 L298.0,176.8 L300.0,178.4 L302.0,179.7 L304.0,180.8 L306.0,181.6 L308.0,182.0 L310.0,182.2 L312.0,182.0 L314.0,181.4 L316.0,180.5 L318.0,179.2 L320.0,177.5 L322.0,175.5 L324.0,173.1 L326.0,170.4 L328.0,167.4 L330.0,164.0 L332.0,160.3 L334.0,156.3 L336.0,152.1 L338.0,147.7 L340.0,143.1 L342.0,138.3 L344.0,133.4 L346.0,128.4 L348.0,123.3 L350.0,118.2 L352.0,113.1 L354.0,108.1 L356.0,103.1 L358.0,98.3 L360.0,93.6 L362.0,89.1 L364.0,84.8 L366.0,80.7 L368.0,76.9 L370.0,73.4 L372.0,70.2 L374.0,67.3 L376.0,64.7 L378.0,62.4 L380.0,60.5 L382.0,59.0 L384.0,57.7 L386.0,56.8 L388.0,56.3 L390.0,56.0 L392.0,56.1 L394.0,56.4 L396.0,57.0 L398.0,57.8 L400.0,58.9 L402.0,60.1 L404.0,61.5 L406.0,63.0 L408.0,64.6 L410.0,66.2 L412.0,67.9 L414.0,69.6 L416.0,71.3 L418.0,72.9 L420.0,74.4 L422.0,75.8 L424.0,77.1 L426.0,78.2 L428.0,79.1 L430.0,79.8 L432.0,80.3 L434.0,80.5 L436.0,80.6 L438.0,80.3 L440.0,79.9 L442.0,79.1 L444.0,78.2 L446.0,77.0 L448.0,75.6 L450.0,74.0 L452.0,72.1 L454.0,70.2 L456.0,68.0 L458.0,65.8 L460.0,63.5 L462.0,61.0 L464.0,58.6 L466.0,56.2 L468.0,53.7 L470.0,51.4 L472.0,49.1 L474.0,47.0 L476.0,45.0 L478.0,43.2 L480.0,41.6 L482.0,40.3 L484.0,39.2 L486.0,38.4 L488.0,38.0 L490.0,37.8 L492.0,38.0 L494.0,38.6 L496.0,39.5 L498.0,40.8 L500.0,42.5 L502.0,44.5 L504.0,46.9 L506.0,49.6 L508.0,52.6 L510.0,56.0 L512.0,59.7 L514.0,63.7 L516.0,67.9 L518.0,72.3 L520.0,76.9 L522.0,81.7 L524.0,86.6 L526.0,91.6 L528.0,96.7 L530.0,101.8 L532.0,106.9 L534.0,111.9 L536.0,116.9 L538.0,121.7 L540.0,126.4 L542.0,130.9 L544.0,135.2 L546.0,139.3 L548.0,143.1 L550.0,146.6 L552.0,149.8 L554.0,152.7 L556.0,155.3 L558.0,157.6 L560.0,159.5 L562.0,161.0 L564.0,162.3 L566.0,163.2 L568.0,163.7 L570.0,164.0 L572.0,163.9 L574.0,163.6 L576.0,163.0 L578.0,162.2 L580.0,161.1 L582.0,159.9 L584.0,158.5 L586.0,157.0 L588.0,155.4 L590.0,153.8 L592.0,152.1 L594.0,150.4 L596.0,148.7 L598.0,147.1 L600.0,145.6 L602.0,144.2 L604.0,142.9 L606.0,141.8 L608.0,140.9 L610.0,140.2 L612.0,139.7 L614.0,139.5 L616.0,139.4 L618.0,139.7 L620.0,140.1 L622.0,140.9 L624.0,141.8 L626.0,143.0 L628.0,144.4 L630.0,146.0 L632.0,147.9 L634.0,149.8 L636.0,152.0 L638.0,154.2 L640.0,156.5 L642.0,159.0 L644.0,161.4 L646.0,163.8 L648.0,166.3 L650.0,168.6 L652.0,170.9 L654.0,173.0 L656.0,175.0 L658.0,176.8 L660.0,178.4 L662.0,179.7 L664.0,180.8 L666.0,181.6 L668.0,182.0 L670.0,182.2 L672.0,182.0 L674.0,181.4 L676.0,180.5 L678.0,179.2 L680.0,177.5 L682.0,175.5 L684.0,173.1 L686.0,170.4 L688.0,167.4 L690.0,164.0 L692.0,160.3 L694.0,156.3 L696.0,152.1 L698.0,147.7 L700.0,143.1 L702.0,138.3 L704.0,133.4 L706.0,128.4 L708.0,123.3 L710.0,118.2 L712.0,113.1 L714.0,108.1 L716.0,103.1 L718.0,98.3 L720.0,93.6"/><path class="svg-wave-acc" d="M0.0,96.2 L18.0,96.2 L18.0,68.5 L36.0,68.5 L36.0,68.5 L54.0,68.5 L54.0,68.5 L72.0,68.5 L72.0,68.5 L90.0,68.5 L90.0,68.5 L108.0,68.5 L108.0,40.9 L126.0,40.9 L126.0,40.9 L144.0,40.9 L144.0,40.9 L162.0,40.9 L162.0,68.5 L180.0,68.5 L180.0,123.8 L198.0,123.8 L198.0,151.5 L216.0,151.5 L216.0,151.5 L234.0,151.5 L234.0,151.5 L252.0,151.5 L252.0,151.5 L270.0,151.5 L270.0,151.5 L288.0,151.5 L288.0,179.1 L306.0,179.1 L306.0,179.1 L324.0,179.1 L324.0,179.1 L342.0,179.1 L342.0,151.5 L360.0,151.5 L360.0,96.2 L378.0,96.2 L378.0,68.5 L396.0,68.5 L396.0,68.5 L414.0,68.5 L414.0,68.5 L432.0,68.5 L432.0,68.5 L450.0,68.5 L450.0,68.5 L468.0,68.5 L468.0,40.9 L486.0,40.9 L486.0,40.9 L504.0,40.9 L504.0,40.9 L522.0,40.9 L522.0,68.5 L540.0,68.5 L540.0,123.8 L558.0,123.8 L558.0,151.5 L576.0,151.5 L576.0,151.5 L594.0,151.5 L594.0,151.5 L612.0,151.5 L612.0,151.5 L630.0,151.5 L630.0,151.5 L648.0,151.5 L648.0,179.1 L666.0,179.1 L666.0,179.1 L684.0,179.1 L684.0,179.1 L702.0,179.1 L702.0,151.5 L720.0,151.5 L720.0,96.2 L720.0,96.2"/><line class="svg-err" x1="0.0" y1="93.6" x2="0.0" y2="96.2"/><circle class="svg-dot" cx="0.0" cy="96.2" r="3.5"/><line class="svg-err" x1="18.0" y1="62.4" x2="18.0" y2="68.5"/><circle class="svg-dot" cx="18.0" cy="68.5" r="3.5"/><line class="svg-err" x1="36.0" y1="57.0" x2="36.0" y2="68.5"/><circle class="svg-dot" cx="36.0" cy="68.5" r="3.5"/><line class="svg-err" x1="54.0" y1="69.6" x2="54.0" y2="68.5"/><circle class="svg-dot" cx="54.0" cy="68.5" r="3.5"/><line class="svg-err" x1="72.0" y1="80.3" x2="72.0" y2="68.5"/><circle class="svg-dot" cx="72.0" cy="68.5" r="3.5"/><line class="svg-err" x1="90.0" y1="74.0" x2="90.0" y2="68.5"/><circle class="svg-dot" cx="90.0" cy="68.5" r="3.5"/><line class="svg-err" x1="108.0" y1="53.7" x2="108.0" y2="40.9"/><circle class="svg-dot" cx="108.0" cy="40.9" r="3.5"/><line class="svg-err" x1="126.0" y1="38.4" x2="126.0" y2="40.9"/><circle class="svg-dot" cx="126.0" cy="40.9" r="3.5"/><line class="svg-err" x1="144.0" y1="46.9" x2="144.0" y2="40.9"/><circle class="svg-dot" cx="144.0" cy="40.9" r="3.5"/><line class="svg-err" x1="162.0" y1="81.7" x2="162.0" y2="68.5"/><circle class="svg-dot" cx="162.0" cy="68.5" r="3.5"/><line class="svg-err" x1="180.0" y1="126.4" x2="180.0" y2="123.8"/><circle class="svg-dot" cx="180.0" cy="123.8" r="3.5"/><line class="svg-err" x1="198.0" y1="157.6" x2="198.0" y2="151.5"/><circle class="svg-dot" cx="198.0" cy="151.5" r="3.5"/><line class="svg-err" x1="216.0" y1="163.0" x2="216.0" y2="151.5"/><circle class="svg-dot" cx="216.0" cy="151.5" r="3.5"/><line class="svg-err" x1="234.0" y1="150.4" x2="234.0" y2="151.5"/><circle class="svg-dot" cx="234.0" cy="151.5" r="3.5"/><line class="svg-err" x1="252.0" y1="139.7" x2="252.0" y2="151.5"/><circle class="svg-dot" cx="252.0" cy="151.5" r="3.5"/><line class="svg-err" x1="270.0" y1="146.0" x2="270.0" y2="151.5"/><circle class="svg-dot" cx="270.0" cy="151.5" r="3.5"/><line class="svg-err" x1="288.0" y1="166.3" x2="288.0" y2="179.1"/><circle class="svg-dot" cx="288.0" cy="179.1" r="3.5"/><line class="svg-err" x1="306.0" y1="181.6" x2="306.0" y2="179.1"/><circle class="svg-dot" cx="306.0" cy="179.1" r="3.5"/><line class="svg-err" x1="324.0" y1="173.1" x2="324.0" y2="179.1"/><circle class="svg-dot" cx="324.0" cy="179.1" r="3.5"/><line class="svg-err" x1="342.0" y1="138.3" x2="342.0" y2="151.5"/><circle class="svg-dot" cx="342.0" cy="151.5" r="3.5"/><line class="svg-err" x1="360.0" y1="93.6" x2="360.0" y2="96.2"/><circle class="svg-dot" cx="360.0" cy="96.2" r="3.5"/><line class="svg-err" x1="378.0" y1="62.4" x2="378.0" y2="68.5"/><circle class="svg-dot" cx="378.0" cy="68.5" r="3.5"/><line class="svg-err" x1="396.0" y1="57.0" x2="396.0" y2="68.5"/><circle class="svg-dot" cx="396.0" cy="68.5" r="3.5"/><line class="svg-err" x1="414.0" y1="69.6" x2="414.0" y2="68.5"/><circle class="svg-dot" cx="414.0" cy="68.5" r="3.5"/><line class="svg-err" x1="432.0" y1="80.3" x2="432.0" y2="68.5"/><circle class="svg-dot" cx="432.0" cy="68.5" r="3.5"/><line class="svg-err" x1="450.0" y1="74.0" x2="450.0" y2="68.5"/><circle class="svg-dot" cx="450.0" cy="68.5" r="3.5"/><line class="svg-err" x1="468.0" y1="53.7" x2="468.0" y2="40.9"/><circle class="svg-dot" cx="468.0" cy="40.9" r="3.5"/><line class="svg-err" x1="486.0" y1="38.4" x2="486.0" y2="40.9"/><circle class="svg-dot" cx="486.0" cy="40.9" r="3.5"/><line class="svg-err" x1="504.0" y1="46.9" x2="504.0" y2="40.9"/><circle class="svg-dot" cx="504.0" cy="40.9" r="3.5"/><line class="svg-err" x1="522.0" y1="81.7" x2="522.0" y2="68.5"/><circle class="svg-dot" cx="522.0" cy="68.5" r="3.5"/><line class="svg-err" x1="540.0" y1="126.4" x2="540.0" y2="123.8"/><circle class="svg-dot" cx="540.0" cy="123.8" r="3.5"/><line class="svg-err" x1="558.0" y1="157.6" x2="558.0" y2="151.5"/><circle class="svg-dot" cx="558.0" cy="151.5" r="3.5"/><line class="svg-err" x1="576.0" y1="163.0" x2="576.0" y2="151.5"/><circle class="svg-dot" cx="576.0" cy="151.5" r="3.5"/><line class="svg-err" x1="594.0" y1="150.4" x2="594.0" y2="151.5"/><circle class="svg-dot" cx="594.0" cy="151.5" r="3.5"/><line class="svg-err" x1="612.0" y1="139.7" x2="612.0" y2="151.5"/><circle class="svg-dot" cx="612.0" cy="151.5" r="3.5"/><line class="svg-err" x1="630.0" y1="146.0" x2="630.0" y2="151.5"/><circle class="svg-dot" cx="630.0" cy="151.5" r="3.5"/><line class="svg-err" x1="648.0" y1="166.3" x2="648.0" y2="179.1"/><circle class="svg-dot" cx="648.0" cy="179.1" r="3.5"/><line class="svg-err" x1="666.0" y1="181.6" x2="666.0" y2="179.1"/><circle class="svg-dot" cx="666.0" cy="179.1" r="3.5"/><line class="svg-err" x1="684.0" y1="173.1" x2="684.0" y2="179.1"/><circle class="svg-dot" cx="684.0" cy="179.1" r="3.5"/><line class="svg-err" x1="702.0" y1="138.3" x2="702.0" y2="151.5"/><circle class="svg-dot" cx="702.0" cy="151.5" r="3.5"/><line class="svg-err" x1="720.0" y1="93.6" x2="720.0" y2="96.2"/><circle class="svg-dot" cx="720.0" cy="96.2" r="3.5"/></svg>
+  <figcaption>Kvantování na 3 bity (8 úrovní). Cyan schody jsou uložené hodnoty, červené úsečky kvantizační chyba.</figcaption>
+</figure>
+<p>Rozdíl mezi skutečnou a uloženou hodnotou je <dfn>kvantizační chyba</dfn>. Je nejvýš polovina kroku mezi úrovněmi a v hudbě ji slyšíme jako šum. Každý bit navíc zdvojnásobí počet úrovní a chybu zmenší na polovinu, tedy přidá asi 6 dB. Poměr nejsilnějšího signálu a kvantizačního šumu (<dfn>SNR</dfn>, dynamický rozsah) je pro sinusový signál:</p>
+<pre><code>SNR ≈ 6,02 · n + 1,76  [dB]</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Bity</th><th>Úrovní</th><th>Dynamika</th><th>Použití</th></tr></thead>
+<tbody>
+<tr><td class="num">8</td><td class="num">256</td><td class="num">≈ 50 dB</td><td>telefon (s nelineární stupnicí), starší hry</td></tr>
+<tr><td class="num">16</td><td class="num">65 536</td><td class="num">≈ 98 dB</td><td>CD, běžná hudba</td></tr>
+<tr><td class="num">24</td><td class="num">16 777 216</td><td class="num">≈ 146 dB</td><td>nahrávání a úpravy ve studiu</td></tr>
+</tbody></table></div>
+<p>Sluch zvládne zhruba 120 dB, takže pro poslech 16 bitů stačí. Studia nahrávají ve 24 bitech kvůli rezervě: nahrává se s odstupem od maxima, aby se signál nepřebudil, a úpravy (zesílení, mixování) zaokrouhlovací chyby sčítají.</p>
+<div class="note warn"><b class="lbl">Přebuzení (clipping)</b><p>Hodnoty větší než nejvyšší úroveň se oříznou na maximum. Vlna dostane ploché vrcholy a zní tvrdě a zkresleně. Informace je ztracená a opravit to nejde.</p></div>
+<p>Telefonní síť používá 8 bitů, ale ne s rovnoměrnými úrovněmi: kódování <strong>A-law</strong> (v Evropě) a <strong>µ-law</strong> má úrovně hustší u tichých hodnot a řidší u hlasitých, podobně jako logaritmický sluch. Dosáhne tak kvality srovnatelné s asi 13 lineárními bity.</p>
+</section>
+
+<section id="pcm">
+<h2>PCM a běžné hodnoty</h2>
+<p>Zvuk uložený jako posloupnost vzorků s danou vzorkovací frekvencí a bitovou hloubkou se nazývá <dfn>PCM</dfn> (pulzně kódová modulace). Je to „syrový“, nekomprimovaný digitální zvuk. Soubor WAV obsahuje právě PCM data s krátkou hlavičkou. Každý <dfn>kanál</dfn> (mono 1, stereo 2, prostorový zvuk 5.1 má 6) má vlastní řadu vzorků.</p>
+<div class="tbl"><table>
+<thead><tr><th>f<sub>s</sub></th><th>Zachytí do</th><th>Kde</th></tr></thead>
+<tbody>
+<tr><td class="num">8 kHz</td><td class="num">4 kHz</td><td>klasická telefonie</td></tr>
+<tr><td class="num">16 kHz</td><td class="num">8 kHz</td><td>HD hovory, rozpoznávání řeči</td></tr>
+<tr><td class="num">44,1 kHz</td><td class="num">22,05 kHz</td><td>CD, hudba, většina streamování</td></tr>
+<tr><td class="num">48 kHz</td><td class="num">24 kHz</td><td>video, film, televize, hry</td></tr>
+<tr><td class="num">96–192 kHz</td><td class="num">48–96 kHz</td><td>studia, „Hi-Res“ nahrávky</td></tr>
+</tbody></table></div>
+<h3>Proč zrovna 44 100 Hz</h3>
+<p>Na slyšitelných 20 kHz je potřeba víc než 40 kHz. Zbytek nad tím je rezerva pro antialiasingový filtr, který nedokáže řezat ostře, a potřebuje přechodové pásmo mezi 20 kHz a 22,05 kHz. Přesné číslo pochází z videa: na přelomu 70. a 80. let se digitální nahrávky ukládaly na videopásky pomocí PCM adaptérů. Do jednoho řádku obrazu se vešly 3 vzorky, a tak 3 × 245 řádků × 60 půlsnímků = 44 100 vzorků za sekundu (NTSC), stejně jako 3 × 294 × 50 (PAL).<sup class="ref"><a href="#z9">9</a></sup></p>
+</section>
+
+<section id="velikost">
+<h2>Výpočet velikosti</h2>
+<p>Nekomprimovaný zvuk má pevný <dfn>datový tok</dfn> (bitrate), počet bitů za sekundu:</p>
+<pre><code>datový tok [b/s] = f_s · n · kanály
+velikost [b]     = f_s · n · kanály · t</code></pre>
+<p>Kvalita CD: 44 100 · 16 · 2 = <strong>1 411 200 b/s</strong> ≈ 1,4 Mb/s = 176 400 B/s. Minuta tedy zabere 10 584 000 B ≈ <strong>10,6 MB</strong>.</p>
+<div class="note warn"><b class="lbl">Pozor na jednotky</b><p>Datový tok se uvádí v <strong>bitech</strong> za sekundu (kb/s, Mb/s), velikost souboru v <strong>bajtech</strong> (kB, MB). Nezapomeň dělit 8. U toků platí k = 1 000, u velikostí se někdy používá KiB = 1 024 B. Viz text <a href="03_bit_byte.html">Bit po bitu</a>.</p></div>
+<div class="calc" id="zvCalc">
+  <div class="calc-row">
+    <label>f<sub>s</sub> (Hz)<select id="cFs"><option>8000</option><option>16000</option><option>22050</option><option selected>44100</option><option>48000</option><option>96000</option></select></label>
+    <label>bity<select id="cBits"><option>8</option><option selected>16</option><option>24</option></select></label>
+    <label>kanály<select id="cCh"><option value="1">1 mono</option><option value="2" selected>2 stereo</option><option value="6">6 (5.1)</option></select></label>
+    <label>délka (s)<input id="cT" type="number" min="1" value="180"></label>
+  </div>
+  <div class="calc-out" id="cOut"></div>
+</div>
+</section>
+
+<p class="part">Komprese</p>
+
+<section id="komprese">
+<h2>Bezztrátová a ztrátová komprese</h2>
+<p>PCM je velké, proto se zvuk komprimuje. Princip je stejný jako u obrázků (<a href="08_komprese.html">komprese</a>):</p>
+<div class="two">
+  <div class="card">
+    <h3>Bezztrátová</h3>
+    <ul>
+      <li>Po rozbalení vrátí <strong>přesně stejná</strong> čísla.</li>
+      <li>Využívá předvídatelnost: další vzorek se dá odhadnout z předchozích a uloží se jen malá odchylka (<em>lineární predikce</em>), ta se zakóduje kratšími kódy.</li>
+      <li>Zmenší zvuk zhruba na 50–70 % podle hudby.</li>
+      <li>Formáty: <strong>FLAC</strong>, ALAC, WavPack.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Ztrátová</h3>
+    <ul>
+      <li>Zahodí informace, které ucho <strong>neslyší nebo nepostřehne</strong>.</li>
+      <li>Zmenší zvuk 5× až 15× (i víc u řeči).</li>
+      <li>Originál už z ní zpátky nedostaneš. Opakované ukládání kvalitu dál zhoršuje.</li>
+      <li>Formáty: <strong>MP3</strong>, AAC, Ogg Vorbis, <strong>Opus</strong>.</li>
+    </ul>
+  </div>
+</div>
+<p>Kvalitu ztrátového záznamu určuje hlavně <dfn>datový tok</dfn> v kb/s. MP3 při 128 kb/s je zhruba 11× menší než CD a pro běžný poslech slušné, při 320 kb/s většina posluchačů rozdíl od originálu nepozná. Kodek může mít <dfn>konstantní tok</dfn> (CBR), nebo <dfn>proměnný tok</dfn> (VBR): složitým pasážím dá víc bitů a jednoduchým méně.</p>
+</section>
+
+<section id="psycho">
+<h2>Psychoakustika: co ucho neslyší</h2>
+<p><dfn>Psychoakustika</dfn> zkoumá, jak člověk zvuk vnímá. Ztrátové kodeky využívají hlavně tyto jevy:</p>
+<ul>
+  <li><strong>Práh slyšení</strong> závisí na frekvenci. Ucho je nejcitlivější kolem 2–5 kHz. Velmi nízké a velmi vysoké tóny musí být mnohem silnější, abychom je vůbec slyšeli. Co je pod prahem, nemusíme ukládat.</li>
+  <li><strong>Frekvenční maskování</strong>: hlasitý tón přehluší tišší tóny s blízkou frekvencí. Mocněji maskuje směrem k vyšším frekvencím.</li>
+  <li><strong>Časové maskování</strong>: silný zvuk na chvíli zamaskuje tiché zvuky těsně po něm (a na pár milisekund i těsně před ním).</li>
+  <li><strong>Omezený rozsah</strong>: frekvence nad asi 16 kHz většina lidí slyší slabě nebo vůbec, kodek je při nízkém toku často odřízne úplně.</li>
+</ul>
+<h3>Jak pracuje kodek MP3</h3>
+<ol class="plan">
+  <li>Rozdělí zvuk na krátké <b>rámce</b> (1 152 vzorků, asi 26 ms při 44,1 kHz).</li>
+  <li>Každý rámec převede na <b>frekvence</b> (filtrová banka a transformace MDCT, příbuzná Fourierově).</li>
+  <li><b>Psychoakustický model</b> spočítá pro každé pásmo, jak velký šum v něm ještě nebude slyšet.</li>
+  <li><b>Kvantuje</b> každé pásmo jen tak přesně, aby chyba zůstala pod touto hranicí. Tady vzniká ztráta.</li>
+  <li>Výsledek bezztrátově zkomprimuje (<b>Huffmanovo kódování</b>) a uloží.</li>
+</ol>
+<p>Je to stejná myšlenka jako u JPEG: převést data do podoby, kde je vidět, co je pro člověka důležité (frekvence), a nedůležité uložit hrubě.</p>
+</section>
+
+<section id="formaty">
+<h2>Formáty</h2>
+<p>Je dobré rozlišovat <dfn>kodek</dfn> (způsob, jak zvuk zakódovat, např. AAC) a <dfn>kontejner</dfn> (formát souboru, který zakódovaná data obaluje a přidává metadata, např. MP4, Ogg, WebM). Jeden kontejner může nést různé kodeky.</p>
+<div class="tbl"><table>
+<thead><tr><th>Formát</th><th>Typ</th><th>Poznámka</th></tr></thead>
+<tbody>
+<tr><td><code>WAV</code></td><td>nekomprimovaný (PCM)</td><td>Microsoft a IBM 1991, nahrávání a střih</td></tr>
+<tr><td><code>FLAC</code></td><td>bezztrátový</td><td>volný, archivace, Hi-Fi streamování</td></tr>
+<tr><td><code>ALAC</code></td><td>bezztrátový</td><td>Apple</td></tr>
+<tr><td><code>MP3</code></td><td>ztrátový</td><td>nejrozšířenější, patenty vypršely v roce 2017</td></tr>
+<tr><td><code>AAC</code></td><td>ztrátový</td><td>nástupce MP3, lepší při stejném toku. Apple, YouTube, video v MP4</td></tr>
+<tr><td><code>Ogg Vorbis</code></td><td>ztrátový</td><td>volný, hry</td></tr>
+<tr><td><code>Opus</code></td><td>ztrátový</td><td>volný (2012), výborný při nízkém toku, hovory (WebRTC, Discord, WhatsApp)</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="midi">
+<h2>MIDI: noty místo zvuku</h2>
+<p><dfn>MIDI</dfn> (Musical Instrument Digital Interface, 1983) není zvukový formát. Ukládá <strong>události</strong>: která klávesa (číslo 0–127), jak silně, kdy zmáčknuta a kdy puštěna, jaký nástroj. Zvuk vytvoří až syntezátor nebo program při přehrávání. Proto je MIDI soubor nepatrný (stovky bajtů až desítky kilobajtů) a dá se snadno upravovat (změnit tempo, nástroj, noty), ale stejný soubor zní na různých zařízeních různě a nahraný zpěv do něj převést nejde.</p>
+<p>Vztah MIDI a WAV je podobný jako vztah <a href="05_pixel_po_pixelu.html">vektorové a rastrové grafiky</a>: návod, jak něco vytvořit, proti uloženému výsledku.</p>
+</section>
+
+<p class="part">K maturitě</p>
+
+<section id="osnova">
+<h2>Jak odpovídat</h2>
+<ol class="plan">
+  <li><b>Zvuk jako vlnění.</b> Tlak v čase, frekvence (výška), amplituda (hlasitost), perioda, rozsah sluchu 20 Hz – 20 kHz, decibely.</li>
+  <li><b>Analog vs digitál.</b> Cesta mikrofon → ADC → čísla → DAC → reproduktor. Výhody digitálu.</li>
+  <li><b>Vzorkování.</b> f<sub>s</sub>, vzorkovací věta f<sub>s</sub> &gt; 2 f<sub>max</sub>, aliasing a antialiasingový filtr. Proč 44,1 kHz.</li>
+  <li><b>Kvantování.</b> 2<sup>n</sup> úrovní, kvantizační chyba, 6 dB na bit, 16 vs 24 bitů, clipping.</li>
+  <li><b>Výpočet.</b> Datový tok a velikost na příkladu CD.</li>
+  <li><b>Komprese.</b> Bezztrátová (FLAC) vs ztrátová (MP3, AAC, Opus), psychoakustika: práh slyšení, maskování.</li>
+  <li><b>Navíc.</b> MIDI, kodek vs kontejner, kde se jaké hodnoty používají.</li>
+</ol>
+</section>
+
+<section id="priklady">
+<h2>Příklady s řešením</h2>
+<details class="q"><summary>1. Kolik místa zabere 10 minut monofonní nahrávky hlasu při 16 kHz a 16 bitech?</summary><div class="a"><p>16 000 · 16 · 1 = 256 000 b/s. Za 600 s: 153 600 000 b = 19 200 000 B = <strong>19,2 MB</strong>.</p></div></details>
+<details class="q"><summary>2. Hudba má složky až do 18 kHz. Jakou nejnižší vzorkovací frekvenci teoreticky potřebujeme?</summary><div class="a"><p>Víc než 2 · 18 kHz = <strong>36 kHz</strong>. V praxi se volí víc kvůli filtru, tedy 44,1 kHz.</p></div></details>
+<details class="q"><summary>3. Tón 5 kHz nahráváme bez filtru s f<sub>s</sub> = 8 kHz. Co uslyšíme?</summary><div class="a"><p>Nyquistova frekvence je 4 kHz, 5 kHz je nad ní. f<sub>alias</sub> = |5 000 − 8 000| = <strong>3 kHz</strong>.</p></div></details>
+<details class="q"><summary>4. Kolik úrovní a jakou přibližnou dynamiku má 12bitový převodník?</summary><div class="a"><p>2<sup>12</sup> = <strong>4 096 úrovní</strong>, dynamika ≈ 6,02 · 12 + 1,76 ≈ <strong>74 dB</strong>.</p></div></details>
+<details class="q"><summary>5. Album má 45 minut. Kolik zabere na CD (PCM) a kolik jako MP3 s tokem 256 kb/s? Jaký je kompresní poměr?</summary><div class="a"><p>CD: 1 411 200 · 2 700 / 8 = 476 280 000 B ≈ <strong>476 MB</strong>. MP3: 256 000 · 2 700 / 8 = 86 400 000 B = <strong>86,4 MB</strong>. Poměr 1 411,2 / 256 ≈ <strong>5,5 : 1</strong>.</p></div></details>
+<details class="q"><summary>6. Jaký datový tok má stereo nahrávka 48 kHz / 24 bitů? Projde linkou 2 Mb/s?</summary><div class="a"><p>48 000 · 24 · 2 = 2 304 000 b/s ≈ 2,3 Mb/s. Nekomprimovaná <strong>neprojde</strong>, potřebuje kompresi (bezztrátová FLAC by ji stáhla zhruba na polovinu).</p></div></details>
+<details class="q"><summary>7. Kolikrát větší tlak má zvuk 80 dB než zvuk 40 dB?</summary><div class="a"><p>Rozdíl 40 dB = 20 · log₁₀(p₁/p₂) → p₁/p₂ = 10² = <strong>100×</strong>. Energie je 10⁴ = 10 000× větší.</p></div></details>
+<details class="q"><summary>8. Jaká je vlnová délka tónu 17 kHz ve vzduchu?</summary><div class="a"><p>λ = 343 / 17 000 ≈ 0,020 m = <strong>2 cm</strong>. Nízký tón 50 Hz má naopak skoro 7 m.</p></div></details>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<details class="q"><summary>Čím se liší frekvence a amplituda a jak je vnímáme?</summary><div class="a"><p>Frekvence je počet kmitů za sekundu (Hz) a vnímáme ji jako výšku tónu. Amplituda je velikost výchylky tlaku a vnímáme ji jako hlasitost.</p></div></details>
+<details class="q"><summary>Proč se hlasitost měří v decibelech, a ne v pascalech?</summary><div class="a"><p>Rozsah slyšitelných tlaků je asi milion : 1 a sluch vnímá logaritmicky. Logaritmická stupnice ten rozsah stlačí na čísla 0–130 a stejné kroky v dB zhruba odpovídají stejným vnímaným krokům.</p></div></details>
+<details class="q"><summary>Co je vzorkování a co kvantování? Která chyba vzniká při kterém kroku?</summary><div class="a"><p>Vzorkování je měření v pravidelných okamžicích (diskretizace času). Při nedostatečné f<sub>s</sub> vzniká aliasing. Kvantování je zaokrouhlení hodnoty na jednu z 2<sup>n</sup> úrovní (diskretizace hodnot). Vzniká kvantizační chyba, slyšitelná jako šum.</p></div></details>
+<details class="q"><summary>Zformuluj vzorkovací větu. Co se stane, když neplatí?</summary><div class="a"><p>Signál s nejvyšší frekvencí f<sub>max</sub> jde přesně zrekonstruovat, pokud f<sub>s</sub> &gt; 2 f<sub>max</sub>. Když neplatí, frekvence nad f<sub>s</sub>/2 se ve vzorcích zobrazí jako nižší falešné frekvence (aliasing). Brání se tomu filtrem před převodníkem.</p></div></details>
+<details class="q"><summary>Proč má CD 44,1 kHz a 16 bitů?</summary><div class="a"><p>44,1 kHz zachytí frekvence do 22,05 kHz, tedy celý slyšitelný rozsah s rezervou pro filtr. Konkrétní číslo vyšlo z ukládání na videopásky. 16 bitů dává dynamiku asi 96 dB, což na poslech stačí.</p></div></details>
+<details class="q"><summary>Proč studio nahrává ve 24 bitech, když 16 stačí?</summary><div class="a"><p>Kvůli rezervě: nahrává se s odstupem od maxima, aby nedošlo k přebuzení, a úpravy sčítají zaokrouhlovací chyby. Výsledek se pak převede na 16 bitů.</p></div></details>
+<details class="q"><summary>Jak může ztrátová komprese zmenšit hudbu desetkrát, aniž by to bylo poznat?</summary><div class="a"><p>Převede zvuk na frekvence a podle psychoakustického modelu zjistí, co je pod prahem slyšení nebo zamaskované hlasitějšími zvuky. Tyto části uloží hrubě nebo vůbec. Bity dává jen tomu, co ucho slyší.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi kodekem a kontejnerem?</summary><div class="a"><p>Kodek určuje, jak je zvuk zakódovaný (MP3, AAC, Opus, FLAC). Kontejner je formát souboru, který zakódovaná data obaluje a přidává metadata (MP4, Ogg, WebM, MKV). Například soubor .mp4 obvykle obsahuje zvuk v AAC.</p></div></details>
+<details class="q"><summary>Proč je soubor MIDI tisíckrát menší než WAV se stejnou skladbou?</summary><div class="a"><p>MIDI neobsahuje vzorky zvuku, jen události (noty, síla, čas, nástroj). Zvuk z nich vyrobí syntezátor až při přehrávání.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček</h2>
+<dl class="gloss">
+  <dt>A/D převodník</dt><dd>zařízení, které vzorkuje a kvantuje analogový signál (ADC)</dd>
+  <dt>aliasing</dt><dd>vznik falešných nižších frekvencí při vzorkování signálu s frekvencemi nad f<sub>s</sub>/2</dd>
+  <dt>amplituda</dt><dd>největší výchylka vlny, vnímáme ji jako hlasitost</dd>
+  <dt>bitová hloubka</dt><dd>počet bitů na jeden vzorek, určuje počet úrovní 2<sup>n</sup></dd>
+  <dt>datový tok</dt><dd>počet bitů za sekundu (b/s), bitrate</dd>
+  <dt>decibel</dt><dd>logaritmická jednotka poměru, +20 dB = 10× větší tlak</dd>
+  <dt>dynamický rozsah</dt><dd>poměr nejsilnějšího a nejslabšího zaznamenatelného signálu, asi 6 dB na bit</dd>
+  <dt>frekvence</dt><dd>počet kmitů za sekundu (Hz), vnímáme ji jako výšku tónu</dd>
+  <dt>harmonické</dt><dd>složky tónu na násobcích základní frekvence, určují barvu tónu</dd>
+  <dt>kodek</dt><dd>algoritmus pro kódování a dekódování zvuku (MP3, AAC, Opus, FLAC)</dd>
+  <dt>kontejner</dt><dd>formát souboru obalující zakódovaná data (MP4, Ogg, WebM)</dd>
+  <dt>kvantování</dt><dd>zaokrouhlení vzorku na nejbližší povolenou úroveň</dd>
+  <dt>maskování</dt><dd>jev, kdy silný zvuk znemožní slyšet slabší zvuk s blízkou frekvencí nebo časem</dd>
+  <dt>MIDI</dt><dd>formát a protokol pro přenos hudebních událostí (not), ne zvuku</dd>
+  <dt>Nyquistova frekvence</dt><dd>polovina vzorkovací frekvence, nejvyšší zachytitelná frekvence</dd>
+  <dt>PCM</dt><dd>pulzně kódová modulace, nekomprimovaný zvuk jako řada vzorků</dd>
+  <dt>perioda</dt><dd>doba jednoho kmitu, T = 1/f</dd>
+  <dt>psychoakustika</dt><dd>obor o tom, jak člověk vnímá zvuk</dd>
+  <dt>spektrum</dt><dd>rozložení zvuku na jednotlivé frekvence a jejich sílu</dd>
+  <dt>vzorek</dt><dd>jedna naměřená hodnota signálu (sample)</dd>
+  <dt>vzorkovací frekvence</dt><dd>počet vzorků za sekundu, f<sub>s</sub></dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<ol class="srcs">
+  <li id="z1"><a href="https://www.firstsounds.org/sounds/scott.php">First Sounds: Édouard-Léon Scott de Martinville</a></li>
+  <li id="z2"><a href="https://www.loc.gov/collections/edison-company-motion-pictures-and-sound-recordings/articles-and-essays/history-of-edison-sound-recordings/">Library of Congress: History of Edison Sound Recordings</a></li>
+  <li id="z3"><a href="https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem">Wikipedia: Nyquist–Shannon sampling theorem</a></li>
+  <li id="z4"><a href="https://www.whathifi.com/news/cd-30-years-old-today">What Hi-Fi: The CD is 30 years old today</a></li>
+  <li id="z5"><a href="https://heise.de/-10485563">heise online: 30 Jahre MP3</a></li>
+  <li id="z6"><a href="https://xiph.org/flac/">Xiph.Org: FLAC</a></li>
+  <li id="z7"><a href="https://www.rfc-editor.org/rfc/rfc6716">RFC 6716: Definition of the Opus Audio Codec</a></li>
+  <li id="z8"><a href="https://audioxpress.com/news/spotify-finally-launches-24-bit-lossless-streaming">audioXpress: Spotify Finally Launches 24-bit Lossless Streaming (2025)</a></li>
+  <li id="z9"><a href="https://en.wikipedia.org/wiki/44,100_Hz">Wikipedia: 44,100 Hz</a></li>
+  <li id="z10"><a href="https://en.wikipedia.org/wiki/Hearing_range">Wikipedia: Hearing range</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k bloku Informace. Interaktivní ukázky (tón, vzorkování, kvantování, poslech, aliasing, maskování, spektrogram) najdeš v prezentaci 10 Vzorek po vzorku.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  function fmt(n, d) { return n.toLocaleString('cs-CZ', { maximumFractionDigits: d }); }
+  function calc() {
+    var fs = +document.getElementById('cFs').value, b = +document.getElementById('cBits').value,
+        ch = +document.getElementById('cCh').value, t = Math.max(0, +document.getElementById('cT').value || 0);
+    var rate = fs * b * ch, bytes = rate * t / 8;
+    document.getElementById('cOut').innerHTML =
+      'tok <b>' + fmt(rate / 1000, 1) + ' kb/s</b> · velikost <b>' + fmt(bytes, 0) + ' B</b> ≈ <b>' + fmt(bytes / 1e6, 1) + ' MB</b>';
+  }
+  ['cFs', 'cBits', 'cCh', 'cT'].forEach(function (id) { document.getElementById(id).addEventListener('input', calc); });
+  calc();
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

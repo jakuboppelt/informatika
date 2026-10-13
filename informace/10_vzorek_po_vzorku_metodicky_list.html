@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Digitální zvuk</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Před hodinou</li>
+    <li><a href="#info">Základní údaje</a></li>
+    <li><a href="#cile">Cíle</a></li>
+    <li><a href="#priprava">Co připravit</a></li>
+    <li><a href="#plan">Časový plán</a></li>
+    <li class="grp">1. hodina · Zvuk a digitalizace</li>
+    <li><a href="#a1">1 · Motivace</a></li>
+    <li><a href="#a2">2 · Zvuk jako vlna</a></li>
+    <li><a href="#a3">3 · Co slyšíme</a></li>
+    <li><a href="#a4">4 · Jak uložit vlnu</a></li>
+    <li><a href="#a5">5 · Vzorkování</a></li>
+    <li><a href="#a6">6 · Kvantování</a></li>
+    <li><a href="#a7">7 · Poslech a exit ticket</a></li>
+    <li class="grp">2. hodina · Věta, velikost, komprese</li>
+    <li><a href="#b1">1 · Opakování</a></li>
+    <li><a href="#b2">2 · Vzorkovací věta</a></li>
+    <li><a href="#b3">3 · Proč 44,1 kHz</a></li>
+    <li><a href="#b4">4 · Výpočet velikosti</a></li>
+    <li><a href="#b5">5 · Komprese a psychoakustika</a></li>
+    <li><a href="#b6">6 · MIDI a shrnutí</a></li>
+    <li class="grp">Podklady</li>
+    <li><a href="#tabule">Zápis na tabuli</a></li>
+    <li><a href="#chyby">Časté chyby</a></li>
+    <li><a href="#diferenciace">Rychlí a pomalejší</a></li>
+    <li><a href="#zaloha">Když nejde technika</a></li>
+    <li><a href="#jedna">Jen jedna hodina?</a></li>
+    <li><a href="#reflexe">Po hodině</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Informace · Metodický list pro učitele</p>
+  <h1>Digitální zvuk <span class="t">2 × 45′</span></h1>
+  <p class="lead">Dvě navazující hodiny k tématu zvuk v bloku Informace. Hodiny vedeš podle prezentace <a href="10_vzorek_po_vzorku.html">Vzorek po vzorku</a>, studenti si pak látku zopakují ze <a href="10_vzorek_po_vzorku_studijni_text.html">studijního textu</a>. Hodně se poslouchá, takže to stojí na dobrém zvuku ve třídě.</p>
+  <div class="facts">
+    <div><span class="k">Navazuje na</span><span class="v">Bit po bitu, Pixel po pixelu, komprese</span></div>
+    <div><span class="k">Metody</span><span class="v">výklad s pokusy, poslech, hlasování, výpočty</span></div>
+    <div><span class="k">Výstup</span><span class="v">exit tickety, výpočet velikosti</span></div>
+  </div>
+</header>
+
+<p class="part">Před hodinou</p>
+
+<section id="info">
+<h2>Základní údaje</h2>
+<div class="tbl"><table>
+<tbody>
+<tr><th scope="row">Předmět</th><td>Informatika, blok Informace (kódování informace)</td></tr>
+<tr><th scope="row">Třída</th><td>1.–2. ročník gymnázia, využitelné i v maturitním semináři</td></tr>
+<tr><th scope="row">Rozsah</th><td>2 × 45 minut: <strong>1. zvuk a digitalizace</strong>, <strong>2. vzorkovací věta, velikost, komprese</strong></td></tr>
+<tr><th scope="row">Předchozí znalosti</th><td>bit, bajt, 2<sup>n</sup> stavů, jednotky (Bit po bitu). Hodí se materiál 08 Komprese (ztrátová × bezztrátová).</td></tr>
+<tr><th scope="row">Mezipředmětové vazby</th><td>fyzika (mechanické vlnění, akustika), hudební výchova (tón, oktáva), matematika (logaritmus, goniometrické funkce)</td></tr>
+<tr><th scope="row">Materiály</th><td><a href="10_vzorek_po_vzorku.html">prezentace</a> (26 snímků), <a href="10_vzorek_po_vzorku_studijni_text.html">studijní text</a> s příklady a otázkami</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="cile">
+<h2>Cíle</h2>
+<div class="two">
+  <div class="card">
+    <h3>Po 1. hodině student</h3>
+    <ul>
+      <li>popíše zvuk jako vlnění tlaku;</li>
+      <li>vysvětlí frekvenci, periodu a amplitudu a jak je vnímáme;</li>
+      <li>uvede rozsah lidského sluchu;</li>
+      <li>vysvětlí, co je vzorkování a vzorkovací frekvence;</li>
+      <li>vysvětlí kvantování a spočítá počet úrovní z bitové hloubky;</li>
+      <li>popíše, jak snížení f<sub>s</sub> a bitů změní zvuk.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Po 2. hodině student</h3>
+    <ul>
+      <li>zformuluje vzorkovací větu a vysvětlí aliasing;</li>
+      <li>vysvětlí, proč má CD 44,1 kHz a 16 bitů;</li>
+      <li>spočítá datový tok a velikost nekomprimovaného zvuku;</li>
+      <li>porovná bezztrátovou a ztrátovou kompresi;</li>
+      <li>vysvětlí práh slyšení a maskování;</li>
+      <li>odliší zvukový soubor od MIDI.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="priprava">
+<h2>Co připravit</h2>
+<ul class="check">
+  <li><strong>Reproduktory</strong> připojené k počítači s projektorem. Vestavěné reproduktory notebooku nezahrají basy ani výšky nad asi 16 kHz, test sluchu a rozdíly ve kvalitě s nimi nevyjdou.</li>
+  <li>Prezentaci otevřít <strong>z webu</strong> (GitHub Pages, adresa začíná https), ne ze souboru. Mikrofon v prohlížeči funguje jen přes https nebo localhost.</li>
+  <li><strong>Mikrofon</strong>: vyzkoušet předem a povolit ho v prohlížeči (snímky 12 a 23). Stačí vestavěný v notebooku.</li>
+  <li><strong>Hlasitost nastavit předem</strong> na rozumnou úroveň. Sinusové tóny, zvlášť vysoké, jsou nepříjemné. Začínej potichu.</li>
+  <li>Kalkulačka (nebo mobil) pro studenty na výpočty ve 2. hodině.</li>
+  <li>Lístečky na exit tickety.</li>
+  <li>Volitelně: ladička, kytara nebo jiný nástroj na ukázku kmitání a harmonických.</li>
+</ul>
+<div class="note warn"><b class="lbl">Ohleduplnost</b><p>Test „kdo slyší 17 kHz“ je oblíbený, ale tóny nech hrát krátce a potichu. Studentům se sluchadly nebo s poruchou sluchu nabídni roli zapisovatele výsledků. Hlasování o tom, kdo co slyší, je dobrovolné.</p></div>
+</section>
+
+<section id="plan">
+<h2>Časový plán</h2>
+<h3>1. hodina · Zvuk a digitalizace</h3>
+<div class="tl-bar" role="img" aria-label="Rozdělení první hodiny do sedmi fází">
+  <a href="#a1" class="f4">1</a>
+  <a href="#a2" class="f8">2 · Vlna</a>
+  <a href="#a3" class="f8">3 · Sluch</a>
+  <a href="#a4" class="f4">4</a>
+  <a href="#a5" class="f8">5 · Vzorkování</a>
+  <a href="#a6" class="f7">6 · Kvant.</a>
+  <a href="#a7" class="f6">7</a>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Snímky</th><th>Forma</th></tr></thead>
+<tbody>
+<tr><td class="num">0–4</td><td><a href="#a1">Motivace: melodie a otázka</a></td><td class="num">1</td><td>poslech, rozhovor</td></tr>
+<tr><td class="num">4–12</td><td><a href="#a2">Zvuk jako vlna, frekvence, amplituda, barva tónu</a></td><td class="num">2, 3, 6</td><td>výklad, pokus</td></tr>
+<tr><td class="num">12–20</td><td><a href="#a3">Rozsah sluchu, decibely</a></td><td class="num">4, 5</td><td>test sluchu, hlasování</td></tr>
+<tr><td class="num">20–24</td><td><a href="#a4">Jak uložit vlnu, historie, analog × digitál</a></td><td class="num">7, 8, 9</td><td>problémová otázka</td></tr>
+<tr><td class="num">24–32</td><td><a href="#a5">Vzorkování</a></td><td class="num">10</td><td>výklad s ukázkou</td></tr>
+<tr><td class="num">32–39</td><td><a href="#a6">Kvantování</a></td><td class="num">11</td><td>výklad, výpočet</td></tr>
+<tr><td class="num">39–45</td><td><a href="#a7">Poslech zkaženého zvuku, exit ticket</a></td><td class="num">12</td><td>poslech, písemně</td></tr>
+</tbody></table></div>
+
+<h3>2. hodina · Věta, velikost, komprese</h3>
+<div class="tl-bar" role="img" aria-label="Rozdělení druhé hodiny do šesti fází">
+  <a href="#b1" class="f4">1</a>
+  <a href="#b2" class="f10">2 · Vzorkovací věta</a>
+  <a href="#b3" class="f5">3</a>
+  <a href="#b4" class="f9">4 · Výpočet</a>
+  <a href="#b5" class="f10">5 · Komprese</a>
+  <a href="#b6" class="f7">6</a>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Snímky</th><th>Forma</th></tr></thead>
+<tbody>
+<tr><td class="num">0–4</td><td><a href="#b1">Opakování</a></td><td class="num">10–12</td><td>rozhovor</td></tr>
+<tr><td class="num">4–14</td><td><a href="#b2">Vzorkovací věta a aliasing, kolo ve filmu</a></td><td class="num">13, 14, 15</td><td>tipování, ukázka</td></tr>
+<tr><td class="num">14–19</td><td><a href="#b3">Proč 44,1 kHz, bitová hloubka</a></td><td class="num">16, 19</td><td>výklad</td></tr>
+<tr><td class="num">19–28</td><td><a href="#b4">Výpočet velikosti</a></td><td class="num">17, 18</td><td>samostatný výpočet</td></tr>
+<tr><td class="num">28–38</td><td><a href="#b5">Komprese, psychoakustika, spektrogram</a></td><td class="num">20–23</td><td>výklad, pokus</td></tr>
+<tr><td class="num">38–45</td><td><a href="#b6">MIDI, shrnutí, exit ticket</a></td><td class="num">24, 25</td><td>poslech, písemně</td></tr>
+</tbody></table></div>
+<div class="note tip"><b class="lbl">Rezerva</b><p>Když nestíháš, ve 2. hodině vynech spektrogram (snímek 23) a MIDI zmiň jednou větou. Kolo ve filmu (15) je krátké a hodně pomáhá pochopit aliasing, to nevynechávej.</p></div>
+</section>
+
+<p class="part">1. hodina · Zvuk a digitalizace</p>
+
+<section id="a1" class="phase">
+<div class="ph-head"><span class="time">0–4 min</span><h2>1 · Motivace</h2><span class="slides-ref">snímek 1</span></div>
+<p class="goal">Vzbudit zvědavost: zvuk v počítači jsou jen čísla.</p>
+<h3>Učitel dělá</h3>
+<p>Na titulním snímku pusť melodii (<em>Přehrát melodii</em>). Křivka se začne hýbat podle skutečného zvuku.</p>
+<h3>Učitel říká</h3>
+<blockquote class="say">„Tohle, co slyšíte, je v počítači uložené jako řada čísel. Zhruba 44 tisíc čísel za každou sekundu. Na konci hodiny budete vědět, proč zrovna tolik, a příště spočítáte, kolik místa zabere písnička a jak je možné, že MP3 je desetkrát menší.“</blockquote>
+<h3>Otázka do třídy</h3>
+<details class="q"><summary>„Odkud všude znáte digitální zvuk?“</summary><div class="a"><p>Spotify, YouTube, hovory, hlasové zprávy, hry, TikTok. Zapiš na kraj tabule tři čtyři odpovědi, ve 2. hodině se k nim vrátíš u formátů.</p></div></details>
+</section>
+
+<section id="a2" class="phase">
+<div class="ph-head"><span class="time">4–12 min</span><h2>2 · Zvuk jako vlna</h2><span class="slides-ref">snímky 2, 3, 6</span></div>
+<p class="goal">Zvuk je vlnění tlaku. Frekvence je výška, amplituda hlasitost, harmonické barva.</p>
+<h3>Snímek 2: molekuly</h3>
+<blockquote class="say">„Reproduktor se pohybuje sem a tam a strká do vzduchu. Podívejte se na oranžovou molekulu: neputuje k vám, jen kmitá na místě. K vám putuje zhuštění, ta porucha. Ve vzduchu rychlostí asi 343 metrů za sekundu. Mikrofon je obrácený reproduktor: tlak pohne membránou a vznikne napětí. Křivka tlaku v čase, to je to, co ukládáme.“</blockquote>
+<h3>Snímek 3: tón</h3>
+<p>Pusť tón 440 Hz a pomalu posouvej frekvenci nahoru a dolů, pak amplitudu. Ukaž, že dvojnásobná frekvence (880 Hz) je stejný tón o oktávu výš.</p>
+<details class="q"><summary>„Perioda tónu 440 Hz je 2,27 ms. Jak jste to spočítali?“ <span class="key">klíčová</span></summary><div class="a"><p>T = 1 / f = 1 / 440 s ≈ 0,00227 s. Napiš na tabuli <code>T = 1/f</code>.</p></div></details>
+<h3>Snímek 6: barva tónu</h3>
+<p>Zahraj sinus a pak přepni na obdélník a pilu. Výška se nemění, mění se barva. Rychle zmiň, že každý zvuk jde rozložit na sinusovky (Fourier). Vrátíš se k tomu u komprese.</p>
+<blockquote class="say">„Proč poznáte housle od flétny, i když hrají stejný tón? Každý nástroj přidává k základnímu tónu jiné množství vyšších tónů, harmonických. Kdo hraje na kytaru, zná flažolety.“</blockquote>
+</section>
+
+<section id="a3" class="phase">
+<div class="ph-head"><span class="time">12–20 min</span><h2>3 · Co slyšíme</h2><span class="slides-ref">snímky 4, 5</span></div>
+<p class="goal">Rozsah sluchu 20 Hz – 20 kHz. Decibely jsou logaritmická stupnice.</p>
+<h3>Snímek 4: test sluchu</h3>
+<p>Postupně pouštěj tlačítka 8, 12, 15, 17, 19 kHz, každé na dvě vteřiny. Studenti zvednou ruku, dokud tón slyší. Pak se zeptej, kolik dospělých by slyšelo 17 kHz (obvykle skoro nikdo, včetně tebe).</p>
+<blockquote class="say">„Zapamatujte si číslo 20 kilohertzů. To je nejvyšší tón, který má smysl ukládat. Za chvíli z něj spočítáme, kolik vzorků za sekundu potřebujeme.“</blockquote>
+<div class="note warn"><b class="lbl">Pozor</b><p>Když nikdo neslyší ani 15 kHz, nejspíš to nezvládají reproduktory. Řekni to nahlas, ať si studenti nemyslí, že neslyší.</p></div>
+<h3>Snímek 5: decibely</h3>
+<p>Klikej na položky. Zdůrazni dvě pravidla: <strong>+20 dB = 10× větší tlak</strong>, <strong>+6 dB ≈ 2×</strong>. Navaž na zdraví: od 85 dB škodí dlouhý poslech, sluchátka naplno mají kolem 100 dB.</p>
+<details class="q"><summary>„Proč měříme hlasitost logaritmicky, a ne v pascalech?“</summary><div class="a"><p>Rozsah je asi milion ku jedné a sluch vnímá poměry, ne rozdíly. Stejný princip jako u výšky tónu: oktáva je vždy dvojnásobek.</p></div></details>
+</section>
+
+<section id="a4" class="phase">
+<div class="ph-head"><span class="time">20–24 min</span><h2>4 · Jak uložit vlnu</h2><span class="slides-ref">snímky 7, 8, 9</span></div>
+<p class="goal">Pochopit problém: spojitou křivku nejde uložit přesně, musíme ji zjednodušit.</p>
+<h3>Snímek 7: otázka</h3>
+<p>Nech studenty minutu přemýšlet ve dvojicích. Často přijdou s „změříme ji v bodech“, to je vzorkování. Druhé zjednodušení (zaokrouhlení hodnot) obvykle nenapadne nikoho, doplň ho.</p>
+<h3>Snímky 8 a 9</h3>
+<p>Historii jen proleť (2 minuty): fonograf, CD 1982, MP3. Na snímku 9 ukaž řetěz mikrofon → A/D → čísla → D/A → reproduktor. Zdůrazni výhodu digitálu: <strong>kopie je dokonale stejná</strong>.</p>
+</section>
+
+<section id="a5" class="phase">
+<div class="ph-head"><span class="time">24–32 min</span><h2>5 · Vzorkování</h2><span class="slides-ref">snímek 10</span></div>
+<p class="goal">Vzorek, vzorkovací frekvence, interval mezi vzorky.</p>
+<blockquote class="say">„Převodník měří napětí v pravidelných okamžicích. Jedno měření je vzorek, anglicky sample. Počet měření za sekundu je vzorkovací frekvence, píšeme f s malým s. Na CD je to 44 100 za sekundu, tedy jeden vzorek zhruba každých 23 mikrosekund.“</blockquote>
+<p>Posuvníkem ubírej vzorky. Přepni na <em>Ukázat schody</em>. Kolem 2 000 Hz už vlna ztrácí tvar, pod 1 500 Hz vychází úplně jiná křivka. Zatím to nevysvětluj, jen řekni „tady se děje něco divného, vrátíme se k tomu příště“.</p>
+<details class="q"><summary>„Proč nevzorkovat milionkrát za sekundu, ať je to přesné?“</summary><div class="a"><p>Každý vzorek zabírá místo. Milion vzorků by dal 22× větší soubor než CD. Otázka je, kolik stačí, aby to ucho nepoznalo. Odpověď ve 2. hodině.</p></div></details>
+</section>
+
+<section id="a6" class="phase">
+<div class="ph-head"><span class="time">32–39 min</span><h2>6 · Kvantování</h2><span class="slides-ref">snímek 11</span></div>
+<p class="goal">2<sup>n</sup> úrovní, kvantizační chyba, 6 dB na bit.</p>
+<blockquote class="say">„Každý vzorek musíme uložit jako celé číslo s daným počtem bitů. S 3 bity máme kolik různých čísel? Osm. Takže vlnu můžeme uložit jen v osmi výškách a každou naměřenou hodnotu zaokrouhlíme. Červené čárky jsou chyba, kterou tím uděláme. Slyšíme ji jako šum.“</blockquote>
+<p>Posuvníkem přidávej bity. Navaž na Bit po bitu: <strong>n bitů → 2<sup>n</sup> stavů</strong>.</p>
+<details class="q"><summary>„Kolik úrovní má CD s 16 bity?“ <span class="key">klíčová</span></summary><div class="a"><p>2<sup>16</sup> = 65 536. Každý bit navíc chybu zmenší na polovinu, tedy přidá asi 6 dB odstupu od šumu: 16 bitů ≈ 96 dB.</p></div></details>
+</section>
+
+<section id="a7" class="phase">
+<div class="ph-head"><span class="time">39–45 min</span><h2>7 · Poslech a exit ticket</h2><span class="slides-ref">snímek 12</span></div>
+<p class="goal">Slyšet důsledky obou zjednodušení.</p>
+<p>Nejdřív melodie: postupně 22 kHz, 11 kHz, 8 kHz, 4 kHz (bity nech 16). Pak zpět na 44,1 kHz a uber bity: 8, 4, 3, 2. Nakonec nahraj hlas dobrovolníka (4 s) a zopakuj. Ptej se, co se mění:</p>
+<ul>
+  <li><strong>nižší f<sub>s</sub></strong>: mizí výšky, zvuk je „jako z telefonu“ a při velmi nízké f<sub>s</sub> se objeví kovové pazvuky (to je aliasing, zatím nepojmenovávej);</li>
+  <li><strong>méně bitů</strong>: přibývá šum a chrastění, při 2–3 bitech zní melodie jako z rozbitého rádia.</li>
+</ul>
+<h3>Exit ticket</h3>
+<ol>
+  <li>Co je vzorkovací frekvence a jakou má CD?</li>
+  <li>Kolik úrovní má zvuk s bitovou hloubkou 8 bitů?</li>
+  <li>Co se stane se zvukem, když snížíme vzorkovací frekvenci? A když snížíme počet bitů?</li>
+</ol>
+<details class="q"><summary>Správné odpovědi</summary><div class="a"><ol><li>Počet vzorků za sekundu, CD má 44 100 Hz.</li><li>2<sup>8</sup> = 256.</li><li>Nižší f<sub>s</sub>: ztratí se vysoké frekvence (a objeví se pazvuky). Méně bitů: přibude šum (kvantizační chyba).</li></ol></div></details>
+</section>
+
+<p class="part">2. hodina · Vzorkovací věta, velikost, komprese</p>
+
+<section id="b1" class="phase">
+<div class="ph-head"><span class="time">0–4 min</span><h2>1 · Opakování</h2><span class="slides-ref">snímky 10–12</span></div>
+<ul>
+  <li>„Jaká dvě zjednodušení děláme při digitalizaci?“ (vzorkování a kvantování)</li>
+  <li>„Co určuje vzorkovací frekvence a co bitová hloubka?“ (kolik měření za sekundu, kolik úrovní)</li>
+  <li>„Jaký nejvyšší tón slyšíme?“ (asi 20 kHz)</li>
+</ul>
+<p>Vyhodnoť exit tickety: nejčastější chyba bývá záměna vzorkovací frekvence a frekvence tónu. Řekni rozdíl znovu.</p>
+</section>
+
+<section id="b2" class="phase">
+<div class="ph-head"><span class="time">4–14 min</span><h2>2 · Vzorkovací věta a aliasing</h2><span class="slides-ref">snímky 13, 14, 15</span></div>
+<p class="goal">f<sub>s</sub> &gt; 2 · f<sub>max</sub>. Co je nad f<sub>s</sub>/2, se změní v jiný tón.</p>
+<h3>Snímek 13: tipování</h3>
+<p>Nech studenty hlasovat: 20 000×, 40 000×, 100 000×, milionkrát za sekundu? Pak odhal odpověď.</p>
+<blockquote class="say">„Každý kmit má kopec a údolí. Abych poznal, že vlna jde nahoru i dolů, potřebuju na každý kmit víc než dva vzorky. Na 20 kilohertzů tedy víc než 40 tisíc vzorků za sekundu. To je vzorkovací věta, Nyquistova–Shannonova.“</blockquote>
+<h3>Snímek 14: aliasing</h3>
+<p>f<sub>s</sub> je 1 000 Hz. Pomalu posouvej signál od 300 Hz nahoru. Do 500 Hz cyan vlna sedí na šedé. Nad 500 Hz se cyan vlna začne <strong>zpomalovat</strong>, ačkoli signál zrychluje. U 1 000 Hz vychází nula, signál ve vzorcích „stojí“.</p>
+<details class="q"><summary>„Signál 700 Hz vzorkujeme 1 000× za sekundu. Co uslyšíme?“ <span class="key">klíčová</span></summary><div class="a"><p>|700 − 1 000| = 300 Hz. Tón, který v originále vůbec nebyl. Proto je před převodníkem filtr, který všechno nad f<sub>s</sub>/2 odřízne.</p></div></details>
+<h3>Snímek 15: kolo</h3>
+<p>Posuvník pomalu zrychluj. Kolem 3 ot./s kolo na „záznamu“ stojí, těsně pod tím se točí pomalu dopředu, těsně nad tím pozpátku. Zeptej se, kdo to viděl ve filmu nebo u vrtule helikoptéry na videu.</p>
+</section>
+
+<section id="b3" class="phase">
+<div class="ph-head"><span class="time">14–19 min</span><h2>3 · Proč 44,1 kHz a 16 bitů</h2><span class="slides-ref">snímky 16, 19</span></div>
+<blockquote class="say">„Na 20 kilohertzů stačí víc než 40. Proč tedy 44,1? Filtr nedokáže řezat ostře, potřebuje rezervu. A přesné číslo je historická náhoda: první digitální nahrávky se ukládaly na videokazety a do řádku obrazu se vešly tři vzorky.“</blockquote>
+<p>Projdi tabulku: telefon 8 kHz (proto zní telefon „úzce“), video 48 kHz. Na snímku 19 jen připomeň 6 dB na bit a rozdíl 16 vs 24 bitů a ukaž clipping (přebuzení) jako chybu, kterou nejde opravit.</p>
+</section>
+
+<section id="b4" class="phase">
+<div class="ph-head"><span class="time">19–28 min</span><h2>4 · Výpočet velikosti</h2><span class="slides-ref">snímky 17, 18</span></div>
+<p class="goal">datový tok = f<sub>s</sub> · bity · kanály, velikost = tok · čas.</p>
+<p>Na snímku 17 nech studenty 3 minuty počítat samostatně. Pak výpočet napiš na tabuli krok za krokem:</p>
+<pre><code>44 100 · 16 · 2 = 1 411 200 b/s
+1 411 200 · 180 s = 254 016 000 b
+254 016 000 / 8 = 31 752 000 B ≈ 31,8 MB</code></pre>
+<p>Na snímku 18 ukaž kalkulačku: přepni na mono, 8 kHz (telefon) a 96 kHz / 24 bitů (studio). Porovnej s MP3 a Opus pod tím.</p>
+<h3>Úloha pro studenty</h3>
+<ol>
+  <li>Hlasová zpráva: 30 s, mono, 16 kHz, 16 bitů. Kolik kB? <em>(16 000 · 16 · 30 / 8 = 960 000 B = 960 kB)</em></li>
+  <li>Film má stopu 5.1 (6 kanálů), 48 kHz, 24 bitů. Jaký je datový tok? <em>(48 000 · 24 · 6 = 6 912 000 b/s ≈ 6,9 Mb/s)</em></li>
+</ol>
+<div class="note warn"><b class="lbl">Častá chyba</b><p>Studenti zapomenou dělit 8 (bity → bajty) nebo vynechají kanály. Nech je napsat jednotky ke každému mezivýsledku.</p></div>
+</section>
+
+<section id="b5" class="phase">
+<div class="ph-head"><span class="time">28–38 min</span><h2>5 · Komprese a psychoakustika</h2><span class="slides-ref">snímky 20–23</span></div>
+<p class="goal">Bezztrátová × ztrátová. Ztrátová zahodí, co ucho neslyší.</p>
+<h3>Snímek 20</h3>
+<p>Navaž na kompresi obrázků: FLAC je jako PNG, MP3 jako JPEG. Vrať se k seznamu z 1. hodiny (Spotify, YouTube…) a přiřaď formáty.</p>
+<h3>Snímek 21: maskování (pokus)</h3>
+<p>Pusť <em>Tichý tón</em> (1 100 Hz). Třída ho slyší. Přidej <em>Hlasitý tón 1 kHz</em>: tichý tón zanikne. Posuň tichý tón na 4–5 kHz: znovu se objeví. Vypni hlasitý tón a ukaž, že tichý hrál celou dobu.</p>
+<blockquote class="say">„Když je tichý tón schovaný za hlasitým, ucho ho stejně neslyší. Tak proč ho ukládat? Přesně tohle dělá MP3: spočítá, co je zamaskované, a na to nedá skoro žádné bity.“</blockquote>
+<div class="note tip"><b class="lbl">Pokud maskování nevyjde</b><p>Záleží na reproduktorech a místnosti. Když tichý tón slyšet zůstane, sniž hlasitost celého počítače. Maskování funguje líp, když je tichý tón opravdu tichý.</p></div>
+<h3>Snímky 22 a 23</h3>
+<p>Kroky kodeku jen přečti (srovnej s JPEG: transformace, model, kvantování, Huffman). Na spektrogramu pusť glissando a pak nech někoho hvízdat nebo zpívat do mikrofonu. Studenty baví vidět svůj hlas a harmonické nad ním.</p>
+</section>
+
+<section id="b6" class="phase">
+<div class="ph-head"><span class="time">38–45 min</span><h2>6 · MIDI, shrnutí, exit ticket</h2><span class="slides-ref">snímky 24, 25</span></div>
+<p>Na snímku 24 pusť melodii jako zvonkohru a jako 8bitovou hru. Stejné noty, jiný zvuk: MIDI ukládá návod, ne zvuk. Navaž na vektorovou grafiku.</p>
+<p>Shrnutí přečti se třídou ze snímku 25. Studenti dostanou odkaz na studijní text, kde jsou příklady a otázky k opakování.</p>
+<h3>Exit ticket</h3>
+<ol>
+  <li>Nejvyšší frekvence ve zvuku je 10 kHz. Jaká musí být nejméně vzorkovací frekvence?</li>
+  <li>Spočítej datový tok monofonního zvuku 8 kHz / 8 bitů.</li>
+  <li>Proč může MP3 vynechat část zvuku, aniž by to bylo poznat? Uveď jeden jev.</li>
+</ol>
+<details class="q"><summary>Správné odpovědi</summary><div class="a"><ol><li>Víc než 20 kHz.</li><li>8 000 · 8 · 1 = 64 000 b/s = 64 kb/s (klasický telefon).</li><li>Práh slyšení (tiché a velmi vysoké nebo nízké tóny neslyšíme) nebo maskování (hlasitý tón přehluší tišší s blízkou frekvencí).</li></ol></div></details>
+<h3>Domácí úkol (dobrovolný)</h3>
+<p>Ve studijním textu spočítat příklady 1, 3 a 5. Nebo: v nastavení Spotify či YouTube Music najít volbu kvality a zjistit, jaký datový tok má „vysoká“ kvalita a kolik dat spotřebuje hodina poslechu.</p>
+</section>
+
+<p class="part">Podklady</p>
+
+<section id="tabule">
+<h2>Zápis na tabuli</h2>
+<h3>Konec 1. hodiny</h3>
+<div class="board">
+  <div class="bcol">
+    <div class="bh">Zvuk</div>
+    <div>vlnění tlaku, 343 m/s</div>
+    <div class="bs">frekvence f [Hz] = výška</div>
+    <div class="bs">amplituda = hlasitost</div>
+    <div class="bcode">T = 1/f · λ = v/f</div>
+    <div class="bcode">sluch 20 Hz – 20 kHz</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Decibely</div>
+    <div class="bcode">+20 dB = 10× tlak<br>+6 dB ≈ 2× tlak</div>
+    <div class="bcode">0 práh · 60 rozhovor<br>85 škodí · 130 bolest</div>
+    <div class="bs">barva tónu = harmonické</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Digitalizace</div>
+    <div class="bcode">mic → A/D → čísla → D/A → repro</div>
+    <div class="bs">1. vzorkování</div>
+    <div class="bcode">f<sub>s</sub> = vzorků/s (CD 44 100)</div>
+    <div class="bs">2. kvantování</div>
+    <div class="bcode">n bitů → 2<sup>n</sup> úrovní (CD 16 b)</div>
+  </div>
+</div>
+<h3>Konec 2. hodiny</h3>
+<div class="board">
+  <div class="bcol">
+    <div class="bh">Vzorkovací věta</div>
+    <div class="bs">f<sub>s</sub> &gt; 2 · f<sub>max</sub></div>
+    <div class="bcode">f<sub>s</sub>/2 = Nyquistova frekv.</div>
+    <div class="bcode">nad ní → aliasing<br>(700 Hz při 1 kHz → 300 Hz)</div>
+    <div class="bcode">filtr před převodníkem</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Velikost</div>
+    <div class="bcode">tok = f<sub>s</sub> · n · kanály</div>
+    <div class="bcode">CD: 44 100 · 16 · 2<br>= 1 411 200 b/s</div>
+    <div class="bcode">3 min ≈ 31,8 MB</div>
+    <div class="bs">6 dB na bit</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Komprese</div>
+    <div class="bcode">bezztrátová: FLAC, ALAC (~½)</div>
+    <div class="bcode">ztrátová: MP3, AAC, Opus (1/5–1/15)</div>
+    <div class="bs">práh slyšení · maskování</div>
+    <div class="bcode">MIDI = noty, ne zvuk</div>
+  </div>
+</div>
+</section>
+
+<section id="chyby">
+<h2>Časté chyby a mylné představy</h2>
+<div class="tbl"><table>
+<thead><tr><th>Mylná představa</th><th>Jak ji vyvrátit</th></tr></thead>
+<tbody>
+<tr><td>„Molekuly vzduchu letí od reproduktoru k uchu.“</td><td>Snímek 2: oranžová molekula jen kmitá na místě. Putuje porucha, ne vzduch.</td></tr>
+<tr><td>Záměna vzorkovací frekvence a frekvence tónu</td><td>f<sub>s</sub> je vlastnost <em>záznamu</em> (jak často měříme), f je vlastnost <em>zvuku</em> (jak rychle kmitá). Píšou se různě.</td></tr>
+<tr><td>„Čím víc vzorků, tím vždycky lépe.“</td><td>Nad 2 · f<sub>max</sub> už další vzorky nic slyšitelného nepřidají, jen zvětší soubor. Proto se poslouchá ve 44,1 kHz.</td></tr>
+<tr><td>„Při nízké f<sub>s</sub> se vysoké tóny prostě ztratí.“</td><td>Bez filtru se neztratí, ale změní v jiné, nižší tóny (aliasing). Snímek 14.</td></tr>
+<tr><td>„MP3 jen ořízne výšky.“</td><td>Ořezání je jen malá část. Hlavní je maskování: kodek rozhoduje pásmo po pásmu, kde může být nepřesný.</td></tr>
+<tr><td>„Převedu MP3 na FLAC a mám bezztrátovou kvalitu.“</td><td>Co MP3 zahodilo, je pryč. FLAC jen bezztrátově uloží už poškozený zvuk.</td></tr>
+<tr><td>Bity × bajty ve výpočtu</td><td>Datový tok je v bitech za sekundu, velikost souboru v bajtech. Dělit 8.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="diferenciace">
+<h2>Rychlejší a pomalejší studenti</h2>
+<div class="two">
+  <div class="card">
+    <h3>Kdo je hotový dřív</h3>
+    <ul>
+      <li>Odvodit vzorec pro zdánlivou frekvenci při aliasingu a ověřit ho na snímku 14 pro 1 300 a 1 700 Hz.</li>
+      <li>Spočítat, kolik hodin hudby v kvalitě CD se vejde na 64GB mobil a kolik v AAC 256 kb/s.</li>
+      <li>Zjistit, proč telefon používá 8 bitů s nelineární stupnicí (A-law) a jakou kvalitu tím získá.</li>
+      <li>Najít na YouTube „Tom’s Diner“ a příběh, proč se jí říká matka MP3.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Kdo potřebuje víc času</h3>
+    <ul>
+      <li>Ve výpočtech stačí dosadit do vzorce ze zápisu, odvození není nutné.</li>
+      <li>Nosná je dvojice pojmů vzorkování (čas) a kvantování (hodnoty). Vše ostatní je nadstavba.</li>
+      <li>Studijní text, kapitoly Vzorkování, Kvantování a Výpočet velikosti s kalkulačkou.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="zaloha">
+<h2>Když nejde technika</h2>
+<ul>
+  <li><strong>Nejdou reproduktory:</strong> prezentace funguje i bez zvuku, všechny grafy se hýbou. Rozdíly v kvalitě nahraď otázkou „co myslíte, že uslyšíte?“ a studenti si poslech zkusí doma.</li>
+  <li><strong>Nejde mikrofon:</strong> na snímcích 12 a 23 použij melodii a glissando. Mikrofon je jen bonus.</li>
+  <li><strong>Nejde projektor:</strong> vzorkování a kvantování jde nakreslit na tabuli. Nakresli sinusovku, studenti do ní kreslí body v pravidelných rozestupech a pak je „zaokrouhlí“ na čtverečky sešitu. Je to stejný pokus jako na snímcích 10 a 11.</li>
+</ul>
+</section>
+
+<section id="jedna">
+<h2>Máš jen jednu hodinu?</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Co</th><th>Snímky</th></tr></thead>
+<tbody>
+<tr><td class="num">0–6</td><td>melodie, zvuk jako vlna, frekvence a amplituda</td><td class="num">1, 2, 3</td></tr>
+<tr><td class="num">6–10</td><td>test sluchu (20 kHz)</td><td class="num">4</td></tr>
+<tr><td class="num">10–20</td><td>vzorkování a kvantování</td><td class="num">7, 10, 11</td></tr>
+<tr><td class="num">20–25</td><td>poslech zkaženého zvuku</td><td class="num">12</td></tr>
+<tr><td class="num">25–31</td><td>vzorkovací věta a aliasing</td><td class="num">13, 14</td></tr>
+<tr><td class="num">31–38</td><td>výpočet velikosti CD</td><td class="num">17</td></tr>
+<tr><td class="num">38–45</td><td>komprese a maskování, shrnutí</td><td class="num">20, 21, 25</td></tr>
+</tbody></table></div>
+<p>Vypadnou decibely, barva tónu, historie, MIDI a spektrogram. Zadej je ze studijního textu.</p>
+</section>
+
+<section id="reflexe">
+<h2>Po hodině</h2>
+<ul>
+  <li>Kolik studentů mělo v exit ticketu správně výpočet a vzorkovací větu? Co nejčastěji spletli?</li>
+  <li>Fungoval poslech? Slyšela třída rozdíly, nebo je potřeba lepší reproduktory?</li>
+  <li>Kde se ztratil čas? Která ukázka studenty nejvíc zaujala a která se dá vynechat?</li>
+  <li>Kolik studentů dokáže vlastními slovy říct rozdíl mezi vzorkováním a kvantováním?</li>
+</ul>
+</section>
+
+<p class="foot">Metodický list ke dvěma hodinám na téma digitální zvuk. Navazuje na prezentaci 10 Vzorek po vzorku a na studijní text k témuž tématu.</p>
+</main>
+</div>
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Barva po barvě</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <!-- 1 : titul -->
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Barevné modely</div>
+        <h1>Jak popsat barvu čísly?</h1>
+        <p class="lede">RGB, CMYK, HSL a další. Proč jich je tolik, kde se vzaly a kdy který použít.</p>
+        <div class="light-stage" id="heroStage">
+          <div class="light-spot is-r" data-x="42" data-y="42"></div>
+          <div class="light-spot is-g" data-x="58" data-y="42"></div>
+          <div class="light-spot is-b" data-x="50" data-y="62"></div>
+          <span class="stage-hint">kruhy jdou posouvat</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 : Newton a hranol -->
+    <section class="slide" data-index="1" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Jak to začalo</div>
+        <h2 class="slide-title">Bílé světlo je směs barev</h2>
+        <p class="lede">Kolem roku 1666 zatemnil Isaac Newton pokoj, nechal dovnitř jen úzký paprsek slunce a postavil mu do cesty skleněný <b>hranol</b>. Na zdi se objevila duha: červená, oranžová, žlutá, zelená, modrá, fialová.</p>
+        <figure class="figure">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Newton%27s_Experimentum_Crucis_%28Grusche_2015%29.jpg/1280px-Newton%27s_Experimentum_Crucis_%28Grusche_2015%29.jpg" alt="Newton u okna zatemněného pokoje, paprsek slunce prochází hranoly a na zdi vzniká barevné spektrum" loading="lazy">
+          <figcaption class="figure-cap">Newtonův pokus v jeho pokoji ve Woolsthorpe. Malba: <a href="https://commons.wikimedia.org/wiki/File:Newton%27s_Experimentum_Crucis_(Grusche_2015).jpg" target="_blank" rel="noopener">Sascha Grusche, 2015</a>, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.cs" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</figcaption>
+        </figure>
+        <p class="lede">Tehdy se myslelo, že barvy do světla „přidává“ sklo. Newton proto z duhy vybral jedinou barvu a poslal ji druhým hranolem. Už se nerozložila, jen se znovu lomila. Závěr: <b>barvy jsou ve světle od začátku</b> a hranol je jen rozdělí. Pokus se jmenuje <i>experimentum crucis</i> (rozhodující pokus).</p>
+      </div>
+    </section>
+
+    <!-- 3 : elektromagnetické spektrum -->
+    <section class="slide" data-index="2" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Co oko vidí</div>
+        <h2 class="slide-title">Světlo je jen úzký proužek</h2>
+        <p class="lede">Světlo je <b>elektromagnetické vlnění</b>, stejně jako rádio, Wi-Fi nebo rentgen. Liší se jen vlnovou délkou. Oko zachytí pouze délky zhruba <b>380 až 750 nm</b> (nanometrů). Na celé škále je to nepatrný kousek:</p>
+        <div class="em-wrap">
+          <div class="em-callout" id="emCallout">viditelné světlo</div>
+          <div class="em-bar" id="emBar"></div>
+          <div class="em-ticks" id="emTicks"></div>
+          <svg class="em-zoom" viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true"><polygon id="emZoomPoly" points="0,0 0,0 100,20 0,20"/></svg>
+          <div class="canvas-frame"><canvas id="spectrumCanvas" width="740" height="60"></canvas></div>
+          <div class="em-ticks" id="visTicks"></div>
+        </div>
+        <div class="demo-box">
+          <input type="range" id="wlRange" min="380" max="750" value="580" aria-label="Vlnová délka">
+          <div class="demo-row">
+            <div class="swatch" id="wlSwatch"></div>
+            <div class="lookup-chips">
+              <div class="chip"><b>vlnová délka</b><span id="wlVal">580 nm</span></div>
+              <div class="chip"><b>vypadá jako</b><span id="wlName">žlutá</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="lede">Jenže i ten proužek obsahuje nekonečně mnoho délek. Jak ho uložit do počítače? Odpověď nenajdeme ve fyzice, ale v <b>oku</b>.</p>
+      </div>
+    </section>
+
+    <!-- 4 : tři čípky -->
+    <section class="slide" data-index="3" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Proč zrovna tři čísla</div>
+        <h2 class="slide-title">Oko má jen tři druhy čípků</h2>
+        <p class="lede">Barvu v sítnici snímají <b>čípky</b> tří druhů: S (krátké vlny, modrá), M (střední, zelená) a L (dlouhé, červená). Každý reaguje na široký rozsah délek, jen různě silně. Posuň vlnovou délku a sleduj, jak silně který čípek reaguje (zjednodušeně):</p>
+        <div class="demo-box">
+          <div class="canvas-frame"><canvas id="coneCanvas" width="740" height="220"></canvas></div>
+          <input type="range" id="coneRange" min="380" max="750" value="580" aria-label="Vlnová délka">
+          <div class="stat-bars">
+            <div class="stat-bar-row"><span class="stat-label">S</span><div class="fill-bar"><div class="fill-bar-in is-s" id="coneS"></div></div><span class="bar-val" id="coneSv">0</span></div>
+            <div class="stat-bar-row"><span class="stat-label">M</span><div class="fill-bar"><div class="fill-bar-in is-m" id="coneM"></div></div><span class="bar-val" id="coneMv">0</span></div>
+            <div class="stat-bar-row"><span class="stat-label">L</span><div class="fill-bar"><div class="fill-bar-in is-l" id="coneL"></div></div><span class="bar-val" id="coneLv">0</span></div>
+          </div>
+        </div>
+        <p class="lede">Mozek tedy nedostane celé spektrum, ale jen <b>tři čísla</b>. Dvě úplně různá světla, která čípky podráždí stejně, vypadají stejně. Tomu se říká <b>metamerie</b> a stojí na ní celá barevná technika: barvu stačí napodobit třemi světly.</p>
+      </div>
+    </section>
+
+    <!-- 5 : historie -->
+    <section class="slide" data-index="4" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Jak to vzniklo</div>
+        <h2 class="slide-title">Od hranolu k monitoru</h2>
+        <ul class="timeline">
+          <li><span class="tl-year">1666</span><span class="tl-text"><b>Isaac Newton</b> rozkládá bílé světlo hranolem na spektrum a skládá ho zpět. Barvy uspořádá do kruhu.</span></li>
+          <li><span class="tl-year">1802</span><span class="tl-text"><b>Thomas Young</b> tvrdí, že oko nemůže mít receptor pro každou barvu. Stačí tři druhy a ostatní barvy jsou jejich kombinací.</span></li>
+          <li><span class="tl-year">1850s</span><span class="tl-text"><b>Hermann von Helmholtz</b> Youngovu teorii rozpracuje. Proto se jí dnes říká Youngova–Helmholtzova.</span></li>
+          <li><span class="tl-year">1855</span><span class="tl-text"><b>James Clerk Maxwell</b> míchá barvy na roztočeném kotouči a měří, kolik které základní barvy je potřeba. Sestaví z toho barevný trojúhelník.</span></li>
+          <li><span class="tl-year">1861</span><span class="tl-text">Maxwell promítne <b>první barevnou fotografii</b>: tři lucerny, tři filtry, jedno plátno.</span></li>
+          <li><span class="tl-year">1931</span><span class="tl-text">Mezinárodní komise CIE z měření stovek pozorovatelů sestaví <b>CIE XYZ</b>, matematický popis všech barev, které člověk vidí.</span></li>
+          <li><span class="tl-year">1953</span><span class="tl-text">V USA schválí normu <b>barevné televize</b>. Obrazovka svítí červeným, zeleným a modrým luminoforem.</span></li>
+          <li><span class="tl-year">1996</span><span class="tl-text">HP a Microsoft navrhnou <b>sRGB</b>, společný standard, aby barvy vypadaly stejně na různých monitorech. Platí dodnes.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 6 : Maxwell -->
+    <section class="slide" data-index="5" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Pokus, který to dokázal</div>
+        <h2 class="slide-title">Tři lucerny na jednom plátně</h2>
+        <p class="lede">V roce 1861 chtěl Maxwell na přednášce v Londýně dokázat, že tři barvy stačí. Fotograf Thomas Sutton vyfotil <b>kostkovanou stuhu</b> třikrát černobíle, pokaždé přes jiný barevný filtr.</p>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <div class="compare-head">1. Rozložit</div>
+            <div class="compare-body">Tři černobílé snímky přes <b>červený</b>, <b>zelený</b> a <b>modrý</b> filtr. Každý zachytí, kolik které barvy je v každém místě. Přesně tohle dnes dělá snímač ve foťáku.</div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-head">2. Složit</div>
+            <div class="compare-body">Tři projektory (lucerny), před každým <b>stejný filtr</b>, promítají na jedno místo plátna. Světla se sečtou a na plátně se objeví barevná stuha. Přesně tohle dnes dělá monitor.</div>
+          </div>
+        </div>
+        <p class="compare-note">Zajímavost: tehdejší fotografické desky na červené světlo skoro nereagovaly. „Červený“ snímek se povedl hlavně díky ultrafialovému světlu, které červené barvivo stuhy odráželo. Maxwell měl i trochu štěstí.</p>
+      </div>
+    </section>
+
+    <!-- 7 : otázka -->
+    <section class="slide pause-slide" data-index="6" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Tipni si</div>
+        <div class="qmark">?</div>
+        <h2>Červená baterka + zelená baterka = ?</h2>
+        <p class="lede">Ve tmě posvítíš na bílou zeď červenou a zelenou baterkou na stejné místo. Jakou barvu tam uvidíš? Nejdřív tipni, pak to na dalším slajdu vyzkoušej.</p>
+      </div>
+    </section>
+
+    <!-- 8 : baterky na zeď -->
+    <section class="slide" data-index="7" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Zkus si to</div>
+        <h2 class="slide-title">Baterky na zeď</h2>
+        <p class="lede">Zeď je černá, protože nic nesvítí. Posouvej světla a překrývej je. Posuvníky ztlumíš jednotlivé baterky.</p>
+        <div class="light-stage" id="lightStage">
+          <div class="light-spot is-r" data-x="40" data-y="40"></div>
+          <div class="light-spot is-g" data-x="60" data-y="40"></div>
+          <div class="light-spot is-b" data-x="50" data-y="64"></div>
+          <span class="stage-hint">táhni kruhy</span>
+        </div>
+        <div class="demo-row">
+          <div class="slider-col">
+            <div class="slider-row"><label class="is-r">R</label><input type="range" class="light-level" data-spot="0" min="0" max="100" value="100" aria-label="Jas červené"></div>
+            <div class="slider-row"><label class="is-g">G</label><input type="range" class="light-level" data-spot="1" min="0" max="100" value="100" aria-label="Jas zelené"></div>
+            <div class="slider-row"><label class="is-b">B</label><input type="range" class="light-level" data-spot="2" min="0" max="100" value="100" aria-label="Jas modré"></div>
+          </div>
+          <button class="reveal-btn" id="lightsTogether">Všechna na jedno místo</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 : aditivní míchání -->
+    <section class="slide" data-index="8" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Aditivní míchání</div>
+        <h2 class="slide-title">Světla se sčítají</h2>
+        <p class="lede">Čím víc světla přidáš, tím je výsledek světlejší. <b>Nic = černá</b>, <b>všechno = bílá</b>. Červená + zelená = žlutá, zelená + modrá = azurová, červená + modrá = purpurová.</p>
+        <p class="lede">Na monitoru ale <b>žádné žluté světlo není</b>. Každý pixel tvoří tři malé subpixely R, G, B. Oko je z dálky nerozliší a sečte je. Díky metamerii vidíš žlutou.</p>
+        <div class="demo-box">
+          <div class="preset-row" id="subPresets">
+            <button class="calc-btn is-active" data-rgb="255,255,0">žlutá</button>
+            <button class="calc-btn" data-rgb="255,140,0">oranžová</button>
+            <button class="calc-btn" data-rgb="0,255,255">azurová</button>
+            <button class="calc-btn" data-rgb="255,255,255">bílá</button>
+            <button class="calc-btn" data-rgb="120,60,200">fialová</button>
+          </div>
+          <div class="demo-row top">
+            <div class="canvas-frame pixelated square"><canvas id="subCanvas" width="240" height="160"></canvas></div>
+            <div class="demo-row">
+              <div class="swatch lg" id="subSwatch"></div>
+              <span class="demo-cap">z dálky</span>
+            </div>
+          </div>
+          <div class="slider-row"><label>🔍</label><input type="range" id="subZoom" min="3" max="40" value="18" aria-label="Přiblížení"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 : RGB editor -->
+    <section class="slide" data-index="9" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Model RGB</div>
+        <h2 class="slide-title">Tři kanály, tři bajty</h2>
+        <p class="lede">Každý kanál má 8 bitů, tedy hodnotu <b>0–255</b>. Celkem 24 bitů na pixel, tj. 2²⁴ = <b>16 777 216</b> barev. Hýbej posuvníky, piš čísla, nebo zadej hex kód.</p>
+        <div class="demo-box">
+          <div class="demo-row">
+            <div class="swatch lg" id="edSwatch"></div>
+            <div class="slider-col">
+              <div class="slider-row"><label class="is-r">R</label><input type="range" id="edR" min="0" max="255" value="125" aria-label="Červená"><input class="num-in" type="number" id="edRn" min="0" max="255" value="125" aria-label="Červená číslem"></div>
+              <div class="slider-row"><label class="is-g">G</label><input type="range" id="edG" min="0" max="255" value="211" aria-label="Zelená"><input class="num-in" type="number" id="edGn" min="0" max="255" value="211" aria-label="Zelená číslem"></div>
+              <div class="slider-row"><label class="is-b">B</label><input type="range" id="edB" min="0" max="255" value="232" aria-label="Modrá"><input class="num-in" type="number" id="edBn" min="0" max="255" value="232" aria-label="Modrá číslem"></div>
+            </div>
+          </div>
+          <div class="demo-row">
+            <div class="swatch" id="edChR"></div><div class="swatch" id="edChG"></div><div class="swatch" id="edChB"></div>
+            <span class="demo-cap">jednotlivé kanály</span>
+          </div>
+          <div class="demo-row">
+            <label class="demo-cap" for="edHex">hex</label>
+            <input class="hex-in" type="text" id="edHex" value="#7DD3E8" maxlength="7" spellcheck="false" autocomplete="off">
+            <div class="lookup-chips">
+              <div class="chip"><b>CSS</b><span id="edCss">rgb(125, 211, 232)</span></div>
+              <div class="chip"><b>dvojkově</b><span id="edBin">01111101 11010011 11101000</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 : hex -->
+    <section class="slide" data-index="10" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Hexadecimální zápis</div>
+        <h2 class="slide-title">#RRGGBB</h2>
+        <p class="lede">Bajt 0–255 se v šestnáctkové soustavě zapíše přesně dvěma znaky <span class="mono">00–FF</span>. Proto se barvy na webu píšou jako šest hex číslic: dvě pro R, dvě pro G, dvě pro B.</p>
+        <div class="formula f-sm">#FF8000 → FF | 80 | 00 → 255, 128, 0</div>
+        <p class="lede">Odhadni barvu podle kódu, pak klikni na kartu:</p>
+        <div class="hex-quiz" id="hexQuiz">
+          <button class="hex-card" data-hex="#FF0000" data-name="čistá červená"><span class="hex-card-code">#FF0000</span><span class="hex-card-name"></span><span class="hex-card-color">?</span></button>
+          <button class="hex-card" data-hex="#00FFFF" data-name="G + B = azurová"><span class="hex-card-code">#00FFFF</span><span class="hex-card-name"></span><span class="hex-card-color">?</span></button>
+          <button class="hex-card" data-hex="#FFFF00" data-name="R + G = žlutá"><span class="hex-card-code">#FFFF00</span><span class="hex-card-name"></span><span class="hex-card-color">?</span></button>
+          <button class="hex-card" data-hex="#808080" data-name="vše stejně = šedá"><span class="hex-card-code">#808080</span><span class="hex-card-name"></span><span class="hex-card-color">?</span></button>
+          <button class="hex-card" data-hex="#FF8000" data-name="hodně R, půlka G = oranžová"><span class="hex-card-code">#FF8000</span><span class="hex-card-name"></span><span class="hex-card-color">?</span></button>
+          <button class="hex-card" data-hex="#400080" data-name="trocha R, víc B = tmavě fialová"><span class="hex-card-code">#400080</span><span class="hex-card-name"></span><span class="hex-card-color">?</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 : hra -->
+    <section class="slide" data-index="11" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Hra</div>
+        <h2 class="slide-title">Namíchej stejnou barvu</h2>
+        <p class="lede">Vlevo je cílová barva. Posuvníky namíchej co nejpodobnější a dej <b>Vyhodnotit</b>. Kdo ve třídě získá nejvíc bodů?</p>
+        <div class="match-pair">
+          <div class="match-swatch" id="gameTarget"><span class="match-label" id="gameTargetLabel">cíl</span></div>
+          <div class="match-swatch" id="gameMine"><span class="match-label" id="gameMineLabel">tvoje</span></div>
+        </div>
+        <div class="slider-col">
+          <div class="slider-row"><label class="is-r">R</label><input type="range" id="gameR" min="0" max="255" value="128" aria-label="Červená"></div>
+          <div class="slider-row"><label class="is-g">G</label><input type="range" id="gameG" min="0" max="255" value="128" aria-label="Zelená"></div>
+          <div class="slider-row"><label class="is-b">B</label><input type="range" id="gameB" min="0" max="255" value="128" aria-label="Modrá"></div>
+        </div>
+        <div class="demo-row center">
+          <button class="reveal-btn" id="gameCheck">Vyhodnotit</button>
+          <button class="reveal-btn" id="gameNew">Nová barva</button>
+          <span class="score" id="gameScore">body: <b>–</b></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 : barevná hloubka -->
+    <section class="slide" data-index="12" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Barevná hloubka</div>
+        <h2 class="slide-title">Kolik bitů na kanál?</h2>
+        <p class="lede"><b>Barevná hloubka</b> je počet bitů na pixel. Málo bitů znamená málo odstínů a v přechodech jsou vidět schody (anglicky <i>banding</i>). Uber bity:</p>
+        <div class="demo-box">
+          <div class="canvas-frame pixelated"><canvas id="depthCanvas" width="360" height="120"></canvas></div>
+          <div class="slider-row"><label>b</label><input type="range" id="depthRange" min="1" max="8" value="8" aria-label="Bitů na kanál"></div>
+          <div class="lookup-chips">
+            <div class="chip"><b>bitů na kanál</b><span id="depthBits">8</span></div>
+            <div class="chip"><b>odstínů na kanál</b><span id="depthLevels">256</span></div>
+            <div class="chip"><b>bitů na pixel</b><span id="depthBpp">24</span></div>
+            <div class="chip"><b>barev celkem</b><span id="depthColors">16 777 216</span></div>
+          </div>
+        </div>
+        <p class="compare-note">Běžné monitory: 8 bitů na kanál (24 b). HDR video a profi monitory: 10 bitů (přes miliardu barev). Fotky v RAW: 12–16 bitů.</p>
+      </div>
+    </section>
+
+    <!-- 14 : alfa -->
+    <section class="slide" data-index="13" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Čtvrtý kanál</div>
+        <h2 class="slide-title">Alfa: průhlednost</h2>
+        <p class="lede">K RGB se často přidává kanál <b>A</b> (alfa) s krytím 0–255. Vznikne <b>RGBA</b> se 4 bajty, tj. 32 bity na pixel. Umí ho PNG, WebP i CSS. Alfa neříká nic o barvě, jen jak moc překryje to, co je pod ní.</p>
+        <div class="checker">
+          <div class="checker-text">POZADÍ</div>
+          <div class="checker-layer" id="alphaLayer"></div>
+        </div>
+        <div class="slider-row"><label>A</label><input type="range" id="alphaRange" min="0" max="255" value="160" aria-label="Alfa"></div>
+        <div class="lookup-chips">
+          <div class="chip"><b>alfa 0–255</b><span id="alphaByte">160</span></div>
+          <div class="chip"><b>alfa 0–1</b><span id="alphaFrac">0,63</span></div>
+          <div class="chip"><b>CSS</b><span id="alphaCss">rgba(0, 120, 255, 0.63)</span></div>
+        </div>
+        <div class="formula f-xs">výsledek = α · popředí + (1 − α) · pozadí</div>
+      </div>
+    </section>
+
+    <!-- 15 : otázka tiskárna -->
+    <section class="slide pause-slide" data-index="14" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Otázka k zamyšlení</div>
+        <div class="qmark">?</div>
+        <h2>Proč tiskárna nemá červený, zelený a modrý inkoust?</h2>
+        <p class="lede">Monitor míchá barvy ze tří světel. Tiskárna má taky tři barevné inkousty, ale úplně jiné: azurový, purpurový a žlutý. Proč?</p>
+        <button class="reveal-btn" data-reveal="printAnswer">Ukázat odpověď</button>
+        <p class="answer" id="printAnswer" hidden>Papír <b>nesvítí</b>. Inkoust jen <b>pohlcuje</b> část světla, které na papír dopadá, a zbytek se odrazí. Kdybys smíchal červený a zelený inkoust, každý by pohltil to, co ten druhý odráží, a vyšla by tmavá hnědá, ne žlutá.</p>
+      </div>
+    </section>
+
+    <!-- 16 : CMYK subtraktivní -->
+    <section class="slide" data-index="15" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Subtraktivní míchání</div>
+        <h2 class="slide-title">Inkousty světlo ubírají</h2>
+        <p class="lede">Papír je bílý, odráží všechno. Každý inkoust jednu složku světla <b>odebere</b>: azurová (Cyan) pohltí červenou, purpurová (Magenta) zelenou, žlutá (Yellow) modrou. Čím víc inkoustu, tím tmavší výsledek.</p>
+        <div class="ink-stage" id="inkStage">
+          <div class="ink-spot is-c" data-x="42" data-y="40"></div>
+          <div class="ink-spot is-m" data-x="58" data-y="40"></div>
+          <div class="ink-spot is-y" data-x="50" data-y="64"></div>
+          <span class="stage-hint">táhni kruhy</span>
+        </div>
+        <div class="demo-row center">
+          <button class="reveal-btn is-on" id="inkIdeal">Ideální inkousty</button>
+          <button class="reveal-btn" id="inkReal">Skutečné inkousty</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 17 : proč K -->
+    <section class="slide" data-index="16" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">CMYK</div>
+        <h2 class="slide-title">Proč je tam ještě K?</h2>
+        <p class="lede">V teorii dá C + M + Y dohromady černou. Ve skutečnosti inkousty nejsou dokonalé a vyjde <b>špinavě tmavě hnědá</b> (zkus skutečné inkousty na minulém slajdu). Proto se přidává čtvrtý, černý inkoust <b>K</b>.</p>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <div class="compare-head">Proč černý inkoust</div>
+            <div class="compare-body">Opravdu sytá černá. Ostrý text (jedna vrstva místo tří, které by se nemusely přesně trefit). Úspora barevných inkoustů. Méně mokrý papír, který se nekroutí.</div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-head">Proč „K“, a ne „B“</div>
+            <div class="compare-body">K znamená <b>Key</b> (klíčová deska). Je to tisková deska s kresbou a textem, na kterou se ostatní barvy „klíčují“. Písmeno B by se navíc pletlo s Blue.</div>
+          </div>
+        </div>
+        <p class="compare-note">Historie: barevný tisk ze tří desek vymyslel kolem roku 1720 malíř Jacob Christoph Le Blon. Černou desku přidal, protože tři barvy dohromady sytou černou nedaly. Stejný problém řeší tiskárny dodnes.</p>
+      </div>
+    </section>
+
+    <!-- 18 : převod RGB -> CMYK -->
+    <section class="slide" data-index="17" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Převod</div>
+        <h2 class="slide-title">Z RGB do CMYK</h2>
+        <p class="lede">CMYK se zapisuje v procentech krytí 0–100 %. Nejjednodušší převod: nejdřív vezmi co nejvíc černé, zbytek dopočítej barevnými inkousty (R′, G′, B′ jsou hodnoty vydělené 255).</p>
+        <div class="formula f-xs">K = 1 − max(R′, G′, B′)　　C = (1 − R′ − K) / (1 − K)</div>
+        <div class="demo-box">
+          <div class="demo-row">
+            <div class="swatch lg" id="cmykSwatch"></div>
+            <div class="slider-col">
+              <div class="slider-row"><label class="is-r">R</label><input type="range" id="cmykR" min="0" max="255" value="242" aria-label="Červená"></div>
+              <div class="slider-row"><label class="is-g">G</label><input type="range" id="cmykG" min="0" max="255" value="160" aria-label="Zelená"></div>
+              <div class="slider-row"><label class="is-b">B</label><input type="range" id="cmykB" min="0" max="255" value="123" aria-label="Modrá"></div>
+            </div>
+          </div>
+          <div class="stat-bars">
+            <div class="stat-bar-row"><span class="stat-label">C</span><div class="fill-bar"><div class="fill-bar-in is-c" id="barC"></div></div><span class="bar-val" id="valC">0 %</span></div>
+            <div class="stat-bar-row"><span class="stat-label">M</span><div class="fill-bar"><div class="fill-bar-in is-mg" id="barM"></div></div><span class="bar-val" id="valM">0 %</span></div>
+            <div class="stat-bar-row"><span class="stat-label">Y</span><div class="fill-bar"><div class="fill-bar-in is-y" id="barY"></div></div><span class="bar-val" id="valY">0 %</span></div>
+            <div class="stat-bar-row"><span class="stat-label">K</span><div class="fill-bar"><div class="fill-bar-in is-k" id="barK"></div></div><span class="bar-val" id="valK">0 %</span></div>
+          </div>
+        </div>
+        <p class="compare-note">Ve skutečnosti se převádí přes barevné profily (ICC) konkrétní tiskárny a papíru. Tenhle vzorec ukazuje princip, ne tiskovou praxi.</p>
+      </div>
+    </section>
+
+    <!-- 19 : RGB vs CMYK -->
+    <section class="slide" data-index="18" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Porovnání</div>
+        <h2 class="slide-title">RGB, nebo CMYK?</h2>
+        <div class="table-wrap">
+          <table class="datatable">
+            <thead><tr><th></th><th>RGB</th><th>CMYK</th></tr></thead>
+            <tbody>
+              <tr><td><b>princip</b></td><td>aditivní: světla se sčítají</td><td>subtraktivní: inkousty světlo ubírají</td></tr>
+              <tr><td><b>zdroj</b></td><td>zařízení samo svítí</td><td>odražené světlo z papíru</td></tr>
+              <tr><td><b>začíná na</b></td><td>černé (nic nesvítí)</td><td>bílé (čistý papír)</td></tr>
+              <tr><td><b>všechno naplno</b></td><td>bílá</td><td>černá</td></tr>
+              <tr><td><b>zápis</b></td><td>3 × 0–255, hex</td><td>4 × 0–100 %</td></tr>
+              <tr><td><b>kde</b></td><td>monitor, mobil, projektor, foťák, web</td><td>tiskárna, tiskárna novin, obaly, plakáty</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="compare-note">Základní barvy jednoho modelu jsou míchané barvy toho druhého: R + G = Y, a naopak M + Y = R. Pro grafika: web dělej v RGB, tiskoviny v CMYK. Svítivé RGB barvy (neonová zelená, sytá modrá) inkoustem vytisknout nejdou.</p>
+      </div>
+    </section>
+
+    <!-- 20 : gamut -->
+    <section class="slide" data-index="19" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Gamut</div>
+        <h2 class="slide-title">Žádné zařízení neumí všechno</h2>
+        <p class="lede">Podkova jsou všechny barevné tóny, které člověk vidí (diagram CIE 1931, bez ohledu na jas). Na okraji leží čisté spektrální barvy. Zařízení umí jen barvy uvnitř svého tvaru, tzv. <b>gamut</b>. Monitor se třemi světly zvládne jen trojúhelník mezi nimi.</p>
+        <div class="demo-box">
+          <div class="preset-row" id="gamutBtns">
+            <button class="calc-btn is-active" data-g="srgb">sRGB (běžný monitor)</button>
+            <button class="calc-btn" data-g="p3">Display P3 (iPhone, Mac)</button>
+            <button class="calc-btn" data-g="cmyk">tisk CMYK (přibližně)</button>
+          </div>
+          <div class="canvas-frame square"><canvas id="gamutCanvas" width="440" height="480"></canvas></div>
+        </div>
+        <p class="compare-note">Barvy na tomto obrázku jsou jen orientační, monitor ty mimo trojúhelník sRGB stejně zobrazit neumí. Všimni si, že tisk dokáže pár azurových odstínů, které sRGB nemá, ale většinu svítivých barev ne.</p>
+      </div>
+    </section>
+
+    <!-- 21 : HSL -->
+    <section class="slide" data-index="20" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Model HSL</div>
+        <h2 class="slide-title">Barva tak, jak o ní mluví lidi</h2>
+        <p class="lede">RGB je pohodlné pro hardware, ne pro člověka. Zkus z hlavy říct, jak v RGB udělat „tutéž modrou, jen tmavší“. HSL popisuje barvu třemi vlastnostmi, které vnímáme: <b>H</b>ue (odstín, úhel na kole 0–360°), <b>S</b>aturation (sytost, 0–100 %) a <b>L</b>ightness (světlost, 0–100 %).</p>
+        <div class="demo-box">
+          <div class="demo-row">
+            <div class="hue-wheel" id="hslWheel"><div class="hue-marker" id="hslMarker"></div><div class="wheel-center" id="hslCenter"></div></div>
+            <div class="slider-col">
+              <div class="slider-row"><label>H</label><input type="range" id="hslH" min="0" max="360" value="195" aria-label="Odstín"></div>
+              <div class="slider-row"><label>S</label><input type="range" id="hslS" min="0" max="100" value="70" aria-label="Sytost"></div>
+              <div class="slider-row"><label>L</label><input type="range" id="hslL" min="0" max="100" value="70" aria-label="Světlost"></div>
+              <div class="lookup-chips">
+                <div class="chip"><b>HSL</b><span id="hslCss">hsl(195, 70%, 70%)</span></div>
+                <div class="chip"><b>RGB</b><span id="hslRgb">125, 211, 232</span></div>
+                <div class="chip"><b>hex</b><span id="hslHex">#7DD3E8</span></div>
+              </div>
+            </div>
+          </div>
+          <span class="demo-cap">stejný odstín, mění se jen L (10 → 90 %)</span>
+          <div class="shade-row" id="hslShades"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 22 : HSV picker -->
+    <section class="slide" data-index="21" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Výběr barvy</div>
+        <h2 class="slide-title">Jedna barva, mnoho zápisů</h2>
+        <p class="lede">Takhle vypadá výběr barvy ve většině programů. Proužek vpravo je odstín, ve čtverci vybíráš sytost (doprava) a jas (nahoru). To je model <b>HSV</b> (někdy HSB), blízký příbuzný HSL. Vyber barvu a sleduj, jak ji zapíše každý model.</p>
+        <div class="demo-row top">
+          <div class="picker">
+            <div class="picker-sv" id="pickSv"><div class="picker-sv-white"></div><div class="picker-sv-black"></div><div class="picker-dot" id="pickDot"></div></div>
+            <div class="picker-hue" id="pickHue"><div class="picker-line" id="pickLine"></div></div>
+          </div>
+          <div class="format-list">
+            <div class="swatch xl" id="pickSwatch"></div>
+            <div class="format-row"><span>HEX</span><span id="fHex">–</span></div>
+            <div class="format-row"><span>RGB</span><span id="fRgb">–</span></div>
+            <div class="format-row"><span>HSL</span><span id="fHsl">–</span></div>
+            <div class="format-row"><span>HSV</span><span id="fHsv">–</span></div>
+            <div class="format-row"><span>CMYK</span><span id="fCmyk">–</span></div>
+          </div>
+        </div>
+        <p class="compare-note">Rozdíl: v HSV je V = 100 % nejjasnější verze barvy (čistý odstín), v HSL je L = 100 % vždy bílá a čistý odstín leží v L = 50 %.</p>
+      </div>
+    </section>
+
+    <!-- 23 : harmonie -->
+    <section class="slide" data-index="22" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">K čemu je HSL v praxi</div>
+        <h2 class="slide-title">Paleta pro web během vteřiny</h2>
+        <p class="lede">Na barevném kole se dobře hledají barvy, které k sobě ladí. Stačí <b>přičítat úhly</b> k odstínu H, což v RGB jednoduše nejde. Hodí se pro web i pro ročníkovou práci.</p>
+        <div class="demo-box">
+          <div class="preset-row" id="harmBtns">
+            <button class="calc-btn is-active" data-h="mono">monochromatická</button>
+            <button class="calc-btn" data-h="comp">doplňková (+180°)</button>
+            <button class="calc-btn" data-h="anal">analogová (±30°)</button>
+            <button class="calc-btn" data-h="triad">triáda (+120°)</button>
+          </div>
+          <div class="slider-row"><label>H</label><input type="range" id="harmH" min="0" max="360" value="195" aria-label="Základní odstín"></div>
+          <div class="palette" id="harmPalette"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 24 : gama -->
+    <section class="slide" data-index="23" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Pro zvídavé</div>
+        <h2 class="slide-title">Číslo 128 není polovina světla</h2>
+        <p class="lede">Oko vnímá jas <b>nelineárně</b>: rozdíly ve tmě postřehne mnohem líp než ve světle. Proto sRGB neukládá množství světla přímo, ale „zahuštěné“ ve tmavých odstínech (tzv. <b>gama</b>). Hodnota 128 vyzáří jen asi pětinu světla hodnoty 255.</p>
+        <div class="demo-box">
+          <div class="slider-row"><label>v</label><input type="range" id="gammaRange" min="0" max="255" value="128" aria-label="Hodnota kanálu"></div>
+          <div class="demo-row">
+            <div class="swatch" id="gammaSwatch"></div>
+            <div class="lookup-chips">
+              <div class="chip"><b>uložená hodnota</b><span id="gammaVal">128 / 255 = 50 %</span></div>
+              <div class="chip"><b>skutečné světlo</b><span id="gammaLin">21,6 %</span></div>
+            </div>
+          </div>
+          <span class="demo-cap">přechod červená → zelená: počítaný z čísel (nahoře) a ze světla (dole)</span>
+          <div class="canvas-frame"><canvas id="gammaCanvas" width="480" height="80"></canvas></div>
+        </div>
+        <p class="compare-note">Horní přechod má uprostřed tmavý „špinavý“ pruh, protože program zprůměroval čísla, ne světlo. Správné míchání (dole) nejdřív čísla převede na světlo.</p>
+      </div>
+    </section>
+
+    <!-- 25 : kontrast -->
+    <section class="slide" data-index="24" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Barvy a čitelnost</div>
+        <h2 class="slide-title">Je ten text vůbec čitelný?</h2>
+        <p class="lede">Na webu musí mít text dost velký <b>kontrast</b> s pozadím, jinak ho špatně přečtou lidé se slabším zrakem nebo poruchou barvocitu (asi každý dvanáctý muž). Pravidla WCAG počítají poměr jasů 1 : 1 až 21 : 1.</p>
+        <div class="demo-row">
+          <label class="demo-cap" for="ctFg">text</label><input class="color-in" type="color" id="ctFg" value="#7a7a7a">
+          <label class="demo-cap" for="ctBg">pozadí</label><input class="color-in" type="color" id="ctBg" value="#121212">
+          <div class="preset-row" id="ctPresets">
+            <button class="calc-btn" data-fg="#EDEDED" data-bg="#121212">tento web</button>
+            <button class="calc-btn" data-fg="#FF0000" data-bg="#00AA00">červená na zelené</button>
+            <button class="calc-btn" data-fg="#FFFF00" data-bg="#FFFFFF">žlutá na bílé</button>
+          </div>
+        </div>
+        <div class="contrast-preview" id="ctPreview">
+          <span class="contrast-big">Nadpis stránky</span>
+          <span class="contrast-small">Běžný odstavec textu. Takhle by vypadal tvůj web s těmito barvami.</span>
+        </div>
+        <div class="demo-row">
+          <span class="big-val accent-val" id="ctRatio">–</span>
+          <span class="verdict" id="ctAA">AA text</span>
+          <span class="verdict" id="ctAAlarge">AA nadpis</span>
+          <span class="verdict" id="ctAAA">AAA text</span>
+        </div>
+        <p class="compare-note">Hranice: běžný text aspoň 4,5 : 1, velký nadpis 3 : 1, přísnější úroveň AAA 7 : 1. Jas se počítá ze světla, ne z čísel, takže tu znovu potřebuješ gamu.</p>
+      </div>
+    </section>
+
+    <!-- 26 : YCbCr -->
+    <section class="slide" data-index="25" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Jas zvlášť, barva zvlášť</div>
+        <h2 class="slide-title">YCbCr: trik JPEGu a videa</h2>
+        <p class="lede">JPEG a video převádějí RGB na <b>Y</b> (jas) a dvě barevné složky <b>Cb</b>, <b>Cr</b>. Oko je citlivé hlavně na jas, takže barvu stačí uložit v nižším rozlišení. Porovnej obě možnosti:</p>
+        <div class="demo-box">
+          <div class="preset-row" id="ycbBtns">
+            <button class="calc-btn is-active" data-m="orig">originál</button>
+            <button class="calc-btn" data-m="y">jen jas Y</button>
+            <button class="calc-btn" data-m="c">jen barva</button>
+            <button class="calc-btn" data-m="cLow">barva 4× hrubší</button>
+            <button class="calc-btn" data-m="yLow">jas 4× hrubší</button>
+          </div>
+          <div class="canvas-frame pixelated medium"><canvas id="ycbCanvas" width="240" height="140"></canvas></div>
+          <div class="lookup-chips">
+            <div class="chip"><b>bajtů na pixel</b><span id="ycbBytes">3</span></div>
+            <div class="chip"><b>úspora</b><span id="ycbSave">0 %</span></div>
+          </div>
+        </div>
+        <p class="compare-note">Hrubší barvu skoro nepoznáš, hrubší jas hned. Skutečný JPEG ukládá barvu obvykle 2× hrubší v každém směru (tzv. 4:2:0), tedy 1,5 bajtu na pixel místo 3.</p>
+      </div>
+    </section>
+
+    <!-- 27 : další modely -->
+    <section class="slide" data-index="26" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Přehled</div>
+        <h2 class="slide-title">Další modely, které potkáš</h2>
+        <div class="model-grid">
+          <div class="compare-col">
+            <div class="compare-head">CIE XYZ a CIELAB</div>
+            <div class="compare-body">Nezávislé na zařízení, popisují barvu tak, jak ji vidí průměrný člověk. Přes ně se převádí mezi RGB a CMYK. V Lab odpovídá vzdálenost dvou barev tomu, jak moc se liší pro oko.</div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-head">Pantone</div>
+            <div class="compare-body">Není to model, ale <b>katalog</b> očíslovaných namíchaných barev. Firmy tak mají logo všude stejně barevné. Tiskne se speciálně namíchaným inkoustem, ne z CMYK.</div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-head">OKLCH</div>
+            <div class="compare-body">Moderní model v CSS: světlost, sytost, odstín. Jako HSL, ale stejné L opravdu vypadá stejně světle. Žlutá a modrá s L = 50 % v HSL tak stejně světlé nejsou.</div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-head">Indexované barvy</div>
+            <div class="compare-body">Obrázek má <b>paletu</b> (např. 256 barev) a pixel ukládá jen pořadí barvy v ní, tedy 1 bajt místo 3. Používá GIF a staré hry.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 28 : CSS -->
+    <section class="slide" data-index="27" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Barvy v CSS</div>
+        <h2 class="slide-title">Napiš barvu jakkoli</h2>
+        <p class="lede">Prohlížeč rozumí všem modelům z dnešní hodiny. Napiš do pole libovolný zápis barvy, nebo klikni na příklad.</p>
+        <div class="demo-row">
+          <input class="text-in" type="text" id="cssIn" value="hsl(195 70% 70%)" spellcheck="false" autocomplete="off" aria-label="Zápis barvy v CSS">
+        </div>
+        <div class="preset-row" id="cssPresets">
+          <button class="calc-btn">tomato</button>
+          <button class="calc-btn">#7DD3E8</button>
+          <button class="calc-btn">#f80</button>
+          <button class="calc-btn">rgb(255 128 0)</button>
+          <button class="calc-btn">rgb(0 120 255 / 50%)</button>
+          <button class="calc-btn">hsl(320 90% 55%)</button>
+          <button class="calc-btn">oklch(70% 0.15 150)</button>
+        </div>
+        <div class="checker">
+          <div class="checker-layer" id="cssSwatch"></div>
+        </div>
+        <div class="lookup-chips">
+          <div class="chip"><b>platný zápis?</b><span id="cssValid">ano</span></div>
+          <div class="chip"><b>prohlížeč to uloží jako</b><span id="cssComputed">–</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 29 : otázka -->
+    <section class="slide pause-slide" data-index="28" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Spočítej</div>
+        <div class="qmark">?</div>
+        <h2>Kolik místa zabere screenshot?</h2>
+        <p class="lede">Obrazovka Full HD má 1920 × 1080 pixelů. Kolik bajtů zabere nekomprimovaný snímek v RGBA? A kolik v RGB?</p>
+        <button class="reveal-btn" data-reveal="shotAnswer">Ukázat výpočet</button>
+        <p class="answer" id="shotAnswer" hidden><b>RGBA:</b> 1920 × 1080 × 4 B = 8 294 400 B ≈ 7,9 MiB.<br><b>RGB:</b> 1920 × 1080 × 3 B = 6 220 800 B ≈ 5,9 MiB.<br>Při 60 snímcích za sekundu by nekomprimované video v RGB mělo přes 350 MB každou sekundu.</p>
+      </div>
+    </section>
+
+    <!-- 30 : shrnutí -->
+    <section class="slide summary-slide" data-index="29" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Shrnutí</div>
+        <h2 class="slide-title">Co jsme se naučili</h2>
+        <ul class="summary-list">
+          <li>Oko má <b>tři druhy čípků</b>, proto ke každé barvě stačí tři čísla. Stejně vypadající různá světla jsou <b>metamerie</b>.</li>
+          <li><b>RGB</b> je aditivní: světla se sčítají (černá → bílá). 8 bitů na kanál = 24 b, přes 16,7 milionu barev. Zápis <b>#RRGGBB</b>, s průhledností <b>RGBA</b>.</li>
+          <li><b>CMYK</b> je subtraktivní: inkousty světlo pohlcují (bílá → černá). <b>K</b> = černá, protože C + M + Y nedají sytou černou.</li>
+          <li>Každé zařízení má svůj <b>gamut</b>. Tisk neumí všechny barvy monitoru, monitor neumí všechny barvy, které vidí oko.</li>
+          <li><b>HSL/HSV</b> popisují barvu lidsky (odstín, sytost, světlost). Hodí se na palety a úpravy barev.</li>
+          <li><b>YCbCr</b> odděluje jas od barvy, na tom stojí komprese JPEG a videa. Kontrast textu se počítá z jasu.</li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 30</span>
+    <a class="nav-btn text-link" href="07_barva_po_barve_studijni_text.html" title="Studijní text k této lekci"><span class="tl-long">Studijní </span>text</a>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- navigace ----------
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total = slides.length;
+  var current = 0;
+  var dotsEl = document.getElementById("dots");
+  var counterEl = document.getElementById("counter");
+  var prevBtn = document.getElementById("prevBtn");
+  var nextBtn = document.getElementById("nextBtn");
+
+  slides.forEach(function(_, i){
+    var d = document.createElement("button");
+    d.className = "dot" + (i === 0 ? " is-active" : "");
+    d.setAttribute("aria-label", "Snímek " + (i+1));
+    d.addEventListener("click", function(){ goTo(i); });
+    dotsEl.appendChild(d);
+  });
+  var dotEls = Array.prototype.slice.call(dotsEl.children);
+
+  function goTo(i){
+    if (i < 0 || i >= total) return;
+    slides[current].hidden = true;
+    current = i;
+    slides[current].hidden = false;
+    dotEls.forEach(function(d, idx){ d.classList.toggle("is-active", idx === current); });
+    counterEl.textContent = (current+1) + " / " + total;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+  }
+  prevBtn.addEventListener("click", function(){ goTo(current - 1); });
+  nextBtn.addEventListener("click", function(){ goTo(current + 1); });
+  document.addEventListener("keydown", function(e){
+    var t = e.target && e.target.tagName;
+    if (t === "INPUT" || t === "TEXTAREA") return;
+    if (e.key === "ArrowRight") goTo(current + 1);
+    if (e.key === "ArrowLeft") goTo(current - 1);
+  });
+  goTo(0);
+
+  // ---------- pomocné funkce ----------
+  function $(id){ return document.getElementById(id); }
+  function clamp(v, a, b){ return Math.min(b, Math.max(a, v)); }
+  function hex2(n){ var s = Math.round(n).toString(16).toUpperCase(); return s.length < 2 ? "0" + s : s; }
+  function bin8(n){ var s = Math.round(n).toString(2); while (s.length < 8) s = "0" + s; return s; }
+  function toHex(r, g, b){ return "#" + hex2(r) + hex2(g) + hex2(b); }
+  function css(r, g, b){ return "rgb(" + Math.round(r) + ", " + Math.round(g) + ", " + Math.round(b) + ")"; }
+  function cz(n, d){ return n.toFixed(d).replace(".", ","); }
+  function thousands(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
+  function parseHex(s){
+    s = s.trim().replace(/^#/, "");
+    if (/^[0-9a-f]{3}$/i.test(s)) s = s[0]+s[0]+s[1]+s[1]+s[2]+s[2];
+    if (!/^[0-9a-f]{6}$/i.test(s)) return null;
+    return [parseInt(s.slice(0,2),16), parseInt(s.slice(2,4),16), parseInt(s.slice(4,6),16)];
+  }
+  function rgbToHsl(r, g, b){
+    r /= 255; g /= 255; b /= 255;
+    var max = Math.max(r,g,b), min = Math.min(r,g,b), h = 0, s = 0, l = (max+min)/2, d = max-min;
+    if (d){
+      s = l > .5 ? d/(2-max-min) : d/(max+min);
+      if (max === r) h = (g-b)/d + (g < b ? 6 : 0);
+      else if (max === g) h = (b-r)/d + 2;
+      else h = (r-g)/d + 4;
+      h *= 60;
+    }
+    return [h, s*100, l*100];
+  }
+  function hslToRgb(h, s, l){
+    s /= 100; l /= 100;
+    var k = function(n){ return (n + h/30) % 12; };
+    var a = s * Math.min(l, 1-l);
+    var f = function(n){ return l - a * Math.max(-1, Math.min(k(n)-3, 9-k(n), 1)); };
+    return [f(0)*255, f(8)*255, f(4)*255];
+  }
+  function hsvToRgb(h, s, v){
+    s /= 100; v /= 100;
+    var f = function(n){ var k = (n + h/60) % 6; return v - v*s*Math.max(0, Math.min(k, 4-k, 1)); };
+    return [f(5)*255, f(3)*255, f(1)*255];
+  }
+  function rgbToHsv(r, g, b){
+    var hsl = rgbToHsl(r, g, b);
+    var max = Math.max(r,g,b)/255, min = Math.min(r,g,b)/255;
+    return [hsl[0], max ? (max-min)/max*100 : 0, max*100];
+  }
+  function rgbToCmyk(r, g, b){
+    r /= 255; g /= 255; b /= 255;
+    var k = 1 - Math.max(r,g,b);
+    if (k >= 1) return [0,0,0,100];
+    return [(1-r-k)/(1-k)*100, (1-g-k)/(1-k)*100, (1-b-k)/(1-k)*100, k*100];
+  }
+  function toLin(c){ c /= 255; return c <= 0.04045 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); }
+  function fromLin(c){ c = clamp(c, 0, 1); return 255 * (c <= 0.0031308 ? 12.92*c : 1.055*Math.pow(c, 1/2.4) - 0.055); }
+  function luminance(rgb){ return 0.2126*toLin(rgb[0]) + 0.7152*toLin(rgb[1]) + 0.0722*toLin(rgb[2]); }
+  function setActive(group, btn){
+    Array.prototype.forEach.call(group.querySelectorAll(".calc-btn"), function(b){ b.classList.toggle("is-active", b === btn); });
+  }
+
+  // vlnová délka -> přibližná RGB barva (aproximace D. Brutona)
+  function wlToRgb(w){
+    var r = 0, g = 0, b = 0, f;
+    if (w < 440){ r = (440-w)/60; b = 1; }
+    else if (w < 490){ g = (w-440)/50; b = 1; }
+    else if (w < 510){ g = 1; b = (510-w)/20; }
+    else if (w < 580){ r = (w-510)/70; g = 1; }
+    else if (w < 645){ r = 1; g = (645-w)/65; }
+    else { r = 1; }
+    if (w < 420) f = 0.3 + 0.7*(w-380)/40;
+    else if (w <= 700) f = 1;
+    else f = 0.3 + 0.7*(780-w)/80;
+    return [r,g,b].map(function(c){ return Math.round(255*Math.pow(c*f, 0.8)); });
+  }
+  function wlName(w){
+    if (w < 450) return "fialová";
+    if (w < 495) return "modrá";
+    if (w < 570) return "zelená";
+    if (w < 590) return "žlutá";
+    if (w < 620) return "oranžová";
+    return "červená";
+  }
+
+  // tažení kruhů (baterky, inkousty)
+  function makeStage(stage){
+    var spots = Array.prototype.slice.call(stage.querySelectorAll(".light-spot, .ink-spot"));
+    function place(el){ el.style.left = el.dataset.x + "%"; el.style.top = el.dataset.y + "%"; }
+    spots.forEach(function(el){
+      place(el);
+      el.addEventListener("pointerdown", function(e){
+        e.preventDefault();
+        el.setPointerCapture(e.pointerId);
+        el.parentNode.appendChild(el);
+        var hint = stage.querySelector(".stage-hint"); if (hint) stage.appendChild(hint);
+        function move(ev){
+          var r = stage.getBoundingClientRect();
+          el.dataset.x = clamp((ev.clientX - r.left) / r.width * 100, 0, 100);
+          el.dataset.y = clamp((ev.clientY - r.top) / r.height * 100, 0, 100);
+          place(el);
+        }
+        function up(){ el.removeEventListener("pointermove", move); el.removeEventListener("pointerup", up); el.removeEventListener("pointercancel", up); }
+        el.addEventListener("pointermove", move);
+        el.addEventListener("pointerup", up);
+        el.addEventListener("pointercancel", up);
+      });
+    });
+    return { spots: spots, place: place };
+  }
+
+  // statické barvy z data-color
+  Array.prototype.forEach.call(document.querySelectorAll("[data-color]"), function(el){ el.style.background = el.dataset.color; });
+
+  // odhalení odpovědí
+  Array.prototype.forEach.call(document.querySelectorAll("[data-reveal]"), function(btn){
+    btn.addEventListener("click", function(){
+      var t = $(btn.dataset.reveal);
+      t.hidden = !t.hidden;
+      btn.classList.toggle("is-on", !t.hidden);
+    });
+  });
+
+  // ---------- 1 : titul ----------
+  makeStage($("heroStage"));
+
+  // ---------- 3 : elektromagnetické spektrum (log. škála 1 pm až 1 km) ----------
+  (function(){
+    var LO = -12, HI = 3;
+    function pos(m){ return (Math.log10(m) - LO) / (HI - LO) * 100; }
+    var segs = [
+      ["γ", "gama", 1e-12, 1e-11],
+      ["rentgen", "nemocnice", 1e-11, 1e-8],
+      ["UV", "opalování", 1e-8, 380e-9],
+      ["", "", 380e-9, 750e-9],
+      ["infračervené", "ovladač, teplo", 750e-9, 1e-3],
+      ["mikrovlny", "Wi-Fi, mikrovlnka", 1e-3, 1],
+      ["rádio", "FM, AM", 1, 1e3]
+    ];
+    var bar = $("emBar");
+    segs.forEach(function(sg){
+      var el = document.createElement("div");
+      el.className = "em-seg" + (sg[0] ? "" : " is-vis");
+      el.style.width = (pos(sg[3]) - pos(sg[2])) + "%";
+      if (sg[0]){
+        var a = document.createElement("span"); a.className = "em-name"; a.textContent = sg[0]; el.appendChild(a);
+        var b = document.createElement("span"); b.className = "em-ex"; b.textContent = sg[1]; el.appendChild(b);
+      }
+      bar.appendChild(el);
+    });
+    var vL = pos(380e-9), vR = pos(750e-9);
+    $("emCallout").style.left = ((vL + vR) / 2) + "%";
+    $("emZoomPoly").setAttribute("points", vL + ",0 " + vR + ",0 100,20 0,20");
+    function ticks(el, list){
+      list.forEach(function(t){
+        var s = document.createElement("span"); s.className = "em-tick"; s.style.left = t[0] + "%"; s.textContent = t[1]; el.appendChild(s);
+      });
+    }
+    ticks($("emTicks"), [[pos(1e-12),"1 pm"],[pos(1e-9),"1 nm"],[pos(1e-6),"1 µm"],[pos(1e-3),"1 mm"],[pos(1),"1 m"],[pos(1e3),"1 km"]]);
+    ticks($("visTicks"), [400,500,600,700].map(function(w){ return [(w-380)/370*100, w + " nm"]; }));
+  })();
+
+  // ---------- 2 : spektrum ----------
+  (function(){
+    var cv = $("spectrumCanvas"), ctx = cv.getContext("2d");
+    for (var x = 0; x < cv.width; x++){
+      var c = wlToRgb(380 + x / (cv.width-1) * 370);
+      ctx.fillStyle = css(c[0], c[1], c[2]);
+      ctx.fillRect(x, 0, 1, cv.height);
+    }
+    var range = $("wlRange");
+    function upd(){
+      var w = +range.value, c = wlToRgb(w);
+      $("wlSwatch").style.background = css(c[0], c[1], c[2]);
+      $("wlVal").textContent = w + " nm";
+      $("wlName").textContent = wlName(w);
+    }
+    range.addEventListener("input", upd); upd();
+  })();
+
+  // ---------- 3 : čípky ----------
+  (function(){
+    function g(w, mu, s1, s2){ var s = w < mu ? s1 : s2; return Math.exp(-0.5 * Math.pow((w-mu)/s, 2)); }
+    function cones(w){ return [g(w, 420, 20, 30), g(w, 534, 40, 38), g(w, 564, 48, 42)]; }
+    var cv = $("coneCanvas"), ctx = cv.getContext("2d"), W = cv.width, H = cv.height, pad = 14;
+    var cols = ["#6C8CFF", "#5FD17A", "#F2766B"];
+    function xOf(w){ return (w-380)/370*W; }
+    function draw(wl){
+      ctx.clearRect(0, 0, W, H);
+      for (var x = 0; x < W; x++){ var c = wlToRgb(380 + x/(W-1)*370); ctx.fillStyle = css(c[0], c[1], c[2]); ctx.fillRect(x, H-8, 1, 8); }
+      for (var i = 0; i < 3; i++){
+        ctx.beginPath();
+        for (var w = 380; w <= 750; w += 2){
+          var y = H - 12 - cones(w)[i] * (H - 12 - pad);
+          if (w === 380) ctx.moveTo(xOf(w), y); else ctx.lineTo(xOf(w), y);
+        }
+        ctx.strokeStyle = cols[i]; ctx.lineWidth = 3; ctx.stroke();
+      }
+      ctx.strokeStyle = "#EDEDED"; ctx.lineWidth = 2; ctx.setLineDash([6, 5]);
+      ctx.beginPath(); ctx.moveTo(xOf(wl), 4); ctx.lineTo(xOf(wl), H - 10); ctx.stroke(); ctx.setLineDash([]);
+    }
+    var range = $("coneRange");
+    function upd(){
+      var w = +range.value, v = cones(w);
+      draw(w);
+      ["S","M","L"].forEach(function(k, i){
+        $("cone"+k).style.width = (v[i]*100) + "%";
+        $("cone"+k+"v").textContent = Math.round(v[i]*100) + " %";
+      });
+    }
+    range.addEventListener("input", upd); upd();
+  })();
+
+  // ---------- 7 : baterky ----------
+  (function(){
+    var st = makeStage($("lightStage"));
+    Array.prototype.forEach.call(document.querySelectorAll(".light-level"), function(r){
+      r.addEventListener("input", function(){ st.spots[+r.dataset.spot].style.opacity = r.value / 100; });
+    });
+    var together = false;
+    var home = st.spots.map(function(el){ return [el.dataset.x, el.dataset.y]; });
+    $("lightsTogether").addEventListener("click", function(){
+      together = !together;
+      st.spots.forEach(function(el, i){
+        el.dataset.x = together ? 50 : home[i][0];
+        el.dataset.y = together ? 50 : home[i][1];
+        st.place(el);
+      });
+      this.classList.toggle("is-on", together);
+      this.textContent = together ? "Zase od sebe" : "Všechna na jedno místo";
+    });
+  })();
+
+  // ---------- 8 : subpixely ----------
+  (function(){
+    var cv = $("subCanvas"), ctx = cv.getContext("2d"), color = [255,255,0];
+    function draw(){
+      var p = +$("subZoom").value, sw = p/3;
+      ctx.fillStyle = "#000"; ctx.fillRect(0, 0, cv.width, cv.height);
+      for (var y = 0; y < cv.height; y += p){
+        for (var x = 0; x < cv.width; x += p){
+          for (var k = 0; k < 3; k++){
+            var v = color[k], rgb = [0,0,0]; rgb[k] = v;
+            ctx.fillStyle = css(rgb[0], rgb[1], rgb[2]);
+            ctx.fillRect(x + k*sw + sw*0.12, y + p*0.06, sw*0.76, p*0.88);
+          }
+        }
+      }
+      $("subSwatch").style.background = css(color[0], color[1], color[2]);
+    }
+    var group = $("subPresets");
+    group.addEventListener("click", function(e){
+      var b = e.target.closest(".calc-btn"); if (!b) return;
+      color = b.dataset.rgb.split(",").map(Number); setActive(group, b); draw();
+    });
+    $("subZoom").addEventListener("input", draw); draw();
+  })();
+
+  // ---------- 9 : RGB editor ----------
+  (function(){
+    var ids = ["R","G","B"];
+    function get(){ return ids.map(function(k){ return +$("ed"+k).value; }); }
+    function render(skipHex){
+      var c = get();
+      $("edSwatch").style.background = css(c[0], c[1], c[2]);
+      $("edChR").style.background = css(c[0], 0, 0);
+      $("edChG").style.background = css(0, c[1], 0);
+      $("edChB").style.background = css(0, 0, c[2]);
+      $("edCss").textContent = css(c[0], c[1], c[2]);
+      $("edBin").textContent = c.map(bin8).join(" ");
+      ids.forEach(function(k, i){ $("ed"+k+"n").value = c[i]; });
+      if (!skipHex){ $("edHex").value = toHex(c[0], c[1], c[2]); $("edHex").classList.remove("is-bad"); }
+    }
+    ids.forEach(function(k){
+      $("ed"+k).addEventListener("input", function(){ render(); });
+      $("ed"+k+"n").addEventListener("input", function(){
+        var v = parseInt(this.value, 10);
+        if (isNaN(v)) return;
+        $("ed"+k).value = clamp(v, 0, 255); render();
+      });
+    });
+    $("edHex").addEventListener("input", function(){
+      var c = parseHex(this.value);
+      this.classList.toggle("is-bad", !c);
+      if (!c) return;
+      ids.forEach(function(k, i){ $("ed"+k).value = c[i]; });
+      render(true);
+    });
+    render();
+  })();
+
+  // ---------- 10 : hex kvíz ----------
+  Array.prototype.forEach.call(document.querySelectorAll(".hex-card"), function(card){
+    card.addEventListener("click", function(){
+      var col = card.querySelector(".hex-card-color");
+      col.style.background = card.dataset.hex;
+      col.textContent = "";
+      card.querySelector(".hex-card-name").textContent = card.dataset.name;
+    });
+  });
+
+  // ---------- 11 : hra ----------
+  (function(){
+    var target = [0,0,0], done = false, best = null;
+    function mine(){ return ["R","G","B"].map(function(k){ return +$("game"+k).value; }); }
+    function renderMine(){ var c = mine(); $("gameMine").style.background = css(c[0], c[1], c[2]); }
+    function newTarget(){
+      target = [0,0,0].map(function(){ return Math.floor(Math.random()*256); });
+      $("gameTarget").style.background = css(target[0], target[1], target[2]);
+      $("gameTargetLabel").textContent = "cíl";
+      $("gameMineLabel").textContent = "tvoje";
+      done = false;
+      $("gameScore").innerHTML = "body: <b>–</b>" + (best !== null ? " · nejlepší " + best : "");
+    }
+    ["R","G","B"].forEach(function(k){ $("game"+k).addEventListener("input", renderMine); });
+    $("gameCheck").addEventListener("click", function(){
+      var c = mine();
+      var d = Math.sqrt(Math.pow(c[0]-target[0],2) + Math.pow(c[1]-target[1],2) + Math.pow(c[2]-target[2],2));
+      var pts = Math.max(0, Math.round(100 * (1 - d/255)));
+      if (best === null || pts > best) best = pts;
+      $("gameTargetLabel").textContent = "cíl " + target.join(", ");
+      $("gameMineLabel").textContent = "tvoje " + c.join(", ");
+      $("gameScore").innerHTML = "body: <b>" + pts + "</b> / 100 · nejlepší " + best;
+      done = true;
+    });
+    $("gameNew").addEventListener("click", newTarget);
+    renderMine(); newTarget();
+  })();
+
+  // ---------- 12 : barevná hloubka ----------
+  (function(){
+    var cv = $("depthCanvas"), ctx = cv.getContext("2d"), W = cv.width, H = cv.height;
+    var base = ctx.createImageData(W, H);
+    for (var y = 0; y < H; y++){
+      for (var x = 0; x < W; x++){
+        var c = hslToRgb(x / W * 360, 85, 15 + y / (H-1) * 70);
+        var i = (y*W + x) * 4;
+        base.data[i] = c[0]; base.data[i+1] = c[1]; base.data[i+2] = c[2]; base.data[i+3] = 255;
+      }
+    }
+    function upd(){
+      var b = +$("depthRange").value, lv = Math.pow(2, b), out = ctx.createImageData(W, H);
+      for (var i = 0; i < base.data.length; i += 4){
+        for (var k = 0; k < 3; k++) out.data[i+k] = Math.round(Math.round(base.data[i+k] / 255 * (lv-1)) / (lv-1) * 255);
+        out.data[i+3] = 255;
+      }
+      ctx.putImageData(out, 0, 0);
+      $("depthBits").textContent = b;
+      $("depthLevels").textContent = thousands(lv);
+      $("depthBpp").textContent = 3*b;
+      $("depthColors").textContent = thousands(Math.pow(2, 3*b));
+    }
+    $("depthRange").addEventListener("input", upd); upd();
+  })();
+
+  // ---------- 13 : alfa ----------
+  (function(){
+    function upd(){
+      var a = +$("alphaRange").value, f = a / 255;
+      $("alphaLayer").style.background = "rgba(0, 120, 255, " + f.toFixed(2) + ")";
+      $("alphaByte").textContent = a;
+      $("alphaFrac").textContent = cz(f, 2);
+      $("alphaCss").textContent = "rgba(0, 120, 255, " + f.toFixed(2) + ")";
+    }
+    $("alphaRange").addEventListener("input", upd); upd();
+  })();
+
+  // ---------- 15 : inkousty ----------
+  (function(){
+    makeStage($("inkStage"));
+    $("inkIdeal").addEventListener("click", function(){ $("inkStage").classList.remove("is-real"); this.classList.add("is-on"); $("inkReal").classList.remove("is-on"); });
+    $("inkReal").addEventListener("click", function(){ $("inkStage").classList.add("is-real"); this.classList.add("is-on"); $("inkIdeal").classList.remove("is-on"); });
+  })();
+
+  // ---------- 17 : RGB -> CMYK ----------
+  (function(){
+    function upd(){
+      var c = ["R","G","B"].map(function(k){ return +$("cmyk"+k).value; });
+      var m = rgbToCmyk(c[0], c[1], c[2]);
+      $("cmykSwatch").style.background = css(c[0], c[1], c[2]);
+      ["C","M","Y","K"].forEach(function(k, i){
+        $("bar"+k).style.width = m[i] + "%";
+        $("val"+k).textContent = Math.round(m[i]) + " %";
+      });
+    }
+    ["R","G","B"].forEach(function(k){ $("cmyk"+k).addEventListener("input", upd); });
+    upd();
+  })();
+
+  // ---------- 19 : gamut (CIE 1931 xy) ----------
+  (function(){
+    // spektrální křivka CIE 1931 2° (380–700 nm)
+    var locus = [[0.1741,0.0050],[0.1733,0.0048],[0.1714,0.0051],[0.1644,0.0109],[0.1566,0.0177],[0.1440,0.0297],[0.1241,0.0578],[0.1096,0.0868],[0.0913,0.1327],[0.0687,0.2007],[0.0454,0.2950],[0.0235,0.4127],[0.0082,0.5384],[0.0039,0.6548],[0.0139,0.7502],[0.0389,0.8120],[0.0743,0.8338],[0.1142,0.8262],[0.1547,0.8059],[0.2296,0.7543],[0.3016,0.6923],[0.3731,0.6245],[0.4441,0.5547],[0.5125,0.4866],[0.5752,0.4242],[0.6270,0.3725],[0.6658,0.3340],[0.6915,0.3083],[0.7079,0.2920],[0.7190,0.2809],[0.7260,0.2740],[0.7347,0.2653]];
+    var labels = { 460: [0.1440,0.0297], 480: [0.0913,0.1327], 500: [0.0082,0.5384], 520: [0.0743,0.8338], 560: [0.3731,0.6245], 580: [0.5125,0.4866], 600: [0.6270,0.3725], 700: [0.7347,0.2653] };
+    var gamuts = {
+      srgb: { pts: [[0.64,0.33],[0.30,0.60],[0.15,0.06]], col: "#FFFFFF" },
+      p3:   { pts: [[0.680,0.320],[0.265,0.690],[0.150,0.060]], col: "#7DD3E8" },
+      cmyk: { pts: [[0.166,0.233],[0.227,0.541],[0.436,0.501],[0.608,0.319],[0.485,0.240],[0.189,0.126]], col: "#F2C14E" }
+    };
+    var shown = { srgb: true, p3: false, cmyk: false };
+    var cv = $("gamutCanvas"), ctx = cv.getContext("2d"), W = cv.width, H = cv.height, m = 34;
+    function X(x){ return m + x / 0.8 * (W - m - 10); }
+    function Y(y){ return H - m - y / 0.9 * (H - m - 10); }
+    function inside(x, y, poly){
+      var c = false;
+      for (var i = 0, j = poly.length-1; i < poly.length; j = i++){
+        var xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+        if (((yi > y) !== (yj > y)) && (x < (xj-xi)*(y-yi)/(yj-yi) + xi)) c = !c;
+      }
+      return c;
+    }
+    var bg = ctx.createImageData(W, H);
+    for (var py = 0; py < H; py++){
+      for (var px = 0; px < W; px++){
+        var x = (px - m) / (W - m - 10) * 0.8, y = (H - m - py) / (H - m - 10) * 0.9;
+        var i = (py*W + px) * 4;
+        if (y > 0.001 && inside(x, y, locus)){
+          var Xc = x / y, Zc = (1 - x - y) / y;
+          var r = 3.2406*Xc - 1.5372 - 0.4986*Zc;
+          var g = -0.9689*Xc + 1.8758 + 0.0415*Zc;
+          var b = 0.0557*Xc - 0.2040 + 1.0570*Zc;
+          r = Math.max(r, 0); g = Math.max(g, 0); b = Math.max(b, 0);
+          var mx = Math.max(r, g, b) || 1;
+          bg.data[i] = fromLin(r/mx); bg.data[i+1] = fromLin(g/mx); bg.data[i+2] = fromLin(b/mx); bg.data[i+3] = 255;
+        } else {
+          bg.data[i] = 18; bg.data[i+1] = 18; bg.data[i+2] = 18; bg.data[i+3] = 255;
+        }
+      }
+    }
+    function draw(){
+      ctx.putImageData(bg, 0, 0);
+      ctx.strokeStyle = "#3A3A3A"; ctx.lineWidth = 1; ctx.fillStyle = "#A8A8A8"; ctx.font = "13px 'JetBrains Mono', monospace";
+      ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0.8), Y(0)); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), Y(0.9)); ctx.stroke();
+      [0.2,0.4,0.6].forEach(function(t){ ctx.fillText(String(t).replace(".", ","), X(t) - 9, Y(0) + 18); ctx.fillText(String(t).replace(".", ","), 2, Y(t) + 4); });
+      ctx.fillText("x", X(0.8) - 12, Y(0) + 18); ctx.fillText("y", 10, Y(0.9) + 12);
+      Object.keys(labels).forEach(function(k){ var p = labels[k]; ctx.fillText(k, X(p[0]) + (p[0] < 0.2 ? -36 : 6), Y(p[1]) + (k === "520" ? -6 : 4)); });
+      Object.keys(gamuts).forEach(function(k){
+        if (!shown[k]) return;
+        var g = gamuts[k];
+        ctx.beginPath();
+        g.pts.forEach(function(p, i){ if (i) ctx.lineTo(X(p[0]), Y(p[1])); else ctx.moveTo(X(p[0]), Y(p[1])); });
+        ctx.closePath(); ctx.lineWidth = 3; ctx.strokeStyle = "#000"; ctx.stroke();
+        ctx.lineWidth = 2; ctx.strokeStyle = g.col; ctx.stroke();
+      });
+      ctx.fillStyle = "#000"; ctx.beginPath(); ctx.arc(X(0.3127), Y(0.3290), 4, 0, 7); ctx.fill();
+      ctx.fillStyle = "#FFF"; ctx.beginPath(); ctx.arc(X(0.3127), Y(0.3290), 2.5, 0, 7); ctx.fill();
+    }
+    var group = $("gamutBtns");
+    group.addEventListener("click", function(e){
+      var b = e.target.closest(".calc-btn"); if (!b) return;
+      shown[b.dataset.g] = !shown[b.dataset.g];
+      b.classList.toggle("is-active", shown[b.dataset.g]);
+      draw();
+    });
+    draw();
+  })();
+
+  // ---------- 20 : HSL ----------
+  (function(){
+    var shades = $("hslShades");
+    for (var i = 0; i < 9; i++){ var d = document.createElement("div"); d.className = "shade"; shades.appendChild(d); }
+    var cells = Array.prototype.slice.call(shades.children);
+    function upd(){
+      var h = +$("hslH").value, s = +$("hslS").value, l = +$("hslL").value, c = hslToRgb(h, s, l);
+      $("hslCenter").style.background = css(c[0], c[1], c[2]);
+      var a = h * Math.PI / 180, rad = 39;
+      $("hslMarker").style.left = (50 + rad * Math.cos(a)) + "%";
+      $("hslMarker").style.top = (50 + rad * Math.sin(a)) + "%";
+      $("hslMarker").style.background = css.apply(null, hslToRgb(h, 100, 50));
+      $("hslCss").textContent = "hsl(" + h + ", " + s + "%, " + l + "%)";
+      $("hslRgb").textContent = c.map(Math.round).join(", ");
+      $("hslHex").textContent = toHex(c[0], c[1], c[2]);
+      cells.forEach(function(el, i){
+        var L = 10 + i*10, cc = hslToRgb(h, s, L);
+        el.style.background = css(cc[0], cc[1], cc[2]);
+        el.style.color = L > 55 ? "#111" : "#EEE";
+        el.textContent = L + "%";
+      });
+    }
+    ["hslH","hslS","hslL"].forEach(function(id){ $(id).addEventListener("input", upd); });
+    upd();
+  })();
+
+  // ---------- 21 : HSV picker ----------
+  (function(){
+    var h = 195, s = 46, v = 91;
+    var sv = $("pickSv"), hue = $("pickHue");
+    function upd(){
+      sv.style.background = css.apply(null, hsvToRgb(h, 100, 100));
+      $("pickDot").style.left = s + "%"; $("pickDot").style.top = (100 - v) + "%";
+      $("pickLine").style.top = (h / 360 * 100) + "%";
+      var c = hsvToRgb(h, s, v).map(Math.round), hsl = rgbToHsl(c[0], c[1], c[2]), cm = rgbToCmyk(c[0], c[1], c[2]);
+      $("pickSwatch").style.background = css(c[0], c[1], c[2]);
+      $("fHex").textContent = toHex(c[0], c[1], c[2]);
+      $("fRgb").textContent = c.join(", ");
+      $("fHsl").textContent = Math.round(hsl[0]) + "°, " + Math.round(hsl[1]) + " %, " + Math.round(hsl[2]) + " %";
+      $("fHsv").textContent = Math.round(h) + "°, " + Math.round(s) + " %, " + Math.round(v) + " %";
+      $("fCmyk").textContent = cm.map(Math.round).join(", ") + " %";
+    }
+    function drag(el, fn){
+      el.addEventListener("pointerdown", function(e){
+        el.setPointerCapture(e.pointerId); fn(e);
+        function mv(ev){ fn(ev); }
+        function up(){ el.removeEventListener("pointermove", mv); el.removeEventListener("pointerup", up); }
+        el.addEventListener("pointermove", mv); el.addEventListener("pointerup", up);
+      });
+    }
+    drag(sv, function(e){
+      var r = sv.getBoundingClientRect();
+      s = clamp((e.clientX - r.left) / r.width * 100, 0, 100);
+      v = clamp(100 - (e.clientY - r.top) / r.height * 100, 0, 100);
+      upd();
+    });
+    drag(hue, function(e){
+      var r = hue.getBoundingClientRect();
+      h = clamp((e.clientY - r.top) / r.height * 360, 0, 359.9);
+      upd();
+    });
+    upd();
+  })();
+
+  // ---------- 22 : harmonie ----------
+  (function(){
+    var mode = "mono", pal = $("harmPalette");
+    function sets(h){
+      switch (mode){
+        case "comp":  return [[h,70,30],[h,70,50],[h,60,85],[h+180,70,50],[h+180,70,70]];
+        case "anal":  return [[h-30,65,50],[h-15,65,55],[h,70,50],[h+15,65,55],[h+30,65,50]];
+        case "triad": return [[h,70,50],[h+120,70,50],[h+240,70,50],[h,30,90],[h,25,15]];
+        default:      return [[h,60,15],[h,60,35],[h,70,50],[h,70,70],[h,60,90]];
+      }
+    }
+    function upd(){
+      var h = +$("harmH").value;
+      pal.innerHTML = "";
+      sets(h).forEach(function(t){
+        var hh = ((t[0] % 360) + 360) % 360, c = hslToRgb(hh, t[1], t[2]);
+        var item = document.createElement("div"); item.className = "palette-item";
+        var sw = document.createElement("div"); sw.className = "palette-color"; sw.style.background = css(c[0], c[1], c[2]);
+        var code = document.createElement("div"); code.className = "palette-code"; code.textContent = toHex(c[0], c[1], c[2]);
+        item.appendChild(sw); item.appendChild(code); pal.appendChild(item);
+      });
+    }
+    var group = $("harmBtns");
+    group.addEventListener("click", function(e){
+      var b = e.target.closest(".calc-btn"); if (!b) return;
+      mode = b.dataset.h; setActive(group, b); upd();
+    });
+    $("harmH").addEventListener("input", upd); upd();
+  })();
+
+  // ---------- 23 : gama ----------
+  (function(){
+    var cv = $("gammaCanvas"), ctx = cv.getContext("2d"), W = cv.width, H = cv.height;
+    var a = [255, 0, 0], b = [0, 200, 0];
+    for (var x = 0; x < W; x++){
+      var t = x / (W-1);
+      var naive = a.map(function(v, k){ return v + (b[k]-v)*t; });
+      var lin = a.map(function(v, k){ return fromLin(toLin(v) + (toLin(b[k]) - toLin(v))*t); });
+      ctx.fillStyle = css(naive[0], naive[1], naive[2]); ctx.fillRect(x, 0, 1, H/2 - 2);
+      ctx.fillStyle = css(lin[0], lin[1], lin[2]); ctx.fillRect(x, H/2 + 2, 1, H/2 - 2);
+    }
+    function upd(){
+      var v = +$("gammaRange").value;
+      $("gammaSwatch").style.background = css(v, v, v);
+      $("gammaVal").textContent = v + " / 255 = " + Math.round(v/255*100) + " %";
+      $("gammaLin").textContent = cz(toLin(v)*100, 1) + " %";
+    }
+    $("gammaRange").addEventListener("input", upd); upd();
+  })();
+
+  // ---------- 24 : kontrast ----------
+  (function(){
+    function upd(){
+      var fg = parseHex($("ctFg").value), bg = parseHex($("ctBg").value);
+      var l1 = luminance(fg), l2 = luminance(bg);
+      var ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+      $("ctPreview").style.color = $("ctFg").value;
+      $("ctPreview").style.background = $("ctBg").value;
+      $("ctRatio").textContent = cz(ratio, 2) + " : 1";
+      [["ctAA", 4.5], ["ctAAlarge", 3], ["ctAAA", 7]].forEach(function(p){
+        var ok = ratio >= p[1];
+        $(p[0]).classList.toggle("is-ok", ok); $(p[0]).classList.toggle("is-bad", !ok);
+      });
+    }
+    $("ctFg").addEventListener("input", upd); $("ctBg").addEventListener("input", upd);
+    $("ctPresets").addEventListener("click", function(e){
+      var b = e.target.closest(".calc-btn"); if (!b) return;
+      $("ctFg").value = b.dataset.fg.toLowerCase(); $("ctBg").value = b.dataset.bg.toLowerCase(); upd();
+    });
+    upd();
+  })();
+
+  // ---------- 25 : YCbCr ----------
+  (function(){
+    var cv = $("ycbCanvas"), ctx = cv.getContext("2d"), W = cv.width, H = cv.height;
+    // nakreslí scénu
+    var sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, "#1E5AA8"); sky.addColorStop(0.6, "#F2A07B"); sky.addColorStop(1, "#F2C14E");
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#FFE14D"; ctx.beginPath(); ctx.arc(180, 62, 20, 0, 7); ctx.fill();
+    ctx.fillStyle = "#2E7D32"; ctx.beginPath(); ctx.moveTo(0, 105); ctx.quadraticCurveTo(70, 70, 140, 100); ctx.quadraticCurveTo(200, 120, 240, 95); ctx.lineTo(240, 140); ctx.lineTo(0, 140); ctx.fill();
+    ctx.fillStyle = "#C62828"; ctx.fillRect(40, 92, 46, 34);
+    ctx.fillStyle = "#4E342E"; ctx.beginPath(); ctx.moveTo(34, 94); ctx.lineTo(63, 72); ctx.lineTo(92, 94); ctx.fill();
+    ctx.fillStyle = "#BBDEFB"; ctx.fillRect(48, 100, 10, 10); ctx.fillRect(68, 100, 10, 10);
+    ctx.fillStyle = "#5D4037"; ctx.fillRect(150, 100, 6, 24);
+    ctx.fillStyle = "#43A047"; ctx.beginPath(); ctx.arc(153, 94, 14, 0, 7); ctx.fill();
+    ctx.fillStyle = "#FFFFFF"; ctx.font = "bold 22px 'Space Grotesk', sans-serif"; ctx.fillText("BARVA", 12, 30);
+    ctx.fillStyle = "#E040FB"; ctx.font = "bold 13px 'Space Grotesk', sans-serif"; ctx.fillText("drobný text 123", 12, 50);
+    var orig = ctx.getImageData(0, 0, W, H), N = W*H;
+    var Yc = new Float32Array(N), Cb = new Float32Array(N), Cr = new Float32Array(N);
+    for (var i = 0; i < N; i++){
+      var r = orig.data[i*4], g = orig.data[i*4+1], b = orig.data[i*4+2];
+      Yc[i] = 0.299*r + 0.587*g + 0.114*b;
+      Cb[i] = 128 - 0.168736*r - 0.331264*g + 0.5*b;
+      Cr[i] = 128 + 0.5*r - 0.418688*g - 0.081312*b;
+    }
+    function blocky(src, n){
+      var out = new Float32Array(N);
+      for (var by = 0; by < H; by += n) for (var bx = 0; bx < W; bx += n){
+        var sum = 0, cnt = 0, x, y;
+        for (y = by; y < Math.min(by+n, H); y++) for (x = bx; x < Math.min(bx+n, W); x++){ sum += src[y*W+x]; cnt++; }
+        for (y = by; y < Math.min(by+n, H); y++) for (x = bx; x < Math.min(bx+n, W); x++) out[y*W+x] = sum / cnt;
+      }
+      return out;
+    }
+    var CbLow = blocky(Cb, 4), CrLow = blocky(Cr, 4), YLow = blocky(Yc, 4);
+    var info = { orig: ["3", "0"], y: ["1", "67"], c: ["2", "33"], cLow: ["1,125", "63"], yLow: ["2,06", "31"] };
+    function render(mode){
+      var out = ctx.createImageData(W, H);
+      for (var i = 0; i < N; i++){
+        var y = Yc[i], cb = Cb[i], cr = Cr[i];
+        if (mode === "y"){ cb = 128; cr = 128; }
+        if (mode === "c"){ y = 128; }
+        if (mode === "cLow"){ cb = CbLow[i]; cr = CrLow[i]; }
+        if (mode === "yLow"){ y = YLow[i]; }
+        out.data[i*4]   = y + 1.402*(cr-128);
+        out.data[i*4+1] = y - 0.344136*(cb-128) - 0.714136*(cr-128);
+        out.data[i*4+2] = y + 1.772*(cb-128);
+        out.data[i*4+3] = 255;
+      }
+      if (mode === "orig") out = orig;
+      ctx.putImageData(out, 0, 0);
+      $("ycbBytes").textContent = info[mode][0];
+      $("ycbSave").textContent = info[mode][1] + " %";
+    }
+    var group = $("ycbBtns");
+    group.addEventListener("click", function(e){
+      var b = e.target.closest(".calc-btn"); if (!b) return;
+      setActive(group, b); render(b.dataset.m);
+    });
+    render("orig");
+  })();
+
+  // ---------- 27 : CSS ----------
+  (function(){
+    var input = $("cssIn"), sw = $("cssSwatch");
+    function upd(){
+      var v = input.value.trim();
+      var ok = !!v && window.CSS && CSS.supports("color", v);
+      input.classList.toggle("is-bad", !ok);
+      $("cssValid").textContent = ok ? "ano" : "ne";
+      if (!ok){ $("cssComputed").textContent = "–"; return; }
+      sw.style.background = v;
+      $("cssComputed").textContent = getComputedStyle(sw).backgroundColor;
+    }
+    input.addEventListener("input", upd);
+    $("cssPresets").addEventListener("click", function(e){
+      var b = e.target.closest(".calc-btn"); if (!b) return;
+      input.value = b.textContent; upd();
+    });
+    upd();
+  })();
+
+})();
+</script>
+</body>
+</html>

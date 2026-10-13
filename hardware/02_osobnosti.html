@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lidé za stroji</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Hardware a operační systémy · 2. materiál</div>
+      <h1>Lidé za stroji</h1>
+      <p class="lede">Počítač nevymyslel jeden člověk. Je to štafeta matematiků, inženýrů, programátorek a studentů, kteří stavěli na práci předchůdců.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Galerie</div>
+      <h2 class="slide-title">Kdo formoval svět IT</h2>
+      <div class="toolbar">
+        <div class="seg" id="filt"></div>
+        <span class="tags"><span class="tag k-teorie">teorie</span><span class="tag k-hw">hardware</span><span class="tag k-sw">software</span><span class="tag k-net">sítě</span></span>
+      </div>
+      <div class="ppl dense" id="ppl"></div>
+      <div class="split" id="pSplit">
+        <div class="panel p-tall" id="pPanel"></div>
+        <div id="pVideo"></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Časová osa</div>
+      <h2 class="slide-title">Kdo se mohl potkat?</h2>
+      <p class="lede">Každý pruh je jeden život. Klikni na osobnost a oranžově se zvýrazní ti, kdo žili ve stejné době.</p>
+      <svg class="chart fit" id="life" role="img" aria-label="Životy osobností na časové ose"></svg>
+      <div class="panel" id="lifePanel"></div>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">K zamyšlení</div>
+      <div class="qmark">?</div>
+      <h2>První program napsala žena. Proč o ženách v IT víme tak málo?</h2>
+      <p class="lede">Ada Lovelace, programátorky ENIACu, Grace Hopper, Margaret Hamilton. V 50. a 60. letech bylo programování považováno za „ženskou“ práci, prestižní byl hardware. Co se změnilo, když se software stal důležitější?</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Kdo to byl?</h2>
+      <p class="score" id="qScore"></p>
+      <div class="clue" id="qClue"></div>
+      <div class="opts4" id="qOpts"></div>
+      <div class="seg"><button class="calc-btn" id="qNext">Další →</button></div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li><b>Babbage</b> navrhl počítač o sto let dřív, než šel postavit. <b>Ada Lovelace</b> pro něj napsala první program.</li>
+        <li><b>Turing</b> popsal, co lze vůbec spočítat. <b>Shannon</b> spojil logiku s obvody a zavedl bit.</li>
+        <li><b>Von Neumann</b> popsal počítač, který má program i data v jedné paměti.</li>
+        <li>Tranzistor, integrovaný obvod a mikroprocesor zmenšily počítač na čip. <b>Moore</b> předpověděl tempo.</li>
+        <li><b>Grace Hopper</b>, <b>Ritchie a Thompson</b>, <b>Torvalds</b>: od kompilátoru přes Unix a C po Linux.</li>
+        <li><b>Antonín Svoboda</b> postavil první československý počítač.</li>
+      </ul>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud informace a videa jsou</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Videa</h3><ul class="src-list">
+          <li><a href="https://www.youtube.com/watch?v=9eyFDBPk4Yw" target="_blank" rel="noopener">Grace Hopper vysvětluje nanosekundu</a></li>
+          <li><a href="https://www.youtube.com/watch?v=4sKY6_nBLG0" target="_blank" rel="noopener">Margaret Hamilton vypráví</a></li>
+          <li><a href="https://www.youtube.com/watch?v=yJDv-zdhzMY" target="_blank" rel="noopener">The Mother of All Demos, 1968</a></li>
+          <li><a href="https://www.youtube.com/watch?v=MnrJzXM7a6o" target="_blank" rel="noopener">Jobs představuje iPhone, 2007</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Fakta</h3><ul class="src-list">
+          <li><a href="https://www.computerhistory.org/timeline/" target="_blank" rel="noopener">Computer History Museum: Timeline of Computer History</a></li>
+          <li><a href="https://ethw.org" target="_blank" rel="noopener">Engineering and Technology History Wiki</a></li>
+          <li><a href="https://historyofinformation.com/detail.php?id=870" target="_blank" rel="noopener">History of Information: Engelbart 1968</a></li>
+          <li><a href="https://cs.wikipedia.org/wiki/EPOS_1" target="_blank" rel="noopener">Wikipedie: EPOS 1 (Antonín Svoboda)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Ada_Lovelace" target="_blank" rel="noopener">Wikipedia: Ada Lovelace</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Alan_Turing" target="_blank" rel="noopener">Wikipedia: Alan Turing</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Grace_Hopper" target="_blank" rel="noopener">Wikipedia: Grace Hopper</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/List_of_pioneers_in_computer_science" target="_blank" rel="noopener">Wikipedia: List of pioneers in computer science</a></li>
+        </ul></div>
+      </div>
+      <p class="note">Videa jsou na YouTube, práva patří jejich autorům. Stav k říjnu 2026.</p>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  function mountVideo(box){
+    var id=box.dataset.yt;
+    box.innerHTML='<button class="vid-btn" aria-label="Přehrát video: '+esc(box.dataset.title)+'"><img class="vid-thumb" alt="" loading="lazy" src="https://i.ytimg.com/vi/'+id+'/hqdefault.jpg"><span class="vid-play">▶</span></button>'+
+      '<div class="vid-meta"><span><span class="vid-title">'+esc(box.dataset.title)+'</span><br><span class="vid-sub">'+esc(box.dataset.sub)+'</span></span>'+
+      '<a class="vid-link" href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener">otevřít na YouTube ↗</a></div>';
+    box.querySelector(".vid-btn").addEventListener("click",function(){
+      var f=document.createElement("iframe");f.className="vid-frame";f.title=box.dataset.title;
+      f.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&rel=0";
+      f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";f.allowFullscreen=true;f.referrerPolicy="strict-origin-when-cross-origin";
+      this.replaceWith(f);
+    });
+  }
+  function mountAll(root){Array.prototype.forEach.call(root.querySelectorAll(".vid[data-yt]"),mountVideo);}
+
+  /* ---------- navigace ---------- */
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    if(slides[current].querySelector("iframe"))mountAll(slides[current]);
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+
+  /* ---------- data ---------- */
+  var K={teorie:"teorie",hw:"hardware",sw:"software",net:"sítě"};
+  var P=[
+    {n:"Charles Babbage",s:"Babbage",b:1791,e:1871,k:"hw",what:"Navrhl první univerzální počítač",
+     d:"Navrhl diferenční stroj na výpočet tabulek a potom analytický stroj (1837). Ten měl všechny části dnešního počítače: mlýn (procesor), sklad (paměť), vstup z děrných štítků a tiskový výstup. Postavit ho tehdejší mechanika nedokázala.",
+     f:"Londýnské Science Museum postavilo v roce 1991 podle jeho plánů diferenční stroj. Funguje a počítá přesně.",
+     c:"Navrhl stroj s „mlýnem“ a „skladem“ o sto let dřív, než šel postavit."},
+    {n:"Ada Lovelace",s:"Lovelace",b:1815,e:1852,k:"sw",what:"Napsala první program",
+     d:"V roce 1843 přeložila článek o analytickém stroji a připsala k němu poznámky třikrát delší než originál. V nich je postup výpočtu Bernoulliho čísel, který se považuje za první počítačový program. Předpověděla, že stroj by mohl zpracovávat i hudbu nebo obrázky, ne jen čísla.",
+     f:"Byla dcerou básníka lorda Byrona. Po ní je pojmenovaný programovací jazyk Ada.",
+     c:"Dcera slavného básníka, autorka prvního programu pro stroj, který nikdy nevznikl."},
+    {n:"Herman Hollerith",s:"Hollerith",b:1860,e:1929,k:"hw",what:"Děrné štítky pro sčítání lidu",
+     d:"Pro sčítání lidu v USA v roce 1890 sestrojil stroj, který četl děrné štítky elektricky. Zpracování zrychlil z let na měsíce. Děrný štítek se díky němu stal standardem na dalších osmdesát let.",
+     f:"Jeho firma se po sloučení s dalšími přejmenovala v roce 1924 na International Business Machines, tedy IBM.",
+     c:"Jeho stroj zpracoval sčítání lidu v USA a jeho firma se později jmenovala IBM."},
+    {n:"Alan Turing",s:"Turing",b:1912,e:1954,k:"teorie",what:"Turingův stroj a lámání Enigmy",
+     d:"V roce 1936 popsal Turingův stroj, jednoduchý myšlenkový model, který dokáže vypočítat cokoli, co vůbec spočítat lze. Za války v Bletchley Parku pomáhal lámat německou šifru Enigma. V roce 1950 navrhl test, jestli stroj umí myslet.",
+     f:"Nejvyšší ocenění v informatice se jmenuje Turingova cena. Říká se jí Nobelova cena informatiky.",
+     c:"Popsal myšlenkový stroj s nekonečnou páskou a za války lámal Enigmu."},
+    {n:"Konrad Zuse",s:"Zuse",b:1910,e:1995,k:"hw",what:"Z3, první funkční programovatelný počítač",
+     d:"V Berlíně v roce 1941 dokončil Z3, první funkční plně automatický programovatelný počítač. Byl reléový a počítal ve dvojkové soustavě. Navrhl také jeden z prvních vyšších programovacích jazyků, Plankalkül.",
+     f:"Původní Z3 zničilo bombardování v roce 1943. Repliku najdeš v Deutsches Museum v Mnichově.",
+     c:"Postavil reléový počítač ve dvojkové soustavě v Berlíně za války."},
+    {n:"John von Neumann",s:"von Neumann",b:1903,e:1957,k:"teorie",what:"Program uložený v paměti",
+     d:"V roce 1945 sepsal zprávu o počítači EDVAC. Popsal v ní stroj, který má program i data uložené ve stejné paměti. Tomuto uspořádání říkáme von Neumannova architektura a staví na ní téměř každý počítač. Zabýval se i teorií her a kvantovou mechanikou.",
+     f:"Zpráva byla pracovní návrh, na kterém se podíleli i Eckert a Mauchly, autoři ENIACu. Kolovala ale jen s jeho jménem, a tak architektura nese jeho jméno.",
+     c:"Rodák z Budapešti, po kterém se jmenuje architektura s programem i daty v jedné paměti."},
+    {n:"Claude Shannon",s:"Shannon",b:1916,e:2001,k:"teorie",what:"Logické obvody a teorie informace",
+     d:"Ve své diplomové práci (1937) ukázal, že Booleovu algebru jde postavit z elektrických spínačů. Tím vznikly logické obvody. V roce 1948 založil teorii informace: jak informaci měřit, kódovat a přenášet.",
+     f:"Slovo bit poprvé použil v tisku on. Vymyslel ho jeho kolega John Tukey.",
+     c:"Zakladatel teorie informace, poprvé napsal v článku slovo bit."},
+    {n:"Grace Hopper",s:"Hopper",b:1906,e:1992,k:"sw",what:"První kompilátor",
+     d:"Napsala jeden z prvních kompilátorů, A-0 (1952). Prosazovala, aby se programy psaly slovy podobnými angličtině a ne čísly. Z jejích myšlenek vychází jazyk COBOL, který v bankách běží dodnes.",
+     f:"V deníku počítače Harvard Mark II z roku 1947 je nalepená můra s poznámkou „first actual case of bug being found“. Hopper ten příběh ráda vyprávěla.",
+     c:"Admirálka amerického námořnictva, která napsala jeden z prvních kompilátorů.",v:{id:"9eyFDBPk4Yw",t:"Grace Hopper vysvětluje nanosekundu",s:"ukázka s drátem · anglicky"}},
+    {n:"Antonín Svoboda",s:"Svoboda",b:1907,e:1980,k:"hw",what:"První československý počítač",
+     d:"Jeho tým postavil SAPO (v provozu od 1957), první československý počítač. Měl tři aritmetické jednotky, které o výsledku hlasovaly. Tím se bránil chybám, což bylo ve světě unikátní. Navázal počítačem EPOS.",
+     f:"Za války vyvíjel ve Francii a v USA zaměřovače protiletadlových děl. V roce 1964 emigroval a učil na univerzitě UCLA.",
+     c:"Český průkopník, jehož počítač měl tři počítací jednotky, které o výsledku hlasovaly."},
+    {n:"Bardeen, Brattain, Shockley",s:"Bardeen",b:1908,e:1991,k:"hw",what:"Tranzistor (1947)",
+     d:"V Bellových laboratořích sestrojili v prosinci 1947 první tranzistor. Nahradil elektronky a umožnil počítače, rádia i telefony, jak je známe. V roce 1956 za něj dostali Nobelovu cenu.",
+     f:"John Bardeen je jediný člověk, který dostal Nobelovu cenu za fyziku dvakrát.",
+     c:"Trojice z Bellových laboratoří, která v roce 1947 sestrojila součástku nahrazující elektronky."},
+    {n:"Jack Kilby",s:"Kilby",b:1923,e:2005,k:"hw",what:"Integrovaný obvod",
+     d:"V roce 1958 ve firmě Texas Instruments vyrobil první integrovaný obvod: několik součástek na jediném kousku polovodiče. Nezávisle na něm přišel Robert Noyce s křemíkovou verzí.",
+     f:"Nobelovu cenu za fyziku dostal až v roce 2000, 42 let po vynálezu.",
+     c:"V létě 1958, kdy kolegové byli na dovolené, postavil první integrovaný obvod."},
+    {n:"Robert Noyce",s:"Noyce",b:1927,e:1990,k:"hw",what:"Křemíkový čip a Intel",
+     d:"V roce 1959 vymyslel integrovaný obvod na křemíku, který šel vyrábět hromadně. Spoluzaložil firmy Fairchild Semiconductor a v roce 1968 Intel.",
+     f:"Přezdívalo se mu „starosta Silicon Valley“.",
+     c:"Spoluzakladatel Intelu, kterému říkali starosta Silicon Valley."},
+    {n:"Gordon Moore",s:"Moore",b:1929,e:2023,k:"hw",what:"Moorův zákon",
+     d:"V roce 1965 si všiml, že počet součástek na čipu roste exponenciálně. Odhad, že se zhruba každé dva roky zdvojnásobí, platil přes padesát let a řídil plány celého odvětví. S Noycem založil Intel.",
+     f:"Moorův zákon není přírodní zákon. Výrobci se ho drželi i proto, že ho brali jako plán.",
+     c:"Předpověděl, že počet tranzistorů na čipu se bude pravidelně zdvojnásobovat."},
+    {n:"Federico Faggin",s:"Faggin",b:1941,e:null,k:"hw",what:"Intel 4004, první mikroprocesor",
+     d:"Vedl návrh čipu Intel 4004 (1971), prvního mikroprocesoru, spolu s Tedem Hoffem, Stanem Mazorem a Masatoshi Shimou. Poté založil firmu Zilog a jejich procesor Z80 poháněl domácí počítače 80. let.",
+     f:"Na čip 4004 vyryl své iniciály FF.",
+     c:"Ital, který vedl návrh prvního mikroprocesoru a vyryl na něj své iniciály."},
+    {n:"Douglas Engelbart",s:"Engelbart",b:1925,e:2013,k:"sw",what:"Myš a „matka všech ukázek“",
+     d:"Vynalezl počítačovou myš. V roce 1968 na jediné ukázce předvedl okna, odkazy v textu, společnou úpravu dokumentu na dálku i videohovor. Chtěl, aby počítač rozšiřoval lidské schopnosti.",
+     f:"První myš byla dřevěná krabička se dvěma kolečky.",
+     c:"Vynálezce myši, který v roce 1968 předvedl budoucnost na jediné prezentaci.",v:{id:"yJDv-zdhzMY",t:"The Mother of All Demos",s:"1968 · anglicky"}},
+    {n:"Margaret Hamilton",s:"Hamilton",b:1936,e:null,k:"sw",what:"Software pro let na Měsíc",
+     d:"Vedla tým, který napsal řídicí software pro program Apollo. Software při přistání Apolla 11 zvládl přetížení počítače tím, že dal přednost nejdůležitějším úlohám. Zavedla pojem softwarové inženýrství.",
+     f:"Na slavné fotce stojí vedle vytištěného kódu, který je stejně vysoký jako ona.",
+     c:"Stojí na fotce vedle komínku vytištěného kódu pro let na Měsíc.",v:{id:"4sKY6_nBLG0",t:"Margaret Hamilton vypráví",s:"software pro Apollo · anglicky"}},
+    {n:"Ritchie a Thompson",s:"Ritchie",b:1941,e:2011,k:"sw",what:"Unix a jazyk C",
+     d:"Ken Thompson a Dennis Ritchie vytvořili v Bellových laboratořích operační systém Unix (1969) a jazyk C (1972). Z Unixu vychází Linux, macOS, iOS i Android. Jazyk C je dodnes základ operačních systémů.",
+     f:"Unix vznikl částečně proto, aby si Thompson mohl na starém počítači hrát vlastní hru Space Travel.",
+     c:"Dvojice z Bellových laboratoří, autoři Unixu a jazyka C."},
+    {n:"Cerf a Kahn",s:"Cerf",b:1943,e:null,k:"net",what:"TCP/IP, základ internetu",
+     d:"Vint Cerf a Bob Kahn navrhli v roce 1974 protokoly TCP/IP, pravidla, podle kterých si počítače v různých sítích posílají data. 1. ledna 1983 na ně přešla síť ARPANET, a to se považuje za zrod internetu.",
+     f:"Vint Cerf je nedoslýchavý. I proto se zajímal o e-mail, protože mu usnadňoval komunikaci.",
+     c:"Dvojice, která navrhla pravidla, podle kterých spolu mluví sítě. Říká se jim otcové internetu."},
+    {n:"Bill Gates",s:"Gates",b:1955,e:null,k:"sw",what:"Microsoft, MS-DOS a Windows",
+     d:"S Paulem Allenem založil v roce 1975 Microsoft. Jejich systém MS-DOS běžel na IBM PC a z Windows se stal nejrozšířenější systém na osobních počítačích.",
+     f:"Microsoft si nechal licencovat MS-DOS pro všechny výrobce, ne jen pro IBM. To rozhodnutí z něj udělalo obra.",
+     c:"Zakladatel firmy, jejíž systém běžel na IBM PC a později pod jménem Windows."},
+    {n:"Jobs a Wozniak",s:"Jobs",b:1955,e:2011,k:"hw",what:"Apple",
+     d:"V roce 1976 založili Apple. Wozniak sám navrhl počítače Apple I a Apple II. Jobs prosadil Macintosh s grafickým rozhraním (1984) a později iPod, iPhone a iPad.",
+     f:"První počítače Apple se skládaly v garáži Jobsových rodičů.",
+     c:"Dva Stevové, garáž a počítač Apple II.",v:{id:"MnrJzXM7a6o",t:"Jobs představuje iPhone",s:"2007 · anglicky"}},
+    {n:"Tim Berners-Lee",s:"Berners-Lee",b:1955,e:null,k:"net",what:"World Wide Web",
+     d:"V CERNu v roce 1989 navrhl systém propojených dokumentů a do roku 1991 vytvořil HTML, HTTP, adresy URL, první prohlížeč a první server. Web dal světu zdarma, bez patentu.",
+     f:"První webová stránka na světě běží na původní adrese v CERNu dodnes.",
+     c:"Vymyslel HTML, HTTP a URL a nenechal si je patentovat."},
+    {n:"Linus Torvalds",s:"Torvalds",b:1969,e:null,k:"sw",what:"Linux a Git",
+     d:"Jako student v Helsinkách napsal v roce 1991 jádro operačního systému Linux a zveřejnil ho zdarma. Dnes běží na většině serverů, superpočítačů a v každém Androidu. V roce 2005 napsal Git.",
+     f:"V prvním oznámení napsal, že jde „jen o koníček, nic velkého a profesionálního“.",
+     c:"Finský student, který svůj „koníček“ zveřejnil zdarma. Dnes běží na většině serverů světa."}
+  ];
+  function ini(n){var w=n.replace(/ a /g," ").split(/[ ,-]+/).filter(Boolean);return (w[0][0]+(w.length>1?w[w.length-1][0]:"")).toUpperCase();}
+  function years(p){return p.e?p.b+"–"+p.e:"nar. "+p.b;}
+
+  /* ---------- 1: galerie ---------- */
+  var filters=[["vse","Vše"],["teorie","Teorie"],["hw","Hardware"],["sw","Software"],["net","Sítě"]];
+  var fAct="vse",pAct=0,cards=[];
+  function showPerson(p,measure){
+    $("pPanel").innerHTML='<div class="tags"><span class="tag k-'+p.k+'">'+K[p.k]+'</span><span class="meta">'+years(p)+'</span></div><h3>'+p.n+': '+p.what+'</h3><p>'+p.d+'</p><p class="fun">'+p.f+'</p>';
+    if(!measure){
+      if(p.v){$("pVideo").innerHTML='<div class="vid" data-yt="'+p.v.id+'" data-title="'+esc(p.v.t)+'" data-sub="'+esc(p.v.s)+'"></div>';mountAll($("pVideo"));}
+      else $("pVideo").innerHTML="";
+      $("pSplit").classList.toggle("solo",!p.v);
+    }
+  }
+  P.forEach(function(p,i){
+    var b=el("button","person",'<span class="ini k-'+p.k+'">'+ini(p.n)+'</span><span class="nm">'+p.n+'<span class="yr">'+years(p)+'</span></span>');
+    b.addEventListener("click",function(){pAct=i;cards.forEach(function(c,j){c.classList.toggle("is-active",j===i);});showPerson(p);});
+    $("ppl").appendChild(b);cards.push(b);
+  });
+  filters.forEach(function(f){
+    var b=el("button","calc-btn"+(f[0]==="vse"?" is-active":""),f[1]);
+    b.addEventListener("click",function(){
+      fAct=f[0];Array.prototype.forEach.call($("filt").children,function(x){x.classList.toggle("is-active",x===b);});
+      cards.forEach(function(c,i){c.hidden=!(fAct==="vse"||P[i].k===fAct);});
+    });
+    $("filt").appendChild(b);
+  });
+  cards[0].classList.add("is-active");showPerson(P[0]);
+  fits.push({slide:$("ppl").closest(".slide"),fn:function(){var p=$("pPanel");p.style.minHeight="0px";var m=0;P.forEach(function(x){showPerson(x,true);m=Math.max(m,p.offsetHeight);});p.style.minHeight=m+"px";showPerson(P[pAct],true);}});
+
+  /* ---------- 2: životy ---------- */
+  var NOW=2026,X0=110,X1=740,Y0=26,RH=17,ymin=1780,ymax=2030;
+  var NS="http://www.w3.org/2000/svg";
+  function sv(tag,a,t){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e;}
+  function lx(y){return X0+(y-ymin)/(ymax-ymin)*(X1-X0);}
+  var L=P.slice().sort(function(a,b){return a.b-b.b;});
+  var svg=$("life"),H=Y0+L.length*RH+10;
+  svg.setAttribute("viewBox","0 0 760 "+H);
+  for(var y=1800;y<=2020;y+=20){
+    svg.appendChild(sv("line",{"class":"ch-grid",x1:lx(y),x2:lx(y),y1:Y0-6,y2:H-6}));
+    svg.appendChild(sv("text",{"class":"ch-axis",x:lx(y),y:14,"text-anchor":"middle"},y));
+  }
+  svg.appendChild(sv("line",{"class":"ch-now",x1:lx(NOW),x2:lx(NOW),y1:Y0-6,y2:H-6}));
+  var bars=[],names=[];
+  L.forEach(function(p,i){
+    var yy=Y0+i*RH,end=p.e||NOW;
+    var r=sv("rect",{"class":"ch-bar",x:lx(p.b),y:yy,width:Math.max(2,lx(end)-lx(p.b)),height:RH-5,rx:3,tabindex:0,role:"button","aria-label":p.n});
+    var t=sv("text",{"class":"ch-name",x:X0-8,y:yy+RH-7,"text-anchor":"end"},p.s);
+    r.addEventListener("click",function(){lifeSel(i);});
+    r.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();lifeSel(i);}});
+    svg.appendChild(r);svg.appendChild(t);bars.push(r);names.push(t);
+  });
+  function lifeSel(i){
+    var a=L[i],ae=a.e||NOW,over=[];
+    L.forEach(function(p,j){
+      var pe=p.e||NOW,ov=j!==i&&p.b<=ae&&a.b<=pe;
+      bars[j].setAttribute("class","ch-bar"+(j===i?" is-active":ov?" is-over":" is-dim"));
+      names[j].setAttribute("class","ch-name"+(j===i||ov?"":" is-dim"));
+      if(ov)over.push(p.s);
+    });
+    $("lifePanel").innerHTML='<span class="meta">'+years(a)+'</span><h3>'+a.n+'</h3><p>'+(over.length?"Ve stejné době žili: <b>"+over.join(", ")+"</b>.":"S nikým z galerie se jeho život nepřekrývá.")+'</p>';
+  }
+  lifeSel(0);
+
+  /* ---------- 4: kvíz ---------- */
+  var qN=8,qI=0,qOk=0,order=[],answered=false;
+  function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function qStart(){order=shuffle(P.map(function(_,i){return i;})).slice(0,qN);qI=0;qOk=0;qRender();}
+  function qRender(){
+    answered=false;var p=P[order[qI]];
+    $("qScore").textContent="Otázka "+(qI+1)+" z "+qN+" · správně "+qOk;
+    $("qClue").innerHTML=p.c;
+    var opts=[order[qI]],pool=shuffle(P.map(function(_,i){return i;}).filter(function(i){return i!==order[qI];}));
+    opts=shuffle(opts.concat(pool.slice(0,3)));
+    $("qOpts").innerHTML="";
+    opts.forEach(function(i){
+      var b=el("button","calc-btn",P[i].n);
+      b.addEventListener("click",function(){
+        if(answered)return;answered=true;
+        var ok=i===order[qI];if(ok)qOk++;
+        Array.prototype.forEach.call($("qOpts").children,function(x,k){if(opts[k]===order[qI])x.classList.add("is-right");});
+        if(!ok)b.classList.add("is-wrong");
+        $("qScore").textContent="Otázka "+(qI+1)+" z "+qN+" · správně "+qOk;
+        $("qNext").hidden=false;
+      });
+      $("qOpts").appendChild(b);
+    });
+    $("qNext").hidden=true;$("qNext").textContent=qI===qN-1?"Výsledek":"Další →";
+  }
+  $("qNext").addEventListener("click",function(){
+    if(qI===qN-1){
+      $("qClue").innerHTML="<b>Výsledek: "+qOk+" z "+qN+".</b> "+(qOk>=6?"Výborně, tyhle lidi znáš.":"Projdi si ještě galerii a zkus to znovu.");
+      $("qOpts").innerHTML="";$("qNext").textContent="Znovu";qI=-1;return;
+    }
+    if(qI===-1){qStart();return;}
+    qI++;qRender();
+  });
+  qStart();
+
+  goTo(0);
+})();
+</script>
+</body>
+</html>

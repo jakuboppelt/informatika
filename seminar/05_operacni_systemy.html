@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operační systémy – maturitní otázka</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Úvod</li>
+    <li><a href="#co-je">Co je operační systém</a></li>
+    <li><a href="#funkce">Úkoly OS</a></li>
+    <li class="grp">Jak OS funguje</li>
+    <li><a href="#jadro">Jádro a systémová volání</a></li>
+    <li><a href="#start">Spuštění počítače</a></li>
+    <li><a href="#procesy">Procesy a vlákna</a></li>
+    <li><a href="#planovani">Plánování procesů</a></li>
+    <li><a href="#pamet">Správa paměti</a></li>
+    <li><a href="#soubory">Souborové systémy</a></li>
+    <li><a href="#prava">Uživatelé a práva</a></li>
+    <li><a href="#ovladace">Ovladače a zařízení</a></li>
+    <li><a href="#rozhrani">GUI a příkazová řádka</a></li>
+    <li><a href="#typy">Typy operačních systémů</a></li>
+    <li class="grp">Systémy a historie</li>
+    <li><a href="#historie">Historie</a></li>
+    <li><a href="#windows">Windows</a></li>
+    <li><a href="#macos">macOS</a></li>
+    <li><a href="#linux">Linux a distribuce</a></li>
+    <li><a href="#mobilni">Android a iOS</a></li>
+    <li><a href="#virtualizace">Virtualizace</a></li>
+    <li><a href="#omyly">Časté omyly</a></li>
+    <li class="grp">K maturitě</li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Maturitní otázka č. 5 · Studijní text</p>
+  <h1>Operační systémy <span class="t">kernel</span></h1>
+  <p class="lead">Co operační systém dělá, jak spravuje procesor, paměť a soubory, jak se spouští počítač a jak se vyvíjely Windows, macOS, Linux, Android a iOS. Malá čísla u textu odkazují na zdroje na konci.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>definovat operační systém a jeho úkoly</li>
+      <li>vysvětlit jádro, režim jádra a systémové volání</li>
+      <li>popsat, co se děje po zapnutí počítače</li>
+      <li>rozlišit program, proces a vlákno</li>
+      <li>nakreslit stavy procesu a vysvětlit plánování</li>
+      <li>vysvětlit virtuální paměť a stránkování</li>
+      <li>porovnat souborové systémy a popsat práva souborů</li>
+      <li>roztřídit operační systémy podle typů</li>
+      <li>popsat vývoj Windows, macOS, Linuxu a mobilních OS</li>
+      <li>vysvětlit rozdíl mezi jádrem Linuxu a distribucí</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Úvod</p>
+
+<section id="co-je">
+<h2>Co je operační systém</h2>
+<p><dfn>Operační systém</dfn> (OS) je základní software, který řídí hardware počítače a poskytuje služby ostatním programům a uživateli. Programy se nemusí starat o to, jaký disk nebo síťovou kartu počítač má, ani o to, že vedle nich běží desítky dalších programů. To všechno za ně řeší operační systém.</p>
+<div class="stackos" aria-label="Vrstvy počítače">
+  <div class="s-user"><b>Uživatel</b><span>klávesnice, myš, dotyk</span></div>
+  <div class="s-app"><b>Aplikace</b><span>prohlížeč, hra, textový editor</span></div>
+  <div class="s-sys"><b>Systémové knihovny a programy</b><span>grafické prostředí, shell, služby</span></div>
+  <div class="s-line">— hranice: systémová volání —</div>
+  <div class="s-kern"><b>Jádro operačního systému</b><span>procesy, paměť, soubory, ovladače</span></div>
+  <div class="s-hw"><b>Hardware</b><span>procesor, RAM, disky, síť, periferie</span></div>
+</div>
+<p>Navazuje to na von Neumannovu architekturu: hardware umí jen provádět instrukce z paměti. Teprve operační systém rozhodne, který program dostane procesor, kam do paměti se nahraje a jak se dostane k disku.</p>
+<p>Operační systém v užším smyslu je jen <dfn>jádro</dfn> (kernel). V širším smyslu k němu patří i systémové knihovny, grafické prostředí a základní programy. Když se řekne „Windows“ nebo „Android“, myslí se obvykle celý balík.</p>
+</section>
+
+<section id="funkce">
+<h2>Úkoly operačního systému</h2>
+<ol>
+  <li><strong>Abstrakce hardwaru.</strong> Program nepracuje s konkrétním diskem, ale se <em>souborem</em>. Nepracuje s fyzickou pamětí, ale se svým <em>virtuálním adresním prostorem</em>. Nepracuje s procesorem, ale je <em>procesem</em>, který se tváří, že má procesor jen pro sebe.</li>
+  <li><strong>Správa prostředků.</strong> Přiděluje a odebírá procesorový čas, paměť, místo na disku a přístup k zařízením tak, aby se programy dělily spravedlivě a efektivně.</li>
+  <li><strong>Ochrana a izolace.</strong> Jeden program nesmí číst ani přepsat paměť jiného programu nebo samotného systému. Uživatel nesmí číst soubory jiného uživatele bez oprávnění.</li>
+  <li><strong>Rozhraní.</strong> Pro uživatele grafické prostředí nebo příkazová řádka, pro programy <dfn>API</dfn> a systémová volání.</li>
+</ol>
+<div class="note mat"><b class="lbl">K maturitě</b><p>Nestačí říct „OS je prostředník mezi uživatelem a hardwarem“. Uveď konkrétní úkoly: plánování procesů, správa paměti, souborový systém, ovladače, ochrana, uživatelské rozhraní.</p></div>
+</section>
+
+<p class="part">Jak OS funguje</p>
+
+<section id="jadro">
+<h2>Jádro, režim jádra a systémová volání</h2>
+<p>Procesor rozlišuje dva režimy. V <dfn>uživatelském režimu</dfn> běží aplikace a mají omezené možnosti: nesmí přímo pracovat s diskem, sítí ani paměťí jiných programů. V <dfn>režimu jádra</dfn> běží jádro OS a smí vše.<sup class="ref"><a href="#z1">1</a></sup></p>
+<p>Když program potřebuje něco, co sám nesmí, například přečíst soubor, požádá jádro <dfn>systémovým voláním</dfn> (system call):</p>
+<ol>
+  <li>Program zavolá funkci knihovny, například <code>open("rozvrh.txt")</code>.</li>
+  <li>Knihovna provede speciální instrukci <strong>trap</strong>. Procesor přepne do režimu jádra a skočí na předem připravenou obsluhu v jádře. Program si tedy nemůže vybrat, kam v jádře skočí.</li>
+  <li>Jádro ověří oprávnění, přečte data z disku přes ovladač a připraví výsledek.</li>
+  <li>Instrukce <strong>návratu z trapu</strong> přepne procesor zpět do uživatelského režimu a program pokračuje.<sup class="ref"><a href="#z1">1</a></sup></li>
+</ol>
+<p>Jak jádro získá procesor zpět od programu, který se zacyklí? Pomocí <dfn>přerušení časovače</dfn>: hardwarový časovač každých několik milisekund přeruší běžící program a předá řízení jádru. Jádro pak může spustit jiný proces.<sup class="ref"><a href="#z1">1</a></sup></p>
+<h3>Typy jader</h3>
+<div class="tbl"><table>
+<thead><tr><th>Typ</th><th>Princip</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td><strong>Monolitické</strong></td><td>celý OS (ovladače, souborové systémy, síť) běží v režimu jádra. Rychlé, ale chyba ovladače může shodit celý systém.</td><td>Linux, s moduly, které lze za běhu nahrát a odebrat<sup class="ref"><a href="#z6">6</a></sup></td></tr>
+<tr><td><strong>Mikrojádro</strong></td><td>v jádře jen nejnutnější (procesy, paměť, zprávy), ostatní služby běží jako běžné procesy. Odolnější, ale režie komunikace.</td><td>Mach, MINIX 3</td></tr>
+<tr><td><strong>Hybridní</strong></td><td>struktura mikrojádra, ale většina služeb kvůli rychlosti stejně v jádře</td><td>Windows NT, XNU (macOS, iOS)<sup class="ref"><a href="#z7">7</a></sup></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="start">
+<h2>Spuštění počítače</h2>
+<ol class="plan">
+  <li><b>Firmware UEFI</b> (dříve BIOS) na základní desce otestuje hardware (POST) a najde disk se zavaděčem.</li>
+  <li><b>Zavaděč</b> (bootloader, např. GRUB u Linuxu nebo Windows Boot Manager) nahraje jádro do paměti a spustí ho. Při více systémech nabídne výběr.</li>
+  <li><b>Jádro</b> inicializuje procesor, paměť a ovladače zařízení a připojí kořenový souborový systém.</li>
+  <li><b>První proces</b> spustí systémové služby. U téměř všech dnešních distribucí Linuxu je to <code>systemd</code> s číslem procesu 1, ze kterého vychází strom všech dalších procesů.<sup class="ref"><a href="#z28">28</a></sup></li>
+  <li><b>Přihlášení</b> uživatele a spuštění grafického prostředí.</li>
+</ol>
+</section>
+
+<section id="procesy">
+<h2>Procesy a vlákna</h2>
+<p><dfn>Program</dfn> je soubor s instrukcemi na disku. <dfn>Proces</dfn> je běžící program: jeho kód a data v paměti, obsah registrů včetně čítače instrukcí, otevřené soubory.<sup class="ref"><a href="#z2">2</a></sup> Jeden program může běžet jako více procesů (třeba dvě okna editoru). Každý proces má číslo <dfn>PID</dfn>.</p>
+<p><dfn>Vlákno</dfn> (thread) je samostatný tok výpočtu uvnitř procesu. Vlákna jednoho procesu sdílejí paměť, takže spolu snadno komunikují, ale musí si dávat pozor, aby si data navzájem nepřepisovala. Prohlížeč například vykresluje stránku jedním vláknem a stahuje obrázky jinými.</p>
+<h3>Stavy procesu</h3>
+<svg class="states" viewBox="0 0 640 230" role="img" aria-label="Stavy procesu: připravený, běžící, čekající">
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="st-head" d="M0 0 L10 5 L0 10 z"/></marker></defs>
+  <rect class="st-box" x="30" y="70" width="150" height="56" rx="12"/><text class="st-t" x="105" y="104" text-anchor="middle">Připravený</text>
+  <rect class="st-box run" x="460" y="70" width="150" height="56" rx="12"/><text class="st-t" x="535" y="104" text-anchor="middle">Běžící</text>
+  <rect class="st-box" x="245" y="160" width="150" height="56" rx="12"/><text class="st-t" x="320" y="194" text-anchor="middle">Čekající</text>
+  <path class="st-a" marker-end="url(#ah)" d="M180 84 H460"/><text class="st-l" x="320" y="76" text-anchor="middle">plánovač mu přidělí procesor</text>
+  <path class="st-a" marker-end="url(#ah)" d="M460 112 H180"/><text class="st-l" x="320" y="128" text-anchor="middle">vypršel čas, plánovač ho odebere</text>
+  <path class="st-a" marker-end="url(#ah)" d="M535 126 V188 H395"/><text class="st-l" x="525" y="150" text-anchor="end">čeká na disk, síť…</text>
+  <path class="st-a" marker-end="url(#ah)" d="M245 188 H105 V126"/><text class="st-l" x="115" y="150">vstup/výstup hotov</text>
+  <text class="st-l" x="30" y="40">nový → připravený · běžící → ukončený</text>
+</svg>
+<p class="small-muted">Podle OSTEP.<sup class="ref"><a href="#z2">2</a></sup> Na jednom jádře může v jednu chvíli běžet jen jeden proces, ostatní čekají ve frontě připravených.</p>
+<h3>Multitasking</h3>
+<p>Dojem, že běží mnoho programů najednou, vzniká rychlým střídáním procesů na procesoru. Přepnutí z jednoho procesu na druhý se nazývá <dfn>přepnutí kontextu</dfn>: jádro uloží registry jednoho procesu a obnoví registry druhého.<sup class="ref"><a href="#z1">1</a></sup></p>
+<ul>
+  <li><strong>Kooperativní multitasking</strong>: program musí procesor sám dobrovolně uvolnit. Jeden zaseknutý program zastaví celý systém. Takto fungovaly hlavně 16bitové Windows 3.x.<sup class="ref"><a href="#z14">14</a></sup></li>
+  <li><strong>Preemptivní multitasking</strong>: jádro odebere procesor samo, pomocí přerušení časovače. Windows 95 ho zavedly pro 32bitové aplikace,<sup class="ref"><a href="#z14">14</a></sup> dnes ho používají všechny běžné systémy.</li>
+</ul>
+</section>
+
+<section id="planovani">
+<h2>Plánování procesů</h2>
+<p><dfn>Plánovač</dfn> (scheduler) rozhoduje, který připravený proces dostane procesor. Hodnotí se například <dfn>doba obratu</dfn> (od příchodu procesu do jeho dokončení) a <dfn>doba odezvy</dfn> (od příchodu do prvního spuštění).<sup class="ref"><a href="#z3">3</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th>Algoritmus</th><th>Princip</th><th>Výhoda / nevýhoda</th></tr></thead>
+<tbody>
+<tr><td><strong>FCFS</strong> (first come, first served)</td><td>v pořadí příchodu, každý doběhne do konce</td><td>jednoduchý; krátké úlohy čekají za dlouhými</td></tr>
+<tr><td><strong>SJF</strong> (shortest job first)</td><td>nejdřív nejkratší úloha</td><td>nejlepší průměrná doba obratu; musí znát délku úloh dopředu</td></tr>
+<tr><td><strong>Round Robin</strong></td><td>každý dostane krátký časový úsek (kvantum) a jde na konec fronty</td><td>rychlá odezva, vhodné pro interaktivní systémy; delší doba obratu a režie přepínání</td></tr>
+<tr><td><strong>Prioritní</strong></td><td>dřív běží procesy s vyšší prioritou</td><td>důležité úlohy rychle; méně důležité mohou „hladovět“</td></tr>
+</tbody></table></div>
+<p>Vyzkoušej si: čtyři procesy přicházejí v časech 0, 1, 2 a 3 a potřebují 8, 4, 2 a 5 jednotek času procesoru.</p>
+<div class="sched">
+  <div class="sched-ctl" id="schAlg">
+    <button data-a="fcfs" class="is-active">FCFS</button><button data-a="sjf">SJF</button><button data-a="rr">Round Robin</button>
+    <label>kvantum <select id="schQ"><option>1</option><option selected>2</option><option>4</option></select></label>
+  </div>
+  <div class="gt" id="schGt"></div>
+  <div class="gt-axis"><span>0</span><span>5</span><span>10</span><span>15</span><span>20</span></div>
+  <p class="sched-out" id="schOut"></p>
+</div>
+<p>Dnešní systémy plánovací algoritmy kombinují: procesy mají priority, interaktivní programy dostávají přednost a plánovač rozděluje práci na více jader.</p>
+</section>
+
+<section id="pamet">
+<h2>Správa paměti</h2>
+<p>Každý proces dostane vlastní <dfn>virtuální adresní prostor</dfn>: vidí paměť, jako by byla jen jeho, od adresy 0. Skutečné umístění v RAM určuje překlad adres, který provádí hardware, jednotka <dfn>MMU</dfn> v procesoru, podle tabulek, které připravuje operační systém.<sup class="ref"><a href="#z4">4</a></sup></p>
+<ul>
+  <li><dfn>Stránkování</dfn>: paměť se dělí na stejně velké <strong>stránky</strong>, na procesorech x86 standardně 4 KiB. Každá stránka má záznam v <dfn>tabulce stránek</dfn>, která říká, kde v RAM leží.<sup class="ref"><a href="#z5">5</a></sup></li>
+  <li><strong>Izolace</strong>: proces se nedostane do paměti jiného procesu. Pokus o přístup mimo vlastní prostor vyvolá výjimku a systém proces obvykle ukončí.<sup class="ref"><a href="#z4">4</a></sup> Ve Windows se to projeví hláškou o pádu aplikace, v Linuxu chybou „segmentation fault“.</li>
+  <li><strong>Odkládání na disk</strong>: když RAM nestačí, systém přesune málo používané stránky na disk (stránkovací soubor ve Windows, swap v Linuxu). Když je proces zase potřebuje, nastane <dfn>výpadek stránky</dfn> a systém je načte zpět. Disk je ale řádově pomalejší než RAM, proto se počítač s malou pamětí citelně zpomalí.</li>
+  <li><strong>Sdílení</strong>: stejná knihovna může být ve fyzické paměti jen jednou a namapovaná do více procesů.</li>
+</ul>
+<div class="note tip"><b class="lbl">Souvislost</b><p>V materiálu o hardwaru jsme viděli hierarchii pamětí a přístupovou dobu RAM, SSD a HDD. Proto má odkládání stránek na HDD tak velký dopad: čtení z RAM trvá desítky nanosekund, z HDD milisekundy.</p></div>
+</section>
+
+<section id="soubory">
+<h2>Souborové systémy</h2>
+<p><dfn>Souborový systém</dfn> určuje, jak jsou na disku uložené soubory, adresáře a jejich vlastnosti (jméno, velikost, datum, vlastník, práva). Bez něj by disk byl jen dlouhá řada bloků bajtů.</p>
+<ul>
+  <li><dfn>Soubor</dfn> je pojmenovaná posloupnost bajtů. <dfn>Adresář</dfn> (složka) obsahuje soubory a další adresáře, vzniká stromová struktura.</li>
+  <li><dfn>Cesta</dfn> určuje polohu souboru. Windows: <code>C:\Users\jana\Documents\ukol.docx</code> s písmeny jednotek a zpětnými lomítky. Linux a macOS: <code>/home/jana/ukol.txt</code> s jedním kořenem <code>/</code>, do kterého se další disky <em>připojují</em> (mount).</li>
+  <li><dfn>Absolutní cesta</dfn> začíná od kořene, <dfn>relativní</dfn> od aktuálního adresáře (<code>../obrazky/logo.png</code>).</li>
+  <li><dfn>Žurnálování</dfn>: systém si nejdřív zapíše, co se chystá změnit. Po výpadku proudu tak dokáže obnovit konzistentní stav.</li>
+</ul>
+<div class="tbl"><table>
+<thead><tr><th>Systém</th><th>Kde se používá</th><th>Vlastnosti</th></tr></thead>
+<tbody>
+<tr><td><strong>FAT32</strong></td><td>starší flash disky, paměťové karty</td><td>čtou ho všechny systémy; soubor nejvýš 4 GiB, bez práv a žurnálu<sup class="ref"><a href="#z29">29</a></sup></td></tr>
+<tr><td><strong>exFAT</strong></td><td>flash disky a karty s velkými soubory</td><td>bez limitu 4 GiB, bez práv a žurnálu<sup class="ref"><a href="#z29">29</a></sup></td></tr>
+<tr><td><strong>NTFS</strong></td><td>Windows</td><td>žurnálování, přístupová práva (ACL), vlastník souboru<sup class="ref"><a href="#z29">29</a></sup></td></tr>
+<tr><td><strong>ext4, Btrfs</strong></td><td>Linux</td><td>unixová práva, žurnálování (ext4), snímky (Btrfs)</td></tr>
+<tr><td><strong>APFS</strong></td><td>macOS, iOS (od 2017)</td><td>navržený pro SSD, šifrování, snímky; nahradil HFS+<sup class="ref"><a href="#z30">30</a></sup></td></tr>
+</tbody></table></div>
+<p>Proto flash disk naformátovaný na FAT32 odmítne uložit film o velikosti 5 GB, i když má volno. Pomůže přeformátování na exFAT.</p>
+</section>
+
+<section id="prava">
+<h2>Uživatelé a přístupová práva</h2>
+<p>Víceuživatelský systém rozlišuje <dfn>uživatelské účty</dfn>. Každý soubor a proces patří nějakému uživateli. <dfn>Správce</dfn> (Administrator ve Windows, <code>root</code> v Linuxu a macOS) smí vše, běžný uživatel jen to, co mu práva dovolí. Běžná práce se doporučuje pod obyčejným účtem a správcovská práva si vyžádat jen na chvíli: ve Windows potvrzením dialogu Řízení uživatelských účtů (UAC), v Linuxu a macOS příkazem <code>sudo</code>.</p>
+<h3>Unixová práva</h3>
+<p>Každý soubor má tři skupiny práv: pro <strong>vlastníka</strong>, pro <strong>skupinu</strong> a pro <strong>ostatní</strong>. Každá skupina obsahuje čtení <code>r</code>, zápis <code>w</code> a spuštění <code>x</code>. Číselně se zapisují osmičkově: r = 4, w = 2, x = 1, a součet za každou skupinu dává jednu číslici.<sup class="ref"><a href="#z38">38</a></sup></p>
+<div class="perm">
+  <div class="perm-grid" id="permGrid">
+    <span></span><span class="h">r (4)</span><span class="h">w (2)</span><span class="h">x (1)</span>
+  </div>
+  <p class="perm-out" id="permOut"></p>
+  <p class="small-muted" id="permNote"></p>
+</div>
+<p>Příklad: <code>chmod 755 skript.sh</code> = vlastník smí vše (7 = 4 + 2 + 1), skupina a ostatní číst a spouštět (5 = 4 + 1). Windows místo toho používá na NTFS <dfn>seznamy řízení přístupu</dfn> (ACL), kde lze nastavit práva pro libovolné uživatele a skupiny.<sup class="ref"><a href="#z29">29</a></sup></p>
+</section>
+
+<section id="ovladace">
+<h2>Ovladače a zařízení</h2>
+<p><dfn>Ovladač</dfn> (driver) je část systému, která umí ovládat konkrétní zařízení: tiskárnu, grafickou kartu, síťovou kartu. Systém pak zbytku programů nabízí jednotné rozhraní („tiskni“, „pošli paket“) a nezáleží na výrobci zařízení.</p>
+<p>Zařízení dává procesoru vědět, že něco potřebuje (stisk klávesy, příchod paketu, dokončení čtení z disku), pomocí <dfn>přerušení</dfn>. Procesor přeruší aktuální práci a spustí obsluhu v jádře. Díky tomu nemusí procesor neustále kontrolovat, jestli se něco nestalo.</p>
+<p>Ovladače běží často v režimu jádra. Chybný ovladač proto dokáže shodit celý systém, například modrou obrazovkou ve Windows.</p>
+</section>
+
+<section id="rozhrani">
+<h2>Grafické rozhraní a příkazová řádka</h2>
+<p><dfn>GUI</dfn> (grafické uživatelské rozhraní) používá okna, ikony, nabídky a myš nebo dotyk. Je snadné na naučení. <dfn>CLI</dfn> (příkazová řádka) ovládá systém textovými příkazy v <dfn>shellu</dfn>. Je rychlejší pro opakované úlohy, dá se automatizovat skripty a je nezbytná pro správu serverů, které často grafické prostředí vůbec nemají. Příkazovou řádku má každý běžný systém: Windows <code>cmd</code> a PowerShell, Linux a macOS například <code>bash</code> nebo <code>zsh</code>.</p>
+<div class="tbl"><table>
+<thead><tr><th>Úkol</th><th>Windows (cmd)</th><th>Linux, macOS</th></tr></thead>
+<tbody>
+<tr><td>výpis adresáře</td><td><code>dir</code></td><td><code>ls</code></td></tr>
+<tr><td>změna adresáře</td><td><code>cd</code></td><td><code>cd</code></td></tr>
+<tr><td>kopírování / přesun</td><td><code>copy</code> / <code>move</code></td><td><code>cp</code> / <code>mv</code></td></tr>
+<tr><td>smazání souboru</td><td><code>del</code></td><td><code>rm</code></td></tr>
+<tr><td>nový adresář</td><td><code>mkdir</code></td><td><code>mkdir</code></td></tr>
+<tr><td>běžící procesy</td><td><code>tasklist</code></td><td><code>ps</code>, <code>top</code></td></tr>
+<tr><td>ukončení procesu</td><td><code>taskkill</code></td><td><code>kill</code></td></tr>
+<tr><td>síťová nastavení</td><td><code>ipconfig</code></td><td><code>ip a</code> (Linux), <code>ifconfig</code></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="typy">
+<h2>Typy operačních systémů</h2>
+<div class="tbl"><table>
+<thead><tr><th>Hledisko</th><th>Typy</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td>Počet úloh</td><td><strong>jednoúlohový</strong>: v jednu chvíli jeden program<br><strong>víceúlohový</strong>: více procesů současně</td><td>MS-DOS<br>Windows, Linux, macOS</td></tr>
+<tr><td>Počet uživatelů</td><td><strong>jednouživatelský</strong>: nerozlišuje uživatele<br><strong>víceuživatelský</strong>: účty, vlastníci, práva</td><td>MS-DOS<br>Windows NT a novější, Linux, macOS</td></tr>
+<tr><td>Způsob práce</td><td><strong>dávkový</strong>: úlohy se zpracují jedna po druhé bez interakce<br><strong>interaktivní</strong> (sdílení času): uživatel pracuje průběžně</td><td>první systémy 50. let<br>dnešní desktop</td></tr>
+<tr><td>Časové nároky</td><td><strong>reálného času</strong> (RTOS): zaručí odezvu do pevného limitu</td><td>FreeRTOS v mikrokontrolérech,<sup class="ref"><a href="#z31">31</a></sup> řízení motorů, airbagy</td></tr>
+<tr><td>Zařízení</td><td><strong>desktopový</strong>, <strong>serverový</strong>, <strong>mobilní</strong>, <strong>vestavěný</strong> (embedded)</td><td>Windows 11; Linux, Windows Server; Android, iOS; firmware routeru, televize</td></tr>
+</tbody></table></div>
+<p>Víceuživatelský neznamená, že u počítače sedí víc lidí najednou. Znamená, že systém rozlišuje uživatele a jejich práva. Notebook s Windows, na kterém má účet každý člen rodiny, je víceuživatelský systém.</p>
+</section>
+
+<p class="part">Systémy a historie</p>
+
+<section id="historie">
+<h2>Historie operačních systémů</h2>
+<ol class="timeline">
+  <li><span class="yr">1956</span> <span class="ev">GM-NAA I/O</span><span class="d">Jeden z prvních operačních systémů, pro počítač IBM 704. Dávkové zpracování: po skončení jednoho programu automaticky spustil další.<sup class="ref"><a href="#z8">8</a></sup></span></li>
+  <li><span class="yr">1964</span> <span class="ev">IBM System/360</span><span class="d">Rodina kompatibilních počítačů s operačním systémem OS/360. Stejný software běžel na malých i velkých modelech.<sup class="ref"><a href="#z9">9</a></sup></span></li>
+  <li><span class="yr">1969</span> <span class="ev">Unix</span><span class="d">Ken Thompson a Dennis Ritchie v Bellových laboratořích. V roce 1973 byl přepsán do jazyka C, a proto šel snadno přenést na jiné počítače. Na univerzitě v Berkeley vznikla varianta BSD.<sup class="ref"><a href="#z10">10</a></sup></span></li>
+  <li><span class="yr">1981</span> <span class="ev">MS-DOS</span><span class="d">Microsoft koupil systém 86-DOS od firmy Seattle Computer Products a jako MS-DOS (u IBM PC DOS) ho dodal pro IBM PC.<sup class="ref"><a href="#z12">12</a></sup> Jednoúlohový systém ovládaný příkazy.</span></li>
+  <li><span class="yr">1983</span> <span class="ev">Projekt GNU</span><span class="d">Richard Stallman začal vyvíjet svobodný systém podobný Unixu.<sup class="ref"><a href="#z11">11</a></sup></span></li>
+  <li><span class="yr">1984</span> <span class="ev">Macintosh</span><span class="d">Apple uvedl počítač s grafickým rozhraním a myší. Jeho systém se jmenoval jednoduše System, později Mac OS.</span></li>
+  <li><span class="yr">1985</span> <span class="ev">Windows 1.0</span><span class="d">Grafická nadstavba nad MS-DOS, ještě ne samostatný operační systém.<sup class="ref"><a href="#z13">13</a></sup></span></li>
+  <li><span class="yr">1991</span> <span class="ev">Linux</span><span class="d">25. srpna oznámil student Linus Torvalds své jádro, 17. září vyšla verze 0.01. Od roku 1992 pod svobodnou licencí GNU GPL.<sup class="ref"><a href="#z11">11</a></sup></span></li>
+  <li><span class="yr">1993</span> <span class="ev">Windows NT</span><span class="d">Nová řada Windows s vlastním hybridním jádrem, nezávislá na DOSu.<sup class="ref"><a href="#z13">13</a></sup><sup class="ref"><a href="#z7">7</a></sup></span></li>
+  <li><span class="yr">1995</span> <span class="ev">Windows 95</span><span class="d">Nabídka Start, hlavní panel, preemptivní multitasking pro 32bitové aplikace.<sup class="ref"><a href="#z14">14</a></sup></span></li>
+  <li><span class="yr">2001</span> <span class="ev">Mac OS X a Windows XP</span><span class="d">Apple přešel na systém postavený na NeXTSTEPu a BSD.<sup class="ref"><a href="#z16">16</a></sup> Windows XP byla první verze řady NT pro domácnosti.<sup class="ref"><a href="#z13">13</a></sup></span></li>
+  <li><span class="yr">2007–2008</span> <span class="ev">iPhone OS a Android</span><span class="d">Mobilní systémy s dotykovým ovládáním. iPhone OS (dnes iOS) vychází z Mac OS X,<sup class="ref"><a href="#z20">20</a></sup> Android z jádra Linuxu.<sup class="ref"><a href="#z19">19</a></sup></span></li>
+  <li><span class="yr">2021</span> <span class="ev">Windows 11</span><span class="d">Současná verze Windows. Podpora Windows 10 skončila 14. října 2025.<sup class="ref"><a href="#z36">36</a></sup></span></li>
+</ol>
+</section>
+
+<section id="windows">
+<h2>Windows</h2>
+<p>Windows se vyvíjely ve dvou řadách. <strong>Řada založená na DOSu</strong> (Windows 1.0 až 3.x, 95, 98, Me) byla grafickou nadstavbou nebo kombinací s DOSem. <strong>Řada NT</strong> (od roku 1993) měla od začátku vlastní 32bitové jádro, ochranu paměti a víceuživatelský model. Obě řady spojily Windows XP a všechny další verze vycházejí z NT.<sup class="ref"><a href="#z13">13</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th>Verze</th><th>Rok</th><th>Co přinesla</th></tr></thead>
+<tbody>
+<tr><td>Windows 1.0</td><td>1985</td><td>grafická nadstavba MS-DOS, okna vedle sebe (nepřekrývající se)</td></tr>
+<tr><td>Windows 3.0 / 3.1</td><td>1990 / 1992</td><td>první velký úspěch, správce programů, písma TrueType ve 3.1</td></tr>
+<tr><td>Windows NT 3.1</td><td>1993</td><td>nové jádro NT pro firmy a servery</td></tr>
+<tr><td>Windows 95</td><td>1995</td><td>nabídka Start, hlavní panel, 32bitové aplikace</td></tr>
+<tr><td>Windows XP</td><td>2001</td><td>jádro NT i pro domácnosti, sjednocení řad</td></tr>
+<tr><td>Windows Vista</td><td>2007</td><td>rozhraní Aero, Řízení uživatelských účtů (UAC); vysoké nároky na hardware</td></tr>
+<tr><td>Windows 7</td><td>2009</td><td>vylepšená Vista, oblíbená a dlouho používaná</td></tr>
+<tr><td>Windows 8</td><td>2012</td><td>dotykové rozhraní s dlaždicemi, bez klasické nabídky Start</td></tr>
+<tr><td>Windows 10</td><td>2015</td><td>návrat nabídky Start, pravidelné funkční aktualizace</td></tr>
+<tr><td>Windows 11</td><td>2021</td><td>nový vzhled, vyšší nároky (např. čip TPM 2.0)</td></tr>
+</tbody></table></div>
+<p class="small-muted">Data vydání podle Wikipedie.<sup class="ref"><a href="#z13">13</a></sup></p>
+<div class="note warn"><b class="lbl">Proč na tom záleží</b><p>Systém bez podpory nedostává bezpečnostní opravy. Windows 10 běží dál, ale od 14. října 2025 pro něj Microsoft běžně nevydává záplaty, dál chráněné jsou jen počítače v placeném programu rozšířených aktualizací.<sup class="ref"><a href="#z36">36</a></sup> Každá nově objevená chyba tak zůstane otevřená.</p></div>
+</section>
+
+<section id="macos">
+<h2>macOS</h2>
+<ul>
+  <li><strong>Klasický Mac OS</strong> (od roku 1984, nejdřív pod názvem System) přinesl grafické rozhraní masově, ale v 90. letech zastarával: chyběla ochrana paměti a skutečný preemptivní multitasking.</li>
+  <li>Apple vlastní náhradu nedokončil. Na konci roku 1996 proto oznámil koupi firmy <strong>NeXT</strong> Steva Jobse (dokončeno v únoru 1997), hlavně kvůli jejímu systému NeXTSTEP.<sup class="ref"><a href="#z15">15</a></sup></li>
+  <li><strong>Mac OS X</strong> 10.0 vyšel 24. března 2001.<sup class="ref"><a href="#z16">16</a></sup> Vychází z NeXTSTEPu a BSD, jádro <strong>XNU</strong> je hybridní (Mach + BSD).<sup class="ref"><a href="#z7">7</a></sup> Otevřený základ systému se jmenuje Darwin.</li>
+  <li>macOS je <strong>certifikovaný UNIX</strong> podle normy UNIX 03 organizace The Open Group.<sup class="ref"><a href="#z18">18</a></sup> Nejde tedy o „oddělení od Unixu“, ale naopak.</li>
+  <li>Číslování: dlouho 10.x (10.0 až 10.15), pak 11 až 15 a od roku 2025 podle roku: <strong>macOS 26 Tahoe</strong>. Je to poslední verze pro Macy s procesory Intel, dál jen Apple Silicon.<sup class="ref"><a href="#z17">17</a></sup></li>
+</ul>
+</section>
+
+<section id="linux">
+<h2>Linux a distribuce</h2>
+<p><strong>Linux</strong> je v přesném smyslu jen <strong>jádro</strong>. K použitelnému systému je potřeba ještě shell, knihovny, nástroje (mnoho z projektu GNU), grafické prostředí a aplikace. Celek sestavený do instalovatelné podoby se jmenuje <dfn>distribuce</dfn>. Jádro i většina programů jsou <strong>open source</strong> pod licencí GNU GPL: zdrojový kód je veřejný a každý ho smí upravovat a šířit, pokud zachová stejnou svobodu.<sup class="ref"><a href="#z11">11</a></sup></p>
+<p>Distribuce se liší hlavně <dfn>správcem balíčků</dfn> (program, který instaluje, aktualizuje a odebírá software včetně závislostí), rytmem vydávání a cílovou skupinou.</p>
+<div class="tbl"><table>
+<thead><tr><th>Distribuce</th><th>Vznik</th><th>Balíčky</th><th>Charakter</th></tr></thead>
+<tbody>
+<tr><td><strong>Debian</strong></td><td>1993</td><td><code>apt</code>, .deb</td><td>komunitní, důraz na stabilitu, větve stable, testing a unstable; základ mnoha dalších distribucí<sup class="ref"><a href="#z21">21</a></sup><sup class="ref"><a href="#z23">23</a></sup></td></tr>
+<tr><td><strong>Ubuntu</strong></td><td>2004</td><td><code>apt</code>, .deb</td><td>vychází z Debianu, firma Canonical, verze LTS každé dva roky s pětiletou podporou; vhodné pro začátečníky<sup class="ref"><a href="#z24">24</a></sup></td></tr>
+<tr><td><strong>Fedora</strong></td><td>2003</td><td><code>dnf</code>, .rpm</td><td>vznikla z Red Hat Linuxu, nové verze softwaru, předstupeň firemního Red Hat Enterprise Linux<sup class="ref"><a href="#z25">25</a></sup></td></tr>
+<tr><td><strong>Arch</strong></td><td>2002</td><td><code>pacman</code></td><td>minimalistický základ, uživatel si vše nastaví sám, průběžné aktualizace (rolling release)<sup class="ref"><a href="#z26">26</a></sup></td></tr>
+<tr><td><strong>Kali</strong></td><td>2013</td><td><code>apt</code></td><td>vychází z Debianu, nástroje pro penetrační testování a bezpečnostní audity<sup class="ref"><a href="#z27">27</a></sup></td></tr>
+</tbody></table></div>
+<p>Linux je hlavním systémem serverů, cloudu i superpočítačů. Jeho jádro je také v každém Androidu.</p>
+</section>
+
+<section id="mobilni">
+<h2>Android a iOS</h2>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Android</th><th>iOS</th></tr></thead>
+<tbody>
+<tr><td>Vývojář</td><td>Google (Open Handset Alliance)</td><td>Apple</td></tr>
+<tr><td>Jádro</td><td>upravené jádro Linuxu</td><td>XNU, stejně jako macOS</td></tr>
+<tr><td>Kód</td><td>otevřený základ AOSP, výrobci přidávají vlastní nadstavby a služby Google</td><td>uzavřený</td></tr>
+<tr><td>Zařízení</td><td>mnoho výrobců</td><td>jen zařízení Apple</td></tr>
+<tr><td>Začátek</td><td>2008, telefon HTC Dream</td><td>2007, první iPhone</td></tr>
+</tbody></table></div>
+<p class="small-muted">Zdroje: Wikipedia.<sup class="ref"><a href="#z19">19</a></sup><sup class="ref"><a href="#z20">20</a></sup></p>
+<p>Mobilní systémy jsou přísnější než desktopové: aplikace běží každá ve vlastním uzavřeném prostoru (sandbox), k fotkám, poloze nebo mikrofonu potřebují výslovné svolení uživatele a instalují se hlavně z obchodu s aplikacemi.</p>
+</section>
+
+<section id="virtualizace">
+<h2>Virtualizace</h2>
+<p><dfn>Virtuální stroj</dfn> je počítač simulovaný softwarem. <dfn>Hypervisor</dfn> (správce virtuálních strojů) mezi nimi rozděluje skutečný procesor, paměť a disky, podobně jako operační systém rozděluje prostředky mezi procesy.<sup class="ref"><a href="#z39">39</a></sup> Na jednom fyzickém serveru tak může běžet mnoho systémů najednou, na tom stojí cloud. Ve škole se virtuální stroj hodí k bezpečnému zkoušení jiného systému, třeba Linuxu na počítači s Windows.</p>
+</section>
+
+<section id="omyly">
+<h2>Časté omyly</h2>
+<div class="tbl"><table>
+<thead><tr><th>Omyl</th><th>Jak to je</th></tr></thead>
+<tbody>
+<tr><td>Windows 1.0 byl operační systém.</td><td>Byl to grafický doplněk nad MS-DOS. Samostatné jádro mají Windows až od řady NT.</td></tr>
+<tr><td>Jednouživatelský OS = osobní počítač.</td><td>Windows, macOS i Linux jsou víceuživatelské, i když u počítače sedí jeden člověk.</td></tr>
+<tr><td>Příkazová řádka je jen v Linuxu.</td><td>Windows má cmd a PowerShell, macOS Terminal.</td></tr>
+<tr><td>macOS se od Unixu oddělil.</td><td>macOS je certifikovaný UNIX.</td></tr>
+<tr><td>Linux je operační systém.</td><td>Linux je jádro. Systém je distribuce (Ubuntu, Fedora…).</td></tr>
+<tr><td>Fedora vznikla od nuly, bez předchůdce.</td><td>Vznikla v roce 2003 z Red Hat Linuxu.</td></tr>
+<tr><td>Debian vznikl v roce 1996.</td><td>Projekt začal v roce 1993, v roce 1996 vyšla verze 1.1.</td></tr>
+<tr><td>Starší Windows jsou v pořádku, když fungují.</td><td>Bez bezpečnostních aktualizací zůstávají známé chyby otevřené.</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">K maturitě</p>
+
+<section id="osnova">
+<h2>Jak odpovídat u maturity</h2>
+<ol class="plan">
+  <li><b>Definice a úkoly:</b> OS jako správce hardwaru a poskytovatel služeb. Abstrakce, správa prostředků, ochrana, rozhraní.</li>
+  <li><b>Jádro:</b> uživatelský režim a režim jádra, systémové volání, přerušení. Monolitické, mikro a hybridní jádro s příklady.</li>
+  <li><b>Spuštění:</b> UEFI, zavaděč, jádro, první proces, přihlášení.</li>
+  <li><b>Procesy:</b> program × proces × vlákno, stavy procesu, multitasking, plánování (FCFS, SJF, Round Robin).</li>
+  <li><b>Paměť:</b> virtuální adresní prostor, stránky, MMU, odkládání na disk, izolace.</li>
+  <li><b>Soubory a práva:</b> souborové systémy a jejich použití, cesty, unixová práva rwx a osmičkový zápis.</li>
+  <li><b>Typy OS</b> podle úloh, uživatelů, času a zařízení.</li>
+  <li><b>Historie a systémy:</b> Unix, MS-DOS, Windows (DOS × NT), macOS (NeXT, Unix), Linux (jádro × distribuce), Android a iOS.</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Jaké jsou hlavní úkoly operačního systému?</summary><div class="a"><p>Abstrakce hardwaru (soubory, procesy, virtuální paměť), správa prostředků (procesor, paměť, disk, zařízení), ochrana a izolace programů a uživatelů, rozhraní pro uživatele a programy.</p></div></details>
+<details class="q"><summary>Proč aplikace nemůže přímo číst z disku a co místo toho udělá?</summary><div class="a"><p>Běží v uživatelském režimu, který přímý přístup k hardwaru nedovolí. Požádá jádro systémovým voláním: instrukce trap přepne do režimu jádra, jádro ověří práva, data přečte a vrátí řízení programu.</p></div></details>
+<details class="q"><summary>Jak OS získá procesor zpět od programu, který se zacyklí?</summary><div class="a"><p>Přerušením časovače. Hardwarový časovač pravidelně přeruší běžící proces a předá řízení jádru, které může naplánovat jiný proces. To je základ preemptivního multitaskingu.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi programem, procesem a vláknem?</summary><div class="a"><p>Program je soubor na disku. Proces je běžící program s vlastní pamětí a stavem. Vlákno je tok výpočtu uvnitř procesu, vlákna jednoho procesu sdílejí paměť.</p></div></details>
+<details class="q"><summary>Nakresli stavy procesu a popiš přechody.</summary><div class="a"><p>Připravený → běžící (plánovač přidělí procesor), běžící → připravený (vypršel čas), běžící → čekající (čeká na vstup/výstup), čekající → připravený (vstup/výstup hotov). Navíc nový a ukončený.</p></div></details>
+<details class="q"><summary>Porovnej FCFS a Round Robin.</summary><div class="a"><p>FCFS pouští procesy v pořadí příchodu do konce, krátké úlohy čekají za dlouhými. Round Robin dává každému krátké kvantum dokola: lepší odezva pro interaktivní práci, ale delší doba obratu a víc přepínání kontextu.</p></div></details>
+<details class="q"><summary>Co je virtuální paměť a k čemu je dobrá?</summary><div class="a"><p>Každý proces má vlastní adresní prostor, který MMU podle tabulek stránek překládá na skutečné adresy v RAM. Zajišťuje izolaci procesů, umožňuje odkládat málo používané stránky na disk a sdílet knihovny.</p></div></details>
+<details class="q"><summary>Proč nejde na flash disk s FAT32 uložit soubor 5 GB?</summary><div class="a"><p>FAT32 má limit velikosti souboru 4 GiB. Řešením je exFAT (nebo NTFS).</p></div></details>
+<details class="q"><summary>Co znamená chmod 640?</summary><div class="a"><p>Vlastník čte a zapisuje (6 = 4 + 2), skupina čte (4), ostatní nemají žádná práva (0).</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi Windows 98 a Windows XP z hlediska architektury?</summary><div class="a"><p>Windows 98 patří do řady založené na DOSu. Windows XP je první verze řady NT pro domácnosti, s vlastním jádrem, ochranou paměti a víceuživatelským modelem.</p></div></details>
+<details class="q"><summary>Proč Apple koupil NeXT?</summary><div class="a"><p>Klasický Mac OS zastarával (bez ochrany paměti a preemptivního multitaskingu) a vlastní náhrada se nedařila. NeXTSTEP se stal základem Mac OS X.</p></div></details>
+<details class="q"><summary>Co je Linux a co je distribuce?</summary><div class="a"><p>Linux je jádro. Distribuce je kompletní systém: jádro, nástroje GNU, knihovny, správce balíčků, grafické prostředí a aplikace (Debian, Ubuntu, Fedora, Arch).</p></div></details>
+<details class="q"><summary>Je Windows víceuživatelský systém?</summary><div class="a"><p>Ano. Rozlišuje uživatelské účty, vlastníky souborů a práva. Víceuživatelský neznamená, že u počítače pracuje víc lidí zároveň.</p></div></details>
+<details class="q"><summary>Co je RTOS a kde se používá?</summary><div class="a"><p>Operační systém reálného času, který zaručí odezvu do pevného časového limitu. Používá se v řízení strojů, autech, mikrokontrolérech (např. FreeRTOS).</p></div></details>
+<details class="q"><summary>Proč je nebezpečné používat systém bez podpory?</summary><div class="a"><p>Nedostává bezpečnostní opravy, takže nově objevené zranitelnosti zůstávají otevřené a útočníci je mohou zneužít.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Operační systém</dt><dd>základní software, který řídí hardware a poskytuje služby programům</dd>
+  <dt>Jádro (kernel)</dt><dd>část OS běžící v režimu jádra: procesy, paměť, soubory, ovladače</dd>
+  <dt>Režim jádra / uživatelský</dt><dd>privilegovaný režim procesoru pro OS / omezený režim pro aplikace</dd>
+  <dt>Systémové volání</dt><dd>žádost programu o službu jádra</dd>
+  <dt>Přerušení</dt><dd>signál, který přeruší běh procesoru a spustí obsluhu v jádře</dd>
+  <dt>Proces</dt><dd>běžící program s vlastní pamětí a stavem</dd>
+  <dt>Vlákno</dt><dd>tok výpočtu uvnitř procesu, sdílí paměť procesu</dd>
+  <dt>PID</dt><dd>číslo procesu</dd>
+  <dt>Přepnutí kontextu</dt><dd>uložení stavu jednoho procesu a obnovení jiného</dd>
+  <dt>Plánovač</dt><dd>část jádra, která rozhoduje, který proces poběží</dd>
+  <dt>Preemptivní multitasking</dt><dd>jádro samo odebírá procesor procesům</dd>
+  <dt>Virtuální paměť</dt><dd>vlastní adresní prostor procesu, překládaný na fyzickou paměť</dd>
+  <dt>Stránka</dt><dd>blok paměti pevné velikosti, na x86 obvykle 4 KiB</dd>
+  <dt>MMU</dt><dd>jednotka procesoru překládající virtuální adresy na fyzické</dd>
+  <dt>Swap, stránkovací soubor</dt><dd>místo na disku pro odložené stránky</dd>
+  <dt>Souborový systém</dt><dd>způsob uložení souborů a adresářů na disku</dd>
+  <dt>Žurnálování</dt><dd>záznam plánovaných změn kvůli obnově po výpadku</dd>
+  <dt>Ovladač</dt><dd>část systému ovládající konkrétní zařízení</dd>
+  <dt>Shell</dt><dd>program, který zpracovává příkazy uživatele</dd>
+  <dt>Distribuce</dt><dd>kompletní systém s jádrem Linux a dalším softwarem</dd>
+  <dt>Správce balíčků</dt><dd>program pro instalaci a aktualizaci softwaru</dd>
+  <dt>RTOS</dt><dd>operační systém reálného času</dd>
+  <dt>Hypervisor</dt><dd>software, který provozuje virtuální stroje</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v říjnu 2026. Odborný základ (procesy, plánování, paměť) vychází z volně dostupné učebnice Operating Systems: Three Easy Pieces (OSTEP).</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-mechanisms.pdf">OSTEP: Mechanism: Limited Direct Execution</a></li>
+  <li id="z2"><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/Educators-Slides/Youjip/Part1.Virtualization/pdf/04.The_abtrasction_the_process.pdf">OSTEP: The Abstraction: The Process (slidy)</a></li>
+  <li id="z3"><a href="https://pages.cs.wisc.edu/~shivaram/cs537-sp19-notes/sched/cs537-scheduling.pdf">UW–Madison CS 537: CPU Scheduling</a></li>
+  <li id="z4"><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/vm-mechanism.pdf">OSTEP: Mechanism: Address Translation</a></li>
+  <li id="z5"><a href="https://en.wikipedia.org/wiki/Page_(computer_memory)">Wikipedia: Page (computer memory)</a></li>
+  <li id="z6"><a href="https://en.wikipedia.org/wiki/Monolithic_kernel">Wikipedia: Monolithic kernel</a></li>
+  <li id="z7"><a href="https://en.wikipedia.org/wiki/Hybrid_kernel">Wikipedia: Hybrid kernel</a></li>
+  <li id="z8"><a href="https://en.wikipedia.org/wiki/GM-NAA_I/O">Wikipedia: GM-NAA I/O</a></li>
+  <li id="z9"><a href="https://www.ibm.com/history/system-360">IBM: The IBM System/360</a></li>
+  <li id="z10"><a href="https://en.wikipedia.org/wiki/History_of_Unix">Wikipedia: History of Unix</a></li>
+  <li id="z11"><a href="https://en.wikipedia.org/wiki/History_of_Linux">Wikipedia: History of Linux</a></li>
+  <li id="z12"><a href="https://en.wikipedia.org/wiki/86-DOS">Wikipedia: 86-DOS</a></li>
+  <li id="z13"><a href="https://en.wikipedia.org/wiki/Microsoft_Windows_version_history">Wikipedia: Microsoft Windows version history</a></li>
+  <li id="z14"><a href="https://en.wikipedia.org/wiki/Windows_95">Wikipedia: Windows 95</a></li>
+  <li id="z15"><a href="https://en.wikipedia.org/wiki/NeXT">Wikipedia: NeXT</a></li>
+  <li id="z16"><a href="https://en.wikipedia.org/wiki/Mac_OS_X_10.0">Wikipedia: Mac OS X 10.0</a></li>
+  <li id="z17"><a href="https://en.wikipedia.org/wiki/MacOS_Tahoe">Wikipedia: macOS Tahoe</a></li>
+  <li id="z18"><a href="https://www.opengroup.org/openbrand/register/brand3700.htm">The Open Group: registr certifikace UNIX 03 (macOS)</a></li>
+  <li id="z19"><a href="https://en.wikipedia.org/wiki/Android_(operating_system)">Wikipedia: Android</a></li>
+  <li id="z20"><a href="https://en.wikipedia.org/wiki/IPhone_OS_1">Wikipedia: iPhone OS 1</a></li>
+  <li id="z21"><a href="https://www.debian.org/doc/manuals/project-history/detailed.en.html">Debian: A Detailed History</a></li>
+  <li id="z23"><a href="https://www.debian.org/releases/">Debian: Releases (stable, testing, unstable)</a></li>
+  <li id="z24"><a href="https://en.wikipedia.org/wiki/Ubuntu">Wikipedia: Ubuntu</a></li>
+  <li id="z25"><a href="https://en.wikipedia.org/wiki/Fedora_Linux">Wikipedia: Fedora Linux</a></li>
+  <li id="z26"><a href="https://en.wikipedia.org/wiki/Arch_Linux">Wikipedia: Arch Linux</a></li>
+  <li id="z27"><a href="https://www.kali.org/docs/introduction/what-is-kali-linux/">Kali Linux: What is Kali Linux?</a></li>
+  <li id="z28"><a href="https://en.wikipedia.org/wiki/Systemd">Wikipedia: systemd</a></li>
+  <li id="z29"><a href="https://learn.microsoft.com/en-us/windows/win32/fileio/filesystem-functionality-comparison">Microsoft: File System Functionality Comparison</a></li>
+  <li id="z30"><a href="https://en.wikipedia.org/wiki/Apple_File_System">Wikipedia: Apple File System</a></li>
+  <li id="z31"><a href="https://en.wikipedia.org/wiki/FreeRTOS">Wikipedia: FreeRTOS</a></li>
+  <li id="z36"><a href="https://support.microsoft.com/en-us/windows/deployment/updates-lifecycle/windows-10-support-has-ended-on-october-14-2025">Microsoft: Windows 10 support has ended on October 14, 2025</a></li>
+  <li id="z38"><a href="https://www.gnu.org/software/coreutils/manual/html_node/Numeric-Modes.html">GNU Coreutils: Numeric Modes</a></li>
+  <li id="z39"><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/vmm-intro.pdf">OSTEP: Virtual Machine Monitors</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce z Informatiky „Operační systémy“. Vznikl s inspirací v materiálu, který vypracovali studenti.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  /* ---------- simulátor plánování ---------- */
+  var P = [{ n: 'P1', a: 0, b: 8 }, { n: 'P2', a: 1, b: 4 }, { n: 'P3', a: 2, b: 2 }, { n: 'P4', a: 3, b: 5 }];
+  var alg = 'fcfs';
+  function simulate() {
+    var q = +document.getElementById('schQ').value, T = 20, timeline = [], rem = P.map(function (p) { return p.b; }), first = P.map(function () { return -1; }), done = P.map(function () { return -1; });
+    var queue = [], cur = -1, slice = 0;
+    for (var t = 0; t < T; t++) {
+      P.forEach(function (p, i) { if (p.a === t) queue.push(i); });
+      if (cur >= 0 && rem[cur] === 0) { cur = -1; }
+      if (alg === 'rr' && cur >= 0 && slice >= q) { queue.push(cur); cur = -1; }
+      if (cur < 0 && queue.length) {
+        if (alg === 'sjf') { queue.sort(function (x, y) { return rem[x] - rem[y] || P[x].a - P[y].a; }); }
+        cur = queue.shift(); slice = 0;
+      }
+      timeline.push(cur);
+      if (cur >= 0) { if (first[cur] < 0) first[cur] = t; rem[cur]--; slice++; if (rem[cur] === 0) done[cur] = t + 1; }
+    }
+    return { tl: timeline, first: first, done: done };
+  }
+  function render() {
+    var r = simulate(), h = '';
+    P.forEach(function (p, i) {
+      h += '<div class="gt-row"><span class="gt-lab">' + p.n + ' (' + p.b + ')</span><div class="gt-cells n20">';
+      for (var t = 0; t < 20; t++) {
+        var cls = r.tl[t] === i ? 'p' + (i + 1) : (t >= p.a && (r.done[i] < 0 || t < r.done[i]) ? 'w' : '');
+        h += '<span class="gt-c ' + cls + '"></span>';
+      }
+      h += '</div></div>';
+    });
+    document.getElementById('schGt').innerHTML = h;
+    var ta = 0, rs = 0;
+    P.forEach(function (p, i) { ta += r.done[i] - p.a; rs += r.first[i] - p.a; });
+    document.getElementById('schOut').innerHTML = 'Průměrná doba obratu <b>' + (ta / 4).toLocaleString('cs-CZ') + '</b> · průměrná doba odezvy <b>' + (rs / 4).toLocaleString('cs-CZ') + '</b> · šedě = proces čeká ve frontě';
+    document.getElementById('schQ').disabled = alg !== 'rr';
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#schAlg button'), function (b) {
+    b.addEventListener('click', function () {
+      alg = b.dataset.a;
+      Array.prototype.forEach.call(document.querySelectorAll('#schAlg button'), function (x) { x.classList.toggle('is-active', x === b); });
+      render();
+    });
+  });
+  document.getElementById('schQ').addEventListener('change', render);
+  render();
+
+  /* ---------- práva souborů ---------- */
+  var grid = document.getElementById('permGrid'), who = ['vlastník', 'skupina', 'ostatní'], init = [[1, 1, 1], [1, 0, 1], [1, 0, 1]], boxes = [];
+  who.forEach(function (w, i) {
+    var lab = document.createElement('span'); lab.textContent = w; grid.appendChild(lab); boxes.push([]);
+    for (var j = 0; j < 3; j++) {
+      var c = document.createElement('input'); c.type = 'checkbox'; c.checked = !!init[i][j];
+      c.setAttribute('aria-label', w + ' ' + 'rwx'[j]);
+      c.addEventListener('change', perm); grid.appendChild(c); boxes[i].push(c);
+    }
+  });
+  function perm() {
+    var oct = '', sym = '';
+    boxes.forEach(function (row) { var v = 0; row.forEach(function (c, j) { if (c.checked) v += [4, 2, 1][j]; sym += c.checked ? 'rwx'[j] : '-'; }); oct += v; });
+    document.getElementById('permOut').innerHTML = 'chmod <b>' + oct + '</b> soubor &nbsp;·&nbsp; ls -l ukáže <b>-' + sym + '</b>';
+    var note = { '755': 'typické pro programy a skripty', '644': 'typické pro běžné soubory', '600': 'soukromý soubor, např. klíč', '777': 'pozor: zapisovat smí kdokoli, to je bezpečnostní riziko', '700': 'jen pro vlastníka' }[oct] || '';
+    document.getElementById('permNote').textContent = note;
+  }
+  perm();
+
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

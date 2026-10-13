@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Vzorek po vzorku</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <!-- 1 : titul -->
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Digitální zvuk</div>
+        <h1>Jak se ze zvuku stanou čísla?</h1>
+        <p class="lede">Co je zvuk, jak ho slyšíme, jak ho počítač změří a uloží a proč má písnička v MP3 jen desetinu velikosti.</p>
+        <div class="canvas-frame scope"><canvas id="heroCanvas" width="760" height="200"></canvas></div>
+        <div class="demo-row center">
+          <button class="reveal-btn" id="heroPlay">▶ Přehrát melodii</button>
+        </div>
+        <p class="hint">Zapni si reproduktory nebo sluchátka, ale nejdřív potichu. Klávesy ← → přepínají snímky.</p>
+      </div>
+    </section>
+
+    <!-- 2 : co je zvuk -->
+    <section class="slide" data-index="1" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Fyzika</div>
+        <h2 class="slide-title">Zvuk je vlnění tlaku</h2>
+        <p class="lede">Reproduktor kmitá sem a tam a strká do vzduchu. Molekuly se střídavě <b>zhušťují</b> a <b>zřeďují</b> a tahle porucha běží prostorem, zatímco každá molekula jen kmitá kolem svého místa. Ve vzduchu se zvuk šíří rychlostí asi <b>343 m/s</b> (při 20 °C), ve vodě asi 1 480 m/s. Ve vakuu vůbec.</p>
+        <div class="demo-box">
+          <span class="demo-cap">molekuly vzduchu (jedna je zvýrazněná)</span>
+          <div class="canvas-frame"><canvas id="airCanvas" width="760" height="150"></canvas></div>
+          <span class="demo-cap">tlak v místě: nahoře zhuštění, dole zředění</span>
+          <div class="canvas-frame"><canvas id="pressCanvas" width="760" height="110"></canvas></div>
+          <div class="slider-row"><label>f</label><input type="range" id="airF" min="1" max="6" step="0.5" value="2" aria-label="Frekvence kmitání"></div>
+        </div>
+        <p class="compare-note">Mikrofon dělá opak reproduktoru: tenká membrána se pohybuje podle tlaku a mění ho na elektrické napětí. Křivka tlaku v čase je přesně to, co budeme ukládat.</p>
+      </div>
+    </section>
+
+    <!-- 3 : frekvence a amplituda -->
+    <section class="slide" data-index="2" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Dvě vlastnosti vlny</div>
+        <h2 class="slide-title">Frekvence a amplituda</h2>
+        <p class="lede"><b>Frekvence</b> <i>f</i> je počet kmitů za sekundu, měří se v hertzích (Hz). Slyšíme ji jako <b>výšku</b> tónu. <b>Amplituda</b> je výška kmitu, slyšíme ji jako <b>hlasitost</b>. Doba jednoho kmitu je <b>perioda</b> <i>T</i> = 1 / <i>f</i>.</p>
+        <div class="demo-box">
+          <div class="canvas-frame"><canvas id="toneCanvas" width="760" height="200"></canvas></div>
+          <div class="slider-col">
+            <div class="slider-row"><label>f</label><input type="range" id="toneF" min="0" max="1000" value="500" aria-label="Frekvence"></div>
+            <div class="slider-row"><label>A</label><input type="range" id="toneA" min="0" max="100" value="50" aria-label="Amplituda"></div>
+          </div>
+          <div class="demo-row">
+            <button class="reveal-btn" id="tonePlay">▶ Hrát tón</button>
+            <div class="lookup-chips">
+              <div class="chip"><b>frekvence</b><span id="toneFv">440 Hz</span></div>
+              <div class="chip"><b>perioda</b><span id="toneT">2,27 ms</span></div>
+              <div class="chip"><b>vlnová délka</b><span id="toneL">78 cm</span></div>
+              <div class="chip"><b>tón</b><span id="toneN">A4</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="compare-note">Okno grafu ukazuje vždy 10 ms. Dvojnásobná frekvence je o <b>oktávu</b> výš. Komorní A (ladička) má 440 Hz, o oktávu výš je 880 Hz.</p>
+      </div>
+    </section>
+
+    <!-- 4 : rozsah sluchu -->
+    <section class="slide" data-index="3" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Co slyšíme</div>
+        <h2 class="slide-title">Od 20 Hz do 20 kHz</h2>
+        <p class="lede">Mladý člověk slyší zhruba <b>20 Hz až 20 000 Hz</b>. Nižší je <b>infrazvuk</b> (zemětřesení, sloni), vyšší <b>ultrazvuk</b> (netopýři, sonografie). Horní hranice s věkem klesá. Kdo ve třídě ještě slyší 16 kHz?</p>
+        <div class="demo-box">
+          <div class="slider-row"><label>f</label><input type="range" id="hearF" min="0" max="1000" value="500" aria-label="Frekvence"></div>
+          <div class="demo-row">
+            <button class="reveal-btn" id="hearPlay">▶ Hrát</button>
+            <div class="preset-row" id="hearPresets">
+              <button class="calc-btn" data-f="50">50 Hz</button>
+              <button class="calc-btn" data-f="1000">1 kHz</button>
+              <button class="calc-btn" data-f="8000">8 kHz</button>
+              <button class="calc-btn" data-f="12000">12 kHz</button>
+              <button class="calc-btn" data-f="15000">15 kHz</button>
+              <button class="calc-btn" data-f="17000">17 kHz</button>
+              <button class="calc-btn" data-f="19000">19 kHz</button>
+            </div>
+          </div>
+          <div class="lookup-chips">
+            <div class="chip"><b>frekvence</b><span id="hearFv">1 000 Hz</span></div>
+            <div class="chip"><b>pásmo</b><span id="hearBand">slyšitelný zvuk</span></div>
+          </div>
+          <div class="range-rows" id="hearRows"></div>
+        </div>
+        <p class="compare-note">Malé reproduktory notebooku basy pod asi 150 Hz a výšky nad asi 16 kHz skoro nezahrají. Když neslyšíš, nemusí to být uchem. Rozsahy zvířat jsou přibližné.</p>
+      </div>
+    </section>
+
+    <!-- 5 : decibely -->
+    <section class="slide" data-index="4" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Hlasitost</div>
+        <h2 class="slide-title">Decibely: logaritmická stupnice</h2>
+        <p class="lede">Ucho snese obrovský rozsah: nejsilnější zvuk, který vydržíme, má asi <b>milionkrát větší tlak</b> než nejslabší, který zaslechneme. Proto se hladina měří v <b>decibelech</b> (dB). Každých <b>+20 dB</b> znamená 10× větší tlak, každých <b>+6 dB</b> zhruba dvojnásobný.</p>
+        <div class="demo-box">
+          <div class="db-list" id="dbList">
+            <button class="db-item" data-db="0"><span>práh slyšení</span><b>0 dB</b></button>
+            <button class="db-item" data-db="20"><span>šustění listí</span><b>20 dB</b></button>
+            <button class="db-item" data-db="30"><span>šepot</span><b>30 dB</b></button>
+            <button class="db-item is-active" data-db="60"><span>běžný rozhovor</span><b>60 dB</b></button>
+            <button class="db-item" data-db="70"><span>vysavač</span><b>70 dB</b></button>
+            <button class="db-item" data-db="85"><span>hranice škodlivosti při dlouhém poslechu</span><b>85 dB</b></button>
+            <button class="db-item" data-db="100"><span>sluchátka naplno</span><b>100 dB</b></button>
+            <button class="db-item" data-db="110"><span>rockový koncert u pódia</span><b>110 dB</b></button>
+            <button class="db-item" data-db="130"><span>práh bolesti</span><b>130 dB</b></button>
+          </div>
+          <div class="fill-bar"><div class="fill-bar-in" id="dbBar"></div></div>
+          <div class="lookup-chips">
+            <div class="chip"><b>tlak oproti prahu</b><span id="dbP">1 000×</span></div>
+            <div class="chip"><b>energie oproti prahu</b><span id="dbI">1 000 000×</span></div>
+          </div>
+        </div>
+        <p class="compare-note">Hodnoty jsou orientační. Od 85 dB výš poškozuje dlouhý poslech sluch nevratně. Pozor na sluchátka.</p>
+      </div>
+    </section>
+
+    <!-- 6 : barva tónu -->
+    <section class="slide" data-index="5" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Barva zvuku</div>
+        <h2 class="slide-title">Proč housle nezní jako flétna</h2>
+        <p class="lede">Skutečné tóny nejsou čistá sinusovka. Vedle základní frekvence <i>f</i> obsahují i <b>vyšší harmonické</b>: 2<i>f</i>, 3<i>f</i>, 4<i>f</i>… Jejich poměr dává tónu <b>barvu</b>. Každý zvuk jde rozložit na součet sinusovek (Fourier). Namíchej tón:</p>
+        <div class="demo-box">
+          <div class="preset-row" id="harmPresets">
+            <button class="calc-btn is-active" data-p="sine">sinus</button>
+            <button class="calc-btn" data-p="square">obdélník (liché)</button>
+            <button class="calc-btn" data-p="saw">pila (všechny)</button>
+            <button class="calc-btn" data-p="soft">měkký tón</button>
+          </div>
+          <div class="harm-grid" id="harmSliders"></div>
+          <div class="harm-views">
+            <div class="harm-view"><span class="demo-cap">tvar vlny (jedna perioda)</span><div class="canvas-frame"><canvas id="harmWave" width="420" height="180"></canvas></div></div>
+            <div class="harm-view"><span class="demo-cap">spektrum: síla harmonických</span><div class="canvas-frame"><canvas id="harmSpec" width="420" height="180"></canvas></div></div>
+          </div>
+          <div class="demo-row center"><button class="reveal-btn" id="harmPlay">▶ Hrát (220 Hz)</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 : otázka -->
+    <section class="slide pause-slide" data-index="6" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Problém</div>
+        <div class="qmark">?</div>
+        <h2>Jak uložit vlnu do počítače?</h2>
+        <p class="lede">Křivka tlaku je spojitá: v každém okamžiku má nějakou hodnotu a hodnota může být jakékoli reálné číslo. Počítač ale umí uložit jen <b>konečně mnoho</b> čísel a každé jen s <b>konečnou přesností</b>. Co s tím?</p>
+        <button class="reveal-btn" data-reveal="storeAnswer">Ukázat odpověď</button>
+        <p class="answer" id="storeAnswer" hidden>Musíme vlnu <b>dvakrát zjednodušit</b>. Měřit ji jen v pravidelných okamžicích (<b>vzorkování</b>, ořízne čas) a každou naměřenou hodnotu zaokrouhlit na jednu z povolených úrovní (<b>kvantování</b>, ořízne hodnoty). Otázka je, jak hustě a jak přesně, aby to ucho nepoznalo.</p>
+      </div>
+    </section>
+
+    <!-- 8 : historie -->
+    <section class="slide" data-index="7" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Jak to vzniklo</div>
+        <h2 class="slide-title">Od drážky k souboru</h2>
+        <ul class="timeline">
+          <li><span class="tl-year">1857</span><span class="tl-text"><b>Édouard-Léon Scott de Martinville</b> sestrojí fonautograf. Zvuk zapíše jako vlnovku na začerněný papír, přehrát ho ale neumí. Jeho záznamy poprvé zazněly až v roce 2008, přečtené počítačem.</span></li>
+          <li><span class="tl-year">1877</span><span class="tl-text"><b>Thomas Edison</b> předvede fonograf: hrot vyrývá vlnu do cínové fólie na válci a umí ji i přehrát.</span></li>
+          <li><span class="tl-year">1887</span><span class="tl-text"><b>Emil Berliner</b> patentuje gramofon. Plochá deska se dá snadno lisovat ve velkém.</span></li>
+          <li><span class="tl-year">1928</span><span class="tl-text"><b>Harry Nyquist</b> (Bell Labs) zkoumá, kolik údajů za sekundu se dá poslat telegrafem. Z toho vychází vzorkovací věta.</span></li>
+          <li><span class="tl-year">1937</span><span class="tl-text"><b>Alec Reeves</b> vymyslí <b>PCM</b> (pulzně kódovou modulaci): signál změřit a poslat jako čísla. Tak se zvuk ukládá dodnes.</span></li>
+          <li><span class="tl-year">1949</span><span class="tl-text"><b>Claude Shannon</b> vzorkovací větu přesně dokáže. Nezávisle na něm ji v roce 1933 odvodil sovětský inženýr Vladimir Kotělnikov.</span></li>
+          <li><span class="tl-year">1982</span><span class="tl-text">1. října vychází v Japonsku <b>CD</b> a přehrávač Sony CDP-101. Philips a Sony zvolí 44,1 kHz, 16 bitů a 74 minut, aby se vešla Beethovenova Devátá.</span></li>
+          <li><span class="tl-year">1995</span><span class="tl-text">Tým Karlheinze Brandenburga ve <b>Fraunhofer IIS</b> vybere pro svůj formát příponu <b>.mp3</b>. Standard MPEG byl hotový už v roce 1992.</span></li>
+          <li><span class="tl-year">2001</span><span class="tl-text"><b>FLAC</b>: volný formát bezztrátové komprese. 2012 přichází <b>Opus</b> pro hovory a streamování.</span></li>
+          <li><span class="tl-year">2025</span><span class="tl-text">Spotify spouští bezztrátový poslech ve <b>FLAC</b> (24 bitů, 44,1 kHz).</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 9 : analog vs digitál -->
+    <section class="slide" data-index="8" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Dva světy</div>
+        <h2 class="slide-title">Analogový a digitální záznam</h2>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <div class="compare-head">Analogový (deska, kazeta)</div>
+            <div class="compare-body">Záznam je <b>tvar</b>, který kopíruje vlnu: drážka v desce se vlní stejně jako tlak vzduchu, na kazetě je to síla zmagnetování. Spojitý v čase i v hodnotách. Každé přehrání a každá kopie ale přidá <b>šum a opotřebení</b>.</div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-head">Digitální (CD, soubor)</div>
+            <div class="compare-body">Záznam je <b>řada čísel</b>. V čase i v hodnotách je zaokrouhlený, ale kopie je <b>dokonale stejná</b> jako originál, nic se neopotřebí a čísla jde dál zpracovávat a komprimovat.</div>
+          </div>
+        </div>
+        <div class="flow-steps">
+          <div class="flow-step"><b>mikrofon</b><span>tlak → napětí</span></div>
+          <div class="flow-step"><b>A/D převodník</b><span>vzorkuje a kvantuje</span></div>
+          <div class="flow-step"><b>čísla</b><span>soubor, síť, úpravy</span></div>
+          <div class="flow-step"><b>D/A převodník</b><span>čísla → napětí</span></div>
+          <div class="flow-step"><b>reproduktor</b><span>napětí → tlak</span></div>
+        </div>
+        <p class="compare-note">A/D převodník (anglicky ADC) najdeš v každém mobilu a zvukové kartě. Na konci cesty je vždycky zase analogový zvuk, protože ucho jinak neumí.</p>
+      </div>
+    </section>
+
+    <!-- 10 : vzorkování -->
+    <section class="slide" data-index="9" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Krok 1</div>
+        <h2 class="slide-title">Vzorkování: měř v pravidelných okamžicích</h2>
+        <p class="lede">Převodník změří napětí v pravidelných intervalech. Jednomu měření říkáme <b>vzorek</b> (sample), počtu měření za sekundu <b>vzorkovací frekvence</b> <i>f</i><sub>s</sub>. Mezi vzorky nevíme nic. Uber vzorků a sleduj, jak se ztrácí tvar vlny:</p>
+        <div class="demo-box">
+          <div class="canvas-frame"><canvas id="sampCanvas" width="760" height="240"></canvas></div>
+          <div class="slider-row"><label>f<sub>s</sub></label><input type="range" id="sampFs" min="0" max="100" value="60" aria-label="Vzorkovací frekvence"></div>
+          <div class="demo-row">
+            <button class="reveal-btn" id="sampHold">Ukázat schody</button>
+            <div class="lookup-chips">
+              <div class="chip"><b>vzorkovací frekvence</b><span id="sampFsV">8 000 Hz</span></div>
+              <div class="chip"><b>interval mezi vzorky</b><span id="sampDt">125 µs</span></div>
+              <div class="chip"><b>vzorků na obrázku</b><span id="sampN">40</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="compare-note">Signál na obrázku je součet tónů 400 Hz a 1 200 Hz a okno ukazuje 5 ms. „Schody“ ukazují, co by vyšlo, kdyby převodník držel poslední hodnotu do dalšího vzorku.</p>
+      </div>
+    </section>
+
+    <!-- 11 : kvantování -->
+    <section class="slide" data-index="10" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Krok 2</div>
+        <h2 class="slide-title">Kvantování: zaokrouhli na úrovně</h2>
+        <p class="lede">Každý vzorek musíme uložit jako celé číslo s pevným počtem bitů. <i>n</i> bitů dá <b>2<sup>n</sup> úrovní</b>, tomu se říká <b>bitová hloubka</b>. Naměřená hodnota se zaokrouhlí na nejbližší úroveň a rozdíl je <b>kvantizační chyba</b>, kterou slyšíme jako šum.</p>
+        <div class="demo-box">
+          <div class="canvas-frame"><canvas id="quantCanvas" width="760" height="240"></canvas></div>
+          <div class="slider-row"><label>n</label><input type="range" id="quantBits" min="1" max="8" value="3" aria-label="Bitová hloubka"></div>
+          <div class="lookup-chips">
+            <div class="chip"><b>bitů na vzorek</b><span id="quantN">3</span></div>
+            <div class="chip"><b>úrovní</b><span id="quantL">8</span></div>
+            <div class="chip"><b>největší chyba</b><span id="quantE">±7,1 %</span></div>
+            <div class="chip"><b>odstup signálu od šumu</b><span id="quantS">≈ 20 dB</span></div>
+          </div>
+        </div>
+        <p class="compare-note">Červené úsečky jsou chyby. Každý bit navíc zdvojnásobí počet úrovní, chybu zmenší na polovinu a přidá asi 6 dB odstupu od šumu. CD má 16 bitů, tedy 65 536 úrovní.</p>
+      </div>
+    </section>
+
+    <!-- 12 : poslechni si -->
+    <section class="slide" data-index="11" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Poslechni si</div>
+        <h2 class="slide-title">Zkaz zvuk sám</h2>
+        <p class="lede">Vyber zdroj, pak sniž vzorkovací frekvenci nebo bitovou hloubku a porovnej s originálem. Kdo pozná rozdíl mezi 44,1 kHz a 22 kHz? A mezi 16 a 8 bity?</p>
+        <div class="demo-box">
+          <div class="demo-row">
+            <span class="demo-cap">zdroj</span>
+            <div class="preset-row" id="lsSource">
+              <button class="calc-btn is-active" data-s="melody">melodie</button>
+              <button class="calc-btn" data-s="mic">nahrát svůj hlas (4 s)</button>
+            </div>
+            <span class="hint" id="lsMicMsg"></span>
+          </div>
+          <div class="demo-row">
+            <span class="demo-cap">f<sub>s</sub></span>
+            <div class="preset-row" id="lsFs">
+              <button class="calc-btn is-active" data-v="44100">44,1 kHz</button>
+              <button class="calc-btn" data-v="22050">22 kHz</button>
+              <button class="calc-btn" data-v="11025">11 kHz</button>
+              <button class="calc-btn" data-v="8000">8 kHz</button>
+              <button class="calc-btn" data-v="4000">4 kHz</button>
+              <button class="calc-btn" data-v="2000">2 kHz</button>
+            </div>
+          </div>
+          <div class="demo-row">
+            <span class="demo-cap">bity</span>
+            <div class="preset-row" id="lsBits">
+              <button class="calc-btn is-active" data-v="16">16</button>
+              <button class="calc-btn" data-v="8">8</button>
+              <button class="calc-btn" data-v="6">6</button>
+              <button class="calc-btn" data-v="4">4</button>
+              <button class="calc-btn" data-v="3">3</button>
+              <button class="calc-btn" data-v="2">2</button>
+            </div>
+          </div>
+          <div class="canvas-frame"><canvas id="lsCanvas" width="760" height="170"></canvas></div>
+          <div class="demo-row center">
+            <button class="reveal-btn" id="lsOrig">▶ Originál</button>
+            <button class="reveal-btn" id="lsDeg">▶ Upravený</button>
+            <div class="lookup-chips">
+              <div class="chip"><b>datový tok (mono)</b><span id="lsRate">706 kb/s</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="compare-note">Graf ukazuje výřez 4 ms: světlá čára je originál, cyan upravený zvuk. Nahrávka z mikrofonu zůstane jen v tvém prohlížeči a nikam se neposílá.</p>
+      </div>
+    </section>
+
+    <!-- 13 : otázka -->
+    <section class="slide pause-slide" data-index="12" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Tipni si</div>
+        <div class="qmark">?</div>
+        <h2>Jak hustě vzorkovat?</h2>
+        <p class="lede">Nejvyšší tón, který slyšíme, má asi 20 000 Hz. Kolikrát za sekundu musíme vlnu změřit, aby se dala zpětně přesně složit? 20 000×? 100 000×? Milionkrát?</p>
+        <button class="reveal-btn" data-reveal="nyqAnswer">Ukázat odpověď</button>
+        <p class="answer" id="nyqAnswer" hidden>Stačí <b>víc než dvakrát</b> za každý kmit nejvyšší frekvence, tedy víc než 40 000×. Každý kmit má kopec a údolí a na každý stačí aspoň jeden vzorek. To je <b>vzorkovací (Nyquistova–Shannonova) věta</b>.</p>
+      </div>
+    </section>
+
+    <!-- 14 : Nyquist a aliasing -->
+    <section class="slide" data-index="13" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Vzorkovací věta</div>
+        <h2 class="slide-title">Víc než dvakrát za kmit</h2>
+        <div class="formula f-sm">f<sub>s</sub> &gt; 2 · f<sub>max</sub></div>
+        <p class="lede">Polovině vzorkovací frekvence se říká <b>Nyquistova frekvence</b>. Co je nad ní, se neztratí beze stopy: ze vzorků vyjde jiný, <b>nižší</b> tón, který v původním zvuku vůbec nebyl. Tomu se říká <b>aliasing</b>. Zvyšuj frekvenci signálu a sleduj, jakou vlnu vzorky popisují:</p>
+        <div class="demo-box">
+          <div class="canvas-frame"><canvas id="aliasCanvas" width="760" height="230"></canvas></div>
+          <div class="slider-row"><label>f</label><input type="range" id="aliasF" min="100" max="1900" step="10" value="300" aria-label="Frekvence signálu"></div>
+          <div class="lookup-chips">
+            <div class="chip"><b>signál</b><span id="aliasFv">300 Hz</span></div>
+            <div class="chip"><b>vzorkování f<sub>s</sub></b><span>1 000 Hz</span></div>
+            <div class="chip"><b>Nyquistova frekvence</b><span>500 Hz</span></div>
+            <div class="chip"><b>ze vzorků vyjde</b><span id="aliasOut">300 Hz</span></div>
+          </div>
+          <span class="verdict-line" id="aliasVerdict">v pořádku: signál je pod Nyquistovou frekvencí</span>
+        </div>
+        <p class="compare-note">Šedá křivka je skutečný signál, body jsou vzorky, cyan je nejnižší vlna, která všemi body prochází. Proto má každý převodník před vzorkováním <b>filtr</b>, který frekvence nad f<sub>s</sub>/2 odřízne.</p>
+      </div>
+    </section>
+
+    <!-- 15 : kolo ve filmu -->
+    <section class="slide" data-index="14" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Aliasing kolem nás</div>
+        <h2 class="slide-title">Proč se kola ve filmu točí pozpátku</h2>
+        <p class="lede">Kamera natáčí 24 snímků za sekundu, tedy <b>vzorkuje</b> obraz. Když se kolo mezi dvěma snímky otočí skoro o celou vzdálenost mezi paprsky, vypadá to, že se pootočilo kousek <b>zpátky</b>. Vlevo skutečné kolo, vpravo to, co uvidí kamera.</p>
+        <div class="demo-box">
+          <div class="wheel-pair">
+            <div class="wheel-cell"><div class="canvas-frame square"><canvas id="wheelReal" width="260" height="260"></canvas></div><span class="demo-cap">skutečnost</span></div>
+            <div class="wheel-cell"><div class="canvas-frame square"><canvas id="wheelCam" width="260" height="260"></canvas></div><span class="demo-cap">kamera 24 snímků/s</span></div>
+          </div>
+          <div class="slider-row"><label>v</label><input type="range" id="wheelV" min="0" max="7" step="0.05" value="0.5" aria-label="Rychlost kola"></div>
+          <div class="lookup-chips">
+            <div class="chip"><b>otáček za sekundu</b><span id="wheelRps">0,5</span></div>
+            <div class="chip"><b>kamera vidí</b><span id="wheelSeen">0,5 ot./s</span></div>
+          </div>
+        </div>
+        <p class="compare-note">Kolo má 8 paprsků, takže stejně vypadá po každé osmině otáčky. Při 3 otáčkách za sekundu se paprsek posune přesně o osminu za snímek a kolo na záznamu stojí.</p>
+      </div>
+    </section>
+
+    <!-- 16 : 44,1 kHz -->
+    <section class="slide" data-index="15" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Běžné hodnoty</div>
+        <h2 class="slide-title">Proč zrovna 44 100 Hz?</h2>
+        <p class="lede">Na 20 kHz stačí víc než 40 kHz. Rezerva nad tím je pro <b>filtr</b> proti aliasingu, který nedokáže řezat ostře. A přesné číslo je z videa: první digitální nahrávky se ukládaly na <b>videokazety</b>. Do jednoho řádku obrazu se vešly 3 vzorky, a tak:</p>
+        <div class="formula f-xs">3 vzorky × 245 řádků × 60 půlsnímků/s = 44 100 / s</div>
+        <div class="table-wrap">
+          <table class="datatable">
+            <thead><tr><th>f<sub>s</sub></th><th>zachytí do</th><th>kde</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">8 kHz</td><td>4 kHz</td><td>klasický telefon (hlas 300–3 400 Hz)</td></tr>
+              <tr><td class="mono">16 kHz</td><td>8 kHz</td><td>HD hovory v mobilní síti, hlasoví asistenti</td></tr>
+              <tr><td class="mono">44,1 kHz</td><td>22,05 kHz</td><td>CD, většina hudby a streamování</td></tr>
+              <tr><td class="mono">48 kHz</td><td>24 kHz</td><td>video, film, televize, hry</td></tr>
+              <tr><td class="mono">96–192 kHz</td><td>48–96 kHz</td><td>nahrávací studia (rezerva pro úpravy)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="compare-note">Evropská verze rovnice pro PAL: 3 × 294 × 50 = 44 100. Stejné číslo, a proto ho Sony a Philips zvolili.</p>
+      </div>
+    </section>
+
+    <!-- 17 : otázka velikost -->
+    <section class="slide pause-slide" data-index="16" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Spočítej</div>
+        <div class="qmark">?</div>
+        <h2>Kolik místa zabere písnička?</h2>
+        <p class="lede">Tříminutová písnička v kvalitě CD: 44 100 vzorků za sekundu, 16 bitů, stereo (2 kanály). Kolik je to bajtů?</p>
+        <button class="reveal-btn" data-reveal="sizeAnswer">Ukázat výpočet</button>
+        <p class="answer" id="sizeAnswer" hidden><b>Datový tok:</b> 44 100 × 16 × 2 = 1 411 200 b/s ≈ 1,4 Mb/s.<br><b>Za 3 minuty:</b> 1 411 200 × 180 = 254 016 000 b = 31 752 000 B ≈ <b>31,8 MB</b>.<br>Stejná písnička v MP3 s tokem 128 kb/s: 128 000 × 180 / 8 = 2,88 MB, tedy asi 11× méně.</p>
+      </div>
+    </section>
+
+    <!-- 18 : kalkulačka -->
+    <section class="slide" data-index="17" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Kalkulačka</div>
+        <h2 class="slide-title">Velikost nekomprimovaného zvuku</h2>
+        <div class="formula f-xs">velikost = f<sub>s</sub> · bity · kanály · čas</div>
+        <div class="demo-box">
+          <div class="demo-row"><span class="demo-cap">f<sub>s</sub></span>
+            <div class="preset-row" id="calcFs">
+              <button class="calc-btn" data-v="8000">8 kHz</button>
+              <button class="calc-btn" data-v="22050">22,05 kHz</button>
+              <button class="calc-btn is-active" data-v="44100">44,1 kHz</button>
+              <button class="calc-btn" data-v="48000">48 kHz</button>
+              <button class="calc-btn" data-v="96000">96 kHz</button>
+            </div>
+          </div>
+          <div class="demo-row"><span class="demo-cap">bity</span>
+            <div class="preset-row" id="calcBits">
+              <button class="calc-btn" data-v="8">8</button>
+              <button class="calc-btn is-active" data-v="16">16</button>
+              <button class="calc-btn" data-v="24">24</button>
+            </div>
+            <span class="demo-cap">kanály</span>
+            <div class="preset-row" id="calcCh">
+              <button class="calc-btn" data-v="1">mono</button>
+              <button class="calc-btn is-active" data-v="2">stereo</button>
+              <button class="calc-btn" data-v="6">5.1</button>
+            </div>
+          </div>
+          <div class="slider-row"><label>t</label><input type="range" id="calcT" min="10" max="600" step="10" value="180" aria-label="Délka v sekundách"></div>
+          <div class="bignum">
+            <div><span>délka</span><b id="calcTv">3:00</b></div>
+            <div><span>datový tok</span><b id="calcRate">1 411 kb/s</b></div>
+            <div><span>velikost</span><b id="calcSize">31,8 MB</b></div>
+          </div>
+          <div class="size-bars" id="calcBars"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 19 : dynamika -->
+    <section class="slide" data-index="18" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Bitová hloubka</div>
+        <h2 class="slide-title">Kolik bitů stačí?</h2>
+        <p class="lede">Rozsah mezi nejtišším a nejhlasitějším zvukem, který záznam zachytí, je <b>dynamický rozsah</b>. Každý bit přidá asi 6 dB, přesněji 6,02 · <i>n</i> + 1,76 dB. Ucho zvládne zhruba 120 dB.</p>
+        <div class="table-wrap">
+          <table class="datatable">
+            <thead><tr><th>bity</th><th>úrovní</th><th>dynamika</th><th>použití</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">8</td><td class="mono">256</td><td class="mono">≈ 50 dB</td><td>telefon (s logaritmickou stupnicí), staré hry a samplery</td></tr>
+              <tr><td class="mono">16</td><td class="mono">65 536</td><td class="mono">≈ 98 dB</td><td>CD, běžná hudba. Stačí na poslech.</td></tr>
+              <tr><td class="mono">24</td><td class="mono">16 777 216</td><td class="mono">≈ 146 dB</td><td>studio, Hi-Res. Víc, než ucho rozliší, ale dává rezervu při úpravách.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="compare-grid">
+          <div class="compare-col">
+            <div class="compare-head">Proč studio nahrává ve 24 bitech</div>
+            <div class="compare-body">Při nahrávání se nechává rezerva, aby se signál nepřebudil. Hudba pak využije třeba jen část rozsahu. Při 16 bitech by v tichých pasážích bylo slyšet zrnění, 24 bitů má rezervu.</div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-head">Přebuzení (clipping)</div>
+            <div class="compare-body">Co je hlasitější než nejvyšší úroveň, se <b>ořízne</b>. Vlna dostane plochý vrchol a zní tvrdě a zkresleně. Tohle už nejde opravit, informace je pryč.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 20 : komprese a formáty -->
+    <section class="slide" data-index="19" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Komprese</div>
+        <h2 class="slide-title">Bezztrátově, nebo ztrátově</h2>
+        <p class="lede"><b>Bezztrátová</b> komprese (jako ZIP) zmenší soubor zhruba na polovinu a po rozbalení vrátí přesně stejná čísla. <b>Ztrátová</b> komprese zahodí to, co ucho stejně neuslyší, a zmenší soubor 5× až 15×. Vrátit se k originálu už nejde.</p>
+        <div class="table-wrap">
+          <table class="datatable">
+            <thead><tr><th>formát</th><th>typ</th><th>kde ho potkáš</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">WAV</td><td>bez komprese (PCM)</td><td>nahrávání, střih, systémové zvuky</td></tr>
+              <tr><td class="mono">FLAC</td><td>bezztrátový</td><td>archivace, Hi-Fi streamování (Spotify, Tidal, Qobuz)</td></tr>
+              <tr><td class="mono">ALAC</td><td>bezztrátový</td><td>Apple Music</td></tr>
+              <tr><td class="mono">MP3</td><td>ztrátový</td><td>nejrozšířenější, hraje všude</td></tr>
+              <tr><td class="mono">AAC</td><td>ztrátový</td><td>nástupce MP3: YouTube, Apple, video v MP4</td></tr>
+              <tr><td class="mono">Ogg Vorbis</td><td>ztrátový</td><td>volný formát, hry, Spotify</td></tr>
+              <tr><td class="mono">Opus</td><td>ztrátový</td><td>volný, nejlepší při nízkém toku: videohovory, Discord, WhatsApp</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="compare-note">Kvalitu ztrátové komprese určuje hlavně <b>datový tok</b> (bitrate) v kb/s. MP3 při 128 kb/s je slušné, při 320 kb/s většina lidí rozdíl od CD nepozná.</p>
+      </div>
+    </section>
+
+    <!-- 21 : psychoakustika -->
+    <section class="slide" data-index="20" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Psychoakustika</div>
+        <h2 class="slide-title">Co ucho neuslyší, nemusíme ukládat</h2>
+        <p class="lede">Ztrátové kodeky využívají dvě slabiny sluchu. <b>Práh slyšení</b>: ucho je nejcitlivější kolem 2–5 kHz, velmi nízké a vysoké tóny musí být mnohem hlasitější. <b>Maskování</b>: hlasitý tón přehluší tišší tóny s podobnou frekvencí. Vyzkoušej:</p>
+        <div class="demo-box">
+          <div class="canvas-frame"><canvas id="maskCanvas" width="760" height="260"></canvas></div>
+          <div class="slider-row"><label>f</label><input type="range" id="maskF" min="0" max="100" value="4" aria-label="Frekvence tichého tónu"></div>
+          <div class="demo-row center">
+            <button class="reveal-btn" id="maskQuiet">▶ Tichý tón</button>
+            <button class="reveal-btn" id="maskLoud">▶ Hlasitý tón 1 kHz</button>
+            <div class="lookup-chips">
+              <div class="chip"><b>tichý tón</b><span id="maskFv">1 100 Hz</span></div>
+              <div class="chip"><b>je slyšet?</b><span id="maskVerdict">zamaskovaný</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="compare-note">Zapni nejdřív tichý tón, pak k němu přidej hlasitý. Když jsou frekvence blízko, tichý tón zanikne. Posuň ho dál a znovu se objeví. Křivky jsou zjednodušené.</p>
+      </div>
+    </section>
+
+    <!-- 22 : jak MP3 šetří -->
+    <section class="slide" data-index="21" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Uvnitř kodeku</div>
+        <h2 class="slide-title">Jak MP3 a AAC šetří místo</h2>
+        <ol class="steps">
+          <li>Zvuk rozdělí na krátké úseky, <b>rámce</b> (v MP3 po 1 152 vzorcích, asi 26 ms).</li>
+          <li>Každý rámec převede z časového průběhu na <b>frekvence</b> (transformace MDCT, příbuzná Fourierově).</li>
+          <li><b>Psychoakustický model</b> spočítá, co je pod prahem slyšení nebo zamaskované.</li>
+          <li>Bity rozdělí jen tam, kde je ucho uslyší. Ostatní frekvence uloží hrubě, nebo vůbec. Tady vzniká ztráta.</li>
+          <li>Výsledek ještě <b>bezztrátově</b> zkomprimuje (Huffmanovo kódování) a uloží.</li>
+        </ol>
+        <div class="size-bars" id="codecBars"></div>
+        <p class="compare-note">Přehrávač dělá opak: čísla rozbalí a z frekvencí zase složí vlnu. Ztráta je nejvíc slyšet tam, kde je málo čím maskovat: v tichých pasážích, u čistých tónů a u ostrých úderů.</p>
+      </div>
+    </section>
+
+    <!-- 23 : spektrogram -->
+    <section class="slide" data-index="22" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Zvuk jako obrázek</div>
+        <h2 class="slide-title">Spektrogram</h2>
+        <p class="lede">Spektrogram ukazuje, které frekvence v čase znějí: vodorovně čas, svisle frekvence, jas je síla. Tak zvuk „vidí“ kodek i aplikace, které poznávají písničky. Zahraj melodii, nebo mluv do mikrofonu a zkus hvízdat.</p>
+        <div class="demo-box">
+          <div class="canvas-frame"><canvas id="specCanvas" width="760" height="300"></canvas></div>
+          <div class="demo-row center">
+            <button class="reveal-btn" id="specMelody">▶ Melodie</button>
+            <button class="reveal-btn" id="specMic">🎤 Mikrofon</button>
+            <button class="reveal-btn" id="specSweep">▶ Glissando 100 Hz → 10 kHz</button>
+          </div>
+          <span class="hint" id="specMsg"></span>
+        </div>
+        <p class="compare-note">Svislá osa je logaritmická, stejně jako sluch: každá oktáva zabere stejně místa. U hlasu uvidíš základní tón a nad ním řadu harmonických.</p>
+      </div>
+    </section>
+
+    <!-- 24 : MIDI -->
+    <section class="slide" data-index="23" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Noty místo zvuku</div>
+        <h2 class="slide-title">MIDI: neukládá zvuk, ale návod</h2>
+        <p class="lede">Formát <b>MIDI</b> (1983) neobsahuje žádné vzorky. Ukládá <b>události</b>: zmáčkni klávesu číslo 64 silou 100, za čtvrt sekundy ji pusť. Zvuk vyrobí až nástroj nebo program, který MIDI přehrává. Melodie v této prezentaci je uložená přesně takhle.</p>
+        <div class="demo-box">
+          <div class="note-strip" id="midiNotes"></div>
+          <div class="demo-row center">
+            <button class="reveal-btn" id="midiPiano">▶ Jako zvonkohra</button>
+            <button class="reveal-btn" id="midiChip">▶ Jako 8bitová hra</button>
+          </div>
+          <div class="bignum">
+            <div><span>jako noty (MIDI)</span><b id="midiSize">≈ 110 B</b></div>
+            <div><span>jako zvuk (CD, WAV)</span><b id="midiWav">≈ 600 kB</b></div>
+            <div><span>poměr</span><b id="midiRatio">≈ 5 000×</b></div>
+          </div>
+        </div>
+        <p class="compare-note">Stejné noty, jiný zvuk: MIDI barvu nástroje neukládá. Proto se používá ve skladatelských programech, u elektronických nástrojů a dřív ve hrách. Nahraný zpěv nebo kytaru ale do not převést nejde.</p>
+      </div>
+    </section>
+
+    <!-- 25 : shrnutí -->
+    <section class="slide summary-slide" data-index="24" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Shrnutí</div>
+        <h2 class="slide-title">Co jsme se naučili</h2>
+        <ul class="summary-list">
+          <li>Zvuk je <b>vlnění tlaku</b>. <b>Frekvence</b> (Hz) je výška tónu, <b>amplituda</b> hlasitost. Slyšíme zhruba 20 Hz až 20 kHz, hlasitost měříme v <b>dB</b>.</li>
+          <li>Digitalizace = <b>vzorkování</b> (měřit v čase, f<sub>s</sub>) a <b>kvantování</b> (zaokrouhlit na 2<sup>n</sup> úrovní). Výsledek je <b>PCM</b>.</li>
+          <li><b>Vzorkovací věta</b>: f<sub>s</sub> &gt; 2 · f<sub>max</sub>. Co je nad f<sub>s</sub>/2, se změní v jiný tón (<b>aliasing</b>).</li>
+          <li>CD: <b>44,1 kHz, 16 bitů, stereo</b> = 1 411 kb/s, asi 10 MB za minutu. Každý bit přidá asi 6 dB dynamiky.</li>
+          <li><b>Bezztrátová</b> komprese (FLAC) vrátí přesně originál, <b>ztrátová</b> (MP3, AAC, Opus) zahodí, co ucho neslyší (<b>práh slyšení, maskování</b>).</li>
+          <li><b>MIDI</b> neukládá zvuk, ale noty, proto je malé.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 26 : zdroje -->
+    <section class="slide summary-slide" data-index="25" hidden>
+      <div class="slide-inner">
+        <div class="eyebrow">Zdroje</div>
+        <h2 class="slide-title">Odkud fakta jsou</h2>
+        <div class="src-cols">
+          <div class="src-group">
+            <h3>Historie</h3>
+            <ul class="src-list">
+              <li><a href="https://www.firstsounds.org/sounds/scott.php" target="_blank" rel="noopener">First Sounds: Scottovy fonautogramy</a></li>
+              <li><a href="https://www.loc.gov/collections/edison-company-motion-pictures-and-sound-recordings/articles-and-essays/history-of-edison-sound-recordings/" target="_blank" rel="noopener">Library of Congress: Edisonovy nahrávky</a></li>
+              <li><a href="https://www.whathifi.com/news/cd-30-years-old-today" target="_blank" rel="noopener">What Hi-Fi: The CD is 30 years old today</a></li>
+              <li><a href="https://heise.de/-10485563" target="_blank" rel="noopener">heise: 30 Jahre MP3</a></li>
+              <li><a href="https://audioxpress.com/news/spotify-finally-launches-24-bit-lossless-streaming" target="_blank" rel="noopener">audioXpress: Spotify Launches 24-bit Lossless</a></li>
+            </ul>
+          </div>
+          <div class="src-group">
+            <h3>Teorie a formáty</h3>
+            <ul class="src-list">
+              <li><a href="https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem" target="_blank" rel="noopener">Wikipedia: Nyquist–Shannon sampling theorem</a></li>
+              <li><a href="https://en.wikipedia.org/wiki/44,100_Hz" target="_blank" rel="noopener">Wikipedia: 44 100 Hz</a></li>
+              <li><a href="https://en.wikipedia.org/wiki/Hearing_range" target="_blank" rel="noopener">Wikipedia: Hearing range</a></li>
+              <li><a href="https://www.rfc-editor.org/rfc/rfc6716" target="_blank" rel="noopener">RFC 6716: Opus Audio Codec</a></li>
+              <li><a href="https://xiph.org/flac/" target="_blank" rel="noopener">Xiph.Org: FLAC</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 26</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- pomocné funkce ----------
+  function $(id){ return document.getElementById(id); }
+  function clamp(v, a, b){ return Math.min(b, Math.max(a, v)); }
+  function cz(n, d){ return n.toFixed(d).replace(".", ","); }
+  function thousands(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
+  function fmtHz(f){ return f >= 1000 ? (f % 1000 === 0 ? thousands(f) : cz(f/1000, f < 10000 ? 2 : 1) + " k") + " Hz" : Math.round(f) + " Hz"; }
+  function fmtHzPlain(f){ return thousands(Math.round(f)) + " Hz"; }
+  function fmtBytes(b){
+    if (b >= 1e9) return cz(b/1e9, 2) + " GB";
+    if (b >= 1e6) return cz(b/1e6, 1) + " MB";
+    if (b >= 1e3) return cz(b/1e3, 0) + " kB";
+    return Math.round(b) + " B";
+  }
+  function logPos(v, lo, hi){ return (Math.log(v) - Math.log(lo)) / (Math.log(hi) - Math.log(lo)); }
+  function logVal(t, lo, hi){ return Math.exp(Math.log(lo) + t * (Math.log(hi) - Math.log(lo))); }
+  function setActive(group, btn){
+    Array.prototype.forEach.call(group.querySelectorAll(".calc-btn"), function(b){ b.classList.toggle("is-active", b === btn); });
+  }
+  function onGroup(group, fn){
+    group.addEventListener("click", function(e){
+      var b = e.target.closest(".calc-btn"); if (!b) return;
+      setActive(group, b); fn(b);
+    });
+  }
+
+  var cs = getComputedStyle(document.documentElement);
+  function cv(name){ return cs.getPropertyValue(name).trim(); }
+  var COL = {
+    bg: cv("--c-bg"), surface: cv("--c-surface"), surface2: cv("--c-surface-2"), line: cv("--c-line"), line2: cv("--c-line-2"),
+    ink: cv("--c-ink"), muted: cv("--c-muted"), faint: cv("--c-faint"),
+    accent: cv("--c-accent"), mint: cv("--c-mint"), warm: cv("--c-warm"), yellow: cv("--c-yellow"), red: cv("--c-red"), lav: cv("--c-lavender")
+  };
+  var MONO = "13px 'JetBrains Mono', monospace";
+
+  // ---------- zvuk ----------
+  var AC = null, master = null, analyser = null;
+  function ac(){
+    if (!AC){
+      var C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return null;
+      AC = new C();
+      master = AC.createGain(); master.gain.value = 0.6;
+      analyser = AC.createAnalyser(); analyser.fftSize = 2048; analyser.smoothingTimeConstant = 0;
+      master.connect(analyser); analyser.connect(AC.destination);
+    }
+    if (AC.state === "suspended") AC.resume();
+    return AC;
+  }
+  var active = [];          // běžící zdroje
+  var activeBtns = [];      // tlačítka ve stavu „hraje“
+  function track(node){ active.push(node); return node; }
+  function stopAll(){
+    active.forEach(function(n){ try { n.stop(); } catch(e){} try { n.disconnect(); } catch(e){} });
+    active = [];
+    activeBtns.forEach(function(b){ b.classList.remove("is-on"); if (b.dataset.label) b.textContent = b.dataset.label; });
+    activeBtns = [];
+    stopMic();
+  }
+  function markPlaying(btn, stopLabel){
+    if (!btn.dataset.label) btn.dataset.label = btn.textContent;
+    btn.classList.add("is-on"); btn.textContent = stopLabel || "■ Zastavit";
+    activeBtns.push(btn);
+  }
+  function playBuffer(data, btn, onEnd){
+    var a = ac(); if (!a) return null;
+    var buf = a.createBuffer(1, data.length, a.sampleRate);
+    buf.getChannelData(0).set(data);
+    var src = a.createBufferSource(); src.buffer = buf; src.connect(master);
+    src.start(); track(src);
+    if (btn) markPlaying(btn);
+    src.onended = function(){
+      var i = active.indexOf(src); if (i >= 0) active.splice(i, 1);
+      if (btn){ btn.classList.remove("is-on"); if (btn.dataset.label) btn.textContent = btn.dataset.label; var j = activeBtns.indexOf(btn); if (j >= 0) activeBtns.splice(j, 1); }
+      if (onEnd) onEnd();
+    };
+    return src;
+  }
+  // tlačítko, které při druhém stisku zastaví
+  function toggleBtn(btn, start){
+    btn.addEventListener("click", function(){
+      if (btn.classList.contains("is-on")){ stopAll(); return; }
+      stopAll(); start();
+    });
+  }
+
+  // ---------- melodie (uložená jako noty) ----------
+  var MELODY = [
+    [76, 0.25], [79, 0.25], [84, 0.5], [83, 0.25], [79, 0.25], [81, 0.5],
+    [79, 0.25], [76, 0.25], [77, 0.25], [74, 0.25], [72, 0.75]
+  ];
+  var BASS = [[48, 1.0], [53, 1.0], [43, 0.75], [48, 0.75]];
+  function midiHz(m){ return 440 * Math.pow(2, (m - 69) / 12); }
+  function noteName(m){
+    var n = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+    return n[((m % 12) + 12) % 12] + (Math.floor(m / 12) - 1);
+  }
+  function melodyLength(){ return MELODY.reduce(function(s, n){ return s + n[1]; }, 0); }
+
+  function renderMelody(sr, timbre){
+    var len = melodyLength() + 0.4, N = Math.floor(len * sr), out = new Float32Array(N);
+    function tone(midi, t0, dur, amp, kind){
+      var f = midiHz(midi), i0 = Math.floor(t0 * sr), n = Math.floor((dur + 0.25) * sr);
+      for (var k = 1; k <= 24; k++){
+        if (k * f >= sr / 2 * 0.95) break;
+        var a;
+        if (kind === "chip"){ if (k % 2 === 0) continue; a = 1 / k; }
+        else if (kind === "bass"){ a = k === 1 ? 1 : 0.5 / k; if (k > 6) break; }
+        else { a = Math.pow(k, -1.15) * (k === 2 ? 0.9 : 1); }
+        var w = 2 * Math.PI * k * f / sr, decay = kind === "chip" ? 0 : (2.2 + k * 0.6);
+        for (var i = 0; i < n && i0 + i < N; i++){
+          var t = i / sr;
+          var env = Math.min(1, t / 0.004);
+          if (kind === "chip") env *= t < dur ? 1 : Math.max(0, 1 - (t - dur) / 0.02);
+          else env *= Math.exp(-decay * t);
+          out[i0 + i] += amp * a * env * Math.sin(w * i);
+        }
+      }
+    }
+    var t = 0;
+    MELODY.forEach(function(n){ tone(n[0], t, n[1], 0.5, timbre === "chip" ? "chip" : "bell"); t += n[1]; });
+    if (timbre !== "chip"){
+      t = 0;
+      BASS.forEach(function(n){ tone(n[0], t, n[1], 0.35, "bass"); t += n[1]; });
+      // činel: krátký šum s vysokými frekvencemi
+      var seed = 12345;
+      function rnd(){ seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff * 2 - 1; }
+      for (var h = 0; h < melodyLength(); h += 0.25){
+        var i0 = Math.floor(h * sr), prev = 0;
+        for (var i = 0; i < 0.06 * sr && i0 + i < N; i++){
+          var x = rnd(), hp = x - prev; prev = x;
+          out[i0 + i] += 0.06 * hp * Math.exp(-i / sr * 70);
+        }
+      }
+    }
+    var peak = 0; for (var j = 0; j < N; j++) peak = Math.max(peak, Math.abs(out[j]));
+    var g = 0.85 / (peak || 1); for (j = 0; j < N; j++) out[j] *= g;
+    return out;
+  }
+  var melodyCache = {};
+  function melody(timbre){
+    var a = ac(); if (!a) return null;
+    var key = timbre + a.sampleRate;
+    if (!melodyCache[key]) melodyCache[key] = renderMelody(a.sampleRate, timbre);
+    return melodyCache[key];
+  }
+
+  // zhorší signál: podvzorkování (bez filtru, drží hodnotu) a kvantování
+  function degrade(src, srcRate, fs, bits){
+    var out = new Float32Array(src.length), step = srcRate / fs, levels = Math.pow(2, bits);
+    var held = 0, next = 0;
+    for (var i = 0; i < src.length; i++){
+      if (i >= next){ held = src[Math.floor(next)]; next += step; }
+      var x = clamp(held, -1, 1);
+      if (bits < 16) x = (Math.round((x + 1) / 2 * (levels - 1)) / (levels - 1)) * 2 - 1;
+      out[i] = x;
+    }
+    return out;
+  }
+
+  // ---------- mikrofon ----------
+  var micStream = null, micSource = null;
+  function stopMic(){
+    if (micSource){ try { micSource.disconnect(); } catch(e){} micSource = null; }
+    if (micStream){ micStream.getTracks().forEach(function(t){ t.stop(); }); micStream = null; }
+  }
+  function getMic(){
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return Promise.reject(new Error("nepodporováno"));
+    return navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: true } });
+  }
+
+  // ---------- navigace ----------
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total = slides.length, current = 0;
+  var dotsEl = $("dots"), counterEl = $("counter"), prevBtn = $("prevBtn"), nextBtn = $("nextBtn");
+  slides.forEach(function(_, i){
+    var d = document.createElement("button");
+    d.className = "dot"; d.setAttribute("aria-label", "Snímek " + (i + 1));
+    d.addEventListener("click", function(){ goTo(i); });
+    dotsEl.appendChild(d);
+  });
+  var dotEls = Array.prototype.slice.call(dotsEl.children);
+  var ticks = {};   // animace podle čísla snímku
+  function goTo(i){
+    if (i < 0 || i >= total) return;
+    if (i !== current) stopAll();
+    slides[current].hidden = true;
+    current = i;
+    slides[current].hidden = false;
+    dotEls.forEach(function(d, idx){ d.classList.toggle("is-active", idx === current); });
+    counterEl.textContent = (current + 1) + " / " + total;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+  }
+  prevBtn.addEventListener("click", function(){ goTo(current - 1); });
+  nextBtn.addEventListener("click", function(){ goTo(current + 1); });
+  document.addEventListener("keydown", function(e){
+    var t = e.target && e.target.tagName;
+    if (t === "INPUT" || t === "TEXTAREA") return;
+    if (e.key === "ArrowRight") goTo(current + 1);
+    if (e.key === "ArrowLeft") goTo(current - 1);
+  });
+  goTo(0);
+  var lastT = performance.now();
+  function loop(now){
+    var dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
+    if (ticks[current]) ticks[current](now / 1000, dt);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-reveal]"), function(btn){
+    btn.addEventListener("click", function(){
+      var t = $(btn.dataset.reveal);
+      t.hidden = !t.hidden;
+      btn.classList.toggle("is-on", !t.hidden);
+    });
+  });
+
+  // kreslení
+  function grid(ctx, W, H, mid){
+    ctx.fillStyle = COL.bg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = COL.line; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(W, mid); ctx.stroke();
+  }
+  function curve(ctx, W, fn, color, width, dash){
+    ctx.beginPath();
+    for (var x = 0; x <= W; x++){ var y = fn(x); if (x) ctx.lineTo(x, y); else ctx.moveTo(x, y); }
+    ctx.strokeStyle = color; ctx.lineWidth = width || 2; ctx.setLineDash(dash || []); ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  // ---------- 1 : titul ----------
+  (function(){
+    var c = $("heroCanvas"), ctx = c.getContext("2d"), W = c.width, H = c.height, buf = new Float32Array(2048);
+    var playing = false;
+    ticks[0] = function(t){
+      grid(ctx, W, H, H/2);
+      if (playing && analyser){
+        analyser.getFloatTimeDomainData(buf);
+        // najdi průchod nulou nahoru, ať vlna stojí
+        var s = 0; for (var i = 1; i < 1024; i++){ if (buf[i-1] < 0 && buf[i] >= 0){ s = i; break; } }
+        curve(ctx, W, function(x){ return H/2 - buf[s + Math.floor(x / W * 900)] * H * 0.45; }, COL.accent, 2.5);
+      } else {
+        curve(ctx, W, function(x){
+          var u = x / W * Math.PI * 2;
+          return H/2 - H * 0.32 * (Math.sin(u * 3 - t * 2) * 0.6 + Math.sin(u * 7 + t * 3) * 0.25 + Math.sin(u * 13 - t * 5) * 0.1) * (0.6 + 0.4 * Math.sin(t * 0.7));
+        }, COL.accent, 2.5);
+      }
+    };
+    var btn = $("heroPlay");
+    toggleBtn(btn, function(){ playing = true; playBuffer(melody("bell"), btn, function(){ playing = false; }); });
+  })();
+
+  // ---------- 2 : molekuly ----------
+  (function(){
+    var c = $("airCanvas"), ctx = c.getContext("2d"), W = c.width, H = c.height;
+    var p = $("pressCanvas"), pctx = p.getContext("2d"), PW = p.width, PH = p.height;
+    var cols = 64, rows = 7, phase = 0;
+    ticks[1] = function(t, dt){
+      var f = +$("airF").value; phase += dt * f * 2 * Math.PI * 0.5;
+      var k = 2 * Math.PI / (W / 2.5) * (f / 2), amp = 9;
+      ctx.fillStyle = COL.bg; ctx.fillRect(0, 0, W, H);
+      // reproduktor
+      var cone = 14 + amp * Math.sin(-phase);
+      ctx.fillStyle = COL.surface2; ctx.fillRect(0, 10, cone, H - 20);
+      for (var r = 0; r < rows; r++){
+        for (var i = 0; i < cols; i++){
+          var x0 = 30 + i * (W - 40) / cols + (r % 2) * 4;
+          var x = x0 + amp * Math.sin(k * x0 - phase);
+          var y = 16 + r * (H - 32) / (rows - 1);
+          var hl = (r === 3 && i === 30);
+          ctx.fillStyle = hl ? COL.warm : COL.muted;
+          ctx.beginPath(); ctx.arc(x, y, hl ? 5 : 2.6, 0, 7); ctx.fill();
+        }
+      }
+      // tlak
+      pctx.fillStyle = COL.bg; pctx.fillRect(0, 0, PW, PH);
+      pctx.strokeStyle = COL.line; pctx.beginPath(); pctx.moveTo(0, PH/2); pctx.lineTo(PW, PH/2); pctx.stroke();
+      curve(pctx, PW, function(x){ return x < 30 ? PH/2 : PH/2 + 38 * Math.cos(k * x - phase) * -1; }, COL.accent, 2.5);
+    };
+  })();
+
+  // ---------- 3 : tón ----------
+  (function(){
+    var c = $("toneCanvas"), ctx = c.getContext("2d"), W = c.width, H = c.height;
+    var osc = null, gain = null;
+    function freq(){ return Math.round(logVal(+$("toneF").value / 1000, 55, 1760)); }
+    function amp(){ return +$("toneA").value / 100; }
+    function draw(){
+      var f = freq(), A = amp();
+      grid(ctx, W, H, H/2);
+      ctx.fillStyle = COL.faint; ctx.font = MONO;
+      for (var ms = 0; ms <= 10; ms += 2){ var x = ms / 10 * W; ctx.fillRect(x, H/2 - 4, 1, 8); ctx.fillText(ms + " ms", Math.min(x + 3, W - 40), H - 8); }
+      curve(ctx, W, function(x){ return H/2 - A * H * 0.42 * Math.sin(2 * Math.PI * f * (x / W * 0.01)); }, COL.accent, 2.5);
+      $("toneFv").textContent = fmtHzPlain(f);
+      $("toneT").textContent = cz(1000 / f, f > 100 ? 2 : 1) + " ms";
+      var lam = 343 / f;
+      $("toneL").textContent = lam >= 1 ? cz(lam, 2) + " m" : Math.round(lam * 100) + " cm";
+      var m = Math.round(69 + 12 * Math.log2(f / 440));
+      $("toneN").textContent = noteName(m) + (Math.abs(midiHz(m) - f) < 1.5 ? "" : " (přibližně)");
+      if (osc){
+        osc.frequency.setTargetAtTime(f, AC.currentTime, 0.02);
+        gain.gain.setTargetAtTime(A * 0.35, AC.currentTime, 0.02);
+      }
+    }
+    $("toneF").value = Math.round(logPos(440, 55, 1760) * 1000);
+    $("toneF").addEventListener("input", draw);
+    $("toneA").addEventListener("input", draw);
+    var btn = $("tonePlay");
+    toggleBtn(btn, function(){
+      var a = ac(); if (!a) return;
+      osc = a.createOscillator(); gain = a.createGain(); gain.gain.value = 0;
+      osc.frequency.value = freq(); osc.connect(gain); gain.connect(master); osc.start();
+      gain.gain.setTargetAtTime(amp() * 0.35, a.currentTime, 0.03);
+      track(osc); track(gain); markPlaying(btn);
+      var o = osc; o.onended = function(){ if (osc === o){ osc = null; gain = null; } };
+    });
+    draw();
+  })();
+
+  // ---------- 4 : rozsah sluchu ----------
+  (function(){
+    var LO = 10, HI = 120000;
+    var rows = [
+      ["člověk", 20, 20000], ["slon", 16, 12000], ["pes", 67, 45000], ["kočka", 45, 64000], ["netopýr", 2000, 110000]
+    ];
+    var host = $("hearRows");
+    rows.forEach(function(r){
+      var row = document.createElement("div"); row.className = "range-row";
+      var lab = document.createElement("span"); lab.className = "range-lab"; lab.textContent = r[0];
+      var track_ = document.createElement("div"); track_.className = "range-track";
+      var bar = document.createElement("div"); bar.className = "range-bar" + (r[0] === "člověk" ? " is-human" : "");
+      bar.style.left = (logPos(r[1], LO, HI) * 100) + "%";
+      bar.style.width = ((logPos(r[2], LO, HI) - logPos(r[1], LO, HI)) * 100) + "%";
+      track_.appendChild(bar); row.appendChild(lab); row.appendChild(track_); host.appendChild(row);
+    });
+    var axis = document.createElement("div"); axis.className = "range-row";
+    var sp = document.createElement("span"); sp.className = "range-lab"; axis.appendChild(sp);
+    var at = document.createElement("div"); at.className = "range-axis";
+    [[10, "10 Hz"], [100, "100"], [1000, "1 k"], [10000, "10 k"], [100000, "100 kHz"]].forEach(function(t){
+      var s = document.createElement("span"); s.style.left = (logPos(t[0], LO, HI) * 100) + "%"; s.textContent = t[1]; at.appendChild(s);
+    });
+    var marker = document.createElement("div"); marker.className = "range-marker"; at.appendChild(marker);
+    axis.appendChild(at); host.appendChild(axis);
+    var markers = [marker];
+    Array.prototype.forEach.call(host.querySelectorAll(".range-track"), function(tr){
+      var m = document.createElement("div"); m.className = "range-marker"; tr.appendChild(m); markers.push(m);
+    });
+
+    var osc = null, gain = null;
+    function freq(){ return Math.round(logVal(+$("hearF").value / 1000, 20, 22000)); }
+    function upd(){
+      var f = freq();
+      $("hearFv").textContent = fmtHzPlain(f);
+      $("hearBand").textContent = f < 20 ? "infrazvuk" : f > 20000 ? "ultrazvuk" : "slyšitelný zvuk";
+      markers.forEach(function(m){ m.style.left = (logPos(f, LO, HI) * 100) + "%"; });
+      if (osc) osc.frequency.setTargetAtTime(f, AC.currentTime, 0.02);
+    }
+    $("hearF").value = Math.round(logPos(1000, 20, 22000) * 1000);
+    $("hearF").addEventListener("input", function(){ setActive($("hearPresets"), null); upd(); });
+    onGroup($("hearPresets"), function(b){ $("hearF").value = Math.round(logPos(+b.dataset.f, 20, 22000) * 1000); upd(); });
+    var btn = $("hearPlay");
+    toggleBtn(btn, function(){
+      var a = ac(); if (!a) return;
+      osc = a.createOscillator(); gain = a.createGain(); gain.gain.value = 0;
+      osc.frequency.value = freq(); osc.connect(gain); gain.connect(master); osc.start();
+      gain.gain.setTargetAtTime(0.18, a.currentTime, 0.05);
+      track(osc); track(gain); markPlaying(btn);
+      var o = osc; o.onended = function(){ if (osc === o){ osc = null; } };
+    });
+    upd();
+  })();
+
+  // ---------- 5 : decibely ----------
+  (function(){
+    var list = $("dbList");
+    function show(btn){
+      Array.prototype.forEach.call(list.children, function(b){ b.classList.toggle("is-active", b === btn); });
+      var db = +btn.dataset.db;
+      $("dbBar").style.width = (db / 130 * 100) + "%";
+      $("dbBar").classList.toggle("is-danger", db >= 85);
+      $("dbP").textContent = thousands(Math.pow(10, db / 20)) + "×";
+      var e = Math.pow(10, db / 10);
+      $("dbI").textContent = e >= 1e6 ? "10" + sup(db / 10) + "×" : thousands(e) + "×";
+    }
+    function sup(n){ var m = "⁰¹²³⁴⁵⁶⁷⁸⁹"; return String(Math.round(n)).split("").map(function(d){ return m[+d]; }).join(""); }
+    list.addEventListener("click", function(e){ var b = e.target.closest(".db-item"); if (b) show(b); });
+    show(list.querySelector(".is-active"));
+  })();
+
+  // ---------- 6 : harmonické ----------
+  (function(){
+    var N = 8, amps = [1, 0, 0, 0, 0, 0, 0, 0], host = $("harmSliders"), inputs = [];
+    for (var k = 0; k < N; k++){
+      var row = document.createElement("div"); row.className = "slider-row";
+      var lab = document.createElement("label"); lab.textContent = (k + 1) + "f";
+      var inp = document.createElement("input"); inp.type = "range"; inp.min = 0; inp.max = 100; inp.value = amps[k] * 100;
+      inp.setAttribute("aria-label", (k + 1) + ". harmonická");
+      inp.addEventListener("input", function(){ amps = inputs.map(function(i){ return +i.value / 100; }); setActive($("harmPresets"), null); draw(); });
+      row.appendChild(lab); row.appendChild(inp); host.appendChild(row); inputs.push(inp);
+    }
+    var presets = {
+      sine:   [1, 0, 0, 0, 0, 0, 0, 0],
+      square: [1, 0, 1/3, 0, 1/5, 0, 1/7, 0],
+      saw:    [1, 1/2, 1/3, 1/4, 1/5, 1/6, 1/7, 1/8],
+      soft:   [1, 0.45, 0.25, 0.08, 0.05, 0, 0, 0]
+    };
+    onGroup($("harmPresets"), function(b){ amps = presets[b.dataset.p].slice(); inputs.forEach(function(i, k){ i.value = Math.round(amps[k] * 100); }); draw(); });
+    var wc = $("harmWave"), wctx = wc.getContext("2d"), sc = $("harmSpec"), sctx = sc.getContext("2d");
+    var osc = null, gain = null;
+    function wave(){
+      var a = ac(); if (!a) return null;
+      var real = new Float32Array(N + 1), imag = new Float32Array(N + 1);
+      for (var k = 0; k < N; k++) imag[k + 1] = amps[k];
+      return a.createPeriodicWave(real, imag, { disableNormalization: false });
+    }
+    function draw(){
+      var W = wc.width, H = wc.height, sum = amps.reduce(function(s, a){ return s + a; }, 0) || 1;
+      grid(wctx, W, H, H/2);
+      curve(wctx, W, function(x){
+        var u = x / W * 2 * Math.PI, y = 0;
+        for (var k = 0; k < N; k++) y += amps[k] * Math.sin((k + 1) * u);
+        return H/2 - y / sum * H * 0.42;
+      }, COL.accent, 2.5);
+      var SW = sc.width, SH = sc.height, bw = SW / N;
+      sctx.fillStyle = COL.bg; sctx.fillRect(0, 0, SW, SH);
+      sctx.font = MONO;
+      for (var k = 0; k < N; k++){
+        var h = amps[k] * (SH - 34);
+        sctx.fillStyle = k === 0 ? COL.accent : COL.lav;
+        sctx.fillRect(k * bw + bw * 0.2, SH - 22 - h, bw * 0.6, h);
+        sctx.fillStyle = COL.muted; sctx.fillText((k + 1) + "f", k * bw + bw * 0.28, SH - 6);
+      }
+      if (osc){ var w = wave(); if (w) osc.setPeriodicWave(w); }
+    }
+    var btn = $("harmPlay");
+    toggleBtn(btn, function(){
+      var a = ac(); if (!a) return;
+      osc = a.createOscillator(); gain = a.createGain(); gain.gain.value = 0;
+      osc.setPeriodicWave(wave()); osc.frequency.value = 220; osc.connect(gain); gain.connect(master); osc.start();
+      gain.gain.setTargetAtTime(0.3, a.currentTime, 0.03);
+      track(osc); track(gain); markPlaying(btn);
+      var o = osc; o.onended = function(){ if (osc === o) osc = null; };
+    });
+    draw();
+  })();
+
+  // ---------- 10 : vzorkování ----------
+  var SIG_MS = 5;
+  function sig(tSec){ return 0.62 * Math.sin(2 * Math.PI * 400 * tSec) + 0.3 * Math.sin(2 * Math.PI * 1200 * tSec + 0.6); }
+  (function(){
+    var c = $("sampCanvas"), ctx = c.getContext("2d"), W = c.width, H = c.height, hold = false;
+    function fs(){ return Math.round(logVal(+$("sampFs").value / 100, 1000, 40000) / 100) * 100; }
+    function draw(){
+      var f = fs(), dt = 1 / f, n = Math.floor(SIG_MS / 1000 / dt) + 1;
+      grid(ctx, W, H, H/2);
+      var Y = function(v){ return H/2 - v * H * 0.42; };
+      curve(ctx, W, function(x){ return Y(sig(x / W * SIG_MS / 1000)); }, COL.faint, 2);
+      if (hold){
+        ctx.beginPath();
+        for (var i = 0; i < n; i++){
+          var x0 = i * dt / (SIG_MS / 1000) * W, x1 = Math.min(W, (i + 1) * dt / (SIG_MS / 1000) * W), y = Y(sig(i * dt));
+          if (i) ctx.lineTo(x0, y); else ctx.moveTo(x0, y);
+          ctx.lineTo(x1, y);
+        }
+        ctx.strokeStyle = COL.accent; ctx.lineWidth = 2.5; ctx.stroke();
+      }
+      for (var j = 0; j < n; j++){
+        var x = j * dt / (SIG_MS / 1000) * W, y = Y(sig(j * dt));
+        ctx.strokeStyle = COL.line2; ctx.lineWidth = 1.5;
+        if (!hold){ ctx.beginPath(); ctx.moveTo(x, H/2); ctx.lineTo(x, y); ctx.stroke(); }
+        ctx.fillStyle = COL.accent; ctx.beginPath(); ctx.arc(x, y, n > 120 ? 2 : 4, 0, 7); ctx.fill();
+      }
+      $("sampFsV").textContent = fmtHzPlain(f);
+      $("sampDt").textContent = dt * 1e6 >= 1000 ? cz(dt * 1000, 2) + " ms" : Math.round(dt * 1e6) + " µs";
+      $("sampN").textContent = n;
+    }
+    $("sampFs").value = Math.round(logPos(8000, 1000, 40000) * 100);
+    $("sampFs").addEventListener("input", draw);
+    $("sampHold").addEventListener("click", function(){ hold = !hold; this.classList.toggle("is-on", hold); this.textContent = hold ? "Ukázat vzorky" : "Ukázat schody"; draw(); });
+    draw();
+  })();
+
+  // ---------- 11 : kvantování ----------
+  (function(){
+    var c = $("quantCanvas"), ctx = c.getContext("2d"), W = c.width, H = c.height;
+    function draw(){
+      var n = +$("quantBits").value, L = Math.pow(2, n), fs = 8000, dt = 1 / fs, cnt = Math.floor(SIG_MS / 1000 / dt) + 1;
+      var Y = function(v){ return H/2 - v * H * 0.44; };
+      function q(v){ return Math.round((v + 1) / 2 * (L - 1)) / (L - 1) * 2 - 1; }
+      ctx.fillStyle = COL.bg; ctx.fillRect(0, 0, W, H);
+      if (L <= 64){
+        ctx.strokeStyle = COL.line; ctx.lineWidth = 1;
+        for (var l = 0; l < L; l++){ var yy = Y(l / (L - 1) * 2 - 1); ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(W, yy); ctx.stroke(); }
+      }
+      curve(ctx, W, function(x){ return Y(sig(x / W * SIG_MS / 1000)); }, COL.faint, 2);
+      ctx.beginPath();
+      for (var i = 0; i < cnt; i++){
+        var x0 = i * dt / (SIG_MS / 1000) * W, x1 = Math.min(W, (i + 1) * dt / (SIG_MS / 1000) * W), y = Y(q(sig(i * dt)));
+        if (i) ctx.lineTo(x0, y); else ctx.moveTo(x0, y);
+        ctx.lineTo(x1, y);
+      }
+      ctx.strokeStyle = COL.accent; ctx.lineWidth = 2; ctx.stroke();
+      for (var j = 0; j < cnt; j++){
+        var x = j * dt / (SIG_MS / 1000) * W, v = sig(j * dt);
+        ctx.strokeStyle = COL.red; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(x, Y(v)); ctx.lineTo(x, Y(q(v))); ctx.stroke();
+        ctx.fillStyle = COL.accent; ctx.beginPath(); ctx.arc(x, Y(q(v)), 3.5, 0, 7); ctx.fill();
+      }
+      $("quantN").textContent = n;
+      $("quantL").textContent = thousands(L);
+      $("quantE").textContent = "±" + cz(100 / (L - 1), L > 100 ? 2 : 1) + " %";
+      $("quantS").textContent = "≈ " + Math.round(6.02 * n + 1.76) + " dB";
+    }
+    $("quantBits").addEventListener("input", draw);
+    draw();
+  })();
+
+  // ---------- 12 : poslechni si ----------
+  (function(){
+    var c = $("lsCanvas"), ctx = c.getContext("2d"), W = c.width, H = c.height;
+    var source = "melody", micData = null, fs = 44100, bits = 16;
+    function src(){ return source === "mic" && micData ? micData : melody("bell"); }
+    function draw(){
+      var a = AC, data = a ? src() : null;
+      grid(ctx, W, H, H/2);
+      $("lsRate").textContent = thousands(fs * bits / 1000) + " kb/s";
+      if (!data){ ctx.fillStyle = COL.muted; ctx.font = MONO; ctx.fillText("klikni na Originál nebo Upravený", 20, 28); return; }
+      var sr = a.sampleRate, deg = degrade(data, sr, fs, bits);
+      // vyber hlasitý úsek
+      var win = Math.floor(0.004 * sr), best = 0, bestE = -1;
+      for (var s = 0; s + win < data.length; s += Math.floor(win / 2)){
+        var e = 0; for (var i = s; i < s + win; i += 8) e += data[i] * data[i];
+        if (e > bestE){ bestE = e; best = s; }
+      }
+      var peak = 0.05; for (i = best; i < best + win; i++) peak = Math.max(peak, Math.abs(data[i]));
+      var Y = function(v){ return H/2 - v / peak * H * 0.44; };
+      curve(ctx, W, function(x){ return Y(data[best + Math.floor(x / W * win)]); }, COL.faint, 2);
+      curve(ctx, W, function(x){ return Y(deg[best + Math.floor(x / W * win)]); }, COL.accent, 2);
+    }
+    onGroup($("lsFs"), function(b){ fs = +b.dataset.v; stopAll(); draw(); });
+    onGroup($("lsBits"), function(b){ bits = +b.dataset.v; stopAll(); draw(); });
+    onGroup($("lsSource"), function(b){
+      stopAll();
+      if (b.dataset.s === "melody"){ source = "melody"; $("lsMicMsg").textContent = ""; draw(); return; }
+      var a = ac(); if (!a) return;
+      $("lsMicMsg").textContent = "povol mikrofon…";
+      getMic().then(function(stream){
+        micStream = stream;
+        var node = a.createMediaStreamSource(stream), rec = a.createScriptProcessor(4096, 1, 1);
+        var len = Math.floor(4 * a.sampleRate), buf = new Float32Array(len), pos = 0;
+        $("lsMicMsg").textContent = "● nahrávám 4 s, mluv…";
+        rec.onaudioprocess = function(e){
+          var inp = e.inputBuffer.getChannelData(0);
+          for (var i = 0; i < inp.length && pos < len; i++) buf[pos++] = inp[i];
+          e.outputBuffer.getChannelData(0).fill(0);
+          if (pos >= len){
+            rec.disconnect(); node.disconnect(); stopMic();
+            var pk = 0; for (var j = 0; j < len; j++) pk = Math.max(pk, Math.abs(buf[j]));
+            var g = pk > 0.001 ? 0.85 / pk : 1; for (j = 0; j < len; j++) buf[j] *= g;
+            micData = buf; source = "mic";
+            $("lsMicMsg").textContent = "hotovo, pusť si Originál a Upravený";
+            draw();
+          }
+        };
+        node.connect(rec); rec.connect(a.destination);
+      }).catch(function(){
+        $("lsMicMsg").textContent = "mikrofon není dostupný, zůstává melodie";
+        setActive($("lsSource"), $("lsSource").querySelector("[data-s=melody]")); source = "melody";
+      });
+    });
+    toggleBtn($("lsOrig"), function(){ var d = src(); if (d) playBuffer(d, $("lsOrig")); draw(); });
+    toggleBtn($("lsDeg"), function(){ var d = src(); if (d) playBuffer(degrade(d, AC.sampleRate, fs, bits), $("lsDeg")); draw(); });
+    draw();
+  })();
+
+  // ---------- 14 : aliasing ----------
+  (function(){
+    var c = $("aliasCanvas"), ctx = c.getContext("2d"), W = c.width, H = c.height, FS = 1000, WIN = 0.012;
+    function draw(){
+      var f = +$("aliasF").value;
+      var k = Math.round(f / FS), fa = Math.abs(f - k * FS), sign = (f - k * FS) < 0 ? -1 : 1;
+      var Y = function(v){ return H/2 - v * H * 0.4; };
+      grid(ctx, W, H, H/2);
+      curve(ctx, W, function(x){ return Y(Math.sin(2 * Math.PI * f * x / W * WIN)); }, COL.faint, 1.5);
+      curve(ctx, W, function(x){ return Y(sign * Math.sin(2 * Math.PI * fa * x / W * WIN)); }, COL.accent, 3);
+      var n = Math.floor(WIN * FS);
+      for (var i = 0; i <= n; i++){
+        var x = i / FS / WIN * W, y = Y(Math.sin(2 * Math.PI * f * i / FS));
+        ctx.fillStyle = COL.yellow; ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fill();
+      }
+      $("aliasFv").textContent = fmtHzPlain(f);
+      $("aliasOut").textContent = fmtHzPlain(fa);
+      var ok = f < FS / 2;
+      var v = $("aliasVerdict");
+      v.textContent = ok ? "v pořádku: signál je pod Nyquistovou frekvencí, vzorky ho popisují správně"
+        : f === FS / 2 ? "hranice: přesně dva vzorky na kmit už nestačí"
+        : "aliasing: vzorky popisují jinou, nižší vlnu (" + fmtHzPlain(fa) + ")";
+      v.classList.toggle("is-bad", !ok);
+    }
+    $("aliasF").addEventListener("input", draw);
+    draw();
+  })();
+
+  // ---------- 15 : kolo ----------
+  (function(){
+    var r = $("wheelReal"), rc = r.getContext("2d"), m = $("wheelCam"), mc = m.getContext("2d");
+    var angle = 0, camAngle = 0, camT = 0, prevCam = 0, seen = 0;
+    function wheel(ctx, a){
+      var W = ctx.canvas.width, cx = W / 2, R = W * 0.42;
+      ctx.fillStyle = COL.bg; ctx.fillRect(0, 0, W, W);
+      ctx.strokeStyle = COL.ink; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(cx, cx, R, 0, 7); ctx.stroke();
+      for (var i = 0; i < 8; i++){
+        var t = a + i * Math.PI / 4;
+        ctx.strokeStyle = i === 0 ? COL.warm : COL.muted; ctx.lineWidth = i === 0 ? 5 : 3;
+        ctx.beginPath(); ctx.moveTo(cx, cx); ctx.lineTo(cx + R * Math.cos(t), cx + R * Math.sin(t)); ctx.stroke();
+      }
+      ctx.fillStyle = COL.ink; ctx.beginPath(); ctx.arc(cx, cx, 8, 0, 7); ctx.fill();
+    }
+    ticks[14] = function(t, dt){
+      var v = +$("wheelV").value;
+      angle += v * 2 * Math.PI * dt;
+      camT += dt;
+      if (camT >= 1 / 24){
+        camT -= 1 / 24;
+        camAngle = angle;
+        // co vidí kamera: posun mezi snímky zmenšený na ±1/16 otáčky (symetrie 8 paprsků)
+        var d = v / 24, step = 1 / 8;
+        var app = d - Math.round(d / step) * step;
+        seen = app * 24;
+      }
+      wheel(rc, angle); wheel(mc, camAngle);
+      $("wheelRps").textContent = cz(v, 2);
+      $("wheelSeen").textContent = Math.abs(seen) < 0.01 ? "kolo stojí" : (seen < 0 ? "pozpátku " : "") + cz(Math.abs(seen), 2) + " ot./s (paprsky)";
+    };
+  })();
+
+  // ---------- 18 : kalkulačka ----------
+  var fsC = 44100, bitsC = 16, chC = 2;
+  function bars(host, items, max){
+    host.innerHTML = "";
+    items.forEach(function(it){
+      var row = document.createElement("div"); row.className = "size-row";
+      var lab = document.createElement("span"); lab.className = "size-lab"; lab.textContent = it[0];
+      var tr = document.createElement("div"); tr.className = "size-track";
+      var b = document.createElement("div"); b.className = "size-bar" + (it[3] ? " " + it[3] : ""); b.style.width = Math.max(0.6, it[1] / max * 100) + "%";
+      tr.appendChild(b);
+      var val = document.createElement("span"); val.className = "size-val"; val.textContent = it[2];
+      row.appendChild(lab); row.appendChild(tr); row.appendChild(val); host.appendChild(row);
+    });
+  }
+  function calc(){
+    var t = +$("calcT").value, rate = fsC * bitsC * chC, size = rate * t / 8;
+    $("calcTv").textContent = Math.floor(t / 60) + ":" + String(t % 60).padStart(2, "0");
+    $("calcRate").textContent = thousands(rate / 1000) + " kb/s";
+    $("calcSize").textContent = fmtBytes(size);
+    var items = [
+      ["tvoje nastavení (WAV)", size, fmtBytes(size), "is-raw"],
+      ["FLAC (asi 55 %)", size * 0.55, fmtBytes(size * 0.55), "is-lossless"],
+      ["MP3 320 kb/s", 320000 * t / 8, fmtBytes(320000 * t / 8), ""],
+      ["MP3 128 kb/s", 128000 * t / 8, fmtBytes(128000 * t / 8), ""],
+      ["Opus 64 kb/s", 64000 * t / 8, fmtBytes(64000 * t / 8), ""]
+    ];
+    var max = Math.max.apply(null, items.map(function(i){ return i[1]; }));
+    bars($("calcBars"), items, max);
+  }
+  onGroup($("calcFs"), function(b){ fsC = +b.dataset.v; calc(); });
+  onGroup($("calcBits"), function(b){ bitsC = +b.dataset.v; calc(); });
+  onGroup($("calcCh"), function(b){ chC = +b.dataset.v; calc(); });
+  $("calcT").addEventListener("input", calc);
+  calc();
+
+  // ---------- 22 : kodeky ----------
+  bars($("codecBars"), [
+    ["CD / WAV", 1411, "1 411 kb/s", "is-raw"],
+    ["FLAC", 800, "≈ 800 kb/s", "is-lossless"],
+    ["MP3 320", 320, "320 kb/s", ""],
+    ["AAC 256", 256, "256 kb/s", ""],
+    ["MP3 128", 128, "128 kb/s", ""],
+    ["Opus 64", 64, "64 kb/s", ""],
+    ["Opus hovor", 24, "≈ 24 kb/s", ""]
+  ], 1411);
+
+  // ---------- 21 : maskování ----------
+  (function(){
+    var c = $("maskCanvas"), ctx = c.getContext("2d"), W = c.width, H = c.height;
+    var FLO = 20, FHI = 20000, DBLO = -10, DBHI = 100, PADL = 44, PADB = 24;
+    var MF = 1000, ML = 70, QL = 38;
+    function X(f){ return PADL + logPos(f, FLO, FHI) * (W - PADL - 10); }
+    function Yd(db){ return (H - PADB) - (db - DBLO) / (DBHI - DBLO) * (H - PADB - 10); }
+    function quiet(f){ var k = f / 1000; return 3.64 * Math.pow(k, -0.8) - 6.5 * Math.exp(-0.6 * Math.pow(k - 3.3, 2)) + 1e-3 * Math.pow(k, 4); }
+    function bark(f){ return 13 * Math.atan(0.00076 * f) + 3.5 * Math.atan(Math.pow(f / 7500, 2)); }
+    function mask(f, on){
+      if (!on) return -Infinity;
+      var dz = bark(f) - bark(MF);
+      return ML - 12 + (dz < 0 ? 27 * dz : -10 * dz);
+    }
+    var loudOn = false, quietOn = false;
+    function qf(){ return Math.round(logVal(+$("maskF").value / 100, 1020, 8000) / 10) * 10; }
+    function draw(){
+      var f = qf();
+      ctx.fillStyle = COL.bg; ctx.fillRect(0, 0, W, H);
+      ctx.font = MONO; ctx.fillStyle = COL.faint; ctx.strokeStyle = COL.line; ctx.lineWidth = 1;
+      [20, 100, 1000, 10000].forEach(function(t){ var x = X(t); ctx.beginPath(); ctx.moveTo(x, 10); ctx.lineTo(x, H - PADB); ctx.stroke(); ctx.fillText(t >= 1000 ? (t / 1000) + " kHz" : t + " Hz", x + 3, H - 6); });
+      [0, 40, 80].forEach(function(d){ var y = Yd(d); ctx.beginPath(); ctx.moveTo(PADL, y); ctx.lineTo(W, y); ctx.stroke(); ctx.fillText(d + " dB", 2, y + 4); });
+      // oblast pod prahem
+      ctx.beginPath(); ctx.moveTo(X(FLO), Yd(DBLO));
+      for (var x = PADL; x <= W - 10; x++){
+        var ff = logVal((x - PADL) / (W - PADL - 10), FLO, FHI);
+        ctx.lineTo(x, Yd(clamp(Math.max(quiet(ff), mask(ff, loudOn)), DBLO, DBHI)));
+      }
+      ctx.lineTo(W - 10, Yd(DBLO)); ctx.closePath();
+      ctx.fillStyle = "rgba(125, 211, 232, 0.10)"; ctx.fill();
+      // práh slyšení
+      ctx.beginPath();
+      for (x = PADL; x <= W - 10; x++){ ff = logVal((x - PADL) / (W - PADL - 10), FLO, FHI); var y = Yd(clamp(quiet(ff), DBLO, DBHI)); if (x === PADL) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
+      ctx.strokeStyle = COL.accent; ctx.lineWidth = 2.5; ctx.stroke();
+      ctx.fillStyle = COL.accent; ctx.fillText("práh slyšení", X(30) , Yd(62));
+      if (loudOn){
+        ctx.beginPath(); var started = false;
+        for (x = PADL; x <= W - 10; x++){ ff = logVal((x - PADL) / (W - PADL - 10), FLO, FHI); var m = mask(ff, true); if (m < DBLO) { started = false; continue; } y = Yd(clamp(m, DBLO, DBHI)); if (!started){ ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y); }
+        ctx.strokeStyle = COL.warm; ctx.lineWidth = 2; ctx.setLineDash([6, 4]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = COL.warm; ctx.fillText("maskování", X(1800), Yd(56));
+      }
+      function stick(fr, db, col, label, on){
+        var xx = X(fr); ctx.strokeStyle = col; ctx.globalAlpha = on ? 1 : 0.35; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(xx, Yd(DBLO)); ctx.lineTo(xx, Yd(db)); ctx.stroke();
+        ctx.fillStyle = col; ctx.beginPath(); ctx.arc(xx, Yd(db), 6, 0, 7); ctx.fill();
+        ctx.fillText(label, xx + 8, Yd(db) - 8); ctx.globalAlpha = 1;
+      }
+      stick(MF, ML, COL.warm, "hlasitý 1 kHz", loudOn);
+      stick(f, QL, COL.mint, "tichý", quietOn);
+      $("maskFv").textContent = fmtHzPlain(f);
+      var masked = loudOn && mask(f, true) > QL;
+      $("maskVerdict").textContent = !quietOn ? "nehraje" : masked ? "zamaskovaný" : "slyšitelný";
+      if (qOsc) qOsc.frequency.setTargetAtTime(f, AC.currentTime, 0.02);
+    }
+    var qOsc = null, lOsc = null;
+    function startTone(f, gainV){
+      var a = ac(); if (!a) return null;
+      var o = a.createOscillator(), g = a.createGain(); g.gain.value = 0;
+      o.frequency.value = f; o.connect(g); g.connect(master); o.start();
+      g.gain.setTargetAtTime(gainV, a.currentTime, 0.04);
+      track(o); track(g);
+      return { o: o, g: g };
+    }
+    function stopTone(t){ if (!t) return; try { t.o.stop(); t.o.disconnect(); t.g.disconnect(); } catch(e){} }
+    $("maskQuiet").addEventListener("click", function(){
+      quietOn = !quietOn;
+      if (quietOn){ var t = startTone(qf(), 0.3 * Math.pow(10, (QL - ML) / 20)); qOsc = t && t.o; this._t = t; }
+      else { stopTone(this._t); qOsc = null; }
+      this.classList.toggle("is-on", quietOn); draw();
+    });
+    $("maskLoud").addEventListener("click", function(){
+      loudOn = !loudOn;
+      if (loudOn){ this._t = startTone(MF, 0.3); lOsc = this._t && this._t.o; }
+      else { stopTone(this._t); lOsc = null; }
+      this.classList.toggle("is-on", loudOn); draw();
+    });
+    // při přepnutí snímku stopAll zastaví i tóny; srovnej stav
+    ticks[20] = function(){
+      if (quietOn && active.indexOf(qOsc) < 0){ quietOn = false; $("maskQuiet").classList.remove("is-on"); draw(); }
+      if (loudOn && active.indexOf(lOsc) < 0){ loudOn = false; $("maskLoud").classList.remove("is-on"); draw(); }
+    };
+    $("maskF").addEventListener("input", draw);
+    draw();
+  })();
+
+  // ---------- 23 : spektrogram ----------
+  (function(){
+    var c = $("specCanvas"), ctx = c.getContext("2d"), W = c.width, H = c.height, GUT = 52;
+    var FLO = 50, FHI = 16000, data = null, running = false;
+    ctx.fillStyle = COL.bg; ctx.fillRect(0, 0, W, H);
+    function labels(){
+      ctx.fillStyle = COL.surface; ctx.fillRect(0, 0, GUT, H);
+      ctx.fillStyle = COL.muted; ctx.font = "12px 'JetBrains Mono', monospace";
+      [100, 500, 1000, 5000, 10000].forEach(function(f){
+        var y = H - logPos(f, FLO, FHI) * H;
+        ctx.fillText(f >= 1000 ? (f / 1000) + "k" : String(f), 6, y + 4);
+      });
+    }
+    labels();
+    function color(v){ // 0..1 → tma → cyan → bílá
+      var r, g, b;
+      if (v < 0.6){ var t = v / 0.6; r = 18 + t * (125 - 18); g = 18 + t * (211 - 18); b = 18 + t * (232 - 18); }
+      else { t = (v - 0.6) / 0.4; r = 125 + t * 130; g = 211 + t * 44; b = 232 + t * 23; }
+      return "rgb(" + (r | 0) + "," + (g | 0) + "," + (b | 0) + ")";
+    }
+    ticks[22] = function(){
+      if (!running || !analyser) return;
+      if (!data) data = new Uint8Array(analyser.frequencyBinCount);
+      analyser.getByteFrequencyData(data);
+      var col = 3;
+      ctx.drawImage(c, GUT + col, 0, W - GUT - col, H, GUT, 0, W - GUT - col, H);
+      var nyq = AC.sampleRate / 2;
+      for (var y = 0; y < H; y += 2){
+        var f = logVal(1 - y / H, FLO, FHI), bin = Math.min(data.length - 1, Math.round(f / nyq * data.length));
+        ctx.fillStyle = color(data[bin] / 255);
+        ctx.fillRect(W - col, y, col, 2);
+      }
+      labels();
+    };
+    var msg = $("specMsg");
+    function start(){ running = true; msg.textContent = ""; }
+    toggleBtn($("specMelody"), function(){ start(); playBuffer(melody("bell"), $("specMelody")); });
+    toggleBtn($("specSweep"), function(){
+      var a = ac(); if (!a) return; start();
+      var o = a.createOscillator(), g = a.createGain(); g.gain.value = 0.25;
+      o.frequency.setValueAtTime(100, a.currentTime); o.frequency.exponentialRampToValueAtTime(10000, a.currentTime + 4);
+      o.connect(g); g.connect(master); o.start(); o.stop(a.currentTime + 4);
+      track(o); track(g); markPlaying($("specSweep"));
+      o.onended = function(){ var b = $("specSweep"); b.classList.remove("is-on"); if (b.dataset.label) b.textContent = b.dataset.label; };
+    });
+    toggleBtn($("specMic"), function(){
+      var a = ac(); if (!a) return;
+      msg.textContent = "povol mikrofon…";
+      getMic().then(function(stream){
+        micStream = stream; micSource = a.createMediaStreamSource(stream);
+        micSource.connect(analyser); // jen do analyzátoru, ne do reproduktorů
+        markPlaying($("specMic")); start();
+      }).catch(function(){ msg.textContent = "mikrofon není dostupný (zkus melodii nebo glissando)"; });
+    });
+  })();
+
+  // ---------- 24 : MIDI ----------
+  (function(){
+    var host = $("midiNotes");
+    MELODY.forEach(function(n){
+      var el = document.createElement("span"); el.className = "note-chip";
+      el.innerHTML = "<b>" + noteName(n[0]) + "</b>" + cz(n[1], 2) + " s";
+      host.appendChild(el);
+    });
+    var events = MELODY.length + BASS.length;
+    var midiBytes = 14 + 8 + events * 8 + 4;   // hlavička, stopa, noty (zap/vyp + čas), konec
+    var secs = melodyLength(), wav = 44100 * 2 * 2 * secs + 44;
+    $("midiSize").textContent = "≈ " + midiBytes + " B";
+    $("midiWav").textContent = "≈ " + fmtBytes(wav);
+    $("midiRatio").textContent = "≈ " + thousands(Math.round(wav / midiBytes / 100) * 100) + "×";
+    toggleBtn($("midiPiano"), function(){ playBuffer(melody("bell"), $("midiPiano")); });
+    toggleBtn($("midiChip"), function(){ playBuffer(melody("chip"), $("midiChip")); });
+  })();
+
+})();
+</script>
+</body>
+</html>

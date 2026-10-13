@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Architektura počítače</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Hardware a operační systémy · 3. materiál</div>
+      <h1>Jak je počítač postavený</h1>
+      <p class="lede">Von Neumannova a Harvardská architektura. Rozebereme schéma, pustíme program krok za krokem a změříme, která architektura je rychlejší.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Klíčová myšlenka</div>
+      <h2 class="slide-title">Instrukce je taky jen číslo</h2>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">ENIAC, 1946</div><div class="compare-body">Program je <b>zapojení kabelů</b> a poloha přepínačů. Nový program znamená dny přepojování.</div></div>
+        <div class="compare-col"><div class="compare-head">EDVAC a další, od 1949</div><div class="compare-body">Program jsou <b>čísla v paměti</b>, stejně jako data. Nový program nahraješ za chvíli.</div></div>
+      </div>
+      <p class="lede">Paměť obsahuje jen bity. Jestli je to číslo, nebo instrukce, rozhoduje to, kdo je čte. Přepínej bity v jedné buňce paměti.</p>
+      <div class="toggle-cols" id="bits"></div>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">Čte ho ALU jako číslo</div><div class="formula f-md" id="asNum">22</div></div>
+        <div class="compare-col"><div class="compare-head">Čte ho řadič jako instrukci</div><div class="formula f-md" id="asIns">LOAD 6</div></div>
+      </div>
+      <p class="hint" id="opHint">horní 4 bity = kód operace, dolní 4 bity = adresa</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Schéma</div>
+      <h2 class="slide-title">Z čeho se počítač skládá</h2>
+      <div class="toolbar">
+        <div class="modeswitch" id="exMode"><button class="is-active" data-m="vn">von Neumann</button><button data-m="h">Harvard</button></div>
+        <span class="note">Klikni na libovolnou část schématu.</span>
+      </div>
+      <div class="split wideL">
+        <svg class="arch" id="exSvg" viewBox="0 0 820 470" role="img" aria-label="Schéma počítače"></svg>
+        <div class="stack">
+          <div class="panel p-tall" id="exPanel"></div>
+          <div class="seg" id="exParts"></div>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Simulace</div>
+      <h2 class="slide-title">Program krok za krokem: 7 + 5</h2>
+      <div class="toolbar">
+        <div class="modeswitch" id="simMode"><button class="is-active" data-m="vn">von Neumann</button><button data-m="h">Harvard</button></div>
+        <div class="phase" id="phase"><span>načtení</span><span>dekódování</span><span>provedení</span></div>
+      </div>
+      <div class="split wideL">
+        <svg class="arch" id="simSvg" viewBox="0 0 820 470" role="img" aria-label="Simulace běhu programu"></svg>
+        <div class="stack">
+          <div class="sim-state">
+            <div><span>Instrukce</span><b id="stIns">–</b></div>
+            <div><span>Krok</span><b id="stStep">0</b></div>
+            <div><span>Přenosy</span><b id="stBus">0</b></div>
+            <div><span>Výstup</span><b id="stOut">–</b></div>
+          </div>
+          <div class="panel p-tall" id="simPanel"></div>
+          <div class="seg"><button class="calc-btn" id="simStep">Krok →</button><button class="calc-btn" id="simPlay">▶ Přehrát</button><button class="calc-btn" id="simReset">Znovu</button></div>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Závod</div>
+      <h2 class="slide-title">Von Neumannovo úzké hrdlo</h2>
+      <p class="lede">Stejný program na obou architekturách. Každý přenos instrukce nebo dat po sběrnici trvá jeden takt. Kde se dá něco dělat současně?</p>
+      <div class="toolbar">
+        <div class="seg" id="raceProg"></div>
+        <div class="seg"><button class="calc-btn" id="raceRun">▶ Spustit závod</button></div>
+      </div>
+      <div class="gantt" id="ganttVN"></div>
+      <div class="gantt" id="ganttH"></div>
+      <div class="toolbar">
+        <div class="legend"><span><i></i>načtení instrukce</span><span><i class="d"></i>přenos dat (čtení, zápis, výstup)</span></div>
+        <span class="note" id="raceNote"></span>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Von Neumannova koncepce (1945)</div>
+      <h2 class="slide-title">Sedm principů. Platí ještě?</h2>
+      <div class="split">
+        <div class="princ" id="princ"></div>
+        <div class="panel p-tall" id="princPanel"></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Srovnání</div>
+      <h2 class="slide-title">Von Neumann a Harvard vedle sebe</h2>
+      <div class="table-wrap">
+        <table class="datatable tbl-vs">
+          <thead><tr><th></th><th>von Neumann</th><th>Harvard</th></tr></thead>
+          <tbody>
+            <tr><td>Paměť</td><td>jedna, pro program i data</td><td>dvě: paměť programu a paměť dat</td></tr>
+            <tr><td>Sběrnice</td><td>jedna společná</td><td>dvě oddělené</td></tr>
+            <tr><td>Instrukce a data současně</td><td>ne, střídají se</td><td>ano</td></tr>
+            <tr><td>Adresy</td><td>jeden adresní prostor</td><td>dva, adresa 0 existuje dvakrát</td></tr>
+            <tr><td>Změna programu za běhu</td><td>jde, i omylem nebo útokem</td><td>program je v paměti jen pro čtení</td></tr>
+            <tr><td>Rozdělení paměti</td><td>pružné, kolik je potřeba</td><td>pevné, daná velikost pro každou část</td></tr>
+            <tr><td>Konstrukce</td><td>jednodušší, levnější</td><td>víc vodičů a řídicí logiky</td></tr>
+            <tr><td>Typicky</td><td>PC, notebook, server (z pohledu programu)</td><td>mikrokontroléry, signálové procesory, cache L1 uvnitř CPU</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">V praxi</div>
+      <h2 class="slide-title">Kde kterou architekturu najdeš</h2>
+      <div class="cards4" id="whereCards"></div>
+      <div class="panel" id="wherePanel"></div>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">K zamyšlení</div>
+      <div class="qmark">?</div>
+      <h2>Harvard je rychlejší. Proč ho tedy nemá celé PC?</h2>
+      <p class="lede" id="pauseAns" hidden>Operační systém neustále nahrává nové programy, a to je zápis dat. V jedné paměti to jde snadno. Pevné rozdělení paměti by plýtvalo místem. Rychlost se proto dohání uvnitř procesoru: oddělená instrukční a datová cache L1. Navenek von Neumann, uvnitř Harvard. Tomu se říká <b>modifikovaná Harvardova architektura</b>.</p>
+      <button class="reveal-btn" id="pauseBtn">Ukázat odpověď</button>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Von Neumann, Harvard, nebo obě?</h2>
+      <p class="score" id="qScore"></p>
+      <div class="clue" id="qText"></div>
+      <div class="seg"><button class="calc-btn" data-a="vn">von Neumann</button><button class="calc-btn" data-a="h">Harvard</button><button class="calc-btn" data-a="b">obě</button><button class="calc-btn" id="qNext" hidden>Další →</button></div>
+      <div class="feedback" id="qFb"></div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Počítač tvoří <b>řadič</b>, <b>ALU</b>, <b>paměť</b>, <b>vstup</b> a <b>výstup</b>. Řadič a ALU jsou dnes jeden čip, procesor.</li>
+        <li>Procesor opakuje cyklus <b>načtení → dekódování → provedení</b>. Registr PC ukazuje na další instrukci.</li>
+        <li><b>Von Neumann</b>: program i data v jedné paměti, jedna sběrnice. Pružné, ale instrukce a data se o sběrnici přetahují.</li>
+        <li><b>Harvard</b>: dvě paměti a dvě sběrnice. Rychlejší, ale méně pružný. Najdeš ho v Arduinu.</li>
+        <li>Dnešní procesory kombinují obojí: jedna RAM, ale oddělená instrukční a datová cache.</li>
+      </ul>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud informace a videa jsou</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Architektura</h3><ul class="src-list">
+          <li><a href="https://en.wikipedia.org/wiki/First_Draft_of_a_Report_on_the_EDVAC" target="_blank" rel="noopener">J. von Neumann: First Draft of a Report on the EDVAC (1945)</a></li>
+          <li><a href="https://cs.wikipedia.org/wiki/Von_Neumannova_architektura" target="_blank" rel="noopener">Wikipedie: Von Neumannova architektura</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Harvard_architecture" target="_blank" rel="noopener">Wikipedia: Harvard architecture</a></li>
+          <li><a href="https://cs.wikipedia.org/wiki/Modifikovan%C3%A1_harvardsk%C3%A1_architektura" target="_blank" rel="noopener">Wikipedie: Modifikovaná harvardská architektura</a></li>
+          <li><a href="https://cs.wikipedia.org/wiki/Digit%C3%A1ln%C3%AD_sign%C3%A1lov%C3%BD_procesor" target="_blank" rel="noopener">Wikipedie: Digitální signálový procesor</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Harvard_Mark_I" target="_blank" rel="noopener">Wikipedia: Harvard Mark I</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Praxe</h3><ul class="src-list">
+          <li><a href="https://www.microchip.com/en-us/product/ATmega328P" target="_blank" rel="noopener">Microchip: ATmega328P (Arduino Uno), technické údaje</a></li>
+          <li><a href="https://www.arduino.cc/reference/en/language/variables/utilities/progmem/" target="_blank" rel="noopener">Arduino: PROGMEM</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/NX_bit" target="_blank" rel="noopener">Wikipedia: NX bit (nespustitelná paměť)</a></li>
+        </ul></div>
+      </div>
+      <p class="note">Videa jsou na YouTube, práva patří jejich autorům. Stav k říjnu 2026.</p>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var NS="http://www.w3.org/2000/svg";
+  function sv(tag,a,t){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e;}
+  function setCls(e,c){e.setAttribute("class",c);}
+  function addCls(e,c){e.classList.add(c);}
+
+  /* ---------- navigace ---------- */
+  var fits=[],onShow=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    fits.forEach(function(f){if(!f.slide.hidden)f.fn();});
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+  window.addEventListener("resize",function(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});});
+  function fitPanel(panel,count,render,getAct){
+    fits.push({slide:panel.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      for(var i=0;i<count();i++){render(i,true);m=Math.max(m,panel.offsetHeight);}
+      panel.style.minHeight=m+"px";render(getAct(),true);
+    }});
+  }
+  function modeSwitch(host,onChange){
+    Array.prototype.forEach.call(host.children,function(b){
+      b.addEventListener("click",function(){
+        Array.prototype.forEach.call(host.children,function(x){x.classList.toggle("is-active",x===b);});
+        onChange(b.dataset.m);
+      });
+    });
+  }
+
+  /* ---------- 1: bity jako číslo i instrukce ---------- */
+  var OPS=["HALT","LOAD","ADD","STORE","OUT"];
+  var bitVals=[0,0,0,1,0,1,1,0],bitBtns=[];
+  bitVals.forEach(function(v,i){
+    var col=el("div","toggle-col"),b=el("button","bit-toggle"+(v?" is-on":""),String(v));
+    b.setAttribute("aria-label","Bit "+(7-i));
+    b.addEventListener("click",function(){bitVals[i]=1-bitVals[i];bitsRender();});
+    col.appendChild(b);col.appendChild(el("div","bit-toggle-label",i<4?"kód":"adr"));
+    $("bits").appendChild(col);bitBtns.push(b);
+  });
+  function bitsRender(){
+    var n=0;bitVals.forEach(function(v,i){n=n*2+v;bitBtns[i].textContent=v;bitBtns[i].classList.toggle("is-on",!!v);});
+    var op=n>>4,ad=n&15;
+    $("asNum").textContent=n;
+    $("asIns").textContent=op<OPS.length?(op===0||op===4?OPS[op]:OPS[op]+" "+ad):"neznámá instrukce";
+  }
+  bitsRender();
+
+  /* ---------- schéma (sdílené pro průzkum i simulaci) ---------- */
+  function buildArch(svg,mode,opts){
+    opts=opts||{};
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    var R={mode:mode,parts:{},hits:{},regs:{},cells:[],dcells:[],buses:{},routes:{}};
+    function hit(id){var g=sv("g",{"class":"a-hit","data-part":id});svg.appendChild(g);R.hits[id]=g;return g;}
+    function box(id,x,y,w,h,title,sub,extra){
+      var g=hit(id);
+      var r=sv("rect",{"class":"a-box"+(extra||""),x:x,y:y,width:w,height:h,rx:12});g.appendChild(r);
+      g.appendChild(sv("text",{"class":"a-title",x:x+14,y:y+26},title));
+      if(sub)g.appendChild(sv("text",{"class":"a-sub",x:x+14,y:y+43},sub));
+      R.parts[id]=r;return g;
+    }
+    function reg(id,x,y,w,label){
+      var g=hit(id);
+      var r=sv("rect",{"class":"a-reg",x:x,y:y,width:w,height:40,rx:7});g.appendChild(r);
+      g.appendChild(sv("text",{"class":"a-regt",x:x+8,y:y+15},label));
+      var v=sv("text",{"class":"a-regv",x:x+8,y:y+34},"0");g.appendChild(v);
+      R.parts[id]=r;R.regs[id]=v;
+    }
+    function bus(id,d,cls,lx,ly,label,anchor){
+      var g=hit(id);
+      var p=sv("path",{"class":"a-bus"+(cls?" "+cls:""),d:d});g.appendChild(p);
+      g.appendChild(sv("text",{"class":"a-buslab",x:lx,y:ly,"text-anchor":anchor||"middle"},label));
+      R.buses[id]=p;R.parts[id]=p;
+    }
+    /* sběrnice dole pod krabicemi */
+    if(mode==="vn"){
+      bus("bus","M95 300 H665 M210 250 V300 M650 250 V300 M105 370 V300 M305 370 V300","",530,322,"systémová sběrnice");
+      R.routes.fetch=[[210,250],[210,300],[650,300],[650,250]];
+      R.routes.data=R.routes.fetch;
+      R.routes.out=[[210,250],[210,300],[305,300],[305,370]];
+      R.busOf={fetch:"bus",data:"bus",out:"bus"};
+    } else {
+      bus("ibus","M400 150 H500","ins",450,136,"instrukční");
+      bus("dbus","M95 320 H665 M210 250 V320 M650 350 V320 M105 370 V320 M305 370 V320","dat",450,342,"datová sběrnice");
+      R.routes.fetch=[[400,150],[500,150]];
+      R.routes.data=[[210,250],[210,320],[650,320],[650,350]];
+      R.routes.out=[[210,250],[210,320],[305,320],[305,370]];
+      R.busOf={fetch:"ibus",data:"dbus",out:"dbus"};
+    }
+    box("cpu",20,20,380,230,"Procesor (CPU)",""," outer");
+    box("radic",36,56,172,182,"Řadič","řídí běh programu");
+    box("alu",220,56,164,182,"ALU","počítá");
+    reg("pc",48,104,148,"PC · čítač");
+    reg("ir",48,156,148,"IR · instrukce");
+    reg("acc",232,104,140,"ACC · střadač");
+    R.aluText=sv("text",{"class":"a-regv",x:232,y:184},"");svg.appendChild(R.aluText);
+    if(mode==="vn"){
+      box("mem",500,20,300,230,"Operační paměť","program i data");
+      for(var i=0;i<10;i++){
+        var x=516+(i>=5?144:0),y=72+(i%5)*35;
+        var g=R.hits.mem;
+        var c=sv("rect",{"class":"a-cell",x:x,y:y,width:128,height:30,rx:5});g.appendChild(c);
+        g.appendChild(sv("text",{"class":"a-addr",x:x+8,y:y+20},String(i)));
+        var t=sv("text",{"class":"a-val",x:x+30,y:y+21},"");g.appendChild(t);
+        R.cells.push({r:c,t:t});
+      }
+    } else {
+      box("imem",500,20,300,230,"Paměť programu","jen instrukce");
+      for(var j=0;j<5;j++){
+        var y2=72+j*35,gi=R.hits.imem;
+        var c2=sv("rect",{"class":"a-cell",x:516,y:y2,width:268,height:30,rx:5});gi.appendChild(c2);
+        gi.appendChild(sv("text",{"class":"a-addr",x:524,y:y2+20},String(j)));
+        var t2=sv("text",{"class":"a-val",x:546,y:y2+21},"");gi.appendChild(t2);
+        R.cells.push({r:c2,t:t2});
+      }
+      box("dmem",500,350,300,110,"Paměť dat","proměnné");
+      for(var k=0;k<4;k++){
+        var x3=516+k*70,gd=R.hits.dmem;
+        var c3=sv("rect",{"class":"a-cell",x:x3,y:402,width:62,height:46,rx:5});gd.appendChild(c3);
+        gd.appendChild(sv("text",{"class":"a-addr",x:x3+7,y:417},String(k)));
+        var t3=sv("text",{"class":"a-val",x:x3+7,y:440},"");gd.appendChild(t3);
+        R.dcells.push({r:c3,t:t3});
+      }
+    }
+    box("in",20,370,170,90,"Vstup","klávesnice, senzor");
+    box("out",210,370,190,90,"Výstup","monitor, LED");
+    R.outText=sv("text",{"class":"a-out",x:384,y:448,"text-anchor":"end"},"");svg.appendChild(R.outText);
+    R.pkt=sv("g",{});svg.appendChild(R.pkt);
+    return R;
+  }
+
+  /* ---------- 2: průzkum schématu ---------- */
+  var INFO={
+    cpu:["Procesor (CPU)","Řadič a ALU dohromady. Von Neumann je popsal jako dvě jednotky, dnes jsou na jednom čipu spolu s registry a cache."],
+    radic:["Řadič","Čte instrukce z paměti, dekóduje je a řídí ostatní části: co se má kam poslat a kdy. Jeho registry: <b>PC</b> drží adresu další instrukce, <b>IR</b> právě prováděnou instrukci."],
+    alu:["ALU, aritmeticko-logická jednotka","Sčítá, odčítá, porovnává a provádí logické operace AND, OR a NOT. Výsledek ukládá do registru, tady do střadače <b>ACC</b>."],
+    pc:["PC, čítač instrukcí","Adresa instrukce, která přijde na řadu. Po načtení instrukce se zvětší o jedna. Skoková instrukce do něj zapíše jinou adresu, tak vznikají podmínky a cykly."],
+    ir:["IR, registr instrukce","Sem řadič uloží načtenou instrukci a z ní pozná, co má udělat."],
+    acc:["ACC, střadač","Registr, do kterého ALU ukládá výsledek. Registry jsou nejrychlejší paměť v počítači, ale je jich jen pár."],
+    mem:["Operační paměť","Řada buněk stejné velikosti, každá má svou adresu. Leží v ní program <b>i</b> data a paměť sama nepozná, co je co. Rozhoduje jen to, odkud řadič čte instrukce."],
+    bus:["Systémová sběrnice","Sdílené vodiče: <b>adresová</b> část říká kam, <b>datová</b> co, <b>řídicí</b> jestli číst, nebo zapsat. Sběrnice je jedna, v jednu chvíli tedy přenáší buď instrukci, nebo data. Tomu se říká <b>von Neumannovo úzké hrdlo</b>."],
+    imem:["Paměť programu","Obsahuje jen instrukce. U mikrokontroléru je to paměť Flash, do které program při běhu nezapisuje. Proto se program nemůže sám omylem přepsat."],
+    dmem:["Paměť dat","Proměnné a mezivýsledky, u mikrokontroléru SRAM. Adresy začínají znovu od nuly: adresa 0 v paměti dat je jiná buňka než adresa 0 v paměti programu."],
+    ibus:["Instrukční sběrnice","Vede jen mezi řadičem a pamětí programu. Přenáší instrukce."],
+    dbus:["Datová sběrnice","Přenáší data mezi procesorem, pamětí dat a vstupy a výstupy. Protože jsou sběrnice dvě, procesor může v jednom taktu načíst další instrukci a zároveň pracovat s daty."],
+    in:["Vstupní zařízení","Klávesnice, myš, mikrofon, senzor, síťová karta. Data jdou po sběrnici do procesoru nebo do paměti."],
+    out:["Výstupní zařízení","Monitor, tiskárna, reproduktor, LED na Arduinu."]
+  };
+  var PARTS={vn:["cpu","radic","alu","pc","ir","acc","mem","bus","in","out"],h:["cpu","radic","alu","pc","ir","acc","imem","dmem","ibus","dbus","in","out"]};
+  var LBL={cpu:"CPU",radic:"Řadič",alu:"ALU",pc:"PC",ir:"IR",acc:"ACC",mem:"Paměť",bus:"Sběrnice",imem:"Paměť programu",dmem:"Paměť dat",ibus:"Instr. sběrnice",dbus:"Dat. sběrnice","in":"Vstup",out:"Výstup"};
+  var exMode="vn",exSel="cpu",EX=null;
+  function exShow(id){
+    exSel=id;
+    Object.keys(EX.parts).forEach(function(k){EX.parts[k].classList.toggle("is-sel",k===id);});
+    Array.prototype.forEach.call($("exParts").children,function(b){b.classList.toggle("is-active",b.dataset.p===id);});
+    exPanel(id);
+  }
+  function exPanel(id){var t=INFO[id];$("exPanel").innerHTML="<h3>"+t[0]+"</h3><p>"+t[1]+"</p>";}
+  function exBuild(){
+    EX=buildArch($("exSvg"),exMode);
+    EX.regs.pc.textContent="0";EX.regs.ir.textContent="LOAD 6";EX.regs.acc.textContent="0";
+    var demo=exMode==="vn"?["LOAD 6","ADD 7","STORE 8","OUT","HALT","","7","5","0",""]:["LOAD 0","ADD 1","STORE 2","OUT","HALT"];
+    EX.cells.forEach(function(c,i){c.t.textContent=demo[i];setCls(c.t,"a-val "+(exMode==="vn"&&i>=5?"dat":"ins"));});
+    if(exMode==="h"){EX.regs.ir.textContent="LOAD 0";["7","5","0",""].forEach(function(v,i){EX.dcells[i].t.textContent=v;setCls(EX.dcells[i].t,"a-val dat");});}
+    Object.keys(EX.hits).forEach(function(k){EX.hits[k].addEventListener("click",function(e){e.stopPropagation();exShow(k);});});
+    $("exParts").innerHTML="";
+    PARTS[exMode].forEach(function(p){var b=el("button","calc-btn",LBL[p]);b.dataset.p=p;b.addEventListener("click",function(){exShow(p);});$("exParts").appendChild(b);});
+    if(PARTS[exMode].indexOf(exSel)<0)exSel=exMode==="vn"?"mem":"imem";
+    exShow(exSel);
+  }
+  modeSwitch($("exMode"),function(m){exMode=m;if(exSel==="mem")exSel="imem";else if(exSel==="imem"||exSel==="dmem")exSel="mem";else if(exSel==="bus")exSel="ibus";else if(exSel==="ibus"||exSel==="dbus")exSel="bus";exBuild();});
+  exBuild();
+  fitPanel($("exPanel"),function(){return Object.keys(INFO).length;},function(i){exPanel(Object.keys(INFO)[i]);},function(){return Object.keys(INFO).indexOf(exSel);});
+
+  /* ---------- 3: simulace ---------- */
+  var PROG={vn:{mem:["LOAD 6","ADD 7","STORE 8","OUT","HALT","","7","5","0",""],data:null},
+            h:{mem:["LOAD 0","ADD 1","STORE 2","OUT","HALT"],data:["7","5","0",""]}};
+  var simMode="vn",S,SV,busy=false,playing=false;
+  function parse(s){var p=s.split(" ");return {op:p[0],a:p.length>1?+p[1]:null};}
+  function simReset(){
+    playing=false;$("simPlay").textContent="▶ Přehrát";
+    SV=buildArch($("simSvg"),simMode);
+    var P=PROG[simMode];
+    S={pc:0,ir:"",acc:0,mem:P.mem.slice(),data:P.data?P.data.slice():null,out:"",stage:"F",halted:false,step:0,bus:0,alu:""};
+    simView(null);
+    $("simPanel").innerHTML="<h3>Připraveno</h3><p>Program sečte čísla 7 a 5, výsledek uloží do paměti a pošle na výstup. "+(simMode==="vn"?"Instrukce leží na adresách 0 až 4, data na adresách 6 až 8, vše v jedné paměti.":"Instrukce jsou v paměti programu, čísla v paměti dat. Obě paměti mají vlastní adresu 0.")+" Stiskni <b>Krok</b>.</p>";
+    setPhase(-1);updButtons();
+  }
+  function cellsOf(kind){return simMode==="vn"?SV.cells:(kind==="ins"?SV.cells:SV.dcells);}
+  function dataArr(){return simMode==="vn"?S.mem:S.data;}
+  function simView(hot){
+    SV.regs.pc.textContent=String(S.pc);
+    SV.regs.ir.textContent=S.ir||"–";
+    SV.regs.acc.textContent=String(S.acc);
+    SV.aluText.textContent=S.alu;
+    SV.outText.textContent=S.out;
+    SV.cells.forEach(function(c,i){
+      var v=S.mem[i];c.t.textContent=v;
+      setCls(c.t,"a-val "+(simMode==="vn"&&i>=5?"dat":"ins"));
+      setCls(c.r,"a-cell"+(i===S.pc&&!S.halted?" is-pc":""));
+    });
+    if(simMode==="h")SV.dcells.forEach(function(c,i){c.t.textContent=S.data[i];setCls(c.r,"a-cell");});
+    ["radic","alu","pc","ir","acc","out"].forEach(function(k){SV.parts[k].classList.remove("is-hot");SV.parts[k].classList.remove("is-hot-d");});
+    if(hot){
+      (hot.parts||[]).forEach(function(k){SV.parts[k].classList.add("is-hot");});
+      if(hot.cell!=null){var arr=cellsOf(hot.kind);addCls(arr[hot.cell].r,hot.kind==="ins"?"is-hot":"is-hot-d");}
+    }
+    $("stIns").textContent=S.ir||"–";$("stStep").textContent=S.step;$("stBus").textContent=S.bus;$("stOut").textContent=S.out||"–";
+  }
+  function setPhase(i){Array.prototype.forEach.call($("phase").children,function(s,k){s.classList.toggle("is-on",k===i);});}
+  function updButtons(){$("simStep").disabled=busy||S.halted;$("simPlay").disabled=S.halted&&!playing;}
+  var SPEED=700;
+  function travel(route,label,kind,rev){
+    return new Promise(function(res){
+      var pts=rev?route.slice().reverse():route,segs=[],len=0;
+      for(var i=1;i<pts.length;i++){var dx=pts[i][0]-pts[i-1][0],dy=pts[i][1]-pts[i-1][1],l=Math.sqrt(dx*dx+dy*dy);segs.push(l);len+=l;}
+      var w=20+label.length*9.2;
+      var g=sv("g",{});var r=sv("rect",{"class":"a-pkt"+(kind==="dat"?" dat":""),x:-w/2,y:-15,width:w,height:30,rx:15});
+      var t=sv("text",{"class":"a-pkt-t"+(kind==="dat"?" dat":""),x:0,y:5,"text-anchor":"middle"},label);
+      g.appendChild(r);g.appendChild(t);SV.pkt.appendChild(g);
+      var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var dur=reduce?1:SPEED,t0=null;
+      function pos(d){for(var i=0;i<segs.length;i++){if(d<=segs[i]||i===segs.length-1){var f=segs[i]?Math.min(1,d/segs[i]):1;return [pts[i][0]+(pts[i+1][0]-pts[i][0])*f,pts[i][1]+(pts[i+1][1]-pts[i][1])*f];}d-=segs[i];}}
+      function frame(ts){
+        if(t0===null)t0=ts;var k=Math.min(1,(ts-t0)/dur);var e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+        var p=pos(e*len);g.setAttribute("transform","translate("+p[0]+" "+p[1]+")");
+        if(k<1)requestAnimationFrame(frame);else{SV.pkt.removeChild(g);res();}
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+  function busHot(which,on){var b=SV.buses[SV.busOf[which]];if(b)b.classList.toggle("is-hot",on);}
+  function access(which,legs){
+    busHot(which,true);S.bus++;$("stBus").textContent=S.bus;
+    var chain=Promise.resolve();
+    legs.forEach(function(l){chain=chain.then(function(){return travel(SV.routes[which],l[0],l[1],l[2]);});});
+    return chain.then(function(){busHot(which,false);});
+  }
+  function say(h,p){$("simPanel").innerHTML="<h3>"+h+"</h3><p>"+p+"</p>";}
+  function doStep(){
+    if(busy||S.halted)return Promise.resolve();
+    busy=true;updButtons();S.step++;
+    var done;
+    if(S.stage==="F"){
+      setPhase(0);
+      var a=S.pc,ins=S.mem[a];
+      simView({parts:["radic","pc"],cell:a,kind:"ins"});
+      say("Načtení instrukce (fetch)","Řadič pošle obsah PC, adresu <b>"+a+"</b>, "+(simMode==="vn"?"po společné sběrnici":"po instrukční sběrnici")+" do paměti"+(simMode==="vn"?"":" programu")+". Paměť vrátí instrukci <b>"+ins+"</b>, ta se uloží do IR a PC se zvětší na "+(a+1)+".");
+      done=access("fetch",[["adr "+a,"ins",false],[ins,"ins",true]]).then(function(){S.ir=ins;S.pc=a+1;S.stage="D";simView({parts:["ir","pc"]});});
+    } else if(S.stage==="D"){
+      setPhase(1);
+      var I=parse(S.ir),txt={
+        LOAD:"načti číslo z adresy "+I.a+" do střadače ACC",ADD:"přičti k ACC číslo z adresy "+I.a,STORE:"zapiš ACC do paměti na adresu "+I.a,OUT:"pošli ACC na výstup",HALT:"zastav procesor"}[I.op];
+      say("Dekódování","Řadič rozpozná instrukci <b>"+S.ir+"</b>: "+txt+". Po sběrnici teď nic nejde.");
+      simView({parts:["radic","ir"]});S.stage="E";
+      done=new Promise(function(r){setTimeout(r,reduceMotion()?1:SPEED*0.6);});
+    } else {
+      setPhase(2);
+      var J=parse(S.ir),D=dataArr();S.stage="F";
+      if(J.op==="LOAD"){
+        say("Provedení: LOAD","Řadič pošle adresu <b>"+J.a+"</b>"+(simMode==="vn"?" po stejné sběrnici, po které přišla instrukce":" po datové sběrnici do paměti dat")+". Číslo <b>"+D[J.a]+"</b> se uloží do ACC.");
+        simView({parts:["acc"],cell:J.a,kind:"dat"});
+        done=access("data",[["adr "+J.a,"ins",false],[D[J.a],"dat",true]]).then(function(){S.acc=+D[J.a];S.alu="";simView({parts:["acc"]});});
+      } else if(J.op==="ADD"){
+        say("Provedení: ADD","Z adresy <b>"+J.a+"</b> přijde číslo <b>"+D[J.a]+"</b> a ALU ho sečte se střadačem: "+S.acc+" + "+D[J.a]+" = <b>"+(S.acc+ +D[J.a])+"</b>.");
+        simView({parts:["alu"],cell:J.a,kind:"dat"});
+        done=access("data",[["adr "+J.a,"ins",false],[D[J.a],"dat",true]]).then(function(){S.alu=S.acc+" + "+D[J.a]+" = "+(S.acc+ +D[J.a]);S.acc=S.acc+ +D[J.a];simView({parts:["alu","acc"]});});
+      } else if(J.op==="STORE"){
+        say("Provedení: STORE","Procesor pošle adresu <b>"+J.a+"</b> i hodnotu <b>"+S.acc+"</b> a paměť ji zapíše."+(simMode==="vn"?" Všimni si: zapsat by šlo i na adresu 0 až 4, tedy přepsat vlastní program.":" Do paměti programu zapisovat nejde."));
+        simView({parts:["acc"],cell:J.a,kind:"dat"});
+        done=access("data",[[S.acc+" → "+J.a,"dat",false]]).then(function(){D[J.a]=String(S.acc);simView({cell:J.a,kind:"dat"});});
+      } else if(J.op==="OUT"){
+        say("Provedení: OUT","Hodnota ze střadače, <b>"+S.acc+"</b>, putuje po "+(simMode==="vn"?"systémové":"datové")+" sběrnici na výstupní zařízení.");
+        simView({parts:["acc","out"]});
+        done=access("out",[[String(S.acc),"dat",false]]).then(function(){S.out=String(S.acc);simView({parts:["out"]});});
+      } else {
+        S.halted=true;setPhase(-1);
+        say("Konec: HALT","Procesor se zastavil. Za "+S.step+" kroků prošlo po sběrnici <b>"+S.bus+"</b> přenosů. "+(simMode==="vn"?"Všechny po jediné sběrnici, jeden po druhém. Přepni na Harvard a porovnej.":"Instrukce šly po instrukční sběrnici, data po datové. Jak to zrychlí běh, uvidíš na dalším snímku."));
+        simView(null);done=Promise.resolve();
+      }
+    }
+    return done.then(function(){busy=false;updButtons();});
+  }
+  function reduceMotion(){return window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;}
+  function play(){
+    if(!playing||S.halted){playing=false;$("simPlay").textContent="▶ Přehrát";updButtons();return;}
+    doStep().then(function(){setTimeout(play,250);});
+  }
+  $("simStep").addEventListener("click",doStep);
+  $("simPlay").addEventListener("click",function(){
+    if(S.halted){simReset();}
+    playing=!playing;$("simPlay").textContent=playing?"❚❚ Pauza":"▶ Přehrát";
+    if(playing&&!busy)play();
+  });
+  $("simReset").addEventListener("click",function(){if(busy){playing=false;return;}simReset();});
+  modeSwitch($("simMode"),function(m){simMode=m;playing=false;var w=function(){if(busy){setTimeout(w,60);return;}simReset();};w();});
+  simReset();
+
+  /* ---------- 4: závod ---------- */
+  var RACE=[
+    {n:"7 + 5",prog:["LOAD","ADD","STORE","OUT","HALT"]},
+    {n:"součet pěti čísel",prog:["LOAD","ADD","ADD","ADD","ADD","STORE","OUT","HALT"]}
+  ];
+  var rI=0,raceTimer=null;
+  function schedule(prog){
+    var vn=[],h={f:[],d:[]};
+    prog.forEach(function(op,i){vn.push({t:"f",i:i+1});if(op!=="HALT")vn.push({t:"d",i:i+1});});
+    prog.forEach(function(op,i){h.f[i]=i+1;if(op!=="HALT")h.d[i+1]=i+1;});
+    var hLen=Math.max(h.f.length,h.d.length);
+    return {vn:vn,h:h,hLen:hLen};
+  }
+  function ganttHtml(title,rows,cols,totalTxt){
+    var html='<div class="g-head"><h3>'+title+'</h3><span class="g-total">'+totalTxt+'</span></div>';
+    rows.forEach(function(r){
+      html+='<div class="g-row"><span class="g-lab">'+r.lab+'</span><div class="g-cells n'+cols+'">';
+      for(var c=0;c<cols;c++){var x=r.cells[c];html+='<span class="g-cell'+(x?" "+x.t:"")+(r.end&&c>=r.end?" x":"")+'" data-c="'+c+'">'+(x?x.i:"")+'</span>';}
+      html+='</div></div>';
+    });
+    return html;
+  }
+  function raceRender(upto){
+    var R2=RACE[rI],sc=schedule(R2.prog),cols=sc.vn.length;
+    var vnCells=sc.vn.map(function(x){return x;});
+    var hf=[],hd=[];for(var c=0;c<cols;c++){hf.push(sc.h.f[c]?{t:"f",i:sc.h.f[c]}:null);hd.push(sc.h.d[c]?{t:"d",i:sc.h.d[c]}:null);}
+    var show=upto==null?cols:upto;
+    $("ganttVN").innerHTML=ganttHtml("von Neumann",[{lab:"sběrnice",cells:vnCells}],cols,show>=cols?cols+" taktů":"takt "+show);
+    $("ganttH").innerHTML=ganttHtml("Harvard",[{lab:"instrukční",cells:hf,end:sc.hLen},{lab:"datová",cells:hd,end:sc.hLen}],cols,show>=sc.hLen?sc.hLen+" taktů":"takt "+show);
+    [$("ganttVN"),$("ganttH")].forEach(function(g){Array.prototype.forEach.call(g.querySelectorAll(".g-cell"),function(c){if(+c.dataset.c<show)c.classList.add("is-on");});});
+    if(show>=cols){
+      var gain=Math.round((1-sc.hLen/cols)*100);
+      $("raceNote").innerHTML="Harvard je hotový za "+sc.hLen+" taktů místo "+cols+", o "+gain+" % rychleji. Zatímco se přenášejí data, načítá se už další instrukce.";
+    } else $("raceNote").textContent="Číslo v políčku = pořadí instrukce v programu.";
+  }
+  RACE.forEach(function(r,i){
+    var b=el("button","calc-btn"+(i===0?" is-active":""),"Program: "+r.n);
+    b.addEventListener("click",function(){rI=i;clearInterval(raceTimer);Array.prototype.forEach.call($("raceProg").children,function(x){x.classList.toggle("is-active",x===b);});raceRender(0);});
+    $("raceProg").appendChild(b);
+  });
+  $("raceRun").addEventListener("click",function(){
+    clearInterval(raceTimer);var t=0,cols=schedule(RACE[rI].prog).vn.length;raceRender(0);
+    raceTimer=setInterval(function(){t++;raceRender(t);if(t>=cols)clearInterval(raceTimer);},reduceMotion()?1:420);
+  });
+  raceRender(0);
+
+  /* ---------- 5: principy ---------- */
+  var PR=[
+    {t:"Počítač tvoří pět jednotek: řadič, ALU, operační paměť, vstup a výstup.",v:"good",n:"Platí",d:"Jen řadič a ALU jsou dnes jeden čip, procesor. Ten navíc obsahuje registry, cache a často i grafiku."},
+    {t:"Stavba počítače nezávisí na úloze. Úlohu určuje program v paměti.",v:"good",n:"Platí",d:"Na stejném notebooku hraješ hru i píšeš úkol. ENIAC byl opak: pro jinou úlohu se přepojoval."},
+    {t:"Program i data jsou uloženy ve stejné paměti.",v:"part",n:"Částečně",d:"Operační paměť RAM je společná. Uvnitř procesoru je ale cache L1 rozdělená na instrukční a datovou a mikrokontroléry mají paměti oddělené úplně. Systém navíc označuje části paměti jako nespustitelné, aby se data nedala spustit jako program."},
+    {t:"Paměť je rozdělená na buňky stejné velikosti, každá má svou adresu.",v:"good",n:"Platí",d:"Dnes je buňka velká jeden bajt a adresy jsou 64bitové."},
+    {t:"Instrukce se provádějí postupně, jedna po druhé.",v:"part",n:"Částečně",d:"Procesor zpracovává několik instrukcí najednou v různých fázích (pipeline), přehazuje jejich pořadí a má více jader. Výsledek ale musí vypadat, jako by šly po sobě."},
+    {t:"Pořadí instrukcí lze měnit skokem, i podmíněným.",v:"good",n:"Platí",d:"Každé if a každý cyklus ve tvém programu se přeloží na skokové instrukce, které přepíšou registr PC."},
+    {t:"Čísla, znaky i instrukce se zapisují ve dvojkové soustavě.",v:"good",n:"Platí",d:"Navazuje na blok Informace: všechno v počítači jsou bity, význam jim dává až to, kdo je čte."}
+  ];
+  var prAct=0,prBtns=[];
+  function prShow(i,measure){
+    var p=PR[i];
+    $("princPanel").innerHTML='<div class="verdict"><span class="badge '+p.v+'">'+p.n+'</span></div><h3>'+p.t+'</h3><p>'+p.d+'</p>';
+    if(!measure){prAct=i;prBtns.forEach(function(b,k){b.classList.toggle("is-active",k===i);});}
+  }
+  PR.forEach(function(p,i){var b=el("button","",p.t);b.addEventListener("click",function(){prShow(i);});$("princ").appendChild(b);prBtns.push(b);});
+  prShow(0);
+  fitPanel($("princPanel"),function(){return PR.length;},prShow,function(){return prAct;});
+
+  /* ---------- 7: v praxi ---------- */
+  var WH=[
+    {n:"Arduino Uno",s:"Harvard",t:"Mikrokontrolér ATmega328P",d:"Program je v paměti Flash (32 KB), proměnné v SRAM (2 KB). Každá paměť má vlastní sběrnici a vlastní adresy. Když chceš uložit dlouhý text do Flash, aby nezabíral SRAM, píšeš <b>PROGMEM</b> a čteš ho zvláštní funkcí, protože běžný ukazatel míří do SRAM."},
+    {n:"Notebook",s:"obojí",t:"Navenek von Neumann, uvnitř Harvard",d:"Operační paměť RAM je jedna pro programy i data. Uvnitř procesoru je ale nejrychlejší cache L1 rozdělená na instrukční a datovou, takže jádro může v jednom taktu číst obojí. Tomu se říká <b>modifikovaná Harvardova architektura</b>."},
+    {n:"Mobil",s:"obojí",t:"Procesory ARM",d:"Stejný princip jako notebook. Navíc operační systém označí oblasti s daty jako <b>nespustitelné</b>. Když útočník podstrčí programu data, která vypadají jako instrukce, procesor je odmítne spustit. Je to ochrana proti slabině von Neumannovy architektury."},
+    {n:"Harvard Mark I",s:"1944",t:"Odkud je jméno",d:"Elektromechanický počítač z Harvardovy univerzity. Program četl z děrné pásky, čísla měl v počítadlech. Program a data byly fyzicky oddělené, a podle něj se architektura jmenuje."}
+  ];
+  var whAct=0,whBtns=[];
+  function whShow(i,measure){var w=WH[i];$("wherePanel").innerHTML='<span class="meta">'+w.s+'</span><h3>'+w.t+'</h3><p>'+w.d+'</p>';if(!measure){whAct=i;whBtns.forEach(function(b,k){b.classList.toggle("is-active",k===i);});}}
+  WH.forEach(function(w,i){var b=el("button","tcard","<b>"+w.n+"</b><span>"+w.s+"</span>");b.addEventListener("click",function(){whShow(i);});$("whereCards").appendChild(b);whBtns.push(b);});
+  whShow(0);
+  fitPanel($("wherePanel"),function(){return WH.length;},whShow,function(){return whAct;});
+
+  /* ---------- 8: pauza ---------- */
+  $("pauseBtn").addEventListener("click",function(){var h=$("pauseAns").hidden;$("pauseAns").hidden=!h;this.classList.toggle("is-on",h);this.textContent=h?"Skrýt odpověď":"Ukázat odpověď";});
+
+  /* ---------- 9: kvíz ---------- */
+  var Q=[
+    {t:"Instrukce i data jdou po jedné společné sběrnici.",a:"vn",f:"Jedna sběrnice je přesně to úzké hrdlo von Neumannovy architektury."},
+    {t:"Adresa 0 může znamenat dvě různé buňky.",a:"h",f:"Harvard má dva adresní prostory: adresa 0 v paměti programu a adresa 0 v paměti dat."},
+    {t:"Řadič čte instrukce, ALU počítá.",a:"b",f:"Rozdíl je v pamětech a sběrnicích, procesor má obě architektury stejný."},
+    {t:"Procesor v jednom taktu načte instrukci a zároveň zapíše data.",a:"h",f:"Dvě sběrnice dovolí oba přenosy současně."},
+    {t:"Program si může za běhu přepsat vlastní instrukce.",a:"vn",f:"Instrukce jsou obyčejná data ve stejné paměti. Využívá se to při nahrávání programů, ale zneužívají to i útoky."},
+    {t:"Najdeš ji v mikrokontroléru ATmega328P v Arduinu Uno.",a:"h",f:"Program ve Flash, data v SRAM, každá paměť s vlastní sběrnicí."},
+    {t:"Když program potřebuje víc místa na data, může si vzít místo, kde by jinak byl kód.",a:"vn",f:"Jedna paměť se dělí pružně. U Harvardu je rozdělení dané konstrukcí."},
+    {t:"Všechno se ukládá ve dvojkové soustavě.",a:"b",f:"Bity jsou společné všem dnešním počítačům."}
+  ];
+  var qI=0,qOk=0,qAns=false,ansBtns=Array.prototype.slice.call(document.querySelectorAll("[data-a]"));
+  var AN={vn:"von Neumann",h:"Harvard",b:"obě"};
+  function qRender(){
+    qAns=false;var q=Q[qI];
+    $("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qText").textContent=q.t;$("qFb").innerHTML="";$("qNext").hidden=true;
+    ansBtns.forEach(function(b){b.hidden=false;b.classList.remove("is-right","is-wrong");b.disabled=false;});
+  }
+  ansBtns.forEach(function(b){b.addEventListener("click",function(){
+    if(qAns)return;qAns=true;var q=Q[qI],ok=b.dataset.a===q.a;if(ok)qOk++;
+    ansBtns.forEach(function(x){if(x.dataset.a===q.a)x.classList.add("is-right");x.disabled=true;});
+    if(!ok)b.classList.add("is-wrong");
+    $("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qFb").innerHTML="<b>"+(ok?"Správně.":"Správně je: "+AN[q.a]+".")+"</b> "+q.f;
+    $("qNext").hidden=false;$("qNext").textContent=qI===Q.length-1?"Výsledek":"Další →";
+  });});
+  $("qNext").addEventListener("click",function(){
+    if(qI===Q.length-1){$("qText").innerHTML="<b>Výsledek: "+qOk+" z "+Q.length+".</b>";$("qFb").innerHTML=qOk>=6?"Výborně, architektury máš v malíku.":"Vrať se k simulaci a závodu a zkus to znovu.";ansBtns.forEach(function(b){b.hidden=true;});$("qNext").textContent="Znovu";qI=-1;qOk=0;return;}
+    qI++;qRender();
+  });
+  qRender();
+
+  goTo(0);
+})();
+</script>
+</body>
+</html>

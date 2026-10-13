@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snímek po snímku – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Video</li>
+    <li><a href="#snimky">Video jsou snímky</a></li>
+    <li><a href="#fps">Snímková frekvence</a></li>
+    <li><a href="#syrove">Kolik zabírá syrové video</a></li>
+    <li class="grp">Komprese videa</li>
+    <li><a href="#rozdily">Ukládej jen změny</a></li>
+    <li><a href="#ipb">Snímky I, P a B</a></li>
+    <li><a href="#jas-barva">Jas a barva zvlášť</a></li>
+    <li class="grp">Soubory a streamování</li>
+    <li><a href="#kodek">Kodek a kontejner</a></li>
+    <li><a href="#bitrate">Bitrate</a></li>
+    <li><a href="#stream">Streamování</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#zkus">Vyzkoušej si</a></li>
+    <li><a href="#chyby">Časté chyby</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Informace · Studijní text k lekci 09</p>
+  <h1>Snímek po snímku <span class="t">▶ 24 fps</span></h1>
+  <p class="lead">Jak se ukládá video: snímky a snímková frekvence, proč by bylo syrové video obří, jak ho komprese zmenší stokrát, co je kodek, kontejner a bitrate. Text je psaný tak, abys ho zvládl sám, i když jsi na hodině chyběl.</p>
+  <a class="deck-link" href="09_snimek_po_snimku.html"><span class="ic">▶</span><span class="tx"><b>Prezentace k lekci: Snímek po snímku</b><span>Interaktivní slajdy z hodiny: přehrávání snímků, porovnání fps, klíčové snímky, streamování</span></span></a>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit, proč vnímáme sled snímků jako pohyb</li>
+      <li>popsat snímkovou frekvenci a typické hodnoty</li>
+      <li>spočítat datový tok nekomprimovaného videa</li>
+      <li>vysvětlit mezisnímkovou kompresi</li>
+      <li>rozlišit snímky I, P a B</li>
+      <li>vysvětlit, proč se barva ukládá hruběji než jas</li>
+      <li>rozlišit kodek a kontejner</li>
+      <li>vysvětlit bitrate a adaptivní streamování</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Video</p>
+
+<section id="snimky">
+<h2>Video jsou rychle se střídající obrázky</h2>
+<p>Ve videu žádný skutečný pohyb není. Je to <strong>posloupnost statických obrázků</strong>, kterým se říká <dfn>snímky</dfn> (anglicky <em>frames</em>). Každý snímek je obyčejný rastrový obrázek (viz <a href="05_pixel_po_pixelu_studijni_text.html">lekce 05</a>).</p>
+<p>Když se snímky střídají dost rychle, mozek mezi nimi „doplní“ pohyb. Stejný princip má kreslený flipbook, kde listuješ stránkami s mírně posunutou kresbou. Iluzi plynulého pohybu se říká <dfn>zdánlivý pohyb</dfn> (phi jev).</p>
+</section>
+
+<section id="fps">
+<h2>Snímková frekvence</h2>
+<p><dfn>Snímková frekvence</dfn> udává, kolik snímků se zobrazí za sekundu. Jednotka je <strong>fps</strong> (frames per second) nebo snímků/s.</p>
+<div class="tbl"><table>
+<thead><tr><th>fps</th><th>pauza mezi snímky</th><th>kde se používá</th></tr></thead>
+<tbody>
+<tr><td class="num">12</td><td class="num">83 ms</td><td>klasická kreslená animace (každá kresba dvakrát), pohyb trochu trhaný</td></tr>
+<tr><td class="num">24</td><td class="num">41,7 ms</td><td>kino, standard od nástupu zvukového filmu (konec 20. let)</td></tr>
+<tr><td class="num">25</td><td class="num">40 ms</td><td>evropská televize (navázáno na síťovou frekvenci 50 Hz)</td></tr>
+<tr><td class="num">30</td><td class="num">33,3 ms</td><td>americká televize (60 Hz), běžná videa z mobilu</td></tr>
+<tr><td class="num">60</td><td class="num">16,7 ms</td><td>hry, sportovní přenosy, plynulé záznamy</td></tr>
+<tr><td class="num">120+</td><td class="num">8,3 ms</td><td>zpomalené záběry, herní monitory</td></tr>
+</tbody></table></div>
+<p>Pauzu spočítáš jako 1000 ms / fps. Pod zhruba 12 fps vnímáme jednotlivé snímky, kolem 24 fps už pohyb splývá. Vyšší fps je plynulejší, ale znamená víc dat.</p>
+</section>
+
+<section id="syrove">
+<h2>Kolik zabírá syrové video</h2>
+<p>Nekomprimované video je jen hodně obrázků za sebou. Datový tok za sekundu spočítáš jako velikost jednoho snímku krát počet snímků:</p>
+<div class="formula">šířka × výška × 24 b × fps = bitů za sekundu</div>
+<p><strong>Full HD, 30 fps:</strong> 1920 × 1080 × 3 B × 30 = 186 624 000 B ≈ <strong>187 MB za sekundu</strong>.</p>
+<div class="tbl"><table>
+<thead><tr><th>rozlišení, fps</th><th>za sekundu</th><th>za minutu</th><th>za hodinu</th></tr></thead>
+<tbody>
+<tr><td>HD 720p, 30</td><td class="num">83 MB</td><td class="num">5,0 GB</td><td class="num">299 GB</td></tr>
+<tr><td>Full HD 1080p, 30</td><td class="num">187 MB</td><td class="num">11,2 GB</td><td class="num">672 GB</td></tr>
+<tr><td>4K, 30</td><td class="num">746 MB</td><td class="num">44,8 GB</td><td class="num">2,7 TB</td></tr>
+<tr><td>4K, 60</td><td class="num">1,49 GB</td><td class="num">89,6 GB</td><td class="num">5,4 TB</td></tr>
+</tbody></table></div>
+<p>Do toho se nepočítá ani zvuk. Hodinový film ve Full HD by se nevešel do žádného telefonu a streamovat by ho šlo jen rychlostí přes 1,5 Gb/s. Přesto se film vejde do pár GB a jde streamovat přes běžný internet. Jak?</p>
+</section>
+
+<p class="part">Komprese videa</p>
+
+<section id="rozdily">
+<h2>Ukládej jen změny</h2>
+<p>Porovnej dva po sobě jdoucí snímky. Pozadí, nábytek, obloha: <strong>většina obrazu se nemění</strong>. Změní se jen to, co se pohnulo. Stačí tedy uložit první snímek celý a u dalších jen rozdíly. Tomu se říká <dfn>mezisnímková komprese</dfn> (temporální).</p>
+<ul>
+  <li><strong>Statická kamera</strong> (zprávy, přednáška): mění se málo, video se zmenší velmi dobře.</li>
+  <li><strong>Pohyb kamery</strong>: posune se celý obraz. Kodek to řeší <dfn>kompenzací pohybu</dfn>: neuloží nové pixely, ale „tenhle blok se posunul o 5 pixelů doleva“.</li>
+  <li><strong>Rychlá akce, déšť, konfety, šum</strong>: mění se skoro všechno, takové scény jsou nejtěžší a bývají v nich vidět kostičky.</li>
+</ul>
+</section>
+
+<section id="ipb">
+<h2>Snímky I, P a B</h2>
+<p>Komprimované video obsahuje tři druhy snímků:</p>
+<div class="tbl"><table>
+<thead><tr><th>typ</th><th>obsahuje</th><th>velikost</th></tr></thead>
+<tbody>
+<tr><td><strong>I</strong> (intra, klíčový snímek)</td><td>celý obrázek, zkomprimovaný jako samostatná fotka (podobně jako JPEG)</td><td>velký</td></tr>
+<tr><td><strong>P</strong> (predicted)</td><td>jen rozdíly proti předchozímu snímku</td><td>malý</td></tr>
+<tr><td><strong>B</strong> (bidirectional)</td><td>rozdíly proti předchozímu i následujícímu snímku</td><td>nejmenší</td></tr>
+</tbody></table></div>
+<p>Klíčový snímek se vkládá pravidelně, třeba každé 1–2 sekundy. Proč, když je největší?</p>
+<ul>
+  <li><strong>Přetáčení.</strong> Když skočíš doprostřed videa, přehrávač potřebuje celý obrázek, od kterého začne skládat rozdíly.</li>
+  <li><strong>Chyby.</strong> Když se při přenosu ztratí kus dat, chyba se šíří dalšími rozdílovými snímky, dokud nepřijde nový klíčový snímek.</li>
+  <li><strong>Střih.</strong> Po změně scény je nový obraz úplně jiný, rozdíly by nepomohly.</li>
+</ul>
+<div class="note tip"><b class="lbl">Znáš to</b><p>Když se video při špatném signálu „rozsype“ na barevné kostky, které se hýbou podle pohybu ve scéně, viděl jsi chybu šířící se P snímky. Spraví se při dalším klíčovém snímku.</p></div>
+</section>
+
+<section id="jas-barva">
+<h2>Jas a barva zvlášť</h2>
+<p>Lidské oko vnímá mnohem lépe <strong>jas</strong> (světlo a tma) než <strong>barvu</strong>. Video proto převádí RGB na jas Y a dvě barevné složky Cb a Cr (model <dfn>YCbCr</dfn>, viz <a href="07_barva_po_barve_studijni_text.html#ycbcr">lekce 07</a>) a barvu ukládá v nižším rozlišení. Tomu se říká <dfn>podvzorkování barvy</dfn> (chroma subsampling).</p>
+<ul>
+  <li><strong>4:4:4</strong>: barva v plném rozlišení (3 bajty na pixel).</li>
+  <li><strong>4:2:0</strong>: barva v polovičním rozlišení vodorovně i svisle, jedna barva na blok 2 × 2 pixelů. Vychází to na 1,5 bajtu na pixel, tedy o polovinu méně dat. Používá ho skoro každé běžné video.</li>
+</ul>
+<p>Pokud bychom místo barvy zhrubili jas, obraz by byl hned viditelně rozmazaný. Hrubší barvu oko skoro nepozná. Stejný trik používá JPEG. Zbylé kroky jsou podobné jako u fotek: bloky pixelů, zahození jemných detailů, bezztrátová komprese (viz <a href="08_komprese_studijni_text.html">lekce 08</a>).</p>
+</section>
+
+<p class="part">Soubory a streamování</p>
+
+<section id="kodek">
+<h2>Kodek a kontejner</h2>
+<p>Soubor <code>video.mp4</code> zná každý. Přípona ale neříká, jak je video zkomprimované. Je potřeba rozlišit dva pojmy:</p>
+<div class="cols2">
+  <div class="card"><h3>Kodek</h3><p><strong>Jak se data zmenší.</strong> Algoritmus, který obraz nebo zvuk komprimuje (kóduje) a zase rozbaluje (dekóduje). Název je složenina z <em>kodér + dekodér</em>.</p><p>Video: H.264 (AVC), H.265 (HEVC), VP9, AV1. Zvuk: AAC, MP3, Opus.</p></div>
+  <div class="card"><h3>Kontejner</h3><p><strong>Do čeho se to zabalí.</strong> Formát souboru, ve kterém leží obraz, zvuk, titulky a informace o videu pohromadě a časově synchronizované.</p><p>MP4, MKV, WebM, MOV, AVI.</p></div>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>kontejner</th><th>typicky uvnitř</th></tr></thead>
+<tbody>
+<tr><td>.mp4</td><td>video H.264 nebo H.265, zvuk AAC</td></tr>
+<tr><td>.mkv</td><td>cokoli, i víc zvukových stop a titulků</td></tr>
+<tr><td>.webm</td><td>video VP9 nebo AV1, zvuk Opus (web, YouTube)</td></tr>
+</tbody></table></div>
+<p>Dva soubory <code>.mp4</code> tedy mohou být zkomprimované úplně jinak. Když se video nepřehraje, často chybí <em>kodek</em>, ne podpora kontejneru.</p>
+<p>Novější kodeky komprimují lépe: H.265 dosáhne stejné kvality jako H.264 zhruba při polovičním objemu dat. Za to potřebují víc výpočetního výkonu a dřív neměly podporu ve všech zařízeních.</p>
+</section>
+
+<section id="bitrate">
+<h2>Bitrate</h2>
+<p><dfn>Bitrate</dfn> (datový tok) je počet bitů, které video spotřebuje za sekundu. Udává se v <strong>Mb/s</strong>, tedy v bitech, ne bajtech (viz <a href="03_bit_byte_studijni_text.html#rychlost">lekce 03</a>). Vyšší bitrate = víc dat na snímek = lepší kvalita a větší soubor.</p>
+<div class="formula">velikost = bitrate × délka<small>5 Mb/s × 3600 s = 18 000 Mb = 2 250 MB ≈ 2,25 GB za hodinu</small></div>
+<div class="tbl"><table>
+<thead><tr><th>kvalita</th><th>orientační bitrate (H.264)</th><th>dat za hodinu</th></tr></thead>
+<tbody>
+<tr><td>480p</td><td class="num">1,5 Mb/s</td><td class="num">≈ 0,7 GB</td></tr>
+<tr><td>720p</td><td class="num">3 Mb/s</td><td class="num">≈ 1,4 GB</td></tr>
+<tr><td>1080p</td><td class="num">5 Mb/s</td><td class="num">≈ 2,3 GB</td></tr>
+<tr><td>4K</td><td class="num">16 Mb/s</td><td class="num">≈ 7,2 GB</td></tr>
+</tbody></table></div>
+<p>Hodnoty jsou orientační, skutečný bitrate závisí na kodeku, službě a obsahu. Porovnej: syrové Full HD má 1,5 Gb/s, streamované 5 Mb/s, tedy asi <strong>300× méně</strong>.</p>
+</section>
+
+<section id="stream">
+<h2>Streamování</h2>
+<p>Při <dfn>streamování</dfn> se video nestahuje celé předem, ale přehrává se průběžně, jak data přicházejí. Přehrávač si drží malou zásobu dopředu (<dfn>buffer</dfn>), aby krátký výpadek sítě nepřerušil přehrávání.</p>
+<p>Služby jako YouTube nebo Netflix mají každé video připravené v několika kvalitách, rozdělené na krátké úseky po pár sekundách. Přehrávač průběžně měří rychlost připojení a pro každý další úsek vybere nejvyšší kvalitu, která se do ní vejde. Tomu se říká <dfn>adaptivní streamování</dfn> (technologie HLS a DASH). Proto se ti při zhoršení signálu obraz na chvíli rozmaže, ale nezastaví se.</p>
+<div class="note mat"><b class="lbl">Příklad</b><p>Máš internet 10 Mb/s. Do něj se vejde 1080p (5 Mb/s), 4K (16 Mb/s) ne. Přehrávač zvolí 1080p a nechá si rezervu.</p></div>
+</section>
+
+<p class="part">Opakování</p>
+
+<section id="zkus">
+<h2>Vyzkoušej si</h2>
+<details class="sol"><summary>1. Jaká je pauza mezi snímky při 50 fps?</summary><div><p>1000 / 50 = <strong>20 ms</strong>.</p></div></details>
+<details class="sol"><summary>2. Kolik dat za sekundu má nekomprimované video 640 × 480 v RGB při 25 fps?</summary><div><p>640 × 480 × 3 B × 25 = 23 040 000 B ≈ <strong>23 MB/s</strong>.</p></div></details>
+<details class="sol"><summary>3. Film trvá 2 hodiny a má bitrate 4 Mb/s. Jak velký je soubor?</summary><div><p>4 Mb/s × 7 200 s = 28 800 Mb = 3 600 MB = <strong>3,6 GB</strong>.</p></div></details>
+<details class="sol"><summary>4. Proč se do videa vkládají klíčové snímky, když jsou největší?</summary><div><p>Kvůli přetáčení (přehrávač potřebuje celý obrázek, od kterého začne), kvůli zastavení šíření chyb a kvůli střihům scén.</p></div></details>
+<details class="sol"><summary>5. Co z toho je kodek a co kontejner: AV1, MKV, AAC, MP4, H.265?</summary><div><p>Kodeky: <strong>AV1, AAC, H.265</strong>. Kontejnery: <strong>MKV, MP4</strong>.</p></div></details>
+<details class="sol"><summary>6. Které video se zkomprimuje lépe: záznam přednášky ze stativu, nebo záběr ohňostroje z ruky?</summary><div><p>Přednáška. Mezi snímky se skoro nic nemění. U ohňostroje se mění jas, barvy i celý záběr.</p></div></details>
+<details class="sol"><summary>7. Kolik dat spotřebuje hodina videa 720p podle tabulky, když máš datový tarif 10 GB?</summary><div><p>Asi 1,4 GB za hodinu, takže tarif stačí zhruba na 7 hodin.</p></div></details>
+</section>
+
+<section id="chyby">
+<h2>Časté chyby</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Správně</th></tr></thead>
+<tbody>
+<tr><td>„MP4 je kodek“</td><td>MP4 je kontejner, kodek je třeba H.264</td></tr>
+<tr><td>Bitrate v MB/s</td><td>Bitrate se udává v bitech (Mb/s), na bajty dělit 8</td></tr>
+<tr><td>Ve vzorci zapomenout na fps</td><td>Velikost snímku × fps = data za sekundu</td></tr>
+<tr><td>„Video ukládá každý snímek celý“</td><td>Celé jsou jen klíčové snímky, ostatní ukládají rozdíly</td></tr>
+<tr><td>„Vyšší fps = vždy lepší video“</td><td>Plynulejší pohyb, ale víc dat; filmy jsou záměrně ve 24 fps</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<details class="q"><summary>Co je video z pohledu počítače?</summary><div class="a"><p>Posloupnost statických rastrových snímků, které se střídají tak rychle, že je vnímáme jako pohyb (spolu se zvukovou stopou).</p></div></details>
+<details class="q"><summary>Co je fps a jaké jsou typické hodnoty?</summary><div class="a"><p>Počet snímků za sekundu. Kino 24, evropská TV 25, videa z mobilu 30, hry a sport 60.</p></div></details>
+<details class="q"><summary>Jak se spočítá datový tok syrového videa?</summary><div class="a"><p>šířka × výška × bitů na pixel × fps. Full HD při 30 fps vychází asi 187 MB za sekundu.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi snímky I, P a B?</summary><div class="a"><p>I obsahuje celý obraz, P jen rozdíly proti předchozímu snímku, B rozdíly proti předchozímu i následujícímu.</p></div></details>
+<details class="q"><summary>Proč se barva ukládá v nižším rozlišení než jas?</summary><div class="a"><p>Oko je mnohem citlivější na jas než na barvu. Hrubší barvu nepozná, a ušetří se tím polovina dat (4:2:0).</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi kodekem a kontejnerem?</summary><div class="a"><p>Kodek je algoritmus komprese (H.264, AV1), kontejner je formát souboru, který balí obraz, zvuk a titulky dohromady (MP4, MKV).</p></div></details>
+<details class="q"><summary>Jak funguje adaptivní streamování?</summary><div class="a"><p>Video je připravené v několika kvalitách po krátkých úsecích. Přehrávač měří rychlost připojení a pro každý úsek vybere nejvyšší kvalitu, která se vejde.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Snímek (frame)</dt><dd>Jeden statický obrázek videa</dd>
+  <dt>fps</dt><dd>Frames per second, počet snímků za sekundu</dd>
+  <dt>Mezisnímková komprese</dt><dd>Ukládání jen změn mezi snímky</dd>
+  <dt>Klíčový snímek (I)</dt><dd>Snímek uložený celý, bez odkazu na jiné</dd>
+  <dt>P a B snímky</dt><dd>Snímky obsahující jen rozdíly proti jiným snímkům</dd>
+  <dt>Kompenzace pohybu</dt><dd>Uložení posunu bloku místo nových pixelů</dd>
+  <dt>Podvzorkování barvy</dt><dd>Ukládání barvy v nižším rozlišení než jasu (4:2:0)</dd>
+  <dt>Kodek</dt><dd>Algoritmus, který kóduje a dekóduje obraz nebo zvuk</dd>
+  <dt>Kontejner</dt><dd>Formát souboru, který balí obraz, zvuk a titulky</dd>
+  <dt>Bitrate</dt><dd>Datový tok, počet bitů za sekundu</dd>
+  <dt>Buffer</dt><dd>Zásoba dat dopředu, která překlene výpadky sítě</dd>
+  <dt>Adaptivní streamování</dt><dd>Průběžná volba kvality podle rychlosti připojení</dd>
+</dl>
+</section>
+
+<p class="foot">Studijní text k lekci „Snímek po snímku“ z bloku Informace. Interaktivní verzi najdeš v <a href="09_snimek_po_snimku.html">prezentaci</a>.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    var d = document.querySelector('.toc details'); if (d) d.open = false;
+  }
+})();
+</script>
+</body>
+</html>

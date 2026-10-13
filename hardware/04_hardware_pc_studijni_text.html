@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hardware osobního počítače – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Úvod</li>
+    <li><a href="#prehled">Z čeho se PC skládá</a></li>
+    <li><a href="#vn">Von Neumann v dnešním PC</a></li>
+    <li class="grp">Procesor</li>
+    <li><a href="#cpu">Co procesor dělá</a></li>
+    <li><a href="#vykon">Takt, IPC a jádra</a></li>
+    <li><a href="#stena">Proč takt neroste</a></li>
+    <li><a href="#cekani">Procesor čeká na paměť</a></li>
+    <li><a href="#cache">Cache L1, L2, L3</a></li>
+    <li><a href="#lokalita">Proč cache funguje</a></li>
+    <li><a href="#cpu-dnes">Současné procesory</a></li>
+    <li class="grp">Paměti a úložiště</li>
+    <li><a href="#ram">Operační paměť RAM</a></li>
+    <li><a href="#ram-param">Parametry RAM</a></li>
+    <li><a href="#latence">RAM, SSD a HDD: přístupová doba</a></li>
+    <li><a href="#ssd">SSD</a></li>
+    <li><a href="#hdd">HDD</a></li>
+    <li><a href="#pouziti">Kdy SSD a kdy HDD</a></li>
+    <li class="grp">Další součásti</li>
+    <li><a href="#deska">Základní deska a UEFI</a></li>
+    <li><a href="#sbernice">Sběrnice a rozhraní</a></li>
+    <li><a href="#gpu">Grafická karta</a></li>
+    <li><a href="#zdroj">Zdroj a chlazení</a></li>
+    <li class="grp">K maturitě</li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Hardware a operační systémy · Studijní text</p>
+  <h1>Hardware osobního počítače <span class="t">CPU · RAM · SSD</span></h1>
+  <p class="lead">Z čeho se skládá dnešní počítač, jak souvisí s von Neumannovou architekturou a proč procesor potřebuje celou hierarchii pamětí. Údaje o konkrétních součástkách platí k říjnu 2026, malá čísla u textu odkazují na zdroje na konci.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vyjmenovat hlavní součásti PC a jejich úlohu</li>
+      <li>přiřadit součásti PC k částem von Neumannova schématu</li>
+      <li>vysvětlit takt, IPC, jádra a vlákna</li>
+      <li>vysvětlit, proč se takt od roku 2005 skoro nezvyšuje</li>
+      <li>popsat hierarchii pamětí a důvod, proč existuje</li>
+      <li>vysvětlit, jak funguje cache a co je lokalita</li>
+      <li>porovnat současné procesory podle parametrů</li>
+      <li>spočítat latenci a propustnost RAM z jejího označení</li>
+      <li>porovnat přístupovou dobu RAM, SSD a HDD</li>
+      <li>vysvětlit, kdy použít SSD a kdy HDD</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Úvod</p>
+
+<section id="prehled">
+<h2>Z čeho se osobní počítač skládá</h2>
+<p><dfn>Hardware</dfn> jsou fyzické součásti počítače, <dfn>software</dfn> jsou programy, které na nich běží. Stolní PC se skládá z několika vyměnitelných dílů, které spojuje základní deska. Notebook a mobil obsahují stejné části, jen zmenšené a často sloučené do jednoho čipu.</p>
+<div class="tbl"><table>
+<thead><tr><th>Součást</th><th>Úkol</th><th>Typický parametr</th></tr></thead>
+<tbody>
+<tr><td><strong>Procesor (CPU)</strong></td><td>provádí instrukce programu</td><td>počet jader, takt (GHz), velikost cache</td></tr>
+<tr><td><strong>Operační paměť (RAM)</strong></td><td>drží právě běžící programy a jejich data</td><td>kapacita (GB), rychlost (MT/s), latence (CL)</td></tr>
+<tr><td><strong>Úložiště (SSD, HDD)</strong></td><td>trvale uchovává soubory a operační systém</td><td>kapacita (TB), přístupová doba, propustnost (MB/s)</td></tr>
+<tr><td><strong>Základní deska</strong></td><td>propojuje všechny součásti</td><td>patice, čipset, sloty</td></tr>
+<tr><td><strong>Grafická karta (GPU)</strong></td><td>počítá obraz a paralelní výpočty</td><td>počet jader, paměť VRAM, propustnost</td></tr>
+<tr><td><strong>Zdroj (PSU)</strong></td><td>mění síťové napětí na stejnosměrné</td><td>výkon (W), účinnost</td></tr>
+<tr><td><strong>Chlazení</strong></td><td>odvádí teplo</td><td>jaký příkon uchladí (W)</td></tr>
+<tr><td><strong>Periferie</strong></td><td>vstup a výstup: klávesnice, myš, monitor, síť</td><td>rozhraní (USB, HDMI, …)</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vn">
+<h2>Von Neumannovo schéma v dnešním PC</h2>
+<p>V minulé hodině jsme si ukázali, že von Neumannův počítač tvoří <strong>řadič</strong>, <strong>ALU</strong>, <strong>operační paměť</strong>, <strong>vstup</strong>, <strong>výstup</strong> a <strong>sběrnice</strong>. Každou z těchto částí najdeš i v dnešním PC:</p>
+<div class="tbl"><table>
+<thead><tr><th>Von Neumann</th><th>Dnešní PC</th><th>Co se změnilo</th></tr></thead>
+<tbody>
+<tr><td>Řadič + ALU</td><td>procesor (CPU)</td><td>v jednom čipu je mnoho jader, každé má vlastní řadič, několik ALU a registry. Navíc obsahuje cache a řadič paměti.</td></tr>
+<tr><td>Operační paměť</td><td>RAM (DDR5)</td><td>připojená přímo k procesoru. Mezi ní a jádry jsou tři úrovně cache.</td></tr>
+<tr><td>Vstup a výstup</td><td>USB, síť, grafická karta, monitor, zvuk</td><td>grafická karta je sama výkonný počítač.</td></tr>
+<tr><td>(ve schématu chybí)</td><td>SSD, HDD</td><td><dfn>vnější paměť</dfn>: procesor ji nečte přímo instrukcí, data se přesouvají do RAM jako ze vstupního zařízení.</td></tr>
+<tr><td>Sběrnice</td><td>paměťové kanály, PCI Express, čipset</td><td>místo jedné sdílené sběrnice je mnoho samostatných linek.</td></tr>
+</tbody></table></div>
+<p>Dvě změny jsou zvlášť důležité. Za prvé, <strong>řadič paměti</strong> je dnes přímo v procesoru. AMD ho tam přesunulo v roce 2003 s procesorem Athlon 64, Intel v roce 2008 s generací Nehalem. Dřív vedla cesta do RAM přes samostatný čip (northbridge) po sběrnici FSB.<sup class="ref"><a href="#z37">37</a></sup> Za druhé, mezi jádrem a RAM jsou <strong>cache</strong>, a ta nejbližší (L1) je rozdělená na instrukční a datovou. To je prvek Harvardovy architektury, proto se dnešním procesorům říká <dfn>modifikovaná Harvardova architektura</dfn>: navenek jedna RAM pro program i data, uvnitř jádra oddělené cesty.</p>
+<div class="note mat"><b class="lbl">K maturitě</b><p>Umět nakreslit von Neumannovo schéma a ke každému bloku napsat, jaká součástka PC mu odpovídá. Zmínit, že úzké hrdlo mezi procesorem a pamětí dnes řeší cache.</p></div>
+</section>
+
+<p class="part">Procesor</p>
+
+<section id="cpu">
+<h2>Co procesor dělá</h2>
+<p>Procesor (CPU, Central Processing Unit) stále dokola opakuje cyklus, který známe ze simulace von Neumannovy architektury: <strong>načtení instrukce</strong> z paměti, <strong>dekódování</strong> a <strong>provedení</strong>. Instrukce jsou velmi jednoduché: přesuň číslo, sečti dvě čísla, porovnej, skoč na jinou adresu.</p>
+<ul>
+  <li><dfn>Jádro</dfn> je samostatná výpočetní jednotka s vlastním řadičem, ALU a registry. Dnešní procesor má jader 6 až 24 (stolní PC).</li>
+  <li><dfn>Registry</dfn> jsou nejrychlejší paměť přímo v jádře. Je jich jen desítky, ALU počítá jen s čísly v registrech.</li>
+  <li><dfn>Instrukční sada</dfn> určuje, jaké instrukce procesor zná. PC a notebooky s procesory Intel a AMD používají <strong>x86-64</strong>, mobily a počítače Apple používají <strong>ARM</strong>. Program přeložený pro jednu sadu na druhé přímo neběží.</li>
+</ul>
+</section>
+
+<section id="vykon">
+<h2>Takt, IPC a jádra</h2>
+<p>Rychlost procesoru určují tři čísla:</p>
+<ul>
+  <li><dfn>Takt</dfn> (frekvence) říká, kolikrát za sekundu „tikne“ hodinový signál. 5 GHz = 5 miliard taktů za sekundu, jeden takt trvá 0,2 ns. Za tu dobu urazí světlo jen 6 cm.</li>
+  <li><dfn>IPC</dfn> (instructions per cycle) je průměrný počet instrukcí, které jádro dokončí za jeden takt. Moderní jádro jich zpracovává několik najednou. IPC se zvyšuje lepším návrhem jádra, ne vyšším taktem.</li>
+  <li><dfn>Počet jader</dfn> říká, kolik programů nebo vláken může běžet skutečně současně.</li>
+</ul>
+<pre><code>teoretický výkon = takt × IPC × počet jader
+příklad: 5,7 GHz × 4 × 16 jader ≈ 365 miliard instrukcí za sekundu</code></pre>
+<p>Toto je jen teoretický strop. Skutečný výkon závisí na tom, jestli má jádro pořád co dělat. Velkou část času totiž čeká na data z paměti, viz <a href="#cekani">dál</a>. Také ne každý program umí využít všechna jádra.</p>
+<h3>Vlákna a SMT</h3>
+<p><dfn>SMT</dfn> (simultaneous multithreading, u Intelu Hyper-Threading) umožňuje jednomu jádru střídat dvě vlákna programu. Když jedno vlákno čeká na data, jádro pracuje na druhém. Procesor se pak hlásí s dvojnásobným počtem vláken: AMD Ryzen 9 9950X3D má 16 jader a 32 vláken.<sup class="ref"><a href="#z9">9</a></sup> Intel u procesorů Core Ultra 200S (Arrow Lake) SMT vypustil, model 285K má 24 jader a 24 vláken.<sup class="ref"><a href="#z43">43</a></sup></p>
+<h3>Hybridní procesory</h3>
+<p>Novější procesory kombinují dva druhy jader: výkonná <dfn>P-jádra</dfn> a úsporná <dfn>E-jádra</dfn>. Intel Core Ultra 9 285K má 8 P a 16 E jader,<sup class="ref"><a href="#z8">8</a></sup> Apple M5 má 4 výkonná a 6 úsporných.<sup class="ref"><a href="#z12">12</a></sup> Operační systém rozhoduje, které úlohy poběží na kterých jádrech.</p>
+</section>
+
+<section id="stena">
+<h2>Proč takt neroste</h2>
+<p>Až do počátku 21. století takt procesorů rychle rostl. V listopadu 2004 Intel vydal Pentium 4 s taktem 3,8 GHz a plánovaný model se 4 GHz zrušil.<sup class="ref"><a href="#z15">15</a></sup> O dvacet let později, v březnu 2024, dosáhl Core i9-14900KS taktu 6,2 GHz.<sup class="ref"><a href="#z16">16</a></sup> Takt tedy za 20 let vzrostl jen asi o 60 %, zatímco počet tranzistorů na čipu řádově tisíckrát.</p>
+<p>Příčinou je konec <dfn>Dennardova škálování</dfn>. Podle něj měla menší tranzistory mít i úměrně menší spotřebu, takže hustota výkonu na čipu zůstávala stejná. Kolem let 2005 až 2007 to přestalo platit, protože se nedaly dál snižovat svodové proudy a napětí. Vyšší takt by znamenal příliš mnoho tepla na malé ploše. Od roku 2005 se takt drží mezi 4 a 6 GHz a výrobci místo něj přidávají jádra.<sup class="ref"><a href="#z14">14</a></sup></p>
+<p>Další tranzistory se tedy využívají jinak: na <strong>víc jader</strong>, na <strong>širší jádra</strong> s vyšším IPC, na <strong>specializované obvody</strong> (grafika, NPU pro umělou inteligenci) a na <strong>větší cache</strong>.</p>
+</section>
+
+<section id="cekani">
+<h2>Procesor čeká na paměť</h2>
+<p>Von Neumannovo úzké hrdlo dnes nespočívá v tom, že by sběrnice byla jen jedna, ale v tom, že <strong>operační paměť je mnohem pomalejší než procesor</strong>. Procesor Ryzen 9 9950X s pamětí DDR5-6000 čeká na data z RAM něco přes 70 ns.<sup class="ref"><a href="#z3">3</a></sup> Při taktu 5,7 GHz je to asi 400 taktů, ve kterých jádro mohlo provést stovky až tisíce instrukcí. Měření v programu 7-Zip ukázala čekání přes 484 taktů u Zen 5 a přes 565 taktů u Intel Lion Cove.<sup class="ref"><a href="#z4">4</a></sup> Procesory Arrow Lake mají latenci RAM přes 100 ns.<sup class="ref"><a href="#z5">5</a></sup></p>
+<p>Řešením jsou menší, ale rychlejší paměti blíž jádru: <strong>cache</strong>. Tvoří spolu s RAM a disky <dfn>hierarchii pamětí</dfn>:</p>
+<div class="lat" aria-label="Přístupová doba jednotlivých pamětí, logaritmické měřítko">
+  <div class="lat-row"><span>Registr</span><div class="lat-bar w5"></div><span class="num">~0,2 ns</span></div>
+  <div class="lat-row"><span>Cache L1</span><div class="lat-bar w10"></div><span class="num">~0,8 ns</span></div>
+  <div class="lat-row"><span>Cache L2</span><div class="lat-bar w20"></div><span class="num">~3 ns</span></div>
+  <div class="lat-row"><span>Cache L3</span><div class="lat-bar w30"></div><span class="num">~10 ns</span></div>
+  <div class="lat-row"><span>RAM</span><div class="lat-bar k-ram w40"></div><span class="num">70–100 ns</span></div>
+  <div class="lat-row"><span>NVMe SSD</span><div class="lat-bar k-sto w65"></div><span class="num">~45 µs</span></div>
+  <div class="lat-row"><span>SATA SSD</span><div class="lat-bar k-sto w75"></div><span class="num">~140 µs</span></div>
+  <div class="lat-row"><span>HDD</span><div class="lat-bar k-hdd w100"></div><span class="num">~10 ms</span></div>
+</div>
+<p class="small-muted">Délka pruhu je logaritmická: každý dílek navíc znamená zhruba desetkrát delší dobu. Čísla jsou orientační, pro registry a cache platí při taktu 5 GHz.</p>
+<p>Rozdíly jsou tak velké, že je lidská představivost nezvládne. Pomůže přepočet: <strong>kdyby jeden takt procesoru trval jednu sekundu</strong>, pak:</p>
+<div class="tbl"><table>
+<thead><tr><th>Operace</th><th>Skutečně</th><th>Kdyby takt trval 1 s</th></tr></thead>
+<tbody>
+<tr><td>Jeden takt (5 GHz)</td><td class="num">0,2 ns</td><td>1 sekunda</td></tr>
+<tr><td>Čtení z L1 (4 takty)</td><td class="num">0,8 ns</td><td>4 sekundy</td></tr>
+<tr><td>Čtení z L2 (asi 14 taktů)</td><td class="num">2,8 ns</td><td>14 sekund</td></tr>
+<tr><td>Čtení z L3 (asi 50 taktů)</td><td class="num">10 ns</td><td>skoro minuta</td></tr>
+<tr><td>Čtení z RAM</td><td class="num">70 ns</td><td>asi 6 minut</td></tr>
+<tr><td>Náhodné čtení z NVMe SSD</td><td class="num">45 µs</td><td>asi 2,6 dne</td></tr>
+<tr><td>Náhodné čtení ze SATA SSD</td><td class="num">140 µs</td><td>asi 8 dní</td></tr>
+<tr><td>Náhodné čtení z HDD</td><td class="num">10 ms</td><td>asi 1,6 roku</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="cache">
+<h2>Cache L1, L2 a L3</h2>
+<p><dfn>Cache</dfn> (vyrovnávací paměť) je malá rychlá paměť, která drží kopii dat z RAM, se kterými procesor právě pracuje. Je vyrobená z paměti <strong>SRAM</strong>: jeden bit drží šest tranzistorů, nepotřebuje obnovování a je velmi rychlá, ale zabírá hodně místa na čipu.<sup class="ref"><a href="#z22">22</a></sup> Proto má jen kilobajty až desítky megabajtů.</p>
+<div class="tbl"><table>
+<thead><tr><th>Úroveň</th><th>Kde je</th><th>Velikost (příklad)</th><th>Latence</th></tr></thead>
+<tbody>
+<tr><td><strong>L1</strong></td><td>v každém jádře, rozdělená na instrukce a data</td><td>Zen 5: 32 KB instrukce + 48 KB data</td><td>4 takty<sup class="ref"><a href="#z1">1</a></sup></td></tr>
+<tr><td><strong>L2</strong></td><td>u každého jádra, společná pro instrukce i data</td><td>Zen 5: 1 MB, Intel Lion Cove: 3 MB</td><td>asi 14 taktů<sup class="ref"><a href="#z2">2</a></sup></td></tr>
+<tr><td><strong>L3</strong></td><td>sdílená více jádry</td><td>Zen 5: 32 MB na 8 jader, s 3D V-Cache 96 MB; Arrow Lake: 36 MB</td><td>asi 46–50 taktů<sup class="ref"><a href="#z2">2</a></sup></td></tr>
+</tbody></table></div>
+<p>Zdroje velikostí: AMD,<sup class="ref"><a href="#z1">1</a></sup> Wikipedia,<sup class="ref"><a href="#z17">17</a></sup> Chips and Cheese.<sup class="ref"><a href="#z4">4</a></sup></p>
+<h3>Jak cache pracuje</h3>
+<ul>
+  <li>Když procesor potřebuje data, nejdřív se podívá do L1. Pokud tam jsou, nastal <dfn>zásah</dfn> (cache hit). Pokud ne, nastal <dfn>výpadek</dfn> (cache miss) a hledá se v L2, potom v L3 a nakonec v RAM.</li>
+  <li>Z RAM se nikdy nenačítá jediný bajt, ale celý <dfn>řádek cache</dfn> (cache line). Všechny moderní procesory x86 mají řádek 64 bajtů.<sup class="ref"><a href="#z44">44</a></sup></li>
+  <li>Když je cache plná, musí se nějaký starý řádek vyhodit, obvykle ten, který se nejdéle nepoužil.</li>
+</ul>
+<h3>Průměrná doba přístupu</h3>
+<p>Užitek cache lze spočítat. Pokud L1 odpoví za 1 ns, úspěšnost je 95 % a výpadek stojí navíc 70 ns přístupu do RAM, pak průměrný přístup trvá:</p>
+<pre><code>průměrná doba = doba zásahu + podíl výpadků × cena výpadku
+              = 1 ns + 0,05 × 70 ns = 4,5 ns     (bez cache 70 ns)</code></pre>
+<div class="calc" id="amat">
+  <div class="calc-row">
+    <label>Zásah (ns)<input type="number" id="aHit" value="1" min="0" step="0.1"></label>
+    <label>Úspěšnost (%)<input type="number" id="aRate" value="95" min="0" max="100" step="1"></label>
+    <label>Výpadek (ns)<input type="number" id="aMiss" value="70" min="0" step="1"></label>
+  </div>
+  <p class="calc-out" id="aOut"></p>
+</div>
+<p>Zkus snížit úspěšnost na 80 %: průměr vzroste na 15 ns, tedy víc než trojnásobek. Proto výrobci zvětšují cache.</p>
+<h3>3D V-Cache</h3>
+<p>AMD u procesorů s označením X3D přidává na čiplet s jádry další vrstvu cache L3 o velikosti 64 MB. Ryzen 7 9850X3D má tak 96 MB L3, dvoučipletový Ryzen 9 9950X3D 128 MB. Velká cache pomáhá hlavně ve hrách. U druhé generace (Ryzen 9000X3D) je přídavná cache pod jádry, takže se jádra lépe chladí.<sup class="ref"><a href="#z13">13</a></sup></p>
+</section>
+
+<section id="lokalita">
+<h2>Proč cache funguje: lokalita</h2>
+<p>Cache je malá, a přesto se v ní procesor většinou trefí. Důvodem je, že programy nečtou paměť náhodně:</p>
+<ul>
+  <li><dfn>Časová lokalita</dfn>: co program použil před chvílí, brzy použije znovu. Například proměnná uvnitř cyklu nebo instrukce samotného cyklu.</li>
+  <li><dfn>Prostorová lokalita</dfn>: když program čte jednu adresu, brzy přečte i sousední. Například prvky pole jeden po druhém. Protože se načítá celý řádek cache, sousední prvky už v cache jsou.</li>
+</ul>
+<p>Příklad: program sčítá pole 16 čísel a řádek cache pojme 4 čísla. První čtení z každé čtveřice je výpadek, další tři jsou zásahy. Úspěšnost 75 %. Kdyby program skákal po náhodných adresách, úspěšnost by byla mnohem nižší. Proto je postupné procházení dat v paměti rychlejší než náhodné, i když program dělá stejný počet operací. Vyzkoušej si to v simulaci v prezentaci.</p>
+<div class="note tip"><b class="lbl">Pro programátory</b><p>Dvourozměrné pole v jazycích jako C nebo Python (NumPy) je v paměti uložené po řádcích. Procházet ho po řádcích je rychlejší než po sloupcích, protože tak čteš sousední adresy.</p></div>
+</section>
+
+<section id="cpu-dnes">
+<h2>Současné procesory</h2>
+<p>Na trhu stolních PC soupeří AMD (patice AM5, architektura Zen 5) a Intel (patice LGA1851, Arrow Lake a jeho obnova z roku 2026). V noteboocích přibyly Intel Panther Lake a Apple M5.</p>
+<div class="tbl"><table>
+<thead><tr><th>Procesor</th><th>Vydán</th><th>Jádra / vlákna</th><th>Max. takt</th><th>L3</th><th>Příkon</th><th>Paměť</th></tr></thead>
+<tbody>
+<tr><td>AMD Ryzen 9 9950X3D<sup class="ref"><a href="#z9">9</a></sup></td><td>březen 2025</td><td>16 / 32</td><td class="num">5,7 GHz</td><td class="num">128 MB</td><td>170 W TDP</td><td>DDR5-5600</td></tr>
+<tr><td>AMD Ryzen 7 9850X3D<sup class="ref"><a href="#z6">6</a></sup></td><td>leden 2026</td><td>8 / 16</td><td class="num">5,6 GHz</td><td class="num">96 MB</td><td>120 W TDP</td><td>DDR5-5600</td></tr>
+<tr><td>AMD Ryzen 5 9600X<sup class="ref"><a href="#z10">10</a></sup></td><td>srpen 2024</td><td>6 / 12</td><td class="num">5,4 GHz</td><td class="num">32 MB</td><td>65 W TDP</td><td>DDR5-5600</td></tr>
+<tr><td>Intel Core Ultra 9 285K<sup class="ref"><a href="#z8">8</a></sup></td><td>říjen 2024</td><td>24 (8P+16E) / 24</td><td class="num">5,7 GHz</td><td class="num">36 MB</td><td>125 W, max. 250 W</td><td>DDR5-6400</td></tr>
+<tr><td>Intel Core Ultra 7 270K Plus<sup class="ref"><a href="#z7">7</a></sup></td><td>březen 2026</td><td>24 (8P+16E) / 24</td><td class="num">5,5 GHz</td><td class="num">36 MB</td><td>max. 250 W</td><td>DDR5-7200</td></tr>
+<tr><td>Intel Core Ultra 5 250K Plus<sup class="ref"><a href="#z6">6</a></sup></td><td>2026</td><td>18 (6P+12E) / 18</td><td class="num">5,3 GHz</td><td class="num">30 MB</td><td>max. 159 W</td><td>DDR5</td></tr>
+<tr><td>Intel Core Ultra X9 388H (notebook)<sup class="ref"><a href="#z11">11</a></sup></td><td>leden 2026</td><td>16 (4P+8E+4LPE)</td><td class="num">5,1 GHz</td><td>–</td><td>25 W, turbo 55–65 W</td><td>LPDDR5X-9600</td></tr>
+<tr><td>Apple M5 (notebook)<sup class="ref"><a href="#z12">12</a></sup></td><td>říjen 2025</td><td>10 (4+6)</td><td>neuvádí</td><td>–</td><td>neuvádí</td><td>LPDDR5X-9600, 153,6 GB/s</td></tr>
+</tbody></table></div>
+<p class="small-muted">AMD udává TDP, Intel maximální turbo příkon (Ryzen 9 9950X3D má maximální spotřebu 230 W).<sup class="ref"><a href="#z9">9</a></sup> Údaje proto nejsou přímo srovnatelné.</p>
+<h3>Co si z tabulky všimnout</h3>
+<ul>
+  <li><strong>Takty jsou si podobné</strong>: 5,1 až 5,7 GHz. Rozdíly ve výkonu dělají jádra, IPC a cache.</li>
+  <li><strong>Cache roste</strong>: od 30 do 128 MB L3. Procesory X3D mají oproti běžným modelům dvojnásobnou až trojnásobnou L3.</li>
+  <li><strong>Notebooky a Apple mají rychlejší paměť</strong> LPDDR5X-9600 připájenou přímo vedle procesoru. Apple M5 dosahuje propustnosti 153,6 GB/s,<sup class="ref"><a href="#z12">12</a></sup> stolní PC s DDR5-6000 ve dvou kanálech asi 96 GB/s.<sup class="ref"><a href="#z3">3</a></sup> Taková paměť se ale nedá vyměnit ani rozšířit.</li>
+  <li><strong>Specializované obvody</strong>: notebookové procesory mají NPU pro umělou inteligenci, Panther Lake až 50 TOPS.<sup class="ref"><a href="#z11">11</a></sup></li>
+  <li><strong>Další generace</strong>: AMD Zen 6 pro stolní PC i Intel Nova Lake (Core Ultra 400) mají podle zpráv přijít až v roce 2027.<sup class="ref"><a href="#z41">41</a>,</sup><sup class="ref"><a href="#z42">42</a></sup></li>
+</ul>
+<div class="note warn"><b class="lbl">Pozor</b><p>Parametry konkrétních modelů se rychle mění. U maturity nejde o to znát tabulku nazpaměť, ale umět vysvětlit, co který parametr znamená a proč na něm záleží.</p></div>
+</section>
+
+<p class="part">Paměti a úložiště</p>
+
+<section id="ram">
+<h2>Operační paměť RAM</h2>
+<p>RAM (Random Access Memory) je operační paměť z von Neumannova schématu. Operační systém do ní nahraje spuštěný program i jeho data. Je vyrobená z paměti <strong>DRAM</strong>: jeden bit je náboj v malém kondenzátoru, ke kterému vede jeden tranzistor. Náboj pomalu uniká, proto se každá buňka musí zhruba každých 64 ms obnovit.<sup class="ref"><a href="#z22">22</a></sup> Buňka DRAM je mnohem menší než buňka SRAM, a proto je DRAM levnější a vejde se jí víc.</p>
+<ul>
+  <li>RAM je <dfn>volatilní</dfn>: bez napájení data ztratí. Proto program i soubory musí ležet ještě na disku.</li>
+  <li>„Random access“ znamená, že ke kterékoli buňce se dostaneme stejně rychle. U pevného disku to neplatí.</li>
+  <li><dfn>DDR</dfn> (Double Data Rate) přenáší data na náběžné i sestupné hraně hodinového signálu, tedy dvakrát za takt.<sup class="ref"><a href="#z47">47</a></sup></li>
+</ul>
+<h3>DDR4 a DDR5</h3>
+<div class="tbl"><table>
+<thead><tr><th></th><th>DDR4</th><th>DDR5</th></tr></thead>
+<tbody>
+<tr><td>Rychlost podle standardu JEDEC</td><td>1 600 až 3 200 MT/s</td><td>od 4 800, od roku 2024 až 8 800 MT/s<sup class="ref"><a href="#z20">20</a></sup></td></tr>
+<tr><td>Napětí</td><td>1,2 V</td><td>1,1 V</td></tr>
+<tr><td>Uspořádání modulu</td><td>jeden 64bitový kanál</td><td>dva nezávislé 32bitové subkanály</td></tr>
+<tr><td>Řízení napájení</td><td>na základní desce</td><td>čip PMIC přímo na modulu</td></tr>
+<tr><td>Oprava chyb</td><td>jen u modulů ECC</td><td>on-die ECC uvnitř každého čipu</td></tr>
+<tr><td>Max. kapacita modulu</td><td>obvykle 32 GB</td><td>až 128 GB</td></tr>
+</tbody></table></div>
+<p class="small-muted">Zdroje: Kingston,<sup class="ref"><a href="#z19">19</a></sup> Elo.<sup class="ref"><a href="#z21">21</a></sup> On-die ECC opravuje chyby jen uvnitř čipu, ne na cestě k procesoru, a nenahrazuje plnou ECC paměť serverů.<sup class="ref"><a href="#z19">19</a></sup></p>
+<p>Platforma AMD AM5 podporuje jen DDR5.<sup class="ref"><a href="#z38">38</a></sup> Notebooky a Apple používají <strong>LPDDR5X</strong>, úspornou variantu připájenou na desku.</p>
+<div class="note warn"><b class="lbl">Aktuálně</b><p>V roce 2026 ceny pamětí DRAM prudce vzrostly. Výrobci dávají přednost čipům pro servery a umělou inteligenci a nové továrny přibývají pomalu. Podle přehledu z ledna 2026 se ceny DDR4 a DDR5 v mnoha případech více než zdvojnásobily.<sup class="ref"><a href="#z23">23</a></sup></p></div>
+</section>
+
+<section id="ram-param">
+<h2>Parametry RAM: co znamená DDR5-6000 CL30</h2>
+<ul>
+  <li><strong>6000</strong> je rychlost v <dfn>MT/s</dfn>, milionech přenosů za sekundu. Hodinový signál paměti má poloviční frekvenci, 3 000 MHz, protože DDR přenáší dvakrát za takt.</li>
+  <li><strong>CL30</strong> je <dfn>CAS latence</dfn>: kolik taktů paměti uplyne od příkazu ke čtení do prvních dat.</li>
+</ul>
+<p>Z obou čísel se dá spočítat latence v nanosekundách a propustnost:<sup class="ref"><a href="#z18">18</a></sup></p>
+<pre><code>latence (ns)      = CL × 2000 / rychlost (MT/s)
+propustnost (GB/s) = rychlost (MT/s) × 8 B / 1000      (jeden 64bitový kanál)</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Modul</th><th>CAS latence</th><th>Propustnost 1 kanálu</th><th>Dva kanály</th></tr></thead>
+<tbody>
+<tr><td>DDR4-3200 CL16</td><td class="num">10,0 ns</td><td class="num">25,6 GB/s</td><td class="num">51,2 GB/s</td></tr>
+<tr><td>DDR5-4800 CL40</td><td class="num">16,7 ns</td><td class="num">38,4 GB/s</td><td class="num">76,8 GB/s</td></tr>
+<tr><td>DDR5-6000 CL30</td><td class="num">10,0 ns</td><td class="num">48,0 GB/s</td><td class="num">96,0 GB/s</td></tr>
+<tr><td>DDR5-8000 CL38</td><td class="num">9,5 ns</td><td class="num">64,0 GB/s</td><td class="num">128,0 GB/s</td></tr>
+</tbody></table></div>
+<div class="calc">
+  <div class="calc-row">
+    <label>Rychlost (MT/s)<input type="number" id="cMT" value="6000" min="1000" step="200"></label>
+    <label>CL<input type="number" id="cCL" value="30" min="1" step="1"></label>
+  </div>
+  <p class="calc-out" id="cOut"></p>
+</div>
+<p>Všimni si: DDR4-3200 CL16 a DDR5-6000 CL30 mají <strong>stejnou CAS latenci</strong> 10 ns, ale DDR5 má téměř dvojnásobnou propustnost. Vyšší číslo CL tedy samo o sobě neznamená pomalejší paměť.</p>
+<p>CAS latence je jen část celé doby přístupu. K ní se přidává cesta přes řadič paměti a otevření řádku v čipu. Celé čtení z RAM proto podle měření trvá zhruba 70 až 100 ns.<sup class="ref"><a href="#z3">3</a>,</sup><sup class="ref"><a href="#z5">5</a></sup></p>
+<div class="note mat"><b class="lbl">Dva kanály</b><p>Dva moduly vložené do správných (párových) slotů pracují ve dvou kanálech a propustnost se zdvojnásobí. Jeden modul 32 GB má proto poloviční propustnost než dva moduly po 16 GB.</p></div>
+</section>
+
+<section id="latence">
+<h2>RAM, SSD a HDD: přístupová doba</h2>
+<p><dfn>Přístupová doba</dfn> (latence) je čas od požadavku na data do jejich doručení. <dfn>Propustnost</dfn> je množství dat za sekundu, když už se čte. Pro práci počítače je často důležitější latence, protože operační systém a programy čtou hodně malých kousků z různých míst.</p>
+<div class="tbl"><table>
+<thead><tr><th>Paměť</th><th>Náhodné čtení (latence)</th><th>Sekvenční čtení</th><th>Zdroj</th></tr></thead>
+<tbody>
+<tr><td>RAM DDR5-6000</td><td class="num">~70 ns</td><td class="num">96 GB/s (2 kanály)</td><td>Chips and Cheese<sup class="ref"><a href="#z3">3</a></sup></td></tr>
+<tr><td>NVMe SSD, PCIe 5.0</td><td class="num">desítky µs</td><td class="num">14 800 MB/s</td><td>Samsung 9100 PRO<sup class="ref"><a href="#z25">25</a></sup></td></tr>
+<tr><td>NVMe SSD, PCIe 4.0</td><td class="num">~45 µs</td><td class="num">7 450 MB/s</td><td>Samsung 990 PRO<sup class="ref"><a href="#z24">24</a></sup></td></tr>
+<tr><td>SATA SSD</td><td class="num">~140 µs</td><td class="num">560 MB/s</td><td>ClickHouse,<sup class="ref"><a href="#z29">29</a></sup> Samsung 870 EVO<sup class="ref"><a href="#z26">26</a></sup></td></tr>
+<tr><td>HDD 7 200 ot./min</td><td class="num">~10 ms</td><td class="num">285 MB/s</td><td>Seagate<sup class="ref"><a href="#z30">30</a>,</sup><sup class="ref"><a href="#z31">31</a></sup></td></tr>
+</tbody></table></div>
+<p class="small-muted">Latence NVMe SSD 990 PRO je dopočítaná z údaje výrobce: 22 000 náhodných čtení za sekundu při jednom požadavku najednou (QD1), tedy 1 / 22 000 s ≈ 45 µs.</p>
+<p>Co z toho plyne:</p>
+<ul>
+  <li><strong>RAM je asi 600× rychlejší než NVMe SSD</strong> v přístupové době (45 µs / 70 ns ≈ 640). Proto operační systém drží v RAM vše, co se právě používá, a když RAM dojde a musí odkládat na disk, počítač se citelně zpomalí.</li>
+  <li><strong>NVMe SSD je asi 200× rychlejší než HDD</strong> (10 ms / 45 µs ≈ 220), SATA SSD asi 70×. Proto výměna HDD za SSD tolik zrychlí start systému.</li>
+  <li><strong>Mezi RAM a HDD je rozdíl přes 100 000×</strong>: za jedno čtení z HDD by RAM stihla asi 140 000 přístupů.</li>
+  <li>V propustnosti jsou rozdíly menší: rychlé SSD je asi 50× rychlejší než HDD (14 800 / 285).</li>
+</ul>
+<p>Podobná srovnání se v informatice tradují dlouho. Peter Norvig uvádí pro „typické PC“ čtení z RAM 100 ns a vystavení disku 8 ms.<sup class="ref"><a href="#z40">40</a></sup></p>
+</section>
+
+<section id="ssd">
+<h2>SSD: polovodičový disk</h2>
+<p>SSD (Solid State Drive) ukládá data do paměti <dfn>NAND flash</dfn>. Bit je uložen jako náboj v izolované části tranzistoru, která ho udrží i bez napájení. SSD nemá žádné pohyblivé části.</p>
+<h3>Buňky SLC, MLC, TLC, QLC</h3>
+<p>Jedna buňka může ukládat víc bitů, pokud rozliší víc úrovní náboje. Čím víc bitů na buňku, tím levnější gigabajt, ale pomalejší zápis a menší výdrž.<sup class="ref"><a href="#z28">28</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th>Typ</th><th>Bitů na buňku</th><th>Úrovní náboje</th><th>Výdrž (cykly zápisu a mazání)</th></tr></thead>
+<tbody>
+<tr><td>SLC</td><td>1</td><td>2</td><td>50 000 až 100 000</td></tr>
+<tr><td>MLC</td><td>2</td><td>4</td><td>asi 10 000</td></tr>
+<tr><td>TLC</td><td>3</td><td>8</td><td>asi 3 000</td></tr>
+<tr><td>QLC</td><td>4</td><td>16</td><td>asi 1 000 až 2 000</td></tr>
+</tbody></table></div>
+<p>Počet úrovní je 2 na počet bitů: 3 bity potřebují 2³ = 8 rozlišitelných úrovní. Většina dnešních SSD používá TLC, například Samsung 990 PRO.<sup class="ref"><a href="#z27">27</a></sup></p>
+<h3>Jak SSD zapisuje</h3>
+<ul>
+  <li>Flash nejde přepsat na místě. Zapisuje se po malých <strong>stránkách</strong> do prázdného místa, mazat jde jen celé velké <strong>bloky</strong>.<sup class="ref"><a href="#z45">45</a></sup></li>
+  <li><dfn>Garbage collection</dfn>: řadič SSD přesouvá platná data z částečně zaplněných bloků, aby mohl bloky smazat a znovu použít.</li>
+  <li><dfn>Wear leveling</dfn>: řadič rozkládá zápisy rovnoměrně, aby se žádný blok neopotřeboval dřív než ostatní.</li>
+  <li><dfn>TRIM</dfn>: operační systém sděluje SSD, které bloky po smazání souboru už nejsou potřeba. Disk je pak nemusí zbytečně přesouvat.<sup class="ref"><a href="#z45">45</a></sup></li>
+</ul>
+<h3>Výdrž: TBW</h3>
+<p>Výrobce udává, kolik dat lze na disk během záruky zapsat, v jednotkách <dfn>TBW</dfn> (terabytes written). Samsung 990 PRO 1 TB má 600 TBW a 2 TB 1 200 TBW s pětiletou zárukou.<sup class="ref"><a href="#z27">27</a></sup> 600 TB za 5 let je přes 300 GB zápisu každý den.</p>
+<h3>Rozhraní</h3>
+<div class="tbl"><table>
+<thead><tr><th>Typ SSD</th><th>Rozhraní</th><th>Sekvenční čtení (max.)</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td>SATA SSD (2,5")</td><td>SATA III, 6 Gb/s</td><td class="num">560 MB/s</td><td>Samsung 870 EVO<sup class="ref"><a href="#z26">26</a></sup></td></tr>
+<tr><td>NVMe M.2</td><td>PCIe 4.0 ×4</td><td class="num">7 450 MB/s</td><td>Samsung 990 PRO<sup class="ref"><a href="#z24">24</a></sup></td></tr>
+<tr><td>NVMe M.2</td><td>PCIe 5.0 ×4</td><td class="num">14 800 MB/s</td><td>Samsung 9100 PRO (1 až 8 TB)<sup class="ref"><a href="#z25">25</a></sup></td></tr>
+</tbody></table></div>
+<p><dfn>NVMe</dfn> je protokol navržený přímo pro flash, komunikuje přes PCI Express. <dfn>M.2</dfn> je tvar destičky a konektoru. Pozor: M.2 disk může být i SATA, rozhoduje rozhraní, ne tvar.</p>
+<p>Kromě MB/s se u SSD uvádí <dfn>IOPS</dfn>, počet vstupně-výstupních operací za sekundu. Samsung 9100 PRO zvládne až 2,2 milionu náhodných čtení za sekundu při mnoha souběžných požadavcích.<sup class="ref"><a href="#z25">25</a></sup> Pevný disk Seagate Exos X24 zvládne podle výrobce 168 náhodných čtení za sekundu, i když dostane 16 požadavků najednou.<sup class="ref"><a href="#z31">31</a></sup></p>
+</section>
+
+<section id="hdd">
+<h2>HDD: pevný disk</h2>
+<p>HDD (Hard Disk Drive) ukládá data magneticky na rotující <strong>plotny</strong>. Nad každou plochou se po <strong>rameni</strong> pohybuje <strong>čtecí a zápisová hlavička</strong>. Data jsou v soustředných kružnicích, <dfn>stopách</dfn>, rozdělených na <dfn>sektory</dfn>.</p>
+<h3>Proč je HDD pomalý: přístupová doba</h3>
+<pre><code>přístupová doba = doba vystavení + rotační zpoždění + doba přenosu</code></pre>
+<ul>
+  <li><dfn>Doba vystavení</dfn> (seek): rameno přesune hlavičku na správnou stopu. Podle velikosti přesunu 0 až asi 17 ms, průměrně kolem 6,5 ms.<sup class="ref"><a href="#z32">32</a></sup></li>
+  <li><dfn>Rotační zpoždění</dfn>: hlavička čeká, až se pod ni otočí správný sektor. Při 7 200 ot./min trvá jedna otáčka 60 / 7 200 s = 8,33 ms, v průměru se čeká polovinu, tedy 4,17 ms. Výrobce udává 4,16 ms.<sup class="ref"><a href="#z31">31</a></sup></li>
+  <li><dfn>Doba přenosu</dfn>: samotné přečtení. 4 KB při 285 MB/s trvá asi 0,014 ms, tedy zanedbatelně.</li>
+</ul>
+<pre><code>příklad: 6,5 ms + 4,17 ms + 0,014 ms ≈ 10,7 ms
+         → asi 93 náhodných čtení za sekundu</code></pre>
+<p>Skutečné měření ukázalo průměr kolem 12 ms s rozptylem od 4 do 25 ms.<sup class="ref"><a href="#z29">29</a></sup> Při sekvenčním čtení, kdy data leží za sebou, hlavička nepřeskakuje a HDD dosáhne až 285 MB/s.<sup class="ref"><a href="#z30">30</a></sup></p>
+<h3>CMR a SMR</h3>
+<p>Disky <dfn>CMR</dfn> mají stopy oddělené mezerami. Disky <dfn>SMR</dfn> překrývají stopy jako tašky na střeše, takže se vejde víc dat. Přepsání jedné stopy ale poškodí sousední, disk ji musí přečíst a zapsat znovu. Při běžném používání to nevadí, ale při dlouhém souvislém zápisu, například obnově pole RAID v NAS, rychlost prudce klesá. Do NAS se proto doporučují disky CMR.<sup class="ref"><a href="#z34">34</a></sup></p>
+<h3>Kapacita</h3>
+<p>Největší pevný disk v prodeji měl v červnu 2026 30 TB (Seagate Exos M), 36TB model byl ohlášený, ale dodával se jen velkým cloudovým firmám. Největší SSD v prodeji mělo 122,88 TB.<sup class="ref"><a href="#z33">33</a></sup> HDD tedy nevítězí kapacitou, ale <strong>cenou za terabajt</strong>.</p>
+</section>
+
+<section id="pouziti">
+<h2>Kdy SSD a kdy HDD</h2>
+<div class="tbl"><table>
+<thead><tr><th></th><th>SSD</th><th>HDD</th></tr></thead>
+<tbody>
+<tr><td>Přístupová doba</td><td>desítky až stovky µs</td><td>jednotky až desítky ms</td></tr>
+<tr><td>Sekvenční čtení</td><td>560 až 14 800 MB/s</td><td>do 285 MB/s</td></tr>
+<tr><td>Pohyblivé části</td><td>žádné: tiché, odolné proti otřesům</td><td>plotny a rameno: hluk, citlivost na nárazy</td></tr>
+<tr><td>Cena za TB</td><td>vyšší</td><td>nižší</td></tr>
+<tr><td>Opotřebení</td><td>omezený počet zápisů (TBW)</td><td>mechanické opotřebení</td></tr>
+</tbody></table></div>
+<ul>
+  <li><strong>Systém, programy, hry</strong> → NVMe SSD. Čtou se tisíce malých souborů z náhodných míst.</li>
+  <li><strong>Notebook</strong> → SSD. Odolnost proti otřesům, nízká spotřeba, malé rozměry.</li>
+  <li><strong>Archiv fotek a videí, domácí NAS</strong> → HDD (v NAS typu CMR). Velké soubory, čtené postupně a jen občas, rozhoduje cena za TB.</li>
+  <li><strong>Záloha</strong> → externí HDD nebo SSD. Hlavní je mít zálohu na jiném zařízení než originál.</li>
+  <li><strong>Střih videa</strong> → rozpracovaný projekt na NVMe SSD, archiv na HDD.</li>
+  <li><strong>Starý počítač s HDD</strong> → výměna za SSD, i SATA, bývá nejvýraznější zrychlení.</li>
+  <li><strong>Datacentrum</strong> → často používaná data na SSD, archivy na HDD.</li>
+</ul>
+</section>
+
+<p class="part">Další součásti</p>
+
+<section id="deska">
+<h2>Základní deska, čipset a UEFI</h2>
+<p><dfn>Základní deska</dfn> (motherboard) propojuje všechny součásti. Určuje:</p>
+<ul>
+  <li><strong>patici procesoru</strong>: AMD AM5 (LGA 1718, od roku 2022) nebo Intel LGA1851,<sup class="ref"><a href="#z38">38</a></sup> procesor musí do patice pasovat,</li>
+  <li><strong>typ paměti</strong>: AM5 podporuje jen DDR5,<sup class="ref"><a href="#z38">38</a></sup></li>
+  <li><strong>čipset</strong>: obvod, přes který jsou k procesoru připojena pomalejší zařízení (další USB, SATA, síť). U AM5 jsou to A620 až X870E, u Intelu pro Core Ultra 200S Z890 a nižší.<sup class="ref"><a href="#z38">38</a>,</sup><sup class="ref"><a href="#z46">46</a></sup></li>
+  <li><strong>sloty</strong>: pro RAM, M.2 SSD a karty PCI Express,</li>
+  <li><strong>napájení procesoru</strong> (VRM): měniče, které z 12 V vyrobí nízké napětí pro procesor.</li>
+</ul>
+<h3>UEFI a spuštění počítače</h3>
+<p>Na desce je čip s firmwarem <dfn>UEFI</dfn> (dříve BIOS). Po zapnutí proběhne test hardwaru (<dfn>POST</dfn>), UEFI najde disk se zavaděčem operačního systému a předá mu řízení. Tady začíná téma operačních systémů.</p>
+</section>
+
+<section id="sbernice">
+<h2>Sběrnice a rozhraní</h2>
+<p>Von Neumann kreslil jednu sběrnici. V dnešním PC jsou místo ní samostatné linky typu bod–bod:</p>
+<div class="tbl"><table>
+<thead><tr><th>Spojení</th><th>Připojuje</th><th>Propustnost</th></tr></thead>
+<tbody>
+<tr><td>Paměťové kanály DDR5-6000 (2×)</td><td>RAM</td><td class="num">96 GB/s</td></tr>
+<tr><td>PCIe 4.0 ×1 / ×4 / ×16</td><td>SSD, karty</td><td class="num">2 / 8 / 32 GB/s</td></tr>
+<tr><td>PCIe 5.0 ×1 / ×4 / ×16</td><td>grafika, nejrychlejší SSD</td><td class="num">4 / 16 / 64 GB/s</td></tr>
+<tr><td>SATA III</td><td>HDD, starší SSD</td><td class="num">6 Gb/s</td></tr>
+<tr><td>USB4 verze 2.0</td><td>externí zařízení</td><td class="num">80 Gb/s (asym. 120 Gb/s)</td></tr>
+</tbody></table></div>
+<p class="small-muted">Zdroje: Chips and Cheese,<sup class="ref"><a href="#z3">3</a></sup> TechRadar,<sup class="ref"><a href="#z35">35</a></sup> Phoronix.<sup class="ref"><a href="#z36">36</a></sup></p>
+<p><dfn>PCI Express</dfn> (PCIe) se skládá z <dfn>linek</dfn> (lanes). Každá další generace zdvojnásobuje rychlost linky. Zápis ×4 nebo ×16 udává počet linek. Nejrychlejší SSD používají 4 linky, grafická karta 16.</p>
+<div class="note warn"><b class="lbl">Pozor na jednotky</b><p><strong>GB/s</strong> jsou gigabajty, <strong>Gb/s</strong> gigabity za sekundu. 1 bajt = 8 bitů, takže 80 Gb/s je 10 GB/s.</p></div>
+</section>
+
+<section id="gpu">
+<h2>Grafická karta</h2>
+<p>GPU (Graphics Processing Unit) je specializovaný procesor s tisíci jednoduchých jader. Hodí se na úlohy, kde se stejný výpočet opakuje na obrovském množství dat: obraz, video, výpočty neuronových sítí. Má vlastní rychlou paměť (VRAM).</p>
+<p>Příklad: Nvidia GeForce RTX 5090 (2025) má 21 760 jader CUDA, 32 GB paměti GDDR7 na 512bitové sběrnici s propustností 1 792 GB/s, 92,2 miliardy tranzistorů a příkon 575 W.<sup class="ref"><a href="#z39">39</a></sup> Propustnost její paměti je asi 18× vyšší než u RAM běžného PC.</p>
+<p>Ve von Neumannově schématu je grafická karta <strong>výstupní zařízení</strong> (obraz), ve skutečnosti je to ale samostatný počítač s vlastním procesorem a pamětí. Procesory pro notebooky a mnohé stolní procesory mají grafiku integrovanou, ta sdílí RAM s procesorem.</p>
+</section>
+
+<section id="zdroj">
+<h2>Zdroj a chlazení</h2>
+<p><dfn>Zdroj</dfn> (PSU) mění střídavé síťové napětí 230 V na stejnosměrná napětí 12 V, 5 V a 3,3 V. Důležitý je výkon ve wattech a účinnost: část energie se ve zdroji mění na teplo.</p>
+<p><dfn>Chlazení</dfn> odvádí teplo. Prakticky všechna elektrická energie, kterou počítač spotřebuje, se nakonec promění v teplo. Procesor s příkonem 250 W potřebuje velký vzduchový chladič nebo vodní chlazení. Když se čip přehřeje, sám sníží takt (<dfn>throttling</dfn>) a zpomalí se.</p>
+</section>
+
+<p class="part">K maturitě</p>
+
+<section id="osnova">
+<h2>Jak odpovídat u maturity</h2>
+<ol class="plan">
+  <li><b>Přehled:</b> součásti PC a jejich úloha. Rozdíl hardware a software.</li>
+  <li><b>Von Neumann v PC:</b> nakreslit schéma, přiřadit součásti, zmínit řadič paměti v CPU a modifikovanou Harvardovu architekturu cache L1.</li>
+  <li><b>Procesor:</b> jádro, registry, instrukční sada. Výkon = takt × IPC × jádra. SMT, P a E jádra.</li>
+  <li><b>Proč takt neroste:</b> Dennardovo škálování, 3,8 GHz v roce 2004 a 6,2 GHz v roce 2024, přechod na více jader.</li>
+  <li><b>Hierarchie pamětí:</b> registry, L1, L2, L3, RAM, SSD, HDD. Latence a velikosti, SRAM a DRAM. Zásah, výpadek, lokalita.</li>
+  <li><b>RAM:</b> DRAM, volatilita, DDR4 a DDR5, výpočet latence z CL a propustnosti, dva kanály.</li>
+  <li><b>Úložiště:</b> SSD (NAND, SLC až QLC, TBW, SATA a NVMe) a HDD (přístupová doba, CMR a SMR). Srovnání a použití.</li>
+  <li><b>Ostatní:</b> základní deska, čipset, UEFI, PCIe, GPU, zdroj a chlazení.</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Které součásti PC odpovídají blokům von Neumannova schématu?</summary><div class="a"><p>Řadič a ALU = procesor. Operační paměť = RAM. Vstup a výstup = klávesnice, myš, monitor, grafická karta, síť, USB. Sběrnice = paměťové kanály, PCI Express, čipset. SSD a HDD jsou vnější paměť, k procesoru připojená jako vstupně-výstupní zařízení.</p></div></details>
+<details class="q"><summary>Proč se dnešním procesorům říká modifikovaná Harvardova architektura?</summary><div class="a"><p>Navenek mají jednu RAM pro program i data (von Neumann), ale cache L1 je rozdělená na instrukční a datovou, takže jádro může najednou číst instrukci i data (Harvard).</p></div></details>
+<details class="q"><summary>Na čem závisí výkon procesoru? Proč nestačí znát takt?</summary><div class="a"><p>Teoreticky na součinu taktu, IPC a počtu jader. Ve skutečnosti i na velikosti cache a na tom, jak často procesor čeká na paměť. Dva procesory se stejným taktem mohou mít velmi rozdílný výkon.</p></div></details>
+<details class="q"><summary>Proč se takt procesorů od roku 2005 téměř nezvyšuje?</summary><div class="a"><p>Přestalo platit Dennardovo škálování: menší tranzistory už nesnižovaly spotřebu úměrně velikosti. Vyšší takt by znamenal neuchladitelné množství tepla. Výrobci proto přidávají jádra a cache.</p></div></details>
+<details class="q"><summary>Proč procesor potřebuje cache, když má RAM?</summary><div class="a"><p>Čtení z RAM trvá kolem 70 až 100 ns, tedy stovky taktů. Cache je mnohem rychlejší (L1 4 takty), protože je malá, z SRAM a přímo u jádra. Díky lokalitě v ní procesor většinou najde, co potřebuje.</p></div></details>
+<details class="q"><summary>Co je časová a prostorová lokalita?</summary><div class="a"><p>Časová: co program použil nedávno, použije brzy znovu. Prostorová: když čte jednu adresu, brzy čte i sousední. Cache proto drží nedávno použitá data a načítá celé řádky (64 bajtů).</p></div></details>
+<details class="q"><summary>Spočítej průměrnou dobu přístupu: zásah 1 ns, úspěšnost 90 %, výpadek 80 ns.</summary><div class="a"><p>1 + 0,1 × 80 = 9 ns.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi SRAM a DRAM?</summary><div class="a"><p>SRAM drží bit v šesti tranzistorech, nepotřebuje obnovování, je rychlá a drahá: cache. DRAM drží bit v kondenzátoru s jedním tranzistorem, musí se zhruba každých 64 ms obnovovat, je hustší a levnější: operační paměť.</p></div></details>
+<details class="q"><summary>Spočítej latenci a propustnost jednoho kanálu DDR5-6400 CL32.</summary><div class="a"><p>32 × 2000 / 6400 = 10 ns. 6400 × 8 / 1000 = 51,2 GB/s na kanál, 102,4 GB/s ve dvou kanálech.</p></div></details>
+<details class="q"><summary>Seřaď podle přístupové doby a uveď řád: RAM, HDD, L1, NVMe SSD.</summary><div class="a"><p>L1 (pod 1 ns), RAM (desítky ns), NVMe SSD (desítky µs), HDD (jednotky až desítky ms).</p></div></details>
+<details class="q"><summary>Z čeho se skládá přístupová doba pevného disku? Spočítej rotační zpoždění pro 5 400 ot./min.</summary><div class="a"><p>Doba vystavení + rotační zpoždění + doba přenosu. Otáčka trvá 60 / 5 400 s ≈ 11,1 ms, průměrné rotační zpoždění je polovina, asi 5,6 ms.</p></div></details>
+<details class="q"><summary>Co znamená TLC a proč je QLC levnější, ale méně odolné?</summary><div class="a"><p>TLC ukládá 3 bity do buňky (8 úrovní náboje), QLC 4 bity (16 úrovní). Víc bitů na buňku = levnější gigabajt, ale úrovně jsou blíž u sebe, zápis je pomalejší a buňka vydrží méně přepisů.</p></div></details>
+<details class="q"><summary>Proč SSD potřebuje TRIM a wear leveling?</summary><div class="a"><p>Flash nejde přepsat na místě a mazat jde jen celé bloky. TRIM říká disku, která data po smazání souboru už nejsou potřeba. Wear leveling rozkládá zápisy rovnoměrně, aby se žádná část neopotřebovala dřív.</p></div></details>
+<details class="q"><summary>Kdy dává smysl HDD a kdy SSD?</summary><div class="a"><p>SSD na systém, programy, hry a do notebooků (rychlý náhodný přístup, odolnost). HDD na velké archivy, NAS a zálohy, kde rozhoduje cena za terabajt a data se čtou postupně.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi M.2, NVMe a SATA?</summary><div class="a"><p>M.2 je tvar destičky a konektoru. NVMe je protokol pro SSD přes PCI Express. SATA je starší rozhraní (6 Gb/s). M.2 disk může být NVMe i SATA.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>CPU</dt><dd>Central Processing Unit, procesor</dd>
+  <dt>Jádro</dt><dd>samostatná výpočetní jednotka procesoru s řadičem, ALU a registry</dd>
+  <dt>Takt</dt><dd>frekvence hodinového signálu, např. 5 GHz</dd>
+  <dt>IPC</dt><dd>instructions per cycle, průměrný počet instrukcí za takt</dd>
+  <dt>SMT</dt><dd>simultaneous multithreading, dvě vlákna na jedno jádro</dd>
+  <dt>Cache</dt><dd>malá rychlá paměť SRAM mezi jádrem a RAM</dd>
+  <dt>Zásah / výpadek</dt><dd>data v cache jsou / nejsou</dd>
+  <dt>Lokalita</dt><dd>sklon programů používat znovu stejná nebo sousední data</dd>
+  <dt>SRAM</dt><dd>statická RAM, 6 tranzistorů na bit, bez obnovování</dd>
+  <dt>DRAM</dt><dd>dynamická RAM, kondenzátor a tranzistor, nutné obnovování</dd>
+  <dt>Volatilní</dt><dd>paměť, která bez napájení ztratí obsah</dd>
+  <dt>MT/s</dt><dd>miliony přenosů za sekundu</dd>
+  <dt>CL</dt><dd>CAS latence, počet taktů paměti do prvních dat</dd>
+  <dt>Latence</dt><dd>doba od požadavku do příchodu dat</dd>
+  <dt>Propustnost</dt><dd>množství dat přenesené za sekundu</dd>
+  <dt>NAND flash</dt><dd>nevolatilní paměť používaná v SSD</dd>
+  <dt>TBW</dt><dd>terabytes written, zaručená výdrž SSD v zapsaných datech</dd>
+  <dt>NVMe</dt><dd>protokol pro SSD přes PCI Express</dd>
+  <dt>PCIe</dt><dd>PCI Express, sériová sběrnice složená z linek</dd>
+  <dt>Doba vystavení</dt><dd>čas přesunu hlavičky HDD na stopu</dd>
+  <dt>Rotační zpoždění</dt><dd>čekání, až se sektor otočí pod hlavičku</dd>
+  <dt>CMR / SMR</dt><dd>oddělené / překrývající se stopy pevného disku</dd>
+  <dt>Čipset</dt><dd>obvod na desce, který připojuje pomalejší zařízení</dd>
+  <dt>UEFI</dt><dd>firmware základní desky, spouští operační systém</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v říjnu 2026. Údaje o konkrétních výrobcích pocházejí od výrobců nebo z technických recenzí, měření latence z nezávislých testů.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://hc2024.hotchips.org/assets/program/conference/day2/24_HC2024.AMD.Cohen.Subramony.final.pdf">AMD: Next Generation „Zen 5“ Core, Hot Chips 2024</a></li>
+  <li id="z2"><a href="https://www.hwcooling.net/en/zen-5-tested-mobile-core-differs-considerably-from-desktop-one/">HWCooling: Zen 5 tested</a></li>
+  <li id="z3"><a href="https://chipsandcheese.com/p/amds-ryzen-9950x-zen-5-on-desktop">Chips and Cheese: AMD’s Ryzen 9950X, Zen 5 on Desktop</a></li>
+  <li id="z4"><a href="https://chipsandcheese.com/p/analyzing-lion-coves-memory-subsystem">Chips and Cheese: Analyzing Lion Cove’s Memory Subsystem</a></li>
+  <li id="z5"><a href="https://chipsandcheese.com/p/examining-intels-arrow-lake-at-the">Chips and Cheese: Examining Intel’s Arrow Lake at the System Level</a></li>
+  <li id="z6"><a href="https://www.club386.com/best-cpus/">Club386: Best CPU 2026</a></li>
+  <li id="z7"><a href="https://techspot.com/review/3107-intel-core-ultra-7-270k-plus/">TechSpot: Intel Core Ultra 7 270K Plus Review</a></li>
+  <li id="z8"><a href="https://pchardware.org/processors/intel-core-ultra-9-285k/">Intel Core Ultra 9 285K, parametry</a></li>
+  <li id="z9"><a href="https://en.wikipedia.org/wiki/AMD_Ryzen_9_9950X3D">Wikipedia: AMD Ryzen 9 9950X3D</a></li>
+  <li id="z10"><a href="https://techpowerup.com/cpu-specs/ryzen-5-9600x.c3652">TechPowerUp: Ryzen 5 9600X</a></li>
+  <li id="z11"><a href="https://www.theregister.com/2026/01/05/intel_unleashes_panther_lake_cpus/">The Register: Intel unleashes Panther Lake CPUs</a></li>
+  <li id="z12"><a href="https://en.wikipedia.org/wiki/Apple_M5">Wikipedia: Apple M5</a></li>
+  <li id="z13"><a href="https://www.corsair.com/eu/cs/explorer/gamer/gaming-pcs/what-is-amd-3d-v-cache-and-why-is-it-so-special/">Corsair: What is AMD 3D V-Cache</a></li>
+  <li id="z14"><a href="https://en.wikipedia.org/wiki/Dennard_scaling">Wikipedia: Dennard scaling</a></li>
+  <li id="z15"><a href="https://www.computerworld.com/article/1711338/intel-reaches-pentium-4-speed-limit-at-3-8-ghz.html">Computerworld: Intel reaches Pentium 4 speed limit at 3.8 GHz</a></li>
+  <li id="z16"><a href="https://newsroom.intel.com/client-computing/intel-core-14th-gen-i9-14900ks-powers-desktop-pcs-to-record-breaking-speeds">Intel: Core i9-14900KS</a></li>
+  <li id="z17"><a href="https://en.wikipedia.org/wiki/Zen_5">Wikipedia: Zen 5</a></li>
+  <li id="z18"><a href="https://kingston.com/en/blog/gaming/cas-latency-cl-ram-timing-explained">Kingston: CAS latency explained</a></li>
+  <li id="z19"><a href="https://kingston.com/tw/blog/pc-performance/ddr5-overview">Kingston: DDR5 overview</a></li>
+  <li id="z20"><a href="https://hothardware.com/news/jedec-ddr5-memory-huge-speed-boost-spec-update">HotHardware: JEDEC DDR5 spec update (8 800 MT/s)</a></li>
+  <li id="z21"><a href="https://elosupport.elotouch.com/hc/en-us/articles/31652789972503-DDR4-vs-DDR5-Specifications">Elo: DDR4 vs DDR5 Specifications</a></li>
+  <li id="z22"><a href="https://www.halbleiter.org/en/digital-technology/dram-cell/">Halbleiter.org: DRAM cell</a></li>
+  <li id="z23"><a href="https://www.versalogic.com/blog/supply-chain-brief-memory-market-conditions-in-2026/">VersaLogic: Memory market conditions in 2026</a></li>
+  <li id="z24"><a href="https://download.semiconductor.samsung.com/resources/data-sheet/Samsung_NVMe_SSD_990_PRO_Datasheet_Rev.1.0_10129514072296.pdf">Samsung: 990 PRO datasheet</a></li>
+  <li id="z25"><a href="https://www.samsung.com/uk/business/memory-storage/nvme-ssd/9100-pro-8tb-nvme-pcie-gen-5-mz-vap8t0bw/">Samsung: 9100 PRO</a></li>
+  <li id="z26"><a href="https://news.samsung.com/global/samsung-introduces-latest-in-its-worlds-best-selling-consumer-sata-ssd-series-the-870-evo">Samsung: 870 EVO</a></li>
+  <li id="z27"><a href="https://techpowerup.com/review/samsung-990-pro-2-tb">TechPowerUp: Samsung 990 Pro 2 TB Review</a></li>
+  <li id="z28"><a href="https://www.enterprisestorageforum.com/hardware/understanding-multilayer-ssds">Enterprise Storage Forum: SLC, MLC, TLC, QLC</a></li>
+  <li id="z29"><a href="https://clickhouse.com/blog/a-journey-to-io_uring-aio-and-modern-storage-devices">ClickHouse: A journey to io_uring and modern storage devices</a></li>
+  <li id="z30"><a href="https://www.storagereview.com/news/seagate-launches-ironwolf-pro-24tb-nas-hdd">StorageReview: Seagate IronWolf Pro 24TB</a></li>
+  <li id="z31"><a href="https://www.storagereview.com/es/review/seagate-exos-x24-24tb-hdd-review">StorageReview: Seagate Exos X24 24TB</a></li>
+  <li id="z32"><a href="https://www.cs.rpi.edu/academics/courses/fall24/csci4380/fall2024/fall2024_lecture_notes/lecture16_1_inclass.txt">RPI CSCI 4380: přednáška o discích</a></li>
+  <li id="z33"><a href="https://www.techradar.com/best/large-hard-drives-and-ssds">TechRadar: The largest SSD and hard drive of 2026</a></li>
+  <li id="z34"><a href="https://computingforgeeks.com/cmr-vs-smr-drives-for-nas/">ComputingForGeeks: CMR vs SMR drives for NAS</a></li>
+  <li id="z35"><a href="https://www.techradar.com/computing/computing-components/pcie-lanes-explained">TechRadar: PCIe lanes explained</a></li>
+  <li id="z36"><a href="https://www.phoronix.com/news/USB4-v2.0-Specification">Phoronix: USB4 v2.0 Specification</a></li>
+  <li id="z37"><a href="https://www.scan.co.uk/tekspek/cpus/intel-nehalem-family">Scan TekSpek: Intel Nehalem family</a></li>
+  <li id="z38"><a href="https://en.wikipedia.org/wiki/Socket_AM5">Wikipedia: Socket AM5</a></li>
+  <li id="z39"><a href="https://www.notebookcheck.net/NVIDIA-GeForce-RTX-5090-Benchmarks-and-Specs.935680.0.html">Notebookcheck: GeForce RTX 5090</a></li>
+  <li id="z40"><a href="https://norvig.com/21-days.html">Peter Norvig: Teach Yourself Programming in Ten Years</a></li>
+  <li id="z41"><a href="https://www.tweaktown.com/news/110232/amds-next-gen-zen-6-powered-ryzen-desktop-cpus-delayed-to-2027/index.html">TweakTown: Zen 6 Ryzen desktop CPUs delayed to 2027</a></li>
+  <li id="z42"><a href="https://wccftech.com/intel-nova-lake-core-ultra-400-q1-2027-launch-lga-1954-razor-lake-hammer-lake-desktop-cpus/">Wccftech: Intel Nova Lake Core Ultra 400 in Q1 2027</a></li>
+  <li id="z43"><a href="https://www.guru3d.com/story/confirmed-again-intel-arrow-lake-desktop-processors-to-launch-without-hyperthreading-technology/">Guru3D: Arrow Lake without Hyper-Threading</a></li>
+  <li id="z44"><a href="https://googlers.googlesource.com/maze/linux/+/0a2a18b721abc960fbcada406746877d22340a60">Linux kernel: x86 cache line 64 bytes</a></li>
+  <li id="z45"><a href="https://www.thessdreview.com/latest-buzz/garbage-collection-and-trim-in-ssds-explained-an-ssd-primer/">The SSD Review: Garbage Collection and TRIM</a></li>
+  <li id="z46"><a href="https://club386.com/z890-motherboard-msi-rundown">Club386: Z890 motherboards</a></li>
+  <li id="z47"><a href="https://www.corsair.com/eu/ru/explorer/diy-builder/memory/mts-vs-mhz-explained/">Corsair: MT/s vs MHz explained</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k bloku Hardware a operační systémy. Interaktivní ukázky (simulace cache, závod disků, animace HDD) najdeš v prezentaci 04.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  function fmt(n, d) { return n.toLocaleString('cs-CZ', { maximumFractionDigits: d }); }
+  function amat() {
+    var h = +document.getElementById('aHit').value, r = +document.getElementById('aRate').value / 100, m = +document.getElementById('aMiss').value;
+    var t = h + (1 - r) * m;
+    document.getElementById('aOut').innerHTML = 'Průměrná doba přístupu: <b>' + fmt(t, 2) + ' ns</b>, bez cache ' + fmt(m, 1) + ' ns, zrychlení <b>' + fmt(m / t, 1) + '×</b>';
+  }
+  function cas() {
+    var mt = +document.getElementById('cMT').value, cl = +document.getElementById('cCL').value;
+    if (!mt) return;
+    document.getElementById('cOut').innerHTML = 'CAS latence <b>' + fmt(cl * 2000 / mt, 2) + ' ns</b> · jeden kanál <b>' + fmt(mt * 8 / 1000, 1) + ' GB/s</b> · dva kanály <b>' + fmt(mt * 16 / 1000, 1) + ' GB/s</b>';
+  }
+  ['aHit', 'aRate', 'aMiss'].forEach(function (id) { document.getElementById(id).addEventListener('input', amat); });
+  ['cMT', 'cCL'].forEach(function (id) { document.getElementById(id).addEventListener('input', cas); });
+  amat(); cas();
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    var d = document.querySelector('.toc details'); if (d) d.open = false;
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Komprese – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Základy</li>
+    <li><a href="#proc">Proč komprimovat</a></li>
+    <li><a href="#princip">Komprese a dekomprese</a></li>
+    <li><a href="#druhy">Dva druhy komprese</a></li>
+    <li class="grp">Bezztrátová</li>
+    <li><a href="#rle">RLE: spočítej opakování</a></li>
+    <li><a href="#huffman">Huffman: krátké kódy</a></li>
+    <li><a href="#lz">LZ a ZIP: odkazy zpět</a></li>
+    <li><a href="#hranice">Kde bezztrátová končí</a></li>
+    <li class="grp">Ztrátová</li>
+    <li><a href="#kvantizace">Zaokrouhlení (kvantizace)</a></li>
+    <li><a href="#vnimani">Co člověk nepozná</a></li>
+    <li><a href="#cena">Cena ztrátové komprese</a></li>
+    <li><a href="#volba">Kterou kdy použít</a></li>
+    <li><a href="#historie">Historie</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#zkus">Vyzkoušej si</a></li>
+    <li><a href="#chyby">Časté chyby</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Informace · Studijní text k lekci 08</p>
+  <h1>Ztrátová a bezztrátová komprese <span class="t">5A3B</span></h1>
+  <p class="lead">Jak se vejde film do mobilu a proč fotka v JPEG nikdy není přesná kopie. Tři triky bezztrátové komprese, princip ztrátové komprese a kdy kterou použít. Text je psaný tak, abys ho zvládl sám, i když jsi na hodině chyběl.</p>
+  <a class="deck-link" href="08_komprese.html"><span class="ic">▶</span><span class="tx"><b>Prezentace k lekci: Ztrátová a bezztrátová komprese</b><span>Interaktivní slajdy z hodiny, s RLE kodérem a ukázkou zaokrouhlení obrazu</span></span></a>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit, proč je komprese potřeba</li>
+      <li>spočítat kompresní poměr</li>
+      <li>rozlišit bezztrátovou a ztrátovou kompresi</li>
+      <li>zakódovat a dekódovat text metodou RLE</li>
+      <li>vysvětlit princip Huffmanova kódování</li>
+      <li>popsat, jak ZIP využívá opakující se úseky</li>
+      <li>zdůvodnit, proč nejde zmenšit každý soubor</li>
+      <li>popsat, co zahazuje JPEG, MP3 a video</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Základy</p>
+
+<section id="proc">
+<h2>Proč komprimovat</h2>
+<p>Nekomprimovaná data jsou obrovská. Jedna minuta videa ve Full HD při 30 snímcích za sekundu:</p>
+<div class="formula">1920 × 1080 × 3 B × 30 × 60 s ≈ 11,2 GB</div>
+<p>Při běžném streamování má stejná minuta asi <strong>37 MB</strong>, tedy zhruba 300× méně. Bez komprese by nešlo streamovat filmy, posílat fotky přes mobil ani rychle načítat web.</p>
+</section>
+
+<section id="princip">
+<h2>Komprese a dekomprese</h2>
+<p><dfn>Komprese</dfn> je převod dat do menší podoby. <dfn>Dekomprese</dfn> je převod zpět do podoby, se kterou umí pracovat program (zobrazit obrázek, přehrát zvuk). Obě strany musí znát stejný postup, tedy stejný <dfn>kompresní algoritmus</dfn> (formát).</p>
+<div class="formula">100 kB → komprese → 25 kB → dekomprese → 100 kB</div>
+<p>Jak dobře komprese funguje, vyjadřuje <dfn>kompresní poměr</dfn>:</p>
+<div class="formula">původní velikost : nová velikost<small>100 : 25 = 4 : 1, soubor je 4× menší, ušetřeno 75 %</small></div>
+<p>Přirovnání: oblečení poskládané do kufru zabere méně místa než hromada. Věcí je pořád stejně, jen jsou uložené chytřeji.</p>
+</section>
+
+<section id="druhy">
+<h2>Dva druhy komprese</h2>
+<div class="cols2">
+  <div class="card"><h3>Bezztrátová</h3><p>Po dekompresi dostaneš <strong>přesně totéž</strong>, do posledního bitu.</p><p>Na: texty, programy, tabulky, screenshoty.<br>Formáty: ZIP, 7z, PNG, FLAC.</p></div>
+  <div class="card"><h3>Ztrátová</h3><p>Část informace se <strong>nevratně zahodí</strong>. Vybírá se to, čeho si člověk nevšimne.</p><p>Na: fotky, hudbu, video.<br>Formáty: JPEG, MP3, AAC, MP4 (H.264).</p></div>
+</div>
+<div class="note mat"><b class="lbl">Proč ne ztrátově všechno?</b><p>Program nebo slohová práce musí po rozbalení fungovat a dávat smysl. Kdyby se v programu změnil jediný bit, může přestat fungovat. U textu by z „ne“ mohlo být „no“. Ztrátová komprese se hodí jen tam, kde výsledek posuzují lidské smysly.</p></div>
+</section>
+
+<p class="part">Bezztrátová komprese</p>
+
+<section id="rle">
+<h2>Trik 1: RLE – spočítej, co se opakuje</h2>
+<p><dfn>RLE</dfn> (run-length encoding, kódování délkou běhu) nahradí řadu stejných znaků jejich počtem a znakem:</p>
+<div class="formula">AAAAABBBCCCCCCCCD → 5A3B8C1D<small>17 znaků → 8 znaků</small></div>
+<p>Stejně se dají uložit černobílé obrázky: řádek „3 bílé, 5 černých, 2 bílé“ místo deseti jednotlivých pixelů. RLE používaly faxy a starý formát PCX.</p>
+<div class="note warn"><b class="lbl">Kdy RLE škodí</b><p>Text bez opakování se prodlouží: <code>ABCD</code> → <code>1A1B1C1D</code>, ze 4 znaků je 8. RLE se hodí jen pro data s dlouhými úseky stejných hodnot.</p></div>
+</section>
+
+<section id="huffman">
+<h2>Trik 2: Huffman – častá písmena dostanou krátký kód</h2>
+<p>Normálně má každé písmeno 8 bitů. Některá písmena jsou ale mnohem častější než jiná. Dáme jim proto kratší kódy a vzácným delší. Morseovka to dělá taky: nejčastější anglické E je jediná tečka, vzácné Q je <code>--.-</code>.</p>
+<p>Slovo <strong>ABRAKADABRA</strong>: A je tam 5×, dostane kód <code>0</code>. Ostatní písmena (B, R, K, D) dostanou kódy o 3 bitech (<code>100</code>, <code>101</code>, <code>110</code>, <code>111</code>).</p>
+<div class="tbl"><table>
+<tbody>
+<tr><td>každé písmeno 8 bitů</td><td class="num">11 × 8 = 88 b</td></tr>
+<tr><td>chytrý kód</td><td class="num">5 × 1 + 6 × 3 = 23 b</td></tr>
+</tbody></table></div>
+<p>Postup, jak pro libovolný text najít nejlepší takové kódy, vymyslel David Huffman v roce 1952. Kódy musí být <dfn>prefixové</dfn> (žádný není začátkem jiného), aby šly přečíst bez oddělovačů. Podrobně v <a href="04_znak_po_znaku_studijni_text.html#komprese">lekci 04</a>.</p>
+<h3>Jak Huffman staví kódy (pro zvídavé)</h3>
+<ol>
+  <li>Spočítej, kolikrát se každý znak vyskytuje.</li>
+  <li>Vezmi dva nejméně časté znaky a spoj je do jednoho uzlu, jeho četnost je součet.</li>
+  <li>Opakuj, dokud nezbude jediný uzel. Vznikne strom.</li>
+  <li>Cesta od kořene ke znaku je jeho kód: doleva 0, doprava 1.</li>
+</ol>
+</section>
+
+<section id="lz">
+<h2>Trik 3: LZ a ZIP – opakuje se kus textu? Odkaž na něj</h2>
+<p>V textu se opakují celá slova a fráze. Místo opakování stačí napsat odkaz „vrať se o X znaků zpět a opiš Y znaků“.</p>
+<div class="formula">A B R A K A D A B R A → A B R A K A D [zpět 7, opiš 4]</div>
+<p>Konec slova „ABRA“ už jednou byl na začátku, takže se nahradí odkazem. Tuhle metodu publikovali Abraham Lempel a Jacob Ziv v roce 1977 (<dfn>LZ77</dfn>).</p>
+<p>Formát <strong>ZIP</strong> (a PNG, gzip) používá metodu <dfn>DEFLATE</dfn>: nejdřív nahradí opakované úseky odkazy (LZ77) a výsledek pak ještě zkrátí Huffmanovým kódováním. Kombinuje tedy triky 2 a 3. Nejlépe funguje u textu a zdrojového kódu, které se zmenší třeba na čtvrtinu.</p>
+</section>
+
+<section id="hranice">
+<h2>Kde bezztrátová komprese končí</h2>
+<h3>Proč ZIP podruhé nepomůže</h3>
+<p>Zkomprimovaný soubor vypadá jako náhodná změť bitů. Všechna opakování a nerovnoměrnosti už jsou pryč, takže není co dál zkracovat. Druhé zazipování soubor nezmenší, často ho dokonce o pár bajtů zvětší (hlavička). Stejně tak skoro nepomůže zazipovat JPEG, MP3 nebo MP4: už jsou zkomprimované.</p>
+<h3>Proč nejde zmenšit každý soubor</h3>
+<p>Kdyby existoval program, který zkrátí <em>každý</em> soubor aspoň o bit, mohli bychom ho pouštět pořád dokola, až by ze všeho zbyl jeden bit. To zjevně nejde. Matematicky: souborů o délce n bitů je 2ⁿ, ale všech kratších souborů dohromady jen 2ⁿ − 1. Do kratších se všechny nevejdou, takže aspoň dva různé soubory by musely dostat stejný výsledek a nešlo by je rozbalit (tzv. <dfn>princip holubníku</dfn>).</p>
+<div class="note mat"><b class="lbl">Shrnutí</b><p>Bezztrátová komprese pomáhá jen tam, kde se v datech něco opakuje nebo je něco častější. Náhodná nebo už zkomprimovaná data zmenšit nejde.</p></div>
+</section>
+
+<p class="part">Ztrátová komprese</p>
+
+<section id="kvantizace">
+<h2>Hlavní trik: zaokrouhli, co oko nepozná</h2>
+<p>Pixel v odstínech šedi má 8 bitů, tedy 256 odstínů. Co když uložíme jen 6 bitů (64 odstínů)? Sousední odstíny se sloučí. Rozdíl oko skoro nevidí, ale data jsou o čtvrtinu menší. Pod 4 bity (16 odstínů) se v plynulých přechodech objeví viditelné pruhy.</p>
+<p>Tomuto zaokrouhlení se říká <dfn>kvantizace</dfn>. Je to jádro každé ztrátové komprese: přesnost se sníží tam, kde to nevadí.</p>
+<div class="tbl"><table>
+<thead><tr><th>bitů na pixel</th><th>odstínů</th><th>velikost proti 8 b</th><th>výsledek</th></tr></thead>
+<tbody>
+<tr><td class="num">8</td><td class="num">256</td><td class="num">100 %</td><td>originál</td></tr>
+<tr><td class="num">6</td><td class="num">64</td><td class="num">75 %</td><td>rozdíl skoro neviditelný</td></tr>
+<tr><td class="num">4</td><td class="num">16</td><td class="num">50 %</td><td>pruhy v přechodech</td></tr>
+<tr><td class="num">3</td><td class="num">8</td><td class="num">38 %</td><td>výrazné schody</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vnimani">
+<h2>Co člověk nepozná</h2>
+<p>Každý druh dat má své „slabé místo“ v lidském vnímání, které ztrátová komprese využívá:</p>
+<div class="tbl"><table>
+<thead><tr><th>data</th><th>formát</th><th>co se zahazuje</th></tr></thead>
+<tbody>
+<tr><td>obrázky</td><td>JPEG</td><td>Oko je citlivější na jas než na barvu a na hrubé tvary než na jemné detaily. Barvy a detaily se ukládají hruběji.</td></tr>
+<tr><td>zvuk</td><td>MP3, AAC</td><td>Tichý tón hned vedle hlasitého neslyšíme (<dfn>maskování</dfn>). Velmi vysoké tóny také ne. Ty se neukládají.</td></tr>
+<tr><td>video</td><td>MP4 (H.264, H.265)</td><td>Mezi snímky se většina obrazu nemění. Celý snímek se uloží jen občas, jinak jen změny. Navíc stejné triky jako JPEG.</td></tr>
+</tbody></table></div>
+<p>Podrobnosti: obrázky v <a href="05_pixel_po_pixelu_studijni_text.html#jpeg">lekci 05</a>, video v <a href="09_snimek_po_snimku_studijni_text.html">lekci 09</a>.</p>
+</section>
+
+<section id="cena">
+<h2>Cena ztrátové komprese</h2>
+<ul>
+  <li><strong>Co se zahodí, už se nevrátí.</strong> Z JPEGu původní fotku nezískáš.</li>
+  <li><strong>Artefakty.</strong> Při silné kompresi jsou v obrázku vidět čtverečky a pruhy v přechodech, ve zvuku „zvonění“ a šumění.</li>
+  <li><strong>Každé uložení horší.</strong> Když JPEG upravíš a znovu uložíš, ztratí se další informace. Upravuj vždy originál.</li>
+  <li><strong>„Zvětšit a zaostřit“ nefunguje.</strong> Ve filmech to jde, ve skutečnosti ne. Chybějící detail lze jen odhadnout (dnes to umí umělá inteligence, ale jde o domyšlený, ne skutečný detail).</li>
+</ul>
+</section>
+
+<section id="volba">
+<h2>Kterou kompresi kdy použít</h2>
+<div class="tbl"><table>
+<thead><tr><th>co ukládám</th><th>komprese</th><th>formát</th></tr></thead>
+<tbody>
+<tr><td>referát, program, tabulka</td><td>bezztrátová</td><td>ZIP</td></tr>
+<tr><td>fotka z výletu</td><td>ztrátová</td><td>JPEG</td></tr>
+<tr><td>screenshot, logo</td><td>bezztrátová</td><td>PNG</td></tr>
+<tr><td>hudba do sluchátek</td><td>ztrátová</td><td>MP3, AAC</td></tr>
+<tr><td>hudba pro archiv, studio</td><td>bezztrátová</td><td>FLAC</td></tr>
+<tr><td>film</td><td>ztrátová</td><td>MP4</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="historie">
+<h2>Historie v kostce</h2>
+<ol class="timeline">
+  <li><span class="yr">1840</span> <span class="ev">Morseova abeceda</span><span class="d">Častá písmena mají krátké značky, předchůdce Huffmana.</span></li>
+  <li><span class="yr">1948</span> <span class="ev">Shannonova teorie informace</span><span class="d">Claude Shannon ukázal, že každá data mají minimální velikost, pod kterou je bezztrátově zmenšit nejde (entropie).</span></li>
+  <li><span class="yr">1952</span> <span class="ev">Huffmanovo kódování</span><span class="d">David Huffman, tehdy student, vymyslel optimální prefixový kód jako seminární práci.</span></li>
+  <li><span class="yr">1977</span> <span class="ev">LZ77</span><span class="d">Abraham Lempel a Jacob Ziv: nahrazování opakovaných úseků odkazy.</span></li>
+  <li><span class="yr">1989</span> <span class="ev">ZIP</span><span class="d">Phil Katz vytvořil formát ZIP, brzy s metodou DEFLATE (LZ77 + Huffman).</span></li>
+  <li><span class="yr">1992</span> <span class="ev">JPEG</span><span class="d">Standard pro ztrátovou kompresi fotografií.</span></li>
+  <li><span class="yr">1993</span> <span class="ev">MP3</span><span class="d">Ztrátová komprese zvuku, vyvinutá hlavně v Německu (Fraunhofer).</span></li>
+  <li><span class="yr">1996</span> <span class="ev">PNG</span><span class="d">Bezztrátový obrázkový formát jako náhrada za GIF.</span></li>
+  <li><span class="yr">2003</span> <span class="ev">H.264</span><span class="d">Videokodek, na kterém dodnes běží většina videí na internetu.</span></li>
+</ol>
+</section>
+
+<p class="part">Opakování</p>
+
+<section id="zkus">
+<h2>Vyzkoušej si</h2>
+<details class="sol"><summary>1. Zakóduj pomocí RLE: WWWWBBBWWWWWW</summary><div><p><strong>4W3B6W</strong> (13 znaků → 6 znaků).</p></div></details>
+<details class="sol"><summary>2. Dekóduj RLE: 3A2B5C</summary><div><p><strong>AAABBCCCCC</strong></p></div></details>
+<details class="sol"><summary>3. Soubor měl 12 MB, po kompresi 3 MB. Jaký je kompresní poměr a kolik procent se ušetřilo?</summary><div><p>12 : 3 = <strong>4 : 1</strong>, ušetřeno 9 / 12 = <strong>75 %</strong>.</p></div></details>
+<details class="sol"><summary>4. Ztrátově, nebo bez ztráty? Fotka z výletu, slohová práce, písnička do mobilu.</summary><div><p>Ztrátově · bez ztráty · ztrátově.</p></div></details>
+<details class="sol"><summary>5. Zazipuješ soubor, který už je zazipovaný. Zmenší se?</summary><div><p>Skoro vůbec, spíš o pár bajtů naroste. Už se v něm nic neopakuje.</p></div></details>
+<details class="sol"><summary>6. Proč je na screenshot s textem lepší PNG než JPEG?</summary><div><p>Velké jednobarevné plochy se bez ztráty dobře zkomprimují a písmena zůstanou ostrá. JPEG by kolem písmen udělal rozmazané artefakty.</p></div></details>
+<details class="sol"><summary>7. Kolik bitů zabere slovo BANANA, když A = 0, N = 10, B = 11? Kolik v UTF-8?</summary><div><p>B A N A N A = 2 + 1 + 2 + 1 + 2 + 1 = <strong>9 bitů</strong>. V UTF-8 6 × 8 = 48 bitů.</p></div></details>
+</section>
+
+<section id="chyby">
+<h2>Časté chyby</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Správně</th></tr></thead>
+<tbody>
+<tr><td>„ZIP zmenší cokoli“</td><td>Jen data s opakováním; JPEG, MP3, MP4 už zmenšit skoro nejde</td></tr>
+<tr><td>„Ztrátová komprese = horší kvalita, kterou poznám“</td><td>Při rozumném nastavení rozdíl nepoznáš, to je její smysl</td></tr>
+<tr><td>„Převodem MP3 do FLAC získám lepší zvuk“</td><td>Zahozenou informaci nic nevrátí, jen bude soubor větší</td></tr>
+<tr><td>Kompresní poměr psát obráceně (1 : 4)</td><td>původní : nová, tedy 4 : 1</td></tr>
+<tr><td>Používat RLE na běžný text</td><td>RLE se hodí jen na dlouhé úseky stejných hodnot</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<details class="q"><summary>Co je komprese a dekomprese?</summary><div class="a"><p>Komprese převádí data do menší podoby, dekomprese zpět do použitelné podoby. Obě strany musí znát stejný algoritmus.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi bezztrátovou a ztrátovou kompresí? Uveď formáty.</summary><div class="a"><p>Bezztrátová obnoví data přesně (ZIP, PNG, FLAC). Ztrátová nevratně zahodí část informace, kterou člověk nepozná (JPEG, MP3, MP4).</p></div></details>
+<details class="q"><summary>Popiš tři triky bezztrátové komprese.</summary><div class="a"><p>RLE (počet opakování + znak), Huffman (častým znakům kratší kód), LZ77 (odkaz na dříve se vyskytující úsek). ZIP kombinuje LZ77 a Huffmana.</p></div></details>
+<details class="q"><summary>Proč nejde bezztrátově zmenšit každý soubor?</summary><div class="a"><p>Kratších souborů je méně než dlouhých, takže by dva různé soubory musely dostat stejný komprimovaný výsledek a nešlo by je rozlišit. Náhodná nebo už zkomprimovaná data nemají co zkrátit.</p></div></details>
+<details class="q"><summary>Co je kvantizace?</summary><div class="a"><p>Zaokrouhlení hodnot na menší počet úrovní. Je to hlavní krok ztrátové komprese.</p></div></details>
+<details class="q"><summary>Co zahazuje MP3?</summary><div class="a"><p>Zvuky, které neslyšíme: tiché tóny maskované hlasitějšími a velmi vysoké frekvence.</p></div></details>
+<details class="q"><summary>Proč se JPEG nemá opakovaně upravovat a ukládat?</summary><div class="a"><p>Každé uložení znovu provede ztrátovou kompresi a ztratí další informace. Kvalita se postupně zhoršuje.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Komprese</dt><dd>Zmenšení objemu dat</dd>
+  <dt>Kompresní poměr</dt><dd>Původní velikost : nová velikost</dd>
+  <dt>Bezztrátová komprese</dt><dd>Po rozbalení přesně původní data</dd>
+  <dt>Ztrátová komprese</dt><dd>Část informace se nevratně zahodí</dd>
+  <dt>RLE</dt><dd>Run-length encoding, kódování počtem opakování</dd>
+  <dt>Huffmanovo kódování</dt><dd>Častým znakům kratší, vzácným delší prefixový kód</dd>
+  <dt>LZ77</dt><dd>Nahrazení opakovaného úseku odkazem zpět</dd>
+  <dt>DEFLATE</dt><dd>LZ77 + Huffman, metoda ve formátech ZIP, PNG, gzip</dd>
+  <dt>Kvantizace</dt><dd>Zaokrouhlení hodnot na méně úrovní</dd>
+  <dt>Maskování</dt><dd>Hlasitý zvuk přehluší tichý zvuk podobné výšky</dd>
+  <dt>Artefakt</dt><dd>Viditelná nebo slyšitelná chyba po silné kompresi</dd>
+</dl>
+</section>
+
+<p class="foot">Studijní text k lekci „Ztrátová a bezztrátová komprese“ z bloku Informace. Interaktivní verzi najdeš v <a href="08_komprese.html">prezentaci</a>.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    var d = document.querySelector('.toc details'); if (d) d.open = false;
+  }
+})();
+</script>
+</body>
+</html>

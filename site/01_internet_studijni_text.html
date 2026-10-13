@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internet a počítačové sítě – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Úvod</li>
+    <li><a href="#co-je">Co je internet</a></li>
+    <li><a href="#historie">Historie</a></li>
+    <li class="grp">Jak data cestují</li>
+    <li><a href="#pakety">Přepojování paketů</a></li>
+    <li><a href="#vrstvy">Vrstvy TCP/IP a OSI</a></li>
+    <li><a href="#fyzicka">Kabely, Wi-Fi, MAC</a></li>
+    <li class="grp">Adresy a jména</li>
+    <li><a href="#ip">IPv4 adresa a maska</a></li>
+    <li><a href="#nat">Soukromé adresy a NAT</a></li>
+    <li><a href="#ipv6">IPv6</a></li>
+    <li><a href="#smerovani">Směrování, TTL, ping</a></li>
+    <li><a href="#dns">DNS</a></li>
+    <li class="grp">Transportní vrstva</li>
+    <li><a href="#porty">Porty</a></li>
+    <li><a href="#tcp">TCP</a></li>
+    <li><a href="#udp">UDP a srovnání</a></li>
+    <li class="grp">Web</li>
+    <li><a href="#http">HTTP</a></li>
+    <li><a href="#kody">Stavové kódy</a></li>
+    <li><a href="#verze">Verze HTTP</a></li>
+    <li><a href="#https">HTTPS a TLS</a></li>
+    <li><a href="#cesta">Cesta stránky</a></li>
+    <li class="grp">Bezpečnost</li>
+    <li><a href="#vpn">VPN</a></li>
+    <li class="grp">K maturitě</li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Sítě a internet · Studijní text</p>
+  <h1>Internet a počítačové sítě <span class="t">IP · TCP · HTTP</span></h1>
+  <p class="lead">Jak vznikl internet, jak se data dělí na pakety a najdou cestu, co jsou IP adresy, porty, TCP a UDP, jak funguje HTTP a HTTPS a co doopravdy dělá VPN. Údaje platí k říjnu 2026, malá čísla u textu odkazují na zdroje na konci.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit rozdíl mezi internetem a webem</li>
+      <li>popsat hlavní milníky historie internetu</li>
+      <li>vysvětlit přepojování paketů</li>
+      <li>popsat vrstvy TCP/IP a zapouzdření</li>
+      <li>spočítat adresu sítě a počet zařízení z IP a masky</li>
+      <li>vysvětlit soukromé adresy, NAT a IPv6</li>
+      <li>popsat, jak DNS přeloží jméno na adresu</li>
+      <li>porovnat TCP a UDP a uvést jejich použití</li>
+      <li>popsat požadavek a odpověď HTTP a stavové kódy</li>
+      <li>vysvětlit, co chrání HTTPS a co VPN</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Úvod</p>
+
+<section id="co-je">
+<h2>Co je internet</h2>
+<p><dfn>Počítačová síť</dfn> je skupina zařízení propojených tak, aby si mohla vyměňovat data. <dfn>Internet</dfn> je <strong>síť sítí</strong>: celosvětové propojení milionů samostatných sítí (domácností, škol, firem, poskytovatelů), které se domlouvají stejnými pravidly, protokoly <strong>TCP/IP</strong>.</p>
+<p><dfn>Protokol</dfn> je dohodnutá sada pravidel komunikace: v jakém pořadí a formátu se posílají zprávy a co znamenají. Protokoly internetu popisují veřejné dokumenty <dfn>RFC</dfn> (Request for Comments).</p>
+<div class="note warn"><b class="lbl">Internet není web</b><p><strong>Internet</strong> je infrastruktura: kabely, směrovače a protokoly. <strong>Web</strong> (World Wide Web) je jedna ze služeb, které po internetu běží: stránky propojené odkazy, přenášené protokolem HTTP. Další služby jsou e-mail, DNS, videohovory, online hry nebo přenos souborů.</p></div>
+<p>Podle Mezinárodní telekomunikační unie (ITU) používalo internet v roce 2025 asi <strong>6 miliard lidí</strong>, zhruba tři čtvrtiny lidstva. 2,2 miliardy lidí zůstávají offline.<sup class="ref"><a href="#z1">1</a></sup></p>
+</section>
+
+<section id="historie">
+<h2>Historie internetu</h2>
+<ol class="timeline">
+  <li><span class="yr">1964</span> <span class="ev">Paul Baran: distribuovaná síť</span><span class="d">Studie pro americké letectvo (RAND) navrhla síť bez centrálního uzlu, která funguje, i když část uzlů zničí útok.<sup class="ref"><a href="#z2">2</a></sup></span></li>
+  <li><span class="yr">1965–1966</span> <span class="ev">Donald Davies: „packet“</span><span class="d">Nezávisle v britské laboratoři NPL navrhl dělit data na malé bloky a pojmenoval je pakety.<sup class="ref"><a href="#z2">2</a></sup></span></li>
+  <li><span class="yr">1969</span> <span class="ev">ARPANET: „LO“</span><span class="d">29. října ve 22:30 posílal Charley Kline z UCLA do Stanford Research Institute slovo LOGIN. Dorazilo jen „LO“, pak systém spadl. Asi o hodinu později přihlášení prošlo.<sup class="ref"><a href="#z3">3</a></sup></span></li>
+  <li><span class="yr">1971</span> <span class="ev">První e-mail</span><span class="d">Ray Tomlinson (BBN) poslal zprávu mezi dvěma počítači po ARPANETu a zavedl v adrese znak @.<sup class="ref"><a href="#z4">4</a></sup></span></li>
+  <li><span class="yr">1974</span> <span class="ev">TCP: Cerf a Kahn</span><span class="d">Článek „A Protocol for Packet Network Intercommunication“ (květen 1974) popsal protokol pro propojení různých paketových sítí.<sup class="ref"><a href="#z5">5</a></sup></span></li>
+  <li><span class="yr">1981</span> <span class="ev">IPv4, TCP, ICMP</span><span class="d">Vycházejí dodnes platné základy: RFC 791 (IP), RFC 793 (TCP), RFC 792 (ICMP). UDP už v roce 1980 (RFC 768).<sup class="ref"><a href="#z14">14</a>,</sup><sup class="ref"><a href="#z16">16</a>,</sup><sup class="ref"><a href="#z17">17</a></sup></span></li>
+  <li><span class="yr">1983</span> <span class="ev">Den vlajky a DNS</span><span class="d">1. ledna přešel celý ARPANET naráz z protokolu NCP na TCP/IP.<sup class="ref"><a href="#z6">6</a></sup> V listopadu Paul Mockapetris popsal systém doménových jmen DNS (RFC 882).<sup class="ref"><a href="#z22">22</a></sup></span></li>
+  <li><span class="yr">1989–1991</span> <span class="ev">World Wide Web</span><span class="d">Tim Berners-Lee v CERNu: návrh v březnu 1989, první server, prohlížeč a web info.cern.ch v prosinci 1990, zveřejnění software v srpnu 1991.<sup class="ref"><a href="#z7">7</a></sup></span></li>
+  <li><span class="yr">1992</span> <span class="ev">Československo online</span><span class="d">13. února bylo oficiálně připojeno pracoviště ČVUT v Praze k uzlu v Linci rychlostí 19,2 kb/s. Tým vedl Jan Gruntorád.<sup class="ref"><a href="#z8">8</a></sup></span></li>
+  <li><span class="yr">1993</span> <span class="ev">Web volně k použití</span><span class="d">30. dubna CERN uvolnil technologii webu pro všechny.<sup class="ref"><a href="#z7">7</a></sup></span></li>
+  <li><span class="yr">1998</span> <span class="ev">IPv6</span><span class="d">Specifikace IPv6 (RFC 2460), dnes platí RFC 8200 z roku 2017.<sup class="ref"><a href="#z18">18</a>,</sup><sup class="ref"><a href="#z42">42</a></sup></span></li>
+  <li><span class="yr">2011</span> <span class="ev">Došly adresy IPv4</span><span class="d">3. února IANA rozdala regionálním registrům posledních pět bloků IPv4.<sup class="ref"><a href="#z9">9</a></sup></span></li>
+  <li><span class="yr">2022</span> <span class="ev">HTTP/3</span><span class="d">Standard HTTP/3 nad protokolem QUIC (RFC 9114, červen 2022).<sup class="ref"><a href="#z30">30</a></sup></span></li>
+  <li><span class="yr">2026</span> <span class="ev">IPv6 většinou</span><span class="d">28. března přistupovalo ke službám Googlu přes IPv6 poprvé přes 50 % uživatelů (50,1 %).<sup class="ref"><a href="#z10">10</a></sup></span></li>
+</ol>
+<div class="note mat"><b class="lbl">K maturitě</b><p>Zapamatuj si: ARPANET 1969, TCP (Cerf a Kahn) 1974, přechod na TCP/IP 1. 1. 1983, web 1989–1991 v CERNu (Berners-Lee), Československo 13. 2. 1992.</p></div>
+</section>
+
+<p class="part">Jak data cestují</p>
+
+<section id="pakety">
+<h2>Přepojování paketů</h2>
+<p>Klasická telefonní síť používala <dfn>přepojování okruhů</dfn>: na začátku hovoru se mezi volajícím a volaným sestavila linka, která jim patřila po celou dobu, i když zrovna mlčeli.</p>
+<p>Internet používá <dfn>přepojování paketů</dfn>. Data se rozdělí na malé kusy, <strong>pakety</strong>. Každý paket nese v hlavičce adresu příjemce a odesílatele a putuje sítí samostatně. Směrovače ho posílají dál podle aktuální situace, různé pakety téže zprávy mohou jít různou cestou a dorazit v jiném pořadí. Příjemce je složí podle pořadových čísel.</p>
+<ul>
+  <li><strong>Výhoda:</strong> linky se sdílí, žádná kapacita nezůstává nevyužitá. Když vypadne jeden uzel, pakety najdou jinou cestu, přesně podle Baranovy myšlenky.</li>
+  <li><strong>Nevýhoda:</strong> pakety se mohou zpozdit, ztratit nebo přijít v jiném pořadí. To řeší vyšší vrstvy, hlavně TCP.</li>
+</ul>
+</section>
+
+<section id="vrstvy">
+<h2>Vrstvy TCP/IP a OSI</h2>
+<p>Komunikace je rozdělená do <dfn>vrstev</dfn>. Každá vrstva řeší jeden úkol a využívá služby vrstvy pod sebou. Díky tomu lze vyměnit třeba Wi-Fi za kabel, aniž by se cokoli změnilo v prohlížeči. Model TCP/IP popsaný v RFC 1122 (1989) má čtyři vrstvy:<sup class="ref"><a href="#z11">11</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th>Vrstva TCP/IP</th><th>Úkol</th><th>Protokoly</th><th>Jednotka dat</th><th>OSI</th></tr></thead>
+<tbody>
+<tr><td><strong>Aplikační</strong></td><td>služby pro programy</td><td>HTTP, DNS, SMTP, SSH</td><td>zpráva</td><td>7 aplikační, 6 prezentační, 5 relační</td></tr>
+<tr><td><strong>Transportní</strong></td><td>spojení mezi programy, porty, spolehlivost</td><td>TCP, UDP</td><td>segment / datagram</td><td>4 transportní</td></tr>
+<tr><td><strong>Síťová</strong> (internetová)</td><td>adresování a směrování mezi sítěmi</td><td>IP, ICMP</td><td>paket</td><td>3 síťová</td></tr>
+<tr><td><strong>Spojová</strong> (linková)</td><td>přenos v rámci jedné místní sítě</td><td>Ethernet, Wi-Fi</td><td>rámec</td><td>2 linková, 1 fyzická</td></tr>
+</tbody></table></div>
+<p>Model <dfn>OSI</dfn> vydala organizace ISO v roce 1984 (ISO 7498). Má sedm vrstev: fyzickou, linkovou, síťovou, transportní, relační, prezentační a aplikační. Internet na něm ale nestojí, OSI se používá hlavně jako výukový a referenční model.<sup class="ref"><a href="#z12">12</a></sup></p>
+<h3>Zapouzdření</h3>
+<p>Při odesílání každá vrstva vezme data od vrstvy nad sebou a přidá k nim svou <strong>hlavičku</strong>, jako by je vložila do další obálky. Příjemce obálky postupně odstraňuje:</p>
+<pre><code>[ Wi-Fi: MAC odesílatele → MAC routeru
+  [ IP: 192.168.1.37 → 203.0.113.80, TTL
+    [ TCP: port 51515 → port 443, pořadové číslo
+      [ HTTP: GET /rozvrh  Host: www.skola.cz ] ] ] ]</code></pre>
+<p>Směrovače v internetu čtou jen obálku IP. Obálka spojové vrstvy se mění na každém úseku cesty, IP adresy zůstávají.</p>
+</section>
+
+<section id="fyzicka">
+<h2>Kabely, Wi-Fi a MAC adresy</h2>
+<ul>
+  <li><strong>Metalický kabel</strong> (kroucená dvojlinka, Ethernet) přenáší elektrické signály. Spojuje počítače se switchem a routerem.</li>
+  <li><strong>Optické vlákno</strong> přenáší světlo. Tvoří páteř internetu mezi městy a kontinenty. Podmořské kabely přenášejí podle firmy TeleGeography přes 99 % mezikontinentálního provozu.<sup class="ref"><a href="#z13">13</a></sup></li>
+  <li><strong>Wi-Fi</strong> přenáší data rádiovými vlnami. Nejnovější Wi-Fi 7 (IEEE 802.11be) pracuje v pásmech 2,4, 5 a 6 GHz s kanály až 320 MHz. Certifikace zařízení začala 8. ledna 2024, finální verze standardu vyšla 22. července 2025. Teoretické maximum je kolem 23 Gb/s, v praxi je rychlost mnohem nižší.<sup class="ref"><a href="#z39">39</a></sup></li>
+</ul>
+<p><dfn>MAC adresa</dfn> je 48bitová (6bajtová) fyzická adresa síťového rozhraní, zapisovaná šestnáctkově, například <code>AA:BB:CC:11:22:33</code>. První tři bajty (OUI) přiděluje organizace IEEE výrobci.<sup class="ref"><a href="#z40">40</a></sup> MAC adresa platí jen v místní síti. Pro cestu přes internet slouží IP adresa.</p>
+<p><dfn>Switch</dfn> (přepínač) propojuje zařízení v jedné místní síti podle MAC adres. <dfn>Router</dfn> (směrovač) propojuje různé sítě a posílá pakety podle IP adres.</p>
+</section>
+
+<p class="part">Adresy a jména</p>
+
+<section id="ip">
+<h2>IPv4 adresa a maska</h2>
+<p>Adresa IPv4 má <strong>32 bitů</strong>.<sup class="ref"><a href="#z14">14</a></sup> Zapisuje se jako čtyři čísla 0 až 255 oddělená tečkou, každé odpovídá 8 bitům (oktetu). Celkem je 2³² ≈ 4,3 miliardy adres.</p>
+<p>Adresa má dvě části: <span class="tagc">adresu sítě</span> a <span class="tagc">adresu zařízení v síti</span>. Kolik bitů patří síti, říká <dfn>prefix</dfn> za lomítkem nebo <dfn>maska</dfn>.</p>
+<pre class="ipex">adresa   192.168.1.37/24
+binárně  <span class="n">11000000.10101000.00000001</span>.<span class="h">00100101</span>
+maska    <span class="n">11111111.11111111.11111111</span>.<span class="h">00000000</span>  = 255.255.255.0
+síť      192.168.1.0       (bity zařízení = 0)
+broadcast 192.168.1.255    (bity zařízení = 1)
+zařízení 2⁸ − 2 = 254      (adresa sítě a broadcast se nepřidělují)</pre>
+<div class="calc">
+  <div class="calc-row"><label>IP adresa / prefix<input class="wide" type="text" id="cIp" value="10.20.30.40/20" spellcheck="false"></label></div>
+  <p class="calc-out" id="cIpOut"></p>
+</div>
+<p>Postup ručně: zapiš adresu a masku binárně, bitový součin (AND) dá adresu sítě. Bity zařízení nastavené na 1 dají <dfn>broadcast</dfn>, adresu pro všechny v síti. Počet použitelných adres zařízení je 2<sup>(32 − prefix)</sup> − 2.</p>
+</section>
+
+<section id="nat">
+<h2>Soukromé adresy a NAT</h2>
+<p>Pro vnitřní sítě jsou vyhrazené tři rozsahy <dfn>soukromých adres</dfn>, které se v internetu nesměrují (RFC 1918, 1996):<sup class="ref"><a href="#z15">15</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th>Rozsah</th><th>Prefix</th><th>Typické použití</th></tr></thead>
+<tbody>
+<tr><td class="num">10.0.0.0 – 10.255.255.255</td><td>10.0.0.0/8</td><td>velké firmy</td></tr>
+<tr><td class="num">172.16.0.0 – 172.31.255.255</td><td>172.16.0.0/12</td><td>střední sítě</td></tr>
+<tr><td class="num">192.168.0.0 – 192.168.255.255</td><td>192.168.0.0/16</td><td>domácnosti</td></tr>
+</tbody></table></div>
+<p>Další zvláštní rozsahy: <code>127.0.0.0/8</code> je <dfn>loopback</dfn>, počítač jím mluví sám se sebou (127.0.0.1, „localhost“).<sup class="ref"><a href="#z11">11</a></sup> Rozsahy 192.0.2.0/24, 198.51.100.0/24 a 203.0.113.0/24 jsou vyhrazené pro příklady v dokumentaci (RFC 5737).<sup class="ref"><a href="#z41">41</a></sup> Proto je používáme i v tomto textu.</p>
+<h3>NAT</h3>
+<p>Domácnost obvykle dostane od poskytovatele jedinou veřejnou adresu. <dfn>NAT</dfn> (Network Address Translation, RFC 3022) v routeru přepíše u odchozích paketů soukromou adresu a port zařízení na svou veřejnou adresu a nový port. Do tabulky si zapíše, komu spojení patří, a příchozí odpověď podle ní vrátí správnému zařízení.<sup class="ref"><a href="#z19">19</a></sup></p>
+<pre><code>uvnitř 192.168.1.37 : 51515  →  venku 203.0.113.5 : 55034  →  cíl 198.51.100.20 : 443
+uvnitř 192.168.1.52 : 60212  →  venku 203.0.113.5 : 55037  →  cíl 198.51.100.20 : 443</code></pre>
+<p>NAT pomohl oddálit nedostatek adres IPv4, ale komplikuje spojení zvenku dovnitř (například pro hry nebo domácí servery).</p>
+</section>
+
+<section id="ipv6">
+<h2>IPv6</h2>
+<p>3. února 2011 rozdala IANA regionálním registrům posledních pět bloků adres IPv4.<sup class="ref"><a href="#z9">9</a></sup> Řešením je <strong>IPv6</strong> se <strong>128bitovými</strong> adresami (RFC 8200).<sup class="ref"><a href="#z18">18</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>IPv4</th><th>IPv6</th></tr></thead>
+<tbody>
+<tr><td>Délka adresy</td><td>32 bitů</td><td>128 bitů</td></tr>
+<tr><td>Počet adres</td><td>2³² ≈ 4,3 · 10⁹</td><td>2¹²⁸ ≈ 3,4 · 10³⁸</td></tr>
+<tr><td>Zápis</td><td>192.0.2.1</td><td>2001:db8::1 (8 skupin po 16 bitech šestnáctkově)</td></tr>
+<tr><td>Minimální hlavička</td><td>20 bajtů</td><td>40 bajtů</td></tr>
+</tbody></table></div>
+<p>V zápisu IPv6 se vynechávají počáteční nuly ve skupině a jedna řada nulových skupin se nahradí <code>::</code>. Přechod probíhá pomalu, většina sítí dnes používá IPv4 i IPv6 souběžně. 28. března 2026 překročil podíl přístupů ke službám Googlu přes IPv6 poprvé 50 %. Mezi zeměmi jsou velké rozdíly, Francie přes 70 %, Itálie kolem 17 %, a jiná měření ukazují průměr kolem 43 %.<sup class="ref"><a href="#z10">10</a></sup></p>
+</section>
+
+<section id="smerovani">
+<h2>Směrování, TTL a ping</h2>
+<p><dfn>Směrovač</dfn> (router) přečte cílovou IP adresu paketu a podle své <dfn>směrovací tabulky</dfn> rozhodne, kterému sousedovi ho pošle. Žádný směrovač nezná celou cestu, každý paket posune o krok blíž.</p>
+<p>Hlavička IPv4 obsahuje pole <dfn>TTL</dfn> (time to live): maximální dobu, po kterou smí paket zůstat v síti.<sup class="ref"><a href="#z14">14</a></sup> Prakticky ho každý směrovač sníží o jedna a při nule paket zahodí a odesílateli pošle zprávu ICMP „Time Exceeded“.<sup class="ref"><a href="#z17">17</a></sup> Tak se zabrání nekonečnému bloudění paketů. Na tom stojí nástroj <code>traceroute</code> (ve Windows <code>tracert</code>), který zjistí směrovače na cestě.</p>
+<p>Příkaz <code>ping</code> posílá zprávu ICMP Echo a čeká na Echo Reply. Měří, jestli je cíl dosažitelný a jak dlouho trvá cesta tam a zpět.<sup class="ref"><a href="#z17">17</a></sup></p>
+<div class="note tip"><b class="lbl">Vyzkoušej</b><p>Na příkazové řádce: <code>ping www.cesnet.cz</code>, <code>tracert www.cesnet.cz</code> (Windows) nebo <code>traceroute</code> (Linux, macOS), <code>nslookup www.cesnet.cz</code> pro dotaz DNS a <code>ipconfig</code> (Windows) nebo <code>ip addr</code> (Linux) pro zjištění vlastní adresy.</p></div>
+</section>
+
+<section id="dns">
+<h2>DNS: překlad jmen na adresy</h2>
+<p><dfn>DNS</dfn> (Domain Name System) překládá doménová jména na IP adresy. Popsal ho Paul Mockapetris v roce 1983, dnešní základ jsou RFC 1034 a 1035 z roku 1987.<sup class="ref"><a href="#z22">22</a>,</sup><sup class="ref"><a href="#z23">23</a></sup> Jména jsou hierarchická a čtou se zprava: <code>www.skola.cz.</code> = kořen → doména nejvyšší úrovně <code>cz</code> → doména <code>skola</code> → jméno <code>www</code>. Doménu .cz spravuje sdružení CZ.NIC, založené v roce 1998.<sup class="ref"><a href="#z24">24</a></sup></p>
+<ol>
+  <li>Prohlížeč a systém se podívají do <strong>mezipaměti</strong>. Každý záznam má dobu platnosti TTL.</li>
+  <li>Počítač pošle dotaz <strong>rekurzivnímu resolveru</strong> (obvykle u poskytovatele). DNS používá port 53 přes UDP i TCP.<sup class="ref"><a href="#z23">23</a></sup></li>
+  <li>Resolver se zeptá <strong>kořenového serveru</strong>, kdo spravuje .cz.</li>
+  <li>Zeptá se serveru <strong>.cz</strong>, kdo spravuje skola.cz.</li>
+  <li>Zeptá se <strong>autoritativního serveru</strong> skola.cz na adresu www.skola.cz, výsledek uloží a vrátí počítači.</li>
+</ol>
+<div class="tbl"><table>
+<thead><tr><th>Záznam</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>A</code></td><td>IPv4 adresa jména</td></tr>
+<tr><td><code>AAAA</code></td><td>IPv6 adresa jména</td></tr>
+<tr><td><code>CNAME</code></td><td>jméno je přezdívkou jiného jména</td></tr>
+<tr><td><code>MX</code></td><td>poštovní server domény</td></tr>
+<tr><td><code>NS</code></td><td>autoritativní server domény</td></tr>
+</tbody></table></div>
+<p class="small-muted">Záznamy A, CNAME, MX a NS definuje RFC 1035,<sup class="ref"><a href="#z23">23</a></sup> záznam AAAA pro IPv6 RFC 3596.<sup class="ref"><a href="#z44">44</a></sup></p>
+</section>
+
+<p class="part">Transportní vrstva</p>
+
+<section id="porty">
+<h2>Porty</h2>
+<p>IP adresa určí počítač, <dfn>port</dfn> určí program v něm. Port je 16bitové číslo 0 až 65 535. Server poslouchá na známém portu, klient si pro spojení půjčí dočasný. Registr portů vede IANA: systémové porty 0–1023, uživatelské 1024–49151, dynamické 49152–65535.<sup class="ref"><a href="#z25">25</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th>Port</th><th>Služba</th></tr></thead>
+<tbody>
+<tr><td class="num">22</td><td>SSH, šifrovaná vzdálená správa<sup class="ref"><a href="#z25">25</a></sup></td></tr>
+<tr><td class="num">25</td><td>SMTP, přenos pošty mezi servery<sup class="ref"><a href="#z25">25</a></sup></td></tr>
+<tr><td class="num">53</td><td>DNS<sup class="ref"><a href="#z23">23</a></sup></td></tr>
+<tr><td class="num">80</td><td>HTTP<sup class="ref"><a href="#z26">26</a></sup></td></tr>
+<tr><td class="num">443</td><td>HTTPS<sup class="ref"><a href="#z26">26</a></sup></td></tr>
+</tbody></table></div>
+<p>Spojení je jednoznačně určené pěticí: protokol, IP a port odesílatele, IP a port příjemce. Proto můžeš mít otevřených deset záložek na stejném serveru.</p>
+</section>
+
+<section id="tcp">
+<h2>TCP: spolehlivý přenos</h2>
+<p><dfn>TCP</dfn> (Transmission Control Protocol) poprvé standardizovalo RFC 793 v roce 1981, dnes platí RFC 9293 z roku 2022.<sup class="ref"><a href="#z16">16</a></sup> TCP vytváří nad nespolehlivou sítí spolehlivý proud bajtů:</p>
+<ul>
+  <li><strong>Navázání spojení</strong> trojcestným podáním ruky (three-way handshake): klient pošle <code>SYN</code>, server odpoví <code>SYN, ACK</code>, klient potvrdí <code>ACK</code>. Teprve pak jdou data.</li>
+  <li><strong>Pořadová čísla</strong>: každý bajt dat má pořadové číslo, příjemce podle nich složí data ve správném pořadí a pozná chybějící.</li>
+  <li><strong>Potvrzování a opakování</strong>: příjemce potvrzuje přijatá data (ACK). Co nebylo potvrzeno, odesílatel pošle znovu.</li>
+  <li><strong>Řízení toku a zahlcení</strong>: TCP zpomalí, když příjemce nestíhá nebo když se v síti začnou ztrácet pakety.</li>
+</ul>
+<p>Hlavička TCP má bez volitelných polí <strong>20 bajtů</strong>.<sup class="ref"><a href="#z16">16</a></sup></p>
+</section>
+
+<section id="udp">
+<h2>UDP a srovnání s TCP</h2>
+<p><dfn>UDP</dfn> (User Datagram Protocol, RFC 768 z roku 1980) je minimalistický. Hlavička má jen čtyři pole: zdrojový port, cílový port, délku a kontrolní součet, dohromady <strong>8 bajtů</strong>. Podle standardu „doručení a ochrana proti duplicitám nejsou zaručeny“.<sup class="ref"><a href="#z20">20</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>TCP</th><th>UDP</th></tr></thead>
+<tbody>
+<tr><td>Spojení</td><td>navazuje (handshake)</td><td>bez spojení</td></tr>
+<tr><td>Doručení</td><td>zaručené, ztracené znovu</td><td>nezaručené</td></tr>
+<tr><td>Pořadí</td><td>zachovává</td><td>nehlídá</td></tr>
+<tr><td>Hlavička</td><td>min. 20 B</td><td>8 B</td></tr>
+<tr><td>Zpoždění</td><td>vyšší (handshake, čekání na opakování)</td><td>nízké</td></tr>
+<tr><td>Použití</td><td>web (HTTP/1.1, HTTP/2), e-mail, přenos souborů, SSH</td><td>DNS, videohovory, online hry, živé vysílání, QUIC</td></tr>
+</tbody></table></div>
+<p><strong>Proč by někdo chtěl nespolehlivý protokol?</strong> U videohovoru je opožděný paket stejně k ničemu. Lepší je ho vynechat než čekat na opakování a zasekávat obraz. Krátký dotaz DNS by se navazováním spojení zbytečně zdržel.</p>
+<h3>QUIC</h3>
+<p><dfn>QUIC</dfn> (RFC 9000, 2021) je bezpečný transportní protokol, který posílá data v datagramech UDP a sám si řeší spolehlivost, šifrování a více souběžných proudů.<sup class="ref"><a href="#z29">29</a></sup> Nad ním běží HTTP/3. Ztráta jednoho paketu zdrží jen ten proud, kterého se týká, ne celé spojení.<sup class="ref"><a href="#z30">30</a></sup></p>
+</section>
+
+<p class="part">Web</p>
+
+<section id="http">
+<h2>HTTP: požadavek a odpověď</h2>
+<p><dfn>HTTP</dfn> (Hypertext Transfer Protocol) je textový protokol typu <strong>požadavek – odpověď</strong>. Klient (prohlížeč) naváže spojení, pošle požadavek a čeká, server pošle odpověď se stavovým kódem a daty. Od HTTP/1.1 může jedno spojení posloužit více požadavkům.<sup class="ref"><a href="#z31">31</a>,</sup><sup class="ref"><a href="#z28">28</a></sup></p>
+<div class="codehead"><span>Požadavek</span></div>
+<pre><code>GET /rozvrh HTTP/1.1          ← metoda, cesta, verze
+Host: www.skola.cz            ← hlavičky
+Accept-Language: cs
+                              ← prázdný řádek, pak případné tělo</code></pre>
+<div class="codehead"><span>Odpověď</span></div>
+<pre><code>HTTP/1.1 200 OK               ← verze, stavový kód, text
+Content-Type: text/html; charset=utf-8
+Content-Length: 5120
+
+&lt;!DOCTYPE html&gt; …            ← tělo odpovědi</code></pre>
+<h3>Metody</h3>
+<div class="tbl"><table>
+<thead><tr><th>Metoda</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>GET</code></td><td>získej obsah (stránku, obrázek)</td></tr>
+<tr><td><code>HEAD</code></td><td>jako GET, ale jen hlavičky bez obsahu</td></tr>
+<tr><td><code>POST</code></td><td>pošli data ke zpracování (formulář)</td></tr>
+<tr><td><code>PUT</code></td><td>ulož obsah na danou adresu</td></tr>
+<tr><td><code>DELETE</code></td><td>smaž</td></tr>
+<tr><td><code>OPTIONS</code></td><td>zjisti možnosti komunikace</td></tr>
+</tbody></table></div>
+<p class="small-muted">Definice metod: RFC 9110.<sup class="ref"><a href="#z27">27</a></sup></p>
+<p>HTTP je <strong>bezstavový</strong>: každý požadavek je samostatný a server si sám od sebe nepamatuje předchozí.<sup class="ref"><a href="#z26">26</a></sup> Přihlášení a košík v e-shopu proto fungují pomocí <dfn>cookies</dfn>, malých údajů, které server uloží v prohlížeči a ten je posílá s dalšími požadavky.<sup class="ref"><a href="#z45">45</a></sup></p>
+</section>
+
+<section id="kody">
+<h2>Stavové kódy</h2>
+<div class="tbl"><table>
+<thead><tr><th>Třída</th><th>Význam</th><th>Příklady</th></tr></thead>
+<tbody>
+<tr><td>1xx</td><td>informace, zpracování pokračuje</td><td>–</td></tr>
+<tr><td>2xx</td><td>úspěch</td><td>200 OK, 201 Created</td></tr>
+<tr><td>3xx</td><td>přesměrování</td><td>301 Moved Permanently, 302 Found, 304 Not Modified</td></tr>
+<tr><td>4xx</td><td>chyba klienta</td><td>400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 429 Too Many Requests</td></tr>
+<tr><td>5xx</td><td>chyba serveru</td><td>500 Internal Server Error, 502 Bad Gateway, 503 Service Unavailable</td></tr>
+</tbody></table></div>
+<p class="small-muted">Zdroj: MDN.<sup class="ref"><a href="#z32">32</a></sup> Kód 418 „I'm a teapot“ je vtip z apríla, RFC 2324.</p>
+<p>Rozdíl mezi 401 a 403: <strong>401</strong> znamená „přihlas se“, <strong>403</strong> „vím, kdo jsi, ale sem nesmíš“. 404 je chyba klienta: požadoval adresu, která neexistuje.</p>
+</section>
+
+<section id="verze">
+<h2>Verze HTTP</h2>
+<div class="tbl"><table>
+<thead><tr><th>Verze</th><th>Standard</th><th>Co přinesla</th></tr></thead>
+<tbody>
+<tr><td>HTTP/0.9</td><td>počátek 90. let</td><td>jen GET, odpověď bez hlaviček<sup class="ref"><a href="#z33">33</a></sup></td></tr>
+<tr><td>HTTP/1.0</td><td>RFC 1945, květen 1996</td><td>hlavičky, stavové kódy, typy obsahu<sup class="ref"><a href="#z33">33</a></sup></td></tr>
+<tr><td>HTTP/1.1</td><td>RFC 2068, leden 1997</td><td>trvalá spojení pro více požadavků<sup class="ref"><a href="#z31">31</a></sup></td></tr>
+<tr><td>HTTP/2</td><td>RFC 7540, květen 2015</td><td>binární rámce, souběžné požadavky v jednom spojení, komprese hlaviček<sup class="ref"><a href="#z34">34</a></sup></td></tr>
+<tr><td>HTTP/3</td><td>RFC 9114, červen 2022</td><td>HTTP nad QUIC (UDP)<sup class="ref"><a href="#z30">30</a></sup></td></tr>
+</tbody></table></div>
+<p>Ve 3. čtvrtletí 2026 připadalo na síti Cloudflare 52,5 % požadavků na HTTP/2, 27,4 % na HTTP/1.x a 20,2 % na HTTP/3. Čísla zahrnují i roboty.<sup class="ref"><a href="#z35">35</a></sup></p>
+</section>
+
+<section id="https">
+<h2>HTTPS a TLS</h2>
+<p><dfn>HTTPS</dfn> je HTTP přenášené přes šifrovaný protokol <dfn>TLS</dfn>, standardně na portu 443. TLS 1.3 (RFC 8446, 2018) má zabránit <strong>odposlechu</strong>, <strong>změně</strong> a <strong>podvržení</strong> zpráv.<sup class="ref"><a href="#z36">36</a></sup></p>
+<ul>
+  <li><strong>Šifrování</strong>: obsah stránky, cesta za doménou (<code>/rozvrh?trida=3A</code>), formuláře i cookies jsou zašifrované.</li>
+  <li><strong>Ověření serveru</strong>: server předloží <dfn>certifikát</dfn> podepsaný důvěryhodnou certifikační autoritou. Prohlížeč ověří, že patří doméně, kterou chceš navštívit.</li>
+  <li><strong>Co HTTPS neskryje</strong>: název domény (poskytovatel ho vidí třeba z dotazu DNS), IP adresu serveru, čas a objem přenesených dat.<sup class="ref"><a href="#z37">37</a></sup></li>
+</ul>
+<p>Ve 3. čtvrtletí 2026 šlo přes HTTPS 98,9 % požadavků od lidí na síti Cloudflare.<sup class="ref"><a href="#z38">38</a></sup></p>
+<div class="note warn"><b class="lbl">Pozor</b><p>Zámeček v prohlížeči znamená jen šifrované spojení s danou doménou, ne to, že je web důvěryhodný. Podvodníci mají certifikáty taky, viz materiál o phishingu.</p></div>
+</section>
+
+<section id="cesta">
+<h2>Co se stane, když napíšeš https://www.skola.cz</h2>
+<ol class="plan">
+  <li><b>Rozbor adresy:</b> protokol https, tedy port 443, server www.skola.cz, cesta /.</li>
+  <li><b>DNS:</b> zjištění IP adresy z mezipaměti nebo dotazem na resolver.</li>
+  <li><b>Spojení:</b> trojcestné podání ruky TCP, u HTTP/3 navázání QUIC přes UDP.</li>
+  <li><b>TLS:</b> dohoda šifrování a ověření certifikátu.</li>
+  <li><b>HTTP:</b> požadavek <code>GET /</code>, odpověď <code>200 OK</code> s HTML.</li>
+  <li><b>Vykreslení:</b> prohlížeč najde v HTML odkazy na CSS, obrázky a skripty, pro každý pošle další požadavek a stránku vykreslí.</li>
+</ol>
+<p>Po celou dobu putují data jako pakety přes desítky směrovačů, zabalené do obálek TCP, IP a spojové vrstvy.</p>
+</section>
+
+<p class="part">Bezpečnost</p>
+
+<section id="vpn">
+<h2>VPN</h2>
+<p><dfn>VPN</dfn> (Virtual Private Network, virtuální privátní síť) vytvoří mezi tvým zařízením a serverem VPN šifrovaný <strong>tunel</strong>. Všechna data jdou nejdřív tunelem na server VPN a teprve odtud do internetu.</p>
+<h3>Druhy VPN</h3>
+<ul>
+  <li><strong>Firemní (vzdálený přístup)</strong>: zaměstnanec z domova se připojí do vnitřní sítě firmy nebo školy, jako by seděl v budově. Původní a nejčastější účel.</li>
+  <li><strong>Propojení poboček (site-to-site)</strong>: dvě sítě firmy v různých městech propojené tunelem přes internet.</li>
+  <li><strong>Komerční VPN</strong>: služba, která skryje tvé spojení před místní sítí a poskytovatelem a webům ukáže svou IP adresu.</li>
+</ul>
+<h3>Kdo co vidí (web používá HTTPS)</h3>
+<div class="tbl"><table>
+<thead><tr><th>Kdo</th><th>Bez VPN</th><th>S VPN</th></tr></thead>
+<tbody>
+<tr><td>Wi-Fi a poskytovatel internetu</td><td>tvou IP, název domény, čas a objem dat</td><td>jen spojení se serverem VPN, čas a objem dat</td></tr>
+<tr><td>Provozovatel VPN</td><td>nic</td><td>tvou skutečnou IP a navštívené weby</td></tr>
+<tr><td>Navštívený web</td><td>tvou veřejnou IP a co děláš na webu</td><td>IP serveru VPN a co děláš na webu</td></tr>
+</tbody></table></div>
+<p class="small-muted">Podle Privacy Guides.<sup class="ref"><a href="#z21">21</a></sup></p>
+<h3>Co VPN nedělá</h3>
+<ul>
+  <li><strong>Nezaručí anonymitu</strong>: provozovatel VPN vidí tvou IP a cíle spojení. Jeho slib, že nic neukládá, nejde ověřit. VPN nedůvěru neodstraní, jen ji přesune od poskytovatele k provozovateli VPN.<sup class="ref"><a href="#z21">21</a></sup></li>
+  <li><strong>Nenahradí HTTPS</strong>: úsek od serveru VPN k webu VPN nešifruje.<sup class="ref"><a href="#z21">21</a></sup></li>
+  <li><strong>Neochrání před sledováním po přihlášení</strong>: když se přihlásíš ke svému účtu, web ví, kdo jsi, ať máš jakoukoli IP.</li>
+  <li><strong>Neochrání před viry a phishingem.</strong></li>
+</ul>
+<h3>Protokoly VPN</h3>
+<p>Tunely vytvářejí protokoly <strong>IPsec</strong>, <strong>OpenVPN</strong> a novější <strong>WireGuard</strong>. WireGuard byl přijat přímo do jádra Linuxu ve verzi 5.6 (2020). Jeho výhodou je malý kód, který se dá snadno zkontrolovat, na rozdíl od rozsáhlých IPsec a OpenVPN.<sup class="ref"><a href="#z43">43</a></sup></p>
+</section>
+
+<p class="part">K maturitě</p>
+
+<section id="osnova">
+<h2>Jak odpovídat u maturity</h2>
+<ol class="plan">
+  <li><b>Pojmy:</b> síť, internet jako síť sítí, protokol, RFC. Internet × web.</li>
+  <li><b>Historie:</b> Baran a Davies, ARPANET 1969, TCP 1974, TCP/IP 1983, DNS, web 1989–1991, ČR 1992, IPv4 vyčerpány 2011.</li>
+  <li><b>Přepojování paketů</b> × okruhů, výhody a nevýhody.</li>
+  <li><b>Vrstvy</b> TCP/IP (4) a OSI (7), zapouzdření, segment / paket / rámec.</li>
+  <li><b>IP:</b> IPv4, maska, výpočet sítě, soukromé adresy, NAT, IPv6, směrování, TTL, ping.</li>
+  <li><b>DNS:</b> hierarchie jmen, průběh dotazu, záznamy A, AAAA, MX.</li>
+  <li><b>TCP × UDP:</b> porty, handshake, spolehlivost, použití, QUIC.</li>
+  <li><b>HTTP:</b> požadavek a odpověď, metody, stavové kódy, verze, HTTPS a TLS.</li>
+  <li><b>VPN:</b> tunel, druhy, kdo co vidí, co VPN neumí.</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Jaký je rozdíl mezi internetem a webem?</summary><div class="a"><p>Internet je celosvětová síť sítí s protokoly TCP/IP. Web je jedna ze služeb internetu: dokumenty propojené odkazy, přenášené přes HTTP. Další služby jsou e-mail, DNS, videohovory.</p></div></details>
+<details class="q"><summary>Proč se data posílají v paketech?</summary><div class="a"><p>Linky se sdílí mezi mnoha uživateli, žádná kapacita nezůstává blokovaná. Při výpadku uzlu najdou pakety jinou cestu. Nevýhodou je možná ztráta a přeházení, které řeší TCP.</p></div></details>
+<details class="q"><summary>Vyjmenuj vrstvy TCP/IP a ke každé jeden protokol.</summary><div class="a"><p>Aplikační (HTTP, DNS), transportní (TCP, UDP), síťová (IP), spojová (Ethernet, Wi-Fi).</p></div></details>
+<details class="q"><summary>Co je zapouzdření?</summary><div class="a"><p>Každá vrstva při odesílání přidá k datům své hlavičky, jako obálku: HTTP data → segment TCP → paket IP → rámec. Příjemce obálky odstraňuje v opačném pořadí.</p></div></details>
+<details class="q"><summary>Spočítej adresu sítě, broadcast a počet zařízení pro 172.16.5.130/26.</summary><div class="a"><p>/26 = maska 255.255.255.192. Poslední oktet 130 = 10000010, prvních 2 bity patří síti → síť 172.16.5.128, broadcast 172.16.5.191, zařízení 2⁶ − 2 = 62.</p></div></details>
+<details class="q"><summary>Proč domácí počítač může mít stejnou adresu 192.168.1.10 jako počítač souseda?</summary><div class="a"><p>Je to soukromá adresa (RFC 1918), platí jen uvnitř domácí sítě. Ven obě domácnosti vystupují pod veřejnou adresou svého routeru díky NAT.</p></div></details>
+<details class="q"><summary>Proč vzniklo IPv6 a kolik bitů má adresa?</summary><div class="a"><p>Adres IPv4 (32 bitů, asi 4,3 miliardy) je málo, IANA rozdala poslední bloky v roce 2011. IPv6 má 128bitové adresy.</p></div></details>
+<details class="q"><summary>K čemu slouží TTL a jak ho využívá traceroute?</summary><div class="a"><p>Omezuje, jak dlouho může paket bloudit sítí: směrovače ho snižují a při nule paket zahodí a pošlou zprávu ICMP Time Exceeded. Traceroute posílá pakety s TTL 1, 2, 3… a z těchto zpráv zjistí směrovače na cestě.</p></div></details>
+<details class="q"><summary>Popiš průběh dotazu DNS na www.skola.cz.</summary><div class="a"><p>Mezipaměť → rekurzivní resolver → kořenový server (kdo zná .cz) → server .cz (kdo zná skola.cz) → autoritativní server skola.cz (adresa www) → resolver uloží a vrátí odpověď.</p></div></details>
+<details class="q"><summary>Popiš trojcestné podání ruky TCP.</summary><div class="a"><p>Klient pošle SYN s počátečním pořadovým číslem, server odpoví SYN + ACK se svým číslem a potvrzením, klient potvrdí ACK. Pak teprve jdou data.</p></div></details>
+<details class="q"><summary>Proč videohovory používají UDP, a ne TCP?</summary><div class="a"><p>Opožděná data jsou k ničemu. TCP by čekalo na opakované odeslání ztracených paketů a obraz by se zasekával. UDP ztracený paket vynechá a pokračuje.</p></div></details>
+<details class="q"><summary>Co znamenají kódy 200, 301, 403, 404 a 500?</summary><div class="a"><p>200 úspěch, 301 trvalé přesměrování, 403 přístup zakázán, 404 stránka nenalezena (chyba klienta), 500 chyba serveru.</p></div></details>
+<details class="q"><summary>Co HTTPS chrání a co ne?</summary><div class="a"><p>Šifruje obsah, cestu za doménou, formuláře a cookies a ověří totožnost serveru certifikátem. Neskryje název domény, IP adresu serveru, čas a objem dat. Neznamená, že web je důvěryhodný.</p></div></details>
+<details class="q"><summary>Kdo vidí navštívené weby, když používám VPN?</summary><div class="a"><p>Provozovatel VPN. Poskytovatel internetu a síť Wi-Fi vidí jen spojení se serverem VPN. Web vidí IP adresu serveru VPN, ale po přihlášení ví, kdo jsi.</p></div></details>
+<details class="q"><summary>Čím se liší HTTP/3 od HTTP/2?</summary><div class="a"><p>HTTP/2 běží nad TCP, HTTP/3 nad QUIC, který používá UDP a sám řeší spolehlivost a šifrování. Ztráta paketu u HTTP/3 zdrží jen jeden proud, ne celé spojení.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Protokol</dt><dd>dohodnutá pravidla komunikace</dd>
+  <dt>RFC</dt><dd>Request for Comments, dokumenty se standardy internetu</dd>
+  <dt>Paket</dt><dd>jednotka dat na síťové vrstvě s hlavičkou IP</dd>
+  <dt>Rámec</dt><dd>jednotka dat na spojové vrstvě (Ethernet, Wi-Fi)</dd>
+  <dt>Zapouzdření</dt><dd>přidávání hlaviček jednotlivých vrstev</dd>
+  <dt>IP adresa</dt><dd>logická adresa zařízení v síti, IPv4 32 bitů, IPv6 128 bitů</dd>
+  <dt>Maska, prefix</dt><dd>určují, kolik bitů adresy patří síti</dd>
+  <dt>Broadcast</dt><dd>adresa pro všechna zařízení v síti</dd>
+  <dt>NAT</dt><dd>překlad soukromých adres na veřejnou v routeru</dd>
+  <dt>MAC adresa</dt><dd>48bitová fyzická adresa síťového rozhraní</dd>
+  <dt>Switch</dt><dd>přepínač, spojuje zařízení v místní síti podle MAC</dd>
+  <dt>Router</dt><dd>směrovač, posílá pakety mezi sítěmi podle IP</dd>
+  <dt>TTL</dt><dd>time to live, omezení životnosti paketu</dd>
+  <dt>ICMP</dt><dd>protokol pro řídicí a chybové zprávy (ping)</dd>
+  <dt>DNS</dt><dd>systém překladu doménových jmen na IP adresy</dd>
+  <dt>Port</dt><dd>16bitové číslo určující program v počítači</dd>
+  <dt>TCP</dt><dd>spolehlivý transportní protokol se spojením</dd>
+  <dt>UDP</dt><dd>jednoduchý transportní protokol bez záruk</dd>
+  <dt>QUIC</dt><dd>šifrovaný transportní protokol nad UDP, základ HTTP/3</dd>
+  <dt>HTTP</dt><dd>protokol požadavků a odpovědí webu</dd>
+  <dt>HTTPS, TLS</dt><dd>HTTP šifrované protokolem TLS</dd>
+  <dt>Certifikát</dt><dd>elektronické potvrzení, že klíč serveru patří dané doméně</dd>
+  <dt>Cookie</dt><dd>malý údaj, který server uloží v prohlížeči</dd>
+  <dt>VPN</dt><dd>šifrovaný tunel k serveru VPN nebo do vzdálené sítě</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v říjnu 2026.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://www.itu.int/fr/mediacentre/Pages/PR-2025-11-17-Facts-and-Figures.aspx">ITU: Facts and Figures 2025 (tisková zpráva)</a></li>
+  <li id="z2"><a href="https://ethw.org/Packet_Switching">ETHW: Packet Switching</a></li>
+  <li id="z3"><a href="https://www.historyofinformation.com/detail.php?id=882">History of Information: Charley Kline sends the first message over the ARPANET</a></li>
+  <li id="z4"><a href="https://www.computinghistory.org.uk/det/6116/First-e-mail-sent-by-Ray-Tomlinson/">Centre for Computing History: Ray Tomlinson sends the first email</a></li>
+  <li id="z5"><a href="https://ethw.org/Milestones:Transmission_Control_Protocol_(TCP)_Enables_the_Internet,_1974">ETHW: Milestone TCP 1974</a></li>
+  <li id="z6"><a href="https://en.wikipedia.org/wiki/Flag_day_(computing)">Wikipedia: Flag day (computing)</a></li>
+  <li id="z7"><a href="https://web30.web.cern.ch/web-history.html">CERN: Web history</a></li>
+  <li id="z8"><a href="https://www.vyzkumne-infrastruktury.cz/en/2022/02/30-years-online/">Výzkumné infrastruktury / CESNET: 30 years online</a></li>
+  <li id="z9"><a href="https://www.arin.net/vault/announcements/20110203">ARIN: The IANA IPv4 Address Free Pool is now Depleted</a></li>
+  <li id="z10"><a href="https://pulse.internetsociety.org/blog/18-years-later-ipv6-reaches-majority">Internet Society Pulse: 18 years later, IPv6 reaches majority</a></li>
+  <li id="z11"><a href="https://www.rfc-editor.org/rfc/rfc1122">RFC 1122: Requirements for Internet Hosts</a></li>
+  <li id="z12"><a href="https://en.wikipedia.org/wiki/OSI_model">Wikipedia: OSI model</a></li>
+  <li id="z13"><a href="https://resources.telegeography.com/2023-mythbusting-part-3">TeleGeography: Do submarine cables account for over 99% of intercontinental data traffic?</a></li>
+  <li id="z14"><a href="https://www.rfc-editor.org/rfc/rfc791">RFC 791: Internet Protocol</a></li>
+  <li id="z15"><a href="https://www.rfc-editor.org/rfc/rfc1918">RFC 1918: Address Allocation for Private Internets</a></li>
+  <li id="z16"><a href="https://www.rfc-editor.org/rfc/rfc9293">RFC 9293: Transmission Control Protocol</a></li>
+  <li id="z17"><a href="https://www.rfc-editor.org/rfc/rfc792">RFC 792: Internet Control Message Protocol</a></li>
+  <li id="z18"><a href="https://www.rfc-editor.org/rfc/rfc8200">RFC 8200: IPv6 Specification</a></li>
+  <li id="z19"><a href="https://www.rfc-editor.org/rfc/rfc3022">RFC 3022: Traditional NAT</a></li>
+  <li id="z20"><a href="https://www.rfc-editor.org/rfc/rfc768">RFC 768: User Datagram Protocol</a></li>
+  <li id="z21"><a href="https://direct.privacyguides.org/en/basics/vpn-overview">Privacy Guides: VPN Overview</a></li>
+  <li id="z22"><a href="https://www.rfc-editor.org/rfc/rfc882">RFC 882: Domain Names, Concepts and Facilities (1983)</a>, <a href="https://www.rfc-editor.org/rfc/rfc1034">RFC 1034</a></li>
+  <li id="z23"><a href="https://www.rfc-editor.org/rfc/rfc1035">RFC 1035: Domain Names, Implementation and Specification</a></li>
+  <li id="z24"><a href="https://podpora.nic.cz/files/nic/informationformedia/historie_CZNIC_20240725.pdf">CZ.NIC: historie sdružení</a></li>
+  <li id="z25"><a href="https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml">IANA: Service Name and Transport Protocol Port Number Registry</a></li>
+  <li id="z26"><a href="https://www.rfc-editor.org/rfc/rfc9110">RFC 9110: HTTP Semantics (porty 80 a 443)</a></li>
+  <li id="z27"><a href="https://www.rfc-editor.org/rfc/rfc9110#section-9">RFC 9110: Methods</a></li>
+  <li id="z28"><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Session">MDN: A typical HTTP session</a></li>
+  <li id="z29"><a href="https://www.rfc-editor.org/rfc/rfc9000">RFC 9000: QUIC</a></li>
+  <li id="z30"><a href="https://www.rfc-editor.org/rfc/rfc9114">RFC 9114: HTTP/3</a></li>
+  <li id="z31"><a href="https://www.rfc-editor.org/rfc/rfc2068">RFC 2068: HTTP/1.1</a></li>
+  <li id="z32"><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status">MDN: HTTP response status codes</a></li>
+  <li id="z33"><a href="https://www.rfc-editor.org/rfc/rfc1945">RFC 1945: HTTP/1.0</a></li>
+  <li id="z34"><a href="https://www.rfc-editor.org/rfc/rfc7540">RFC 7540: HTTP/2</a></li>
+  <li id="z35"><a href="https://technologychecker.io/blog/http-protocol-adoption">HTTP protocol adoption 2026 (data Cloudflare Radar)</a></li>
+  <li id="z36"><a href="https://www.rfc-editor.org/rfc/rfc8446">RFC 8446: TLS 1.3</a></li>
+  <li id="z37"><a href="https://www.howtogeek.com/141599/can-third-parties-read-the-full-url-when-browsing-via-https/">How-To Geek: Can third parties read the full URL when browsing via HTTPS?</a></li>
+  <li id="z38"><a href="https://technologychecker.io/blog/https-adoption">HTTPS adoption 2026 (data Cloudflare Radar)</a></li>
+  <li id="z39"><a href="https://en.wikipedia.org/wiki/IEEE_802.11be-2024">Wikipedia: IEEE 802.11be (Wi-Fi 7)</a></li>
+  <li id="z40"><a href="https://www.computernetworkingnotes.com/ccna-study-guide/mac-address-or-ethernet-addressing-explained.html">ComputerNetworkingNotes: MAC address explained</a></li>
+  <li id="z41"><a href="https://www.rfc-editor.org/rfc/rfc5737">RFC 5737: IPv4 Address Blocks Reserved for Documentation</a></li>
+  <li id="z42"><a href="https://www.rfc-editor.org/rfc/rfc2460">RFC 2460: IPv6 Specification (1998)</a></li>
+  <li id="z43"><a href="https://www.theregister.com/2020/01/29/wireguard_vpn_will_be_in_linux_56_kernel/">The Register: WireGuard VPN will be in Linux 5.6 kernel</a></li>
+  <li id="z44"><a href="https://www.rfc-editor.org/rfc/rfc3596">RFC 3596: DNS Extensions to Support IPv6</a></li>
+  <li id="z45"><a href="https://www.rfc-editor.org/rfc/rfc6265">RFC 6265: HTTP State Management Mechanism (cookies)</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k bloku Sítě a internet. Interaktivní ukázky (pakety, zapouzdření, kalkulačka IP, NAT, TCP × UDP, HTTP, VPN) najdeš v prezentaci 01.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  function ipStr(n) { return [n >>> 24 & 255, n >>> 16 & 255, n >>> 8 & 255, n & 255].join('.'); }
+  function calc() {
+    var v = document.getElementById('cIp').value.trim();
+    var m = v.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/(\d{1,2})$/);
+    var out = document.getElementById('cIpOut');
+    if (!m || m.slice(1, 5).some(function (x) { return +x > 255; }) || +m[5] > 32) { out.textContent = 'Zadej adresu ve tvaru 10.20.30.40/20'; return; }
+    var n = m.slice(1, 5).reduce(function (s, x) { return s * 256 + (+x); }, 0), p = +m[5];
+    var mask = p === 0 ? 0 : (0xFFFFFFFF << (32 - p)) >>> 0, net = (n & mask) >>> 0, bc = (net | (~mask >>> 0)) >>> 0;
+    var hosts = p >= 31 ? Math.pow(2, 32 - p) : Math.pow(2, 32 - p) - 2;
+    out.innerHTML = 'maska <b>' + ipStr(mask) + '</b> · síť <b>' + ipStr(net) + '</b> · broadcast <b>' + ipStr(bc) + '</b> · zařízení <b>' + hosts.toLocaleString('cs-CZ') + '</b>';
+  }
+  document.getElementById('cIp').addEventListener('input', calc); calc();
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

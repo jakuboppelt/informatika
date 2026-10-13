@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barva po barvě – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Proč tři čísla</li>
+    <li><a href="#svetlo">Světlo a spektrum</a></li>
+    <li><a href="#oko">Oko a tři druhy čípků</a></li>
+    <li><a href="#historie">Historie</a></li>
+    <li class="grp">RGB</li>
+    <li><a href="#aditivni">Aditivní míchání</a></li>
+    <li><a href="#rgb">Model RGB</a></li>
+    <li><a href="#hex">Zápis #RRGGBB</a></li>
+    <li><a href="#hloubka">Barevná hloubka</a></li>
+    <li><a href="#alfa">Alfa kanál</a></li>
+    <li class="grp">CMYK</li>
+    <li><a href="#subtraktivni">Subtraktivní míchání</a></li>
+    <li><a href="#cmyk">Model CMYK</a></li>
+    <li><a href="#prevod">Převod RGB → CMYK</a></li>
+    <li><a href="#srovnani">RGB a CMYK</a></li>
+    <li><a href="#gamut">Gamut</a></li>
+    <li class="grp">Další modely</li>
+    <li><a href="#hsl">HSL a HSV</a></li>
+    <li><a href="#harmonie">Barevné harmonie</a></li>
+    <li><a href="#gama">Gama</a></li>
+    <li><a href="#kontrast">Kontrast a čitelnost</a></li>
+    <li><a href="#ycbcr">YCbCr</a></li>
+    <li><a href="#dalsi">Lab, Pantone, OKLCH</a></li>
+    <li><a href="#css">Barvy v CSS</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#zkus">Vyzkoušej si</a></li>
+    <li><a href="#chyby">Časté chyby</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Informace · Studijní text k lekci 07</p>
+  <h1>Barva po barvě <span class="t">#7DD3E8</span></h1>
+  <p class="lead">Jak popsat barvu čísly. Proč stačí tři čísla, jak funguje RGB a hexadecimální zápis, proč tiskárna používá CMYK, co je gamut, HSL, gama a kontrast. Text je psaný tak, abys ho zvládl sám, i když jsi na hodině chyběl.</p>
+  <a class="deck-link" href="07_barva_po_barve.html"><span class="ic">▶</span><span class="tx"><b>Prezentace k lekci: Barva po barvě</b><span>Interaktivní slajdy z hodiny: baterky na zeď, RGB editor, inkousty, gamut, výběr barvy, kontrast</span></span></a>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit, proč k popisu barvy stačí tři čísla</li>
+      <li>popsat aditivní a subtraktivní míchání</li>
+      <li>převést barvu mezi RGB a hex zápisem</li>
+      <li>spočítat počet barev pro danou barevnou hloubku</li>
+      <li>vysvětlit, proč CMYK obsahuje černou</li>
+      <li>převést RGB na CMYK jednoduchým vzorcem</li>
+      <li>vysvětlit pojem gamut</li>
+      <li>popsat model HSL a k čemu se hodí</li>
+      <li>vysvětlit gamu a kontrastní poměr</li>
+      <li>popsat, k čemu slouží YCbCr</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Proč tři čísla</p>
+
+<section id="svetlo">
+<h2>Světlo a spektrum</h2>
+<p>Barva není vlastnost předmětu, ale <strong>světla</strong>, které z něj přichází do oka. Světlo je elektromagnetické vlnění, stejně jako rádiové vlny, mikrovlny nebo rentgen. Liší se jen <dfn>vlnovou délkou</dfn>.</p>
+<p>Lidské oko vidí jen úzký pruh vlnových délek, zhruba <strong>380 až 750 nm</strong> (nanometrů). Tomu se říká <dfn>viditelné spektrum</dfn>. Kratší vlny (UV, rentgen) ani delší (infračervené, mikrovlny, rádio) nevidíme.</p>
+<div class="tbl"><table>
+<thead><tr><th>vlnová délka</th><th>vypadá jako</th></tr></thead>
+<tbody>
+<tr><td class="num">380–450 nm</td><td>fialová</td></tr>
+<tr><td class="num">450–495 nm</td><td>modrá</td></tr>
+<tr><td class="num">495–570 nm</td><td>zelená</td></tr>
+<tr><td class="num">570–590 nm</td><td>žlutá</td></tr>
+<tr><td class="num">590–620 nm</td><td>oranžová</td></tr>
+<tr><td class="num">620–750 nm</td><td>červená</td></tr>
+</tbody></table></div>
+<p>Kolem roku 1666 Isaac Newton v zatemněném pokoji nechal projít paprsek slunce skleněným hranolem a na zdi se objevila duha. Pak z ní vybral jednu barvu a poslal ji druhým hranolem: už se nerozložila. Tento „rozhodující pokus“ (<em>experimentum crucis</em>) ukázal, že <strong>bílé světlo je směs všech barev</strong> a hranol je jen rozdělí.</p>
+<figure class="figure">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Newton%27s_Experimentum_Crucis_%28Grusche_2015%29.jpg/1280px-Newton%27s_Experimentum_Crucis_%28Grusche_2015%29.jpg" alt="Newton u okna zatemněného pokoje, paprsek slunce prochází hranoly a na zdi vzniká barevné spektrum" loading="lazy">
+  <figcaption>Newtonův pokus s hranoly. Malba: <a href="https://commons.wikimedia.org/wiki/File:Newton%27s_Experimentum_Crucis_(Grusche_2015).jpg" target="_blank" rel="noopener">Sascha Grusche, 2015</a>, licence <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.cs" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</figcaption>
+</figure>
+</section>
+
+<section id="oko">
+<h2>Oko a tři druhy čípků</h2>
+<p>Spektrum obsahuje nekonečně mnoho vlnových délek. Jak to, že na popis barvy počítači stačí tři čísla? Odpověď je v oku.</p>
+<p>Barvy v sítnici snímají buňky zvané <dfn>čípky</dfn>. Člověk má jen <strong>tři druhy</strong>:</p>
+<ul>
+  <li><strong>S</strong> (short): citlivé hlavně na krátké vlny, modrou,</li>
+  <li><strong>M</strong> (medium): na střední vlny, zelenou,</li>
+  <li><strong>L</strong> (long): na dlouhé vlny, žlutozelenou až červenou.</li>
+</ul>
+<p>Každý druh reaguje na široký rozsah délek, jen různě silně. Mozek tedy nedostane celé spektrum, ale jen <strong>tři čísla</strong>: jak silně byl podrážděn každý druh čípků. Za šera pracují ještě <dfn>tyčinky</dfn>, ty ale barvy nerozlišují.</p>
+<div class="note mat"><b class="lbl">Metamerie</b><p>Dvě fyzikálně úplně různá světla, která podráždí čípky stejně, vypadají <strong>stejně</strong>. Tomu se říká <dfn>metamerie</dfn>. Monitor ji využívá: žluté světlo (580 nm) nemá, ale smíchá červenou a zelenou tak, aby čípky reagovaly stejně jako na žlutou.</p></div>
+<p>Asi 8 % mužů a 0,5 % žen má <dfn>poruchu barvocitu</dfn>, nejčastěji oslabené nebo chybějící čípky M nebo L. Takoví lidé hůř rozlišují červenou a zelenou. Proto by informace na webu neměla záviset jen na barvě.</p>
+</section>
+
+<section id="historie">
+<h2>Historie</h2>
+<ol class="timeline">
+  <li><span class="yr">1666</span> <span class="ev">Isaac Newton</span><span class="d">Rozkládá bílé světlo hranolem a skládá ho zpět. Barvy uspořádá do kruhu.</span></li>
+  <li><span class="yr">1802</span> <span class="ev">Thomas Young</span><span class="d">Navrhuje, že oko má jen tři druhy receptorů a ostatní barvy jsou jejich kombinací.</span></li>
+  <li><span class="yr">1850s</span> <span class="ev">Hermann von Helmholtz</span><span class="d">Teorii rozpracuje, dnes se jmenuje Youngova–Helmholtzova trichromatická teorie.</span></li>
+  <li><span class="yr">1855</span> <span class="ev">James Clerk Maxwell</span><span class="d">Měří míchání barev na roztočeném kotouči a sestaví barevný trojúhelník.</span></li>
+  <li><span class="yr">1861</span> <span class="ev">První barevná fotografie</span><span class="d">Maxwell nechá vyfotit stuhu třikrát černobíle přes červený, zelený a modrý filtr a promítne ji třemi lucernami se stejnými filtry na jedno plátno.</span></li>
+  <li><span class="yr">1931</span> <span class="ev">CIE XYZ</span><span class="d">Mezinárodní komise pro osvětlení sestaví z měření pozorovatelů matematický popis všech viditelných barev.</span></li>
+  <li><span class="yr">1953</span> <span class="ev">Barevná televize</span><span class="d">V USA schválena norma barevného vysílání. Obrazovka svítí červeným, zeleným a modrým luminoforem.</span></li>
+  <li><span class="yr">1996</span> <span class="ev">sRGB</span><span class="d">HP a Microsoft navrhují společný standard RGB, aby barvy vypadaly stejně na různých monitorech. Platí dodnes.</span></li>
+</ol>
+<p>Maxwellův pokus je přesně princip dnešní techniky: <strong>snímač fotoaparátu</strong> barvu rozloží na tři složky přes filtry R, G, B a <strong>monitor</strong> ji ze tří světel zase složí.</p>
+</section>
+
+<p class="part">RGB</p>
+
+<section id="aditivni">
+<h2>Aditivní míchání: světla se sčítají</h2>
+<p>Když ve tmě posvítíš na bílou zeď červenou a zelenou baterkou na stejné místo, uvidíš <strong>žlutou</strong>. Světla se <dfn>sčítají</dfn>: čím víc světla přidáš, tím je výsledek světlejší.</p>
+<div class="tbl"><table>
+<thead><tr><th>světla</th><th>výsledek</th></tr></thead>
+<tbody>
+<tr><td>žádné</td><td><span class="swatch sw-k"></span>černá</td></tr>
+<tr><td>červená + zelená</td><td><span class="swatch sw-y"></span>žlutá</td></tr>
+<tr><td>zelená + modrá</td><td><span class="swatch sw-c"></span>azurová (cyan)</td></tr>
+<tr><td>červená + modrá</td><td><span class="swatch sw-m"></span>purpurová (magenta)</td></tr>
+<tr><td>červená + zelená + modrá</td><td><span class="swatch sw-w"></span>bílá</td></tr>
+</tbody></table></div>
+<p>Monitor, mobil i projektor míchají barvy aditivně. Každý pixel tvoří tři malé <dfn>subpixely</dfn> R, G a B. Z běžné vzdálenosti je oko nerozliší a sečte je do jedné barvy. Podívej se na displej lupou a uvidíš je.</p>
+</section>
+
+<section id="rgb">
+<h2>Model RGB</h2>
+<p><dfn>RGB</dfn> popisuje barvu třemi čísly: kolik svítí <strong>R</strong>ed (červená), <strong>G</strong>reen (zelená) a <strong>B</strong>lue (modrá). Každý kanál má 8 bitů, tedy hodnotu <strong>0 až 255</strong>.</p>
+<div class="formula">256 × 256 × 256 = 2²⁴ = 16 777 216 barev<small>3 bajty = 24 bitů na pixel</small></div>
+<div class="tbl"><table>
+<thead><tr><th>barva</th><th>R, G, B</th><th>hex</th></tr></thead>
+<tbody>
+<tr><td><span class="swatch sw-k"></span>černá</td><td class="num">0, 0, 0</td><td class="num">#000000</td></tr>
+<tr><td><span class="swatch sw-w"></span>bílá</td><td class="num">255, 255, 255</td><td class="num">#FFFFFF</td></tr>
+<tr><td><span class="swatch sw-r"></span>červená</td><td class="num">255, 0, 0</td><td class="num">#FF0000</td></tr>
+<tr><td><span class="swatch sw-y"></span>žlutá</td><td class="num">255, 255, 0</td><td class="num">#FFFF00</td></tr>
+<tr><td><span class="swatch sw-o"></span>oranžová</td><td class="num">255, 128, 0</td><td class="num">#FF8000</td></tr>
+<tr><td><span class="swatch sw-gray"></span>šedá</td><td class="num">128, 128, 128</td><td class="num">#808080</td></tr>
+<tr><td><span class="swatch sw-accent"></span>světle tyrkysová</td><td class="num">125, 211, 232</td><td class="num">#7DD3E8</td></tr>
+</tbody></table></div>
+<p>Když jsou všechny tři kanály stejné, vznikne šedá. Čím vyšší čísla, tím světlejší barva.</p>
+</section>
+
+<section id="hex">
+<h2>Zápis #RRGGBB</h2>
+<p>Na webu se barvy nejčastěji zapisují <dfn>hexadecimálně</dfn>. Bajt 0–255 se v šestnáctkové soustavě zapíše přesně dvěma znaky <code>00</code>–<code>FF</code> (viz <a href="03_bit_byte_studijni_text.html#hex">lekce 03</a>). Barva má tedy šest znaků: dva pro R, dva pro G, dva pro B.</p>
+<div class="formula">#FF8000 → FF | 80 | 00 → 255, 128, 0</div>
+<h3>Převod z hex do desítkové</h3>
+<p>Každou dvojici převeď zvlášť: první znak × 16 + druhý znak. Písmena: A = 10, B = 11, C = 12, D = 13, E = 14, F = 15.</p>
+<p><code>#7DD3E8</code>: 7D = 7·16 + 13 = 125, D3 = 13·16 + 3 = 211, E8 = 14·16 + 8 = 232 → <code>rgb(125, 211, 232)</code>.</p>
+<h3>Převod z desítkové do hex</h3>
+<p>Číslo vyděl 16: celá část je první znak, zbytek druhý. 200 : 16 = 12 zbytek 8 → <code>C8</code>.</p>
+<div class="note tip"><b class="lbl">Zkrácený zápis</b><p>Když jsou obě číslice v každé dvojici stejné, jde zápis zkrátit na tři znaky: <code>#FF8800</code> = <code>#F80</code>, <code>#FFFFFF</code> = <code>#FFF</code>.</p></div>
+</section>
+
+<section id="hloubka">
+<h2>Barevná hloubka</h2>
+<p><dfn>Barevná hloubka</dfn> je počet bitů na pixel (nebo na kanál). Málo bitů znamená málo odstínů a v plynulých přechodech jsou vidět „schody“ (<em>banding</em>).</p>
+<div class="tbl"><table>
+<thead><tr><th>bitů na kanál</th><th>odstínů na kanál</th><th>bitů na pixel</th><th>barev celkem</th><th>použití</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td class="num">2</td><td class="num">3</td><td class="num">8</td><td>staré terminály</td></tr>
+<tr><td class="num">5–6</td><td class="num">32–64</td><td class="num">16</td><td class="num">65 536</td><td>„High Color“, starší mobily</td></tr>
+<tr><td class="num">8</td><td class="num">256</td><td class="num">24</td><td class="num">16 777 216</td><td>běžné monitory a obrázky</td></tr>
+<tr><td class="num">10</td><td class="num">1 024</td><td class="num">30</td><td class="num">≈ 1,07 miliardy</td><td>HDR video, profesionální monitory</td></tr>
+<tr><td class="num">12–16</td><td class="num">4 096–65 536</td><td class="num">36–48</td><td class="num">biliony</td><td>fotky RAW, úpravy fotek</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="alfa">
+<h2>Alfa kanál: průhlednost</h2>
+<p>K RGB se často přidává čtvrtý kanál <strong>A</strong> (alfa), který určuje <dfn>krytí</dfn>: 0 = úplně průhledné, 255 = úplně neprůhledné. Vznikne <dfn>RGBA</dfn> se 4 bajty (32 bity) na pixel. Umí ho PNG, WebP i CSS, JPEG ne.</p>
+<p>Alfa neříká nic o barvě, jen jak moc barva překryje to, co je pod ní. Výsledná barva se počítá pro každý kanál zvlášť:</p>
+<div class="formula">výsledek = α · popředí + (1 − α) · pozadí<small>α je krytí v rozsahu 0 až 1</small></div>
+<p><strong>Příklad:</strong> červená (255, 0, 0) s krytím 0,5 na bílém pozadí: R = 0,5·255 + 0,5·255 = 255, G = 0,5·0 + 0,5·255 ≈ 128, B ≈ 128 → růžová (255, 128, 128).</p>
+<p>V CSS: <code>rgba(255, 0, 0, 0.5)</code> nebo <code>rgb(255 0 0 / 50%)</code>.</p>
+</section>
+
+<p class="part">CMYK</p>
+
+<section id="subtraktivni">
+<h2>Subtraktivní míchání: inkousty světlo ubírají</h2>
+<p>Proč tiskárna nemá červený, zelený a modrý inkoust? Protože <strong>papír nesvítí</strong>. Vidíme jen světlo, které se od něj odrazí. Bílý papír odráží všechno. Inkoust část světla <strong>pohltí</strong> a odrazí jen zbytek.</p>
+<ul>
+  <li><span class="swatch sw-c"></span><strong>Azurová (Cyan)</strong> pohltí červenou, odrazí zelenou a modrou.</li>
+  <li><span class="swatch sw-m"></span><strong>Purpurová (Magenta)</strong> pohltí zelenou, odrazí červenou a modrou.</li>
+  <li><span class="swatch sw-y"></span><strong>Žlutá (Yellow)</strong> pohltí modrou, odrazí červenou a zelenou.</li>
+</ul>
+<p>Každý inkoust tedy z bílého světla jednu složku <dfn>odečte</dfn>. Proto se mluví o subtraktivním míchání. Čím víc inkoustu, tím tmavší výsledek.</p>
+<div class="tbl"><table>
+<thead><tr><th>inkousty</th><th>co zbude</th><th>výsledek</th></tr></thead>
+<tbody>
+<tr><td>žádný</td><td>R + G + B</td><td><span class="swatch sw-w"></span>bílá (papír)</td></tr>
+<tr><td>purpurová + žlutá</td><td>R</td><td><span class="swatch sw-r"></span>červená</td></tr>
+<tr><td>azurová + žlutá</td><td>G</td><td><span class="swatch sw-g"></span>zelená</td></tr>
+<tr><td>azurová + purpurová</td><td>B</td><td><span class="swatch sw-b"></span>modrá</td></tr>
+<tr><td>všechny tři</td><td>nic</td><td><span class="swatch sw-k"></span>černá (teoreticky)</td></tr>
+</tbody></table></div>
+<p>Kdybys smíchal červený a zelený inkoust, každý by pohltil to, co ten druhý odráží, a vyšla by tmavě hnědá, ne žlutá.</p>
+</section>
+
+<section id="cmyk">
+<h2>Model CMYK</h2>
+<p>V teorii dají C + M + Y dohromady černou. Skutečné inkousty ale nejsou dokonalé a vyjde <strong>špinavě tmavě hnědá</strong>. Proto se přidává čtvrtý, černý inkoust <strong>K</strong>.</p>
+<div class="cols2">
+  <div class="card"><h3>Proč černý inkoust</h3><p>Sytá černá. Ostrý text (jedna vrstva místo tří, které by se nemusely přesně trefit na sebe). Úspora drahých barevných inkoustů. Méně mokrý papír, který se nekroutí.</p></div>
+  <div class="card"><h3>Proč „K“</h3><p>K znamená <em>Key</em>, klíčová tisková deska s kresbou a textem, ke které se ostatní barvy zarovnávaly. Písmeno B by se navíc pletlo s Blue.</p></div>
+</div>
+<p>CMYK se zapisuje v procentech krytí 0–100 % pro každý inkoust, např. <code>C 0 % M 50 % Y 100 % K 0 %</code> je oranžová. Barevný tisk ze tří desek vymyslel kolem roku 1720 malíř Jacob Christoph Le Blon, černou desku přidal ze stejného důvodu jako dnešní tiskárny.</p>
+</section>
+
+<section id="prevod">
+<h2>Převod RGB → CMYK</h2>
+<p>Nejjednodušší převod: hodnoty RGB vyděl 255 (R′, G′, B′ v rozsahu 0–1), vezmi co nejvíc černé a zbytek dopočítej barevnými inkousty.</p>
+<div class="formula">K = 1 − max(R′, G′, B′)<small>C = (1 − R′ − K) / (1 − K), M = (1 − G′ − K) / (1 − K), Y = (1 − B′ − K) / (1 − K)</small></div>
+<p><strong>Příklad:</strong> oranžová (255, 128, 0) → R′ = 1, G′ ≈ 0,5, B′ = 0. K = 1 − 1 = 0. C = 0, M = 1 − 0,5 = 0,5, Y = 1 → <strong>C 0 %, M 50 %, Y 100 %, K 0 %</strong>.</p>
+<p><strong>Příklad:</strong> tmavě šedá (64, 64, 64) → R′ = G′ = B′ = 0,25. K = 0,75, C = M = Y = 0 → jen černý inkoust na 75 %.</p>
+<div class="note warn"><b class="lbl">V praxi</b><p>Skutečný převod se dělá přes <dfn>barevné profily</dfn> (ICC) konkrétní tiskárny a papíru, protože každý inkoust a papír se chová jinak. Vzorec ukazuje princip, ne tiskovou praxi.</p></div>
+</section>
+
+<section id="srovnani">
+<h2>RGB a CMYK</h2>
+<div class="tbl"><table>
+<thead><tr><th></th><th>RGB</th><th>CMYK</th></tr></thead>
+<tbody>
+<tr><td><strong>princip</strong></td><td>aditivní, světla se sčítají</td><td>subtraktivní, inkousty světlo ubírají</td></tr>
+<tr><td><strong>zdroj světla</strong></td><td>zařízení samo svítí</td><td>odražené světlo z papíru</td></tr>
+<tr><td><strong>začíná na</strong></td><td>černé (nic nesvítí)</td><td>bílé (čistý papír)</td></tr>
+<tr><td><strong>všechno naplno</strong></td><td>bílá</td><td>černá</td></tr>
+<tr><td><strong>zápis</strong></td><td>3 × 0–255, hex</td><td>4 × 0–100 %</td></tr>
+<tr><td><strong>kde</strong></td><td>monitor, mobil, projektor, fotoaparát, web</td><td>tiskárna, noviny, obaly, plakáty</td></tr>
+</tbody></table></div>
+<p>Základní barvy jednoho modelu jsou míchané barvy druhého: R + G = Y a naopak M + Y = R. Pro grafika z toho plyne: web dělej v RGB, tiskoviny v CMYK.</p>
+</section>
+
+<section id="gamut">
+<h2>Gamut: žádné zařízení neumí všechno</h2>
+<p><dfn>Gamut</dfn> je množina barev, které dokáže dané zařízení zobrazit nebo vytisknout. Žádné zařízení neumí všechny barvy, které vidí oko.</p>
+<p>Všechny viditelné barevné tóny zobrazuje diagram <dfn>CIE 1931</dfn> ve tvaru podkovy. Na jejím okraji leží čisté spektrální barvy. Monitor se třemi světly umí jen barvy uvnitř <strong>trojúhelníku</strong>, jehož rohy jsou jeho červená, zelená a modrá. Čím sytější základní barvy, tím větší trojúhelník.</p>
+<div class="tbl"><table>
+<thead><tr><th>prostor</th><th>kde</th><th>poznámka</th></tr></thead>
+<tbody>
+<tr><td>sRGB</td><td>běžné monitory, web</td><td>standard od roku 1996, pokrývá asi třetinu viditelných barev</td></tr>
+<tr><td>Display P3</td><td>iPhone, Mac, novější mobily</td><td>asi o čtvrtinu větší než sRGB, hlavně v zelených a červených</td></tr>
+<tr><td>Adobe RGB</td><td>profesionální fotografie</td><td>větší rozsah zelených a azurových</td></tr>
+<tr><td>tisk CMYK</td><td>tiskárny</td><td>tvar jiný než sRGB: umí pár azurových odstínů navíc, ale chybí mu svítivé barvy</td></tr>
+</tbody></table></div>
+<p>Barvy mimo gamut se musí nahradit nejbližší dostupnou barvou. Proto neonová zelená nebo sytá modrá z monitoru vyjde vytištěná mdlejší.</p>
+</section>
+
+<p class="part">Další modely</p>
+
+<section id="hsl">
+<h2>HSL a HSV</h2>
+<p>RGB je pohodlné pro hardware, ne pro člověka. Zkus z hlavy říct, jak v RGB udělat „tutéž modrou, jen tmavší“. Model <dfn>HSL</dfn> popisuje barvu vlastnostmi, které vnímáme:</p>
+<ul>
+  <li><strong>H</strong> (hue, odstín): úhel na barevném kole 0–360°. 0° červená, 60° žlutá, 120° zelená, 180° azurová, 240° modrá, 300° purpurová.</li>
+  <li><strong>S</strong> (saturation, sytost): 0 % šedá, 100 % nejsytější.</li>
+  <li><strong>L</strong> (lightness, světlost): 0 % černá, 50 % čistý odstín, 100 % bílá.</li>
+</ul>
+<p>„Tatáž modrá, jen tmavší“ je v HSL jednoduché: ponech H a S a sniž L. Třeba <code>hsl(200, 70%, 60%)</code> → <code>hsl(200, 70%, 40%)</code>.</p>
+<h3>HSV (HSB)</h3>
+<p>Výběr barvy ve většině programů (čtverec + proužek odstínu) používá příbuzný model <dfn>HSV</dfn> (někdy HSB). Místo světlosti má <strong>V</strong> (value, jas). Rozdíl: v HSV je V = 100 % nejjasnější verze odstínu (čistá barva), v HSL je L = 100 % vždy bílá a čistá barva leží na L = 50 %.</p>
+<div class="tbl"><table>
+<thead><tr><th>barva</th><th>RGB</th><th>HSL</th><th>HSV</th></tr></thead>
+<tbody>
+<tr><td><span class="swatch sw-r"></span>červená</td><td class="num">255, 0, 0</td><td class="num">0°, 100 %, 50 %</td><td class="num">0°, 100 %, 100 %</td></tr>
+<tr><td><span class="swatch sw-w"></span>bílá</td><td class="num">255, 255, 255</td><td class="num">0°, 0 %, 100 %</td><td class="num">0°, 0 %, 100 %</td></tr>
+<tr><td><span class="swatch sw-gray"></span>šedá</td><td class="num">128, 128, 128</td><td class="num">0°, 0 %, 50 %</td><td class="num">0°, 0 %, 50 %</td></tr>
+<tr><td><span class="swatch sw-accent"></span>světle tyrkysová</td><td class="num">125, 211, 232</td><td class="num">192°, 70 %, 70 %</td><td class="num">192°, 46 %, 91 %</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="harmonie">
+<h2>Barevné harmonie</h2>
+<p>Na barevném kole se dobře hledají barvy, které spolu ladí. Stačí přičítat úhly k odstínu H:</p>
+<ul>
+  <li><strong>monochromatická</strong>: jeden odstín, různá světlost (bezpečná volba pro web),</li>
+  <li><strong>doplňková</strong>: odstín a odstín + 180° (výrazný kontrast, třeba modrá a oranžová),</li>
+  <li><strong>analogová</strong>: sousední odstíny ±30° (klidná, přírodní),</li>
+  <li><strong>triáda</strong>: tři odstíny po 120°.</li>
+</ul>
+<p>Hodí se to při návrhu webu nebo prezentace k ročníkové práci: vyber jeden základní odstín a ostatní barvy z něj odvoď.</p>
+</section>
+
+<section id="gama">
+<h2>Gama: 128 není polovina světla</h2>
+<p>Oko vnímá jas <strong>nelineárně</strong>: rozdíly ve tmavých odstínech rozliší mnohem lépe než ve světlých. Kdyby se 256 hodnot rozdělilo rovnoměrně podle množství světla, většina by připadla na světlé odstíny, které od sebe skoro nerozeznáme, a ve tmavých by byly vidět schody.</p>
+<p>Standard sRGB proto hodnoty ukládá „zahuštěné“ ve tmavé části. Tomuto přepočtu se říká <dfn>gama</dfn>. Hodnota 128 tak vyzáří jen asi <strong>22 %</strong> světla hodnoty 255, i když jako „polovina“ vypadá.</p>
+<div class="note warn"><b class="lbl">Důsledek</b><p>Když program míchá barvy přímým průměrováním čísel (např. přechod z červené do zelené), uprostřed vznikne tmavý „špinavý“ pruh. Správné míchání nejdřív převede čísla na množství světla, zprůměruje a převede zpět.</p></div>
+</section>
+
+<section id="kontrast">
+<h2>Kontrast a čitelnost</h2>
+<p>Text na webu musí mít dost velký <dfn>kontrast</dfn> s pozadím, jinak ho špatně přečtou lidé se slabším zrakem nebo poruchou barvocitu, a nikdo na slunci na mobilu. Pravidla přístupnosti <dfn>WCAG</dfn> počítají <strong>kontrastní poměr</strong> z relativního jasu obou barev (s ohledem na gamu):</p>
+<div class="formula">(L₁ + 0,05) : (L₂ + 0,05)<small>L₁ je jas světlejší barvy, L₂ tmavší; výsledek 1 : 1 (stejné barvy) až 21 : 1 (černá a bílá)</small></div>
+<div class="tbl"><table>
+<thead><tr><th>úroveň</th><th>běžný text</th><th>velký text (nadpisy)</th></tr></thead>
+<tbody>
+<tr><td>AA (minimum)</td><td class="num">4,5 : 1</td><td class="num">3 : 1</td></tr>
+<tr><td>AAA (přísnější)</td><td class="num">7 : 1</td><td class="num">4,5 : 1</td></tr>
+</tbody></table></div>
+<p>Pozor na kombinace jako žlutá na bílé (kontrast asi 1,1 : 1) nebo červená na zelené (podobný jas, pro barvoslepé nečitelné). Kontrast ověříš v nástrojích prohlížeče (DevTools) nebo na webu WebAIM Contrast Checker.</p>
+</section>
+
+<section id="ycbcr">
+<h2>YCbCr: jas zvlášť, barva zvlášť</h2>
+<p>JPEG a video převádějí RGB na model <dfn>YCbCr</dfn>: <strong>Y</strong> je jas (černobílý obraz) a <strong>Cb</strong>, <strong>Cr</strong> jsou dvě barevné složky (odchylka do modré a do červené).</p>
+<div class="formula">Y = 0,299 R + 0,587 G + 0,114 B<small>zelená přispívá k jasu nejvíc, modrá nejméně, stejně jako u oka</small></div>
+<p>Oko je citlivé hlavně na jas, takže barevné složky stačí uložit v nižším rozlišení. Běžné <dfn>4:2:0</dfn> ukládá jednu barvu na blok 2 × 2 pixelů, tedy 1,5 bajtu na pixel místo 3. Hrubší barvu skoro nepoznáš, hrubší jas hned. Na tom stojí komprese JPEG (<a href="05_pixel_po_pixelu_studijni_text.html#jpeg">lekce 05</a>) i videa (<a href="09_snimek_po_snimku_studijni_text.html#jas-barva">lekce 09</a>).</p>
+</section>
+
+<section id="dalsi">
+<h2>Další modely, které potkáš</h2>
+<div class="cols2">
+  <div class="card"><h3>CIE XYZ a CIELAB</h3><p>Nezávislé na zařízení, popisují barvu tak, jak ji vidí průměrný člověk. Přes ně se převádí mezi RGB a CMYK. V Lab odpovídá vzdálenost dvou barev tomu, jak moc se liší pro oko.</p></div>
+  <div class="card"><h3>Pantone</h3><p>Není to model, ale <strong>katalog</strong> očíslovaných barev. Firmy tak mají logo všude stejné. Tiskne se speciálně namíchaným inkoustem, ne z CMYK.</p></div>
+  <div class="card"><h3>OKLCH</h3><p>Moderní model v CSS: světlost, sytost (chroma), odstín. Jako HSL, ale stejné L opravdu vypadá stejně světle. Žlutá a modrá s L = 50 % v HSL tak stejně světlé nejsou.</p></div>
+  <div class="card"><h3>Indexované barvy</h3><p>Obrázek má <strong>paletu</strong> (např. 256 barev) a pixel ukládá jen pořadí barvy v ní, tedy 1 bajt místo 3. Používá GIF a staré hry.</p></div>
+</div>
+</section>
+
+<section id="css">
+<h2>Barvy v CSS</h2>
+<p>Prohlížeč rozumí všem hlavním modelům:</p>
+<pre><code>color: tomato;                    /* pojmenovaná barva (přes 140 jmen) */
+color: #FF8000;                   /* hex */
+color: #F80;                      /* zkrácený hex */
+color: rgb(255 128 0);            /* RGB */
+color: rgb(255 128 0 / 50%);      /* RGB s průhledností */
+color: hsl(30 100% 50%);          /* HSL */
+color: oklch(70% 0.15 50);        /* OKLCH */</code></pre>
+<p>Všechny zápisy prohlížeč interně převede na stejnou barvu, ve vývojářských nástrojích ji pak ukáže jako <code>rgb(…)</code>. Podrobnosti k CSS najdeš ve <a href="../seminar/03_HTML_a_CSS_studijni_text.html#jednotky">studijním textu k HTML a CSS</a>.</p>
+</section>
+
+<p class="part">Opakování</p>
+
+<section id="zkus">
+<h2>Vyzkoušej si</h2>
+<details class="sol"><summary>1. Převeď #3A7BD5 do RGB.</summary><div><p>3A = 3·16 + 10 = 58, 7B = 7·16 + 11 = 123, D5 = 13·16 + 5 = 213 → <strong>rgb(58, 123, 213)</strong>.</p></div></details>
+<details class="sol"><summary>2. Převeď rgb(255, 165, 0) do hex.</summary><div><p>255 = FF, 165 = 10·16 + 5 = A5, 0 = 00 → <strong>#FFA500</strong> (oranžová).</p></div></details>
+<details class="sol"><summary>3. Jakou barvu dá na monitoru #00FFFF? A jaký inkoust ji vytiskne?</summary><div><p>G + B naplno = <strong>azurová</strong>. Vytiskne ji samotný azurový inkoust (C 100 %).</p></div></details>
+<details class="sol"><summary>4. Kolik barev má obrázek s 5 bity na kanál?</summary><div><p>2⁵ = 32 odstínů na kanál, 32³ = 2¹⁵ = <strong>32 768 barev</strong> (15 bitů na pixel).</p></div></details>
+<details class="sol"><summary>5. Převeď rgb(0, 128, 255) na CMYK.</summary><div><p>R′ = 0, G′ ≈ 0,5, B′ = 1. K = 0. C = 1, M = 0,5, Y = 0 → <strong>C 100 %, M 50 %, Y 0 %, K 0 %</strong>.</p></div></details>
+<details class="sol"><summary>6. Jak zapíšeš v HSL tutéž barvu jako hsl(120, 80%, 40%), jen světlejší?</summary><div><p>Ponech odstín a sytost, zvyš světlost: třeba <strong>hsl(120, 80%, 70%)</strong>.</p></div></details>
+<details class="sol"><summary>7. Jaký je doplňkový odstín k H = 30° (oranžová)?</summary><div><p>30 + 180 = <strong>210°</strong>, modrá.</p></div></details>
+<details class="sol"><summary>8. Kolik bajtů zabere nekomprimovaný screenshot Full HD v RGBA?</summary><div><p>1920 × 1080 × 4 B = 8 294 400 B ≈ <strong>7,9 MiB</strong>.</p></div></details>
+<details class="sol"><summary>9. Poloprůhledná modrá (0, 0, 255) s α = 0,25 leží na bílém pozadí. Jaká je výsledná barva?</summary><div><p>R = G = 0,25·0 + 0,75·255 ≈ 191, B = 255 → <strong>rgb(191, 191, 255)</strong>, světle modrá.</p></div></details>
+</section>
+
+<section id="chyby">
+<h2>Časté chyby</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Správně</th></tr></thead>
+<tbody>
+<tr><td>„Červená + zelená = hnědá“ (u světla)</td><td>U světla žlutá; hnědá vyjde u barev a inkoustů</td></tr>
+<tr><td>„Základní barvy jsou červená, žlutá, modrá“</td><td>Pro světlo R, G, B; pro tisk C, M, Y (+ K). Červená–žlutá–modrá je tradice malířů</td></tr>
+<tr><td>„K v CMYK znamená black“</td><td>K = key (klíčová deska)</td></tr>
+<tr><td>Hex číst po jednotlivých znacích</td><td>Vždy po dvojicích: RR GG BB</td></tr>
+<tr><td>„RGB má 3 bity“</td><td>3 bajty = 24 bitů</td></tr>
+<tr><td>Tiskovou zakázku posílat v RGB s neonovými barvami</td><td>Převést do CMYK a zkontrolovat barvy mimo gamut</td></tr>
+<tr><td>Informaci předávat jen barvou (červená = chyba)</td><td>Přidat text nebo ikonu kvůli lidem s poruchou barvocitu</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<details class="q"><summary>Proč k popisu barvy stačí tři čísla?</summary><div class="a"><p>Oko má jen tři druhy čípků (S, M, L). Mozek dostává jen tři hodnoty podráždění, takže každou barvu lze napodobit vhodnou směsí tří světel (metamerie).</p></div></details>
+<details class="q"><summary>Co ukázal Newtonův pokus s hranolem?</summary><div class="a"><p>Že bílé světlo je směs barev spektra. Hranol barvy jen rozdělí, nevytváří je: jednu vybranou barvu už druhý hranol nerozložil.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi aditivním a subtraktivním mícháním?</summary><div class="a"><p>Aditivní sčítá světla (RGB, začíná na černé, všechno = bílá). Subtraktivní ubírá světlo inkousty (CMY, začíná na bílém papíru, všechno = černá).</p></div></details>
+<details class="q"><summary>Proč má CMYK černý inkoust?</summary><div class="a"><p>C + M + Y dají ve skutečnosti tmavě hnědou, ne sytou černou. Černý inkoust dá sytou černou, ostrý text a ušetří barevné inkousty.</p></div></details>
+<details class="q"><summary>Co je gamut?</summary><div class="a"><p>Množina barev, které zařízení umí zobrazit nebo vytisknout. Monitor umí jen trojúhelník mezi svými základními barvami, tisk má jiný a menší rozsah.</p></div></details>
+<details class="q"><summary>K čemu je model HSL?</summary><div class="a"><p>Popisuje barvu lidsky: odstín, sytost, světlost. Snadno se v něm dělají úpravy (tmavší, méně sytá) a palety (posun odstínu).</p></div></details>
+<details class="q"><summary>Co je gama a proč existuje?</summary><div class="a"><p>Nelineární přepočet mezi uloženou hodnotou a množstvím světla. Odpovídá tomu, že oko lépe rozlišuje tmavé odstíny, takže hodnoty se využijí efektivněji.</p></div></details>
+<details class="q"><summary>Jaký minimální kontrast vyžaduje WCAG pro běžný text?</summary><div class="a"><p>4,5 : 1 (úroveň AA), pro velký text 3 : 1.</p></div></details>
+<details class="q"><summary>K čemu slouží YCbCr?</summary><div class="a"><p>Oddělí jas od barvy. Barvu lze uložit v nižším rozlišení, protože ji oko vnímá hůř než jas. Používá ho JPEG a video.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Viditelné spektrum</dt><dd>Vlnové délky 380–750 nm, které oko vidí</dd>
+  <dt>Čípky</dt><dd>Buňky sítnice vnímající barvu, tři druhy S, M, L</dd>
+  <dt>Metamerie</dt><dd>Různá světla, která vypadají stejně</dd>
+  <dt>Aditivní míchání</dt><dd>Sčítání světel (RGB)</dd>
+  <dt>Subtraktivní míchání</dt><dd>Ubírání světla pigmenty (CMYK)</dd>
+  <dt>RGB</dt><dd>Model z červené, zelené a modré, 3 × 0–255</dd>
+  <dt>Hex zápis</dt><dd>#RRGGBB, každý kanál dvěma šestnáctkovými číslicemi</dd>
+  <dt>Barevná hloubka</dt><dd>Počet bitů na pixel nebo na kanál</dd>
+  <dt>Alfa kanál</dt><dd>Kanál krytí (průhlednosti), RGBA</dd>
+  <dt>CMYK</dt><dd>Model tiskových inkoustů: azurová, purpurová, žlutá, černá</dd>
+  <dt>Gamut</dt><dd>Rozsah barev, které zařízení zvládne</dd>
+  <dt>sRGB</dt><dd>Standardní barevný prostor monitorů a webu (1996)</dd>
+  <dt>HSL, HSV</dt><dd>Modely odstín–sytost–světlost (jas)</dd>
+  <dt>Gama</dt><dd>Nelineární vztah mezi hodnotou a množstvím světla</dd>
+  <dt>WCAG</dt><dd>Pravidla přístupnosti webu, mimo jiné kontrast</dd>
+  <dt>YCbCr</dt><dd>Model s odděleným jasem a barvou (JPEG, video)</dd>
+  <dt>ICC profil</dt><dd>Popis barevného chování konkrétního zařízení</dd>
+</dl>
+</section>
+
+<p class="foot">Studijní text k lekci „Barva po barvě“ z bloku Informace. Interaktivní verzi najdeš v <a href="07_barva_po_barve.html">prezentaci</a>.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    var d = document.querySelector('.toc details'); if (d) d.open = false;
+  }
+})();
+</script>
+</body>
+</html>

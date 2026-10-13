@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Jak funguje internet</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <!-- 0 -->
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Sítě a internet · 1. materiál</div>
+      <h1>Jak funguje internet</h1>
+      <p class="lede">Od čtyř počítačů v roce 1969 k šesti miliardám lidí. Pakety, IP adresy, TCP a UDP, HTTP a VPN, všechno si vyzkoušíš na interaktivních ukázkách.</p>
+      <p class="hint">Údaje platí k říjnu 2026. Zdroje jsou na posledním snímku.</p>
+    </div></section>
+
+    <!-- 1 historie -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Historie</div>
+      <h2 class="slide-title">Od ARPANETu k šesti miliardám uživatelů</h2>
+      <div class="tl-chips" id="hist"></div>
+      <div class="panel p-tall" id="histPanel"></div>
+    </div></section>
+
+    <!-- 2 pakety -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Přepojování paketů</div>
+      <h2 class="slide-title">Zpráva se rozseká na pakety</h2>
+      <p class="lede">Telefon dřív spojil linku od volajícího k volanému a ta patřila jen jim. Internet místo toho rozdělí data na malé <b>pakety</b>. Každý nese adresu a pořadové číslo a jde sám, klidně jinou cestou.</p>
+      <div class="in-row"><input class="net-in" id="pkIn" maxlength="48" value="Ahoj, posílám ti úkol z informatiky!" aria-label="Zpráva"><button class="calc-btn" id="pkGo">Odeslat</button><button class="calc-btn" id="pkSort" disabled>Seřadit podle čísla</button></div>
+      <div class="pk-net">
+        <div class="pk-end"><b>Odesílatel</b>rozdělí na pakety</div>
+        <div class="pk-lanes" id="pkLanes"><div class="pk-lane"><i>cesta A</i></div><div class="pk-lane"><i>cesta B</i></div><div class="pk-lane"><i>cesta C</i></div></div>
+        <div class="pk-end"><b>Příjemce</b>složí zpět</div>
+      </div>
+      <div class="pk-recv" id="pkRecv"></div>
+      <p class="note" id="pkNote">Napiš zprávu a odešli ji.</p>
+    </div></section>
+
+    <!-- 3 vrstvy -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Vrstvy</div>
+      <h2 class="slide-title">Každá vrstva přidá svou obálku</h2>
+      <div class="layers4" id="lay4">
+        <div class="l-app"><b>Aplikační</b>HTTP, DNS, e-mail</div>
+        <div class="l-tcp"><b>Transportní</b>TCP, UDP: porty</div>
+        <div class="l-ip"><b>Síťová</b>IP: adresy a směrování</div>
+        <div class="l-link"><b>Spojová</b>Ethernet, Wi-Fi: MAC</div>
+      </div>
+      <div class="split">
+        <div class="enc" id="enc"></div>
+        <div class="stack">
+          <div class="seg"><button class="calc-btn" id="encDown">Zabalit ↓ (odesílatel)</button><button class="calc-btn" id="encUp">Rozbalit ↑ (příjemce)</button></div>
+          <div class="panel" id="encPanel"></div>
+          <p class="tiny">Model TCP/IP má 4 vrstvy. Teoretický model OSI jich má 7 (fyzická, linková, síťová, transportní, relační, prezentační, aplikační), internet ale stojí na TCP/IP.</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 4 IP kalkulačka -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">IP adresa</div>
+      <h2 class="slide-title">32 bitů, které určují síť i počítač</h2>
+      <div class="in-row"><input class="net-in short" id="ipIn" value="192.168.1.37/24" aria-label="IP adresa s prefixem" spellcheck="false"><div class="seg" id="ipPre"></div></div>
+      <div class="ipbits" id="ipBits"></div>
+      <p class="iplegend"><span class="n">modře</span> bity sítě (prefix), <span class="h">oranžově</span> bity zařízení v síti</p>
+      <div class="bignum" id="ipOut"></div>
+    </div></section>
+
+    <!-- 5 IPv4 vs IPv6 -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Došly adresy</div>
+      <h2 class="slide-title">IPv4 a IPv6</h2>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">IPv4 (1981)</div>
+          <div class="compare-row"><span>Délka adresy</span><span>32 bitů</span></div>
+          <div class="compare-row"><span>Počet adres</span><span>2³² ≈ 4,3 miliardy</span></div>
+          <div class="compare-row"><span>Hlavička</span><span>20 bajtů</span></div>
+          <div class="compare-row"><span>Zápis</span><span>192.0.2.1</span></div>
+        </div>
+        <div class="compare-col"><div class="compare-head">IPv6 (1998, dnes RFC 8200)</div>
+          <div class="compare-row"><span>Délka adresy</span><span>128 bitů</span></div>
+          <div class="compare-row"><span>Počet adres</span><span>2¹²⁸ ≈ 3,4 · 10³⁸</span></div>
+          <div class="compare-row"><span>Hlavička</span><span>40 bajtů</span></div>
+          <div class="compare-row"><span>Zápis</span><span>2001:db8::1</span></div>
+        </div>
+      </div>
+      <p class="lede">3. února 2011 rozdala organizace IANA regionálním registrům posledních pět bloků IPv4. Přechod na IPv6 jde pomalu: přístup ke službám Googlu přes IPv6 poprvé překročil polovinu až <b>28. března 2026</b> (50,1 %). Mezitím pomáhá <b>NAT</b>.</p>
+    </div></section>
+
+    <!-- 6 NAT -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">NAT</div>
+      <h2 class="slide-title">Celá domácnost za jednou veřejnou adresou</h2>
+      <p class="lede">Doma mají zařízení <b>soukromé</b> adresy (192.168.x.x), které v internetu neplatí. Router je při odeslání přepíše na svou jedinou veřejnou adresu a pamatuje si, komu patří odpověď. Klikni na zařízení.</p>
+      <div class="nat">
+        <div class="nat-col" id="natDevs"></div>
+        <div class="nat-router">Router s NAT<span>doma 192.168.1.1</span><span>venku 203.0.113.5</span></div>
+        <div class="nat-net">Server v internetu<br><span class="tiny">198.51.100.20, port 443</span><br><span class="tiny" id="natSees">vidí jen 203.0.113.5</span></div>
+      </div>
+      <div class="table-wrap"><table class="datatable"><thead><tr><th>Uvnitř (zařízení : port)</th><th>Venku (router : port)</th><th>Cíl</th></tr></thead><tbody id="natTbl"><tr><td colspan="3">Tabulka je zatím prázdná.</td></tr></tbody></table></div>
+    </div></section>
+
+    <!-- 7 DNS -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">DNS</div>
+      <h2 class="slide-title">Telefonní seznam internetu</h2>
+      <p class="lede">Lidé si pamatují jména (www.skola.cz), směrovače potřebují čísla (IP adresy). Překlad zajišťuje <b>DNS</b>, hierarchický systém serverů. Projdi dotaz krok za krokem.</p>
+      <div class="split">
+        <div class="stack"><div class="seg" id="dnsSeg"></div><div class="panel p-tall" id="dnsPanel"></div></div>
+        <div class="vid" data-yt="5o8CwafCxnU" data-title="IP adresy a DNS" data-sub="Code.org · anglicky"></div>
+      </div>
+    </div></section>
+
+    <!-- 8 TCP × UDP simulace -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Transportní vrstva</div>
+      <h2 class="slide-title">TCP, nebo UDP? Pošli 10 paketů špatnou sítí</h2>
+      <div class="sliders"><div class="sl"><label for="loss">Ztrátovost sítě</label><input type="range" id="loss" min="0" max="50" step="5" value="20"><output id="oLoss"></output></div></div>
+      <div class="seg"><button class="calc-btn" id="tuGo">▶ Odeslat</button></div>
+      <div class="tu">
+        <div class="tu-row"><span class="tu-lab">TCP</span><div class="tu-cells" id="tuT"></div><span class="tu-res" id="tuTr"></span></div>
+        <div class="tu-row"><span class="tu-lab">UDP</span><div class="tu-cells" id="tuU"></div><span class="tu-res" id="tuUr"></span></div>
+      </div>
+      <p class="tiny"><span class="badge good">doručeno</span> <span class="badge part">posláno znovu</span> <span class="badge bad">ztraceno</span> TCP si každý paket nechá potvrdit a ztracený pošle znovu, proto vše dorazí, ale později. UDP pošle a dál se nestará.</p>
+    </div></section>
+
+    <!-- 9 handshake -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">TCP</div>
+      <h2 class="slide-title">Trojcestné podání ruky</h2>
+      <div class="split">
+        <div class="stack">
+          <div class="hs3">
+            <div class="hs3-end">Klient</div>
+            <div class="hs3-mid" id="hs3"></div>
+            <div class="hs3-end">Server</div>
+          </div>
+          <div class="seg"><button class="calc-btn" id="hsStep">Další zpráva →</button><button class="calc-btn" id="hsReset">Znovu</button></div>
+          <p class="note" id="hsNote"></p>
+        </div>
+        <div class="table-wrap"><table class="datatable"><thead><tr><th></th><th>TCP</th><th>UDP</th></tr></thead><tbody>
+          <tr><td>Spojení</td><td>naváže před přenosem</td><td>bez spojení</td></tr>
+          <tr><td>Doručení</td><td>zaručí, ztracené pošle znovu</td><td>nezaručuje</td></tr>
+          <tr><td>Pořadí</td><td>složí podle pořadových čísel</td><td>nehlídá</td></tr>
+          <tr><td>Hlavička</td><td>nejméně 20 bajtů</td><td>8 bajtů</td></tr>
+          <tr><td>Specifikace</td><td>RFC 793 (1981), dnes RFC 9293</td><td>RFC 768 (1980)</td></tr>
+        </tbody></table></div>
+      </div>
+    </div></section>
+
+    <!-- 10 kdy co -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Použití</div>
+      <h2 class="slide-title">Kdy se hodí který protokol</h2>
+      <div class="cards4" id="tuCards"></div>
+      <div class="panel" id="tuPanel"></div>
+    </div></section>
+
+    <!-- 11 porty -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Porty</div>
+      <h2 class="slide-title">IP adresa určí počítač, port určí program</h2>
+      <p class="lede">IP adresa je jako adresa domu, port jako číslo bytu. Port je 16bitové číslo (0 až 65 535). Server poslouchá na známém portu, klient si vybere dočasný.</p>
+      <div class="table-wrap"><table class="datatable"><thead><tr><th>Port</th><th>Služba</th><th>Protokol</th></tr></thead><tbody>
+        <tr><td>22</td><td>SSH, vzdálená správa</td><td>TCP</td></tr>
+        <tr><td>25</td><td>SMTP, odesílání pošty mezi servery</td><td>TCP</td></tr>
+        <tr><td>53</td><td>DNS</td><td>UDP i TCP</td></tr>
+        <tr><td>80</td><td>HTTP</td><td>TCP</td></tr>
+        <tr><td>443</td><td>HTTPS</td><td>TCP, u HTTP/3 UDP</td></tr>
+        <tr><td>49152–65535</td><td>dynamické porty, klient si je půjčuje</td><td>TCP i UDP</td></tr>
+      </tbody></table></div>
+      <p class="tiny">Porty 0 až 1023 jsou systémové a přiděluje je organizace IANA.</p>
+    </div></section>
+
+    <!-- 12 HTTP -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">HTTP</div>
+      <h2 class="slide-title">Požadavek a odpověď</h2>
+      <div class="seg" id="httpSeg"></div>
+      <div class="split">
+        <div class="stack"><span class="hint">prohlížeč → server</span><pre class="raw" id="httpReq"></pre></div>
+        <div class="stack"><span class="hint">server → prohlížeč</span><pre class="raw" id="httpRes"></pre></div>
+      </div>
+      <h3>Stavové kódy</h3>
+      <div class="codes" id="codes"></div>
+      <p class="note" id="codeNote"></p>
+    </div></section>
+
+    <!-- 13 verze HTTP -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Verze HTTP</div>
+      <h2 class="slide-title">Stejné dotazy, rychlejší doručení</h2>
+      <div class="split">
+        <div class="table-wrap"><table class="datatable"><thead><tr><th>Verze</th><th>Rok</th><th>Co přinesla</th></tr></thead><tbody>
+          <tr><td>HTTP/0.9</td><td>začátek 90. let</td><td>jen GET, žádné hlavičky</td></tr>
+          <tr><td>HTTP/1.0</td><td>1996</td><td>hlavičky, stavové kódy, typy obsahu</td></tr>
+          <tr><td>HTTP/1.1</td><td>1997</td><td>jedno spojení pro více požadavků</td></tr>
+          <tr><td>HTTP/2</td><td>2015</td><td>binární rámce, souběžné požadavky, komprese hlaviček</td></tr>
+          <tr><td>HTTP/3</td><td>2022</td><td>běží nad QUIC, tedy nad UDP</td></tr>
+        </tbody></table></div>
+        <div class="stack">
+          <h3>Podíl požadavků, 3. čtvrtletí 2026</h3>
+          <div class="mbars" id="verBars"></div>
+          <p class="tiny">Měřeno na síti Cloudflare, včetně robotů. Šifrovaně přes HTTPS šlo 98,9 % požadavků od lidí.</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 14 cesta stránky -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Všechno dohromady</div>
+      <h2 class="slide-title">Co se stane, když napíšeš https://www.skola.cz</h2>
+      <div class="walk" id="walk"></div>
+      <div class="panel p-tall" id="walkPanel"></div>
+      <div class="seg"><button class="calc-btn" id="walkPrev">← Zpět</button><button class="calc-btn" id="walkNext">Další krok →</button></div>
+    </div></section>
+
+    <!-- 15 VPN kdo co vidí -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">VPN</div>
+      <h2 class="slide-title">Kdo vidí, co děláš?</h2>
+      <div class="toolbar">
+        <div class="modeswitch" id="vpnMode"><button class="is-active" data-m="off">Bez VPN</button><button data-m="on">S VPN</button></div>
+        <div class="modeswitch" id="httpsMode"><button class="is-active" data-m="on">Web s HTTPS</button><button data-m="off">Web jen s HTTP</button></div>
+      </div>
+      <svg class="vpn" id="vpnSvg" viewBox="0 0 760 170" role="img" aria-label="Cesta dat přes Wi-Fi, poskytovatele a případně VPN k webu"></svg>
+      <div class="table-wrap"><table class="datatable see"><thead><tr><th>Kdo</th><th>Co vidí</th></tr></thead><tbody id="vpnTbl"></tbody></table></div>
+    </div></section>
+
+    <!-- 16 VPN použití -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">VPN</div>
+      <h2 class="slide-title">K čemu VPN slouží a k čemu ne</h2>
+      <div class="cards4" id="vpnCards"></div>
+      <div class="panel" id="vpnPanel"></div>
+    </div></section>
+
+    <!-- 17 fyzická vrstva -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Fyzická cesta</div>
+      <h2 class="slide-title">Kabely, světlo a rádiové vlny</h2>
+      <div class="split">
+        <div class="stack"><div class="seg" id="physSeg"></div><div class="panel p-tall" id="physPanel"></div></div>
+        <div class="vid" data-yt="ZhEf7e4kopM" data-title="Dráty, kabely a Wi-Fi" data-sub="Code.org · anglicky"></div>
+      </div>
+    </div></section>
+
+    <!-- 18 kvíz -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Pravda, nebo ne?</h2>
+      <p class="score" id="qScore"></p>
+      <div class="clue" id="qText"></div>
+      <div class="seg"><button class="calc-btn" data-a="1">Pravda</button><button class="calc-btn" data-a="0">Není pravda</button><button class="calc-btn" id="qNext" hidden>Další →</button></div>
+      <div class="feedback" id="qFb"></div>
+    </div></section>
+
+    <!-- 19 shrnutí -->
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Internet je síť sítí. Data putují v <b>paketech</b>, každý zvlášť, a skládají se u příjemce.</li>
+        <li>Vrstvy: <b>aplikační</b> (HTTP, DNS), <b>transportní</b> (TCP, UDP), <b>síťová</b> (IP), <b>spojová</b> (Ethernet, Wi-Fi).</li>
+        <li><b>IPv4</b> má 32 bitů a adresy došly, pomáhá NAT a přechod na <b>IPv6</b> (128 bitů). DNS překládá jména na adresy.</li>
+        <li><b>TCP</b> je spolehlivé a hlídá pořadí, <b>UDP</b> je rychlé a nic nezaručuje. HTTP/3 běží nad UDP.</li>
+        <li><b>HTTP</b> = požadavek a odpověď se stavovým kódem. <b>HTTPS</b> šifruje obsah, ne název domény.</li>
+        <li><b>VPN</b> přesune důvěru od poskytovatele k provozovateli VPN, anonymitu nezaručí.</li>
+      </ul>
+    </div></section>
+
+    <!-- 20 zdroje -->
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud informace jsou</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Historie a statistiky</h3><ul class="src-list">
+          <li><a href="https://ethw.org/Packet_Switching" target="_blank" rel="noopener">ETHW: Packet Switching (Baran, Davies)</a></li>
+          <li><a href="https://www.historyofinformation.com/detail.php?id=882" target="_blank" rel="noopener">History of Information: první zpráva ARPANET</a></li>
+          <li><a href="https://www.computinghistory.org.uk/det/6116/First-e-mail-sent-by-Ray-Tomlinson/" target="_blank" rel="noopener">Centre for Computing History: první e-mail</a></li>
+          <li><a href="https://ethw.org/Milestones:Transmission_Control_Protocol_(TCP)_Enables_the_Internet,_1974" target="_blank" rel="noopener">ETHW: TCP, 1974</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Flag_day_(computing)" target="_blank" rel="noopener">Wikipedia: Flag day 1. 1. 1983</a></li>
+          <li><a href="https://web30.web.cern.ch/web-history.html" target="_blank" rel="noopener">CERN: Web history</a></li>
+          <li><a href="https://www.vyzkumne-infrastruktury.cz/en/2022/02/30-years-online/" target="_blank" rel="noopener">CESNET: 30 let online (1992)</a></li>
+          <li><a href="https://www.arin.net/vault/announcements/20110203" target="_blank" rel="noopener">ARIN: vyčerpání IPv4 (2011)</a></li>
+          <li><a href="https://pulse.internetsociety.org/blog/18-years-later-ipv6-reaches-majority" target="_blank" rel="noopener">Internet Society: IPv6 přes 50 %</a></li>
+          <li><a href="https://www.itu.int/fr/mediacentre/Pages/PR-2025-11-17-Facts-and-Figures.aspx" target="_blank" rel="noopener">ITU: Facts and Figures 2025</a></li>
+          <li><a href="https://technologychecker.io/blog/http-protocol-adoption" target="_blank" rel="noopener">Podíl verzí HTTP 2026 (Cloudflare Radar)</a></li>
+          <li><a href="https://technologychecker.io/blog/https-adoption" target="_blank" rel="noopener">Podíl HTTPS 2026 (Cloudflare Radar)</a></li>
+          <li><a href="https://resources.telegeography.com/2023-mythbusting-part-3" target="_blank" rel="noopener">TeleGeography: podmořské kabely</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/IEEE_802.11be-2024" target="_blank" rel="noopener">Wikipedia: Wi-Fi 7</a></li>
+          <li><a href="https://podpora.nic.cz/files/nic/informationformedia/historie_CZNIC_20240725.pdf" target="_blank" rel="noopener">CZ.NIC: historie</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Standardy a vysvětlení</h3><ul class="src-list">
+          <li><a href="https://www.rfc-editor.org/rfc/rfc791" target="_blank" rel="noopener">RFC 791: IPv4</a> · <a href="https://www.rfc-editor.org/rfc/rfc8200" target="_blank" rel="noopener">RFC 8200: IPv6</a></li>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc9293" target="_blank" rel="noopener">RFC 9293: TCP</a> · <a href="https://www.rfc-editor.org/rfc/rfc768" target="_blank" rel="noopener">RFC 768: UDP</a></li>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc1122" target="_blank" rel="noopener">RFC 1122: vrstvy</a> · <a href="https://en.wikipedia.org/wiki/OSI_model" target="_blank" rel="noopener">Wikipedia: model OSI</a></li>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc1918" target="_blank" rel="noopener">RFC 1918: soukromé adresy</a> · <a href="https://www.rfc-editor.org/rfc/rfc3022" target="_blank" rel="noopener">RFC 3022: NAT</a> · <a href="https://www.rfc-editor.org/rfc/rfc5737" target="_blank" rel="noopener">RFC 5737</a></li>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc1034" target="_blank" rel="noopener">RFC 1034</a> a <a href="https://www.rfc-editor.org/rfc/rfc1035" target="_blank" rel="noopener">RFC 1035: DNS</a></li>
+          <li><a href="https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml" target="_blank" rel="noopener">IANA: registr portů</a></li>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc1945" target="_blank" rel="noopener">RFC 1945: HTTP/1.0</a> · <a href="https://www.rfc-editor.org/rfc/rfc2068" target="_blank" rel="noopener">RFC 2068: HTTP/1.1</a></li>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc7540" target="_blank" rel="noopener">RFC 7540: HTTP/2</a> · <a href="https://www.rfc-editor.org/rfc/rfc9114" target="_blank" rel="noopener">RFC 9114: HTTP/3</a> · <a href="https://www.rfc-editor.org/rfc/rfc9000" target="_blank" rel="noopener">RFC 9000: QUIC</a></li>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc9110" target="_blank" rel="noopener">RFC 9110: sémantika HTTP</a> · <a href="https://www.rfc-editor.org/rfc/rfc8446" target="_blank" rel="noopener">RFC 8446: TLS 1.3</a></li>
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status" target="_blank" rel="noopener">MDN: stavové kódy HTTP</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Session" target="_blank" rel="noopener">MDN: HTTP session</a></li>
+          <li><a href="https://direct.privacyguides.org/en/basics/vpn-overview" target="_blank" rel="noopener">Privacy Guides: VPN</a> · <a href="https://www.howtogeek.com/141599/can-third-parties-read-the-full-url-when-browsing-via-https/" target="_blank" rel="noopener">How-To Geek: co vidí poskytovatel</a></li>
+          <li><a href="https://www.theregister.com/2020/01/29/wireguard_vpn_will_be_in_linux_56_kernel/" target="_blank" rel="noopener">The Register: WireGuard v Linuxu 5.6</a></li>
+          <li><a href="https://www.computernetworkingnotes.com/ccna-study-guide/mac-address-or-ethernet-addressing-explained.html" target="_blank" rel="noopener">MAC adresa</a></li>
+          <li>Videa: <a href="https://www.youtube.com/watch?v=5o8CwafCxnU" target="_blank" rel="noopener">IP a DNS</a>, <a href="https://www.youtube.com/watch?v=ZhEf7e4kopM" target="_blank" rel="noopener">kabely a Wi-Fi</a> (Code.org)</li>
+        </ul></div>
+      </div>
+      <p class="note">Ověřeno v říjnu 2026.</p>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  var NS="http://www.w3.org/2000/svg";
+  function sv(tag,a,t){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e;}
+  function fmt(n,d){return n.toLocaleString("cs-CZ",{maximumFractionDigits:d==null?1:d});}
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- video ---------- */
+  function mountVideo(box){
+    var id=box.dataset.yt;
+    box.innerHTML='<button class="vid-btn" aria-label="Přehrát video: '+esc(box.dataset.title)+'"><img class="vid-thumb" alt="" loading="lazy" src="https://i.ytimg.com/vi/'+id+'/hqdefault.jpg"><span class="vid-play">▶</span></button>'+
+      '<div class="vid-meta"><span><span class="vid-title">'+esc(box.dataset.title)+'</span><br><span class="vid-sub">'+esc(box.dataset.sub)+'</span></span>'+
+      '<a class="vid-link" href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener">otevřít na YouTube ↗</a></div>';
+    box.querySelector(".vid-btn").addEventListener("click",function(){
+      var f=document.createElement("iframe");f.className="vid-frame";f.title=box.dataset.title;
+      f.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&rel=0";
+      f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";f.allowFullscreen=true;f.referrerPolicy="strict-origin-when-cross-origin";
+      this.replaceWith(f);
+    });
+  }
+  function mountAll(root){Array.prototype.forEach.call(root.querySelectorAll(".vid[data-yt]"),mountVideo);}
+
+  /* ---------- navigace ---------- */
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    if(slides[current].querySelector("iframe"))mountAll(slides[current]);
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function picker(host,items,mk,panel,show){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;show(it,i);
+      });host.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");show(items[0],0);
+    if(panel)fits.push({slide:host.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){show(it,i,true);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";show(items[act],act,true);
+    }});
+    return btns;
+  }
+  function modeSwitch(host,onChange){
+    Array.prototype.forEach.call(host.children,function(b){
+      b.addEventListener("click",function(){
+        Array.prototype.forEach.call(host.children,function(x){x.classList.toggle("is-active",x===b);});
+        onChange(b.dataset.m);
+      });
+    });
+  }
+
+  /* ---------- 1: historie ---------- */
+  var HIST=[
+    {y:"1964",s:"Baran",t:"Síť, která přežije útok",d:"Paul Baran z RAND Corporation popsal pro americké letectvo <b>distribuovanou síť</b> bez centrálního uzlu. Když část uzlů zničí útok, zprávy najdou jinou cestu."},
+    {y:"1965",s:"paket",t:"Donald Davies pojmenoval paket",d:"Nezávisle na Baranovi navrhl v britské laboratoři NPL dělit data na malé bloky a nazval je <b>pakety</b>. Obě práce se staly základem přepojování paketů."},
+    {y:"1969",s:"ARPANET",t:"„LO“: první zpráva po ARPANETu",d:"29. října 1969 ve 22:30 posílal student Charley Kline z UCLA slovo LOGIN do počítače ve Stanfordově výzkumném institutu. Dorazila jen písmena L a O, pak systém spadl. Asi o hodinu později přihlášení prošlo."},
+    {y:"1971",s:"e-mail",t:"První e-mail a zavináč",d:"Ray Tomlinson z firmy BBN poslal zkušební zprávu mezi dvěma počítači stojícími vedle sebe. Pro oddělení jména uživatele a počítače zvolil znak <b>@</b>."},
+    {y:"1974",s:"TCP",t:"Cerf a Kahn: jak propojit sítě",d:"V květnu 1974 vyšel článek Vintona Cerfa a Roberta Kahna „A Protocol for Packet Network Intercommunication“. Popsal protokol TCP, který umožnil propojit různé sítě do jedné. Propojování sítí se anglicky řekne <i>internetworking</i>, odtud <b>internet</b>."},
+    {y:"1983",s:"TCP/IP, DNS",t:"Den vlajky a doménová jména",d:"1. ledna 1983 přešel celý ARPANET najednou ze starého protokolu NCP na TCP/IP. Kdo nepřešel, přestal se domlouvat. V listopadu 1983 Paul Mockapetris popsal systém doménových jmen <b>DNS</b>."},
+    {y:"1989",s:"web",t:"Tim Berners-Lee v CERNu",d:"V březnu 1989 navrhl systém propojených dokumentů. V prosinci 1990 běžel první webový server, prohlížeč a web info.cern.ch, v srpnu 1991 software zveřejnil. Web je jen jedna ze služeb internetu."},
+    {y:"1992",s:"Česko",t:"Československo na internetu",d:"13. února 1992 bylo oficiálně připojeno pracoviště ČVUT v Praze k uzlu v rakouském Linci rychlostí 19,2 kb/s. Tým vedl Jan Gruntorád."},
+    {y:"1993",s:"web pro všechny",t:"Web volně k použití",d:"30. dubna 1993 dal CERN technologii webu k volnému užívání. Proto web nikomu nepatří a mohl se rozšířit."},
+    {y:"2011",s:"IPv4 došly",t:"Došly volné adresy IPv4",d:"3. února 2011 rozdala IANA regionálním registrům posledních pět bloků adres IPv4. Odtud tlak na NAT a IPv6."},
+    {y:"2022",s:"HTTP/3",t:"HTTP/3 nad QUIC",d:"V červnu 2022 vyšel standard HTTP/3. Neběží nad TCP, ale nad novým protokolem QUIC, který používá UDP."},
+    {y:"2025",s:"6 miliard",t:"Tři čtvrtiny lidstva online",d:"Podle Mezinárodní telekomunikační unie (ITU) používá v roce 2025 internet 6 miliard lidí, asi tři čtvrtiny populace. 2,2 miliardy lidí zůstávají offline."},
+    {y:"2026",s:"IPv6 přes 50 %",t:"IPv6 poprvé většinou",d:"28. března 2026 přistupovalo ke službám Googlu přes IPv6 poprvé víc než polovina uživatelů (50,1 %). Jiná měření ukazují méně, kolem 43 %."}
+  ];
+  picker($("hist"),HIST,function(h){return el("button","",h.y+"<span>"+h.s+"</span>");},$("histPanel"),function(h){
+    $("histPanel").innerHTML='<span class="meta">'+h.y+'</span><h3>'+h.t+'</h3><p>'+h.d+'</p>';
+  });
+
+  /* ---------- 2: pakety ---------- */
+  var lanes=Array.prototype.slice.call($("pkLanes").children),pkData=[],pkArrived=[],pkRun=false;
+  function pkSend(){
+    if(pkRun)return;
+    var msg=$("pkIn").value||"(prázdná zpráva)",size=6;
+    pkData=[];for(var i=0;i<msg.length;i+=size)pkData.push(msg.slice(i,i+size));
+    pkArrived=[];$("pkRecv").innerHTML="";$("pkSort").disabled=true;pkRun=true;
+    lanes.forEach(function(l){Array.prototype.forEach.call(l.querySelectorAll(".pk"),function(p){p.remove();});});
+    $("pkNote").textContent="Zpráva má "+msg.length+" znaků, odchází v "+pkData.length+" paketech po "+size+" znacích. Každý jde jinou cestou.";
+    var done=0;
+    pkData.forEach(function(chunk,i){
+      var lane=Math.floor(Math.random()*3),speed=[1600,2400,3300][lane]+Math.random()*900,start=i*260;
+      var p=el("span","pk","<em>#"+(i+1)+"</em>"+esc(chunk));lanes[lane].appendChild(p);
+      var t0=null;
+      setTimeout(function(){
+        function fr(ts){
+          if(t0===null)t0=ts;var k=reduce?1:Math.min(1,(ts-t0)/speed);
+          p.style.left="calc("+(k*100).toFixed(1)+"% - "+(k*p.offsetWidth).toFixed(0)+"px)";
+          if(k<1){requestAnimationFrame(fr);return;}
+          p.remove();pkArrived.push(i);
+          $("pkRecv").appendChild(el("span","pk","<em>#"+(i+1)+"</em>"+esc(chunk)));
+          if(++done===pkData.length){pkRun=false;$("pkSort").disabled=false;
+            var inOrder=pkArrived.every(function(x,k){return x===k;});
+            $("pkNote").textContent=inOrder?"Všechny pakety dorazily, tentokrát náhodou ve správném pořadí. Zkus to znovu.":"Pakety dorazily v jiném pořadí, než odešly. Příjemce je seřadí podle čísla.";}
+        }
+        requestAnimationFrame(fr);
+      },start);
+    });
+  }
+  $("pkGo").addEventListener("click",pkSend);
+  $("pkSort").addEventListener("click",function(){
+    $("pkRecv").innerHTML="";
+    pkData.forEach(function(c,i){$("pkRecv").appendChild(el("span","pk is-sorted","<em>#"+(i+1)+"</em>"+esc(c)));});
+    $("pkNote").innerHTML="Složená zpráva: <b>"+esc(pkData.join(""))+"</b>. Pořadí hlídá protokol TCP pomocí pořadových čísel.";
+  });
+
+  /* ---------- 3: zapouzdření ---------- */
+  var ENC=[
+    {c:"l-app",n:"Aplikační vrstva: HTTP",h:"",d:"Prohlížeč připraví požadavek HTTP. S HTTPS by tato data byla ještě zašifrovaná protokolem TLS."},
+    {c:"l-tcp",n:"Transportní vrstva: TCP",h:"zdrojový port 51515 → cílový port 443 · pořadové číslo · potvrzení",d:"TCP přidá hlavičku s porty (kterému programu data patří) a pořadovým číslem. Celku se říká <b>segment</b>."},
+    {c:"l-ip",n:"Síťová vrstva: IP",h:"odesílatel 192.168.1.37 → příjemce 203.0.113.80 · TTL",d:"IP přidá adresu odesílatele a příjemce a TTL, kolik směrovačů smí paket ještě projít. Vznikne <b>paket</b>. Směrovače čtou jen tuto obálku."},
+    {c:"l-link",n:"Spojová vrstva: Wi-Fi / Ethernet",h:"MAC notebooku → MAC routeru",d:"Na každém úseku cesty se přidá obálka s fyzickými adresami (MAC) a vznikne <b>rámec</b>. Na každém směrovači se tato obálka vymění, IP adresy zůstávají."}
+  ];
+  var encN=1;
+  function encRender(){
+    var inner='<div class="enc-data">GET /rozvrh HTTP/1.1\nHost: www.skola.cz</div>';
+    for(var i=0;i<encN;i++){
+      var e=ENC[i];
+      inner='<div class="enc-box '+e.c+'"><div class="enc-h"><span>'+e.n+'</span></div>'+(e.h?'<div class="enc-hdr">'+e.h+'</div>':"")+inner+'</div>';
+    }
+    $("enc").innerHTML=inner;
+    var last=ENC[encN-1];
+    $("encPanel").innerHTML="<h3>"+last.n+"</h3><p>"+last.d+"</p>";
+    Array.prototype.forEach.call($("lay4").children,function(c,i){c.classList.toggle("is-on",i<encN);});
+    $("encDown").disabled=encN>=4;$("encUp").disabled=encN<=1;
+  }
+  $("encDown").addEventListener("click",function(){if(encN<4){encN++;encRender();}});
+  $("encUp").addEventListener("click",function(){if(encN>1){encN--;encRender();}});
+  encRender();
+
+  /* ---------- 4: IP kalkulačka ---------- */
+  var IPP=[["Doma","192.168.1.37/24"],["Firma","10.20.30.40/8"],["Veřejná","203.0.113.77/28"],["Sám sobě","127.0.0.1/8"]];
+  function ipTo(a){return a.map(function(x){return x>>>0;}).reduce(function(s,x){return (s*256+x);},0);}
+  function ipStr(n){return [n>>>24&255,n>>>16&255,n>>>8&255,n&255].join(".");}
+  function ipType(n){
+    function inR(base,p){var b=ipTo(base.split(".").map(Number));var m=p===0?0:(0xFFFFFFFF<<(32-p))>>>0;return ((n&m)>>>0)===((b&m)>>>0);}
+    if(inR("10.0.0.0",8)||inR("172.16.0.0",12)||inR("192.168.0.0",16))return ["soukromá","v internetu neplatí, za NAT (RFC 1918)"];
+    if(inR("127.0.0.0",8))return ["loopback","počítač mluví sám se sebou"];
+    if(inR("192.0.2.0",24)||inR("198.51.100.0",24)||inR("203.0.113.0",24))return ["dokumentační","jen pro příklady v učebnicích (RFC 5737)"];
+    return ["veřejná","dosažitelná z internetu"];
+  }
+  function ipCalc(){
+    var v=$("ipIn").value.trim(),m=v.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(?:\/(\d{1,2}))?$/);
+    if(!m||m.slice(1,5).some(function(x){return +x>255;})||(m[5]&&+m[5]>32)){$("ipOut").innerHTML='<div><span>Chyba</span><b>Zadej např. 192.168.1.37/24</b></div>';$("ipBits").innerHTML="";return;}
+    var oct=m.slice(1,5).map(Number),p=m[5]==null?24:+m[5],n=ipTo(oct);
+    var mask=p===0?0:(0xFFFFFFFF<<(32-p))>>>0,net=(n&mask)>>>0,bc=(net|(~mask>>>0))>>>0;
+    var h="";
+    oct.forEach(function(o,i){
+      var bits=("00000000"+o.toString(2)).slice(-8),s="";
+      for(var b=0;b<8;b++){var idx=i*8+b;s+='<span class="'+(idx<p?"n":"h")+'">'+bits[b]+"</span>";}
+      h+='<div class="ipoct"><b>'+o+"</b><span>"+s+"</span></div>";
+    });
+    $("ipBits").innerHTML=h;
+    var total=Math.pow(2,32-p),hosts=p>=31?total:total-2,t=ipType(n);
+    $("ipOut").innerHTML='<div><span>Maska</span><b>'+ipStr(mask)+'</b><small>/'+p+' = '+p+' jedniček</small></div>'+
+      '<div><span>Adresa sítě</span><b>'+ipStr(net)+'</b><small>všechny bity zařízení 0</small></div>'+
+      '<div><span>Broadcast</span><b>'+ipStr(bc)+'</b><small>všechny bity zařízení 1</small></div>'+
+      '<div><span>Zařízení v síti</span><b>'+fmt(hosts,0)+'</b><small>2^'+(32-p)+(p<31?" − 2":"")+'</small></div>'+
+      '<div><span>Typ adresy</span><b>'+t[0]+'</b><small>'+t[1]+'</small></div>';
+  }
+  var ipBtns=[];
+  IPP.forEach(function(x,i){var b=el("button","calc-btn"+(i===0?" is-active":""),x[0]);b.addEventListener("click",function(){$("ipIn").value=x[1];ipBtns.forEach(function(y){y.classList.toggle("is-active",y===b);});ipCalc();});$("ipPre").appendChild(b);ipBtns.push(b);});
+  $("ipIn").addEventListener("input",function(){ipBtns.forEach(function(y){y.classList.remove("is-active");});ipCalc();});
+  ipCalc();
+
+  /* ---------- 6: NAT ---------- */
+  var DEV=[["Notebook","192.168.1.37"],["Mobil","192.168.1.52"],["Tablet","192.168.1.60"]],natRows=[],natPort=50000+Math.floor(Math.random()*9000);
+  DEV.forEach(function(d){
+    var b=el("button","nat-dev",d[0]+"<span>"+d[1]+"</span>");
+    b.addEventListener("click",function(){
+      var src=49152+Math.floor(Math.random()*16000);natPort+=1+Math.floor(Math.random()*7);
+      natRows.unshift([d[0]+" "+d[1]+" : "+src,"203.0.113.5 : "+natPort,"198.51.100.20 : 443"]);
+      if(natRows.length>5)natRows.pop();
+      $("natTbl").innerHTML=natRows.map(function(r,i){return '<tr'+(i===0?' class="is-new"':"")+'><td>'+r[0]+"</td><td>"+r[1]+"</td><td>"+r[2]+"</td></tr>";}).join("");
+      $("natSees").textContent="přišlo od 203.0.113.5 : "+natPort;
+    });
+    $("natDevs").appendChild(b);
+  });
+
+  /* ---------- 7: DNS ---------- */
+  var DNS=[
+    {n:"1. Mezipaměť",d:"Prohlížeč a operační systém se nejdřív podívají, jestli adresu www.skola.cz nedávno nehledaly. Každý záznam DNS má dobu platnosti (TTL), po kterou se smí pamatovat."},
+    {n:"2. Resolver",d:"Počítač pošle dotaz <b>rekurzivnímu resolveru</b>, obvykle u poskytovatele internetu. DNS používá port 53, krátké dotazy jdou přes UDP."},
+    {n:"3. Kořen",d:"Resolver se zeptá <b>kořenového serveru</b>: kdo zná doménu nejvyšší úrovně .cz? Kořen odpoví adresou serverů pro .cz."},
+    {n:"4. Doména .cz",d:"Resolver se zeptá serveru domény <b>.cz</b>, který spravuje sdružení CZ.NIC: kdo zná skola.cz? Dostane adresu <b>autoritativního</b> serveru školy."},
+    {n:"5. Odpověď",d:"Autoritativní server odpoví: www.skola.cz má adresu 203.0.113.80. Resolver výsledek uloží na dobu TTL a pošle počítači. Teprve teď může začít komunikace s webem."}
+  ];
+  picker($("dnsSeg"),DNS,function(d){return el("button","calc-btn",d.n);},$("dnsPanel"),function(d){$("dnsPanel").innerHTML="<h3>"+d.n+"</h3><p>"+d.d+"</p>";});
+
+  /* ---------- 8: TCP × UDP ---------- */
+  function tuCells(host){host.innerHTML="";for(var i=0;i<10;i++)host.appendChild(el("span","tu-c",String(i+1)));return host.children;}
+  var cT=tuCells($("tuT")),cU=tuCells($("tuU")),tuBusy=false;
+  function lossVal(){return +$("loss").value/100;}
+  $("loss").addEventListener("input",function(){$("oLoss").textContent=$("loss").value+" %";});$("oLoss").textContent=$("loss").value+" %";
+  $("tuGo").addEventListener("click",function(){
+    if(tuBusy)return;tuBusy=true;cT=tuCells($("tuT"));cU=tuCells($("tuU"));
+    var p=lossVal(),i=0,re=0,uOk=0,rounds=0;
+    $("tuTr").textContent="navazuji spojení…";$("tuUr").textContent="";
+    function stepU(k){var lost=Math.random()<p;cU[k].className="tu-c "+(lost?"lost":"ok");if(!lost)uOk++;}
+    function stepT(k,cb){
+      var lost=Math.random()<p;
+      if(lost){re++;cT[k].className="tu-c lost";setTimeout(function(){cT[k].className="tu-c re";setTimeout(function(){stepT(k,cb);},reduce?1:260);},reduce?1:260);}
+      else{cT[k].className="tu-c "+(cT[k].classList.contains("re")?"re":"ok");setTimeout(function(){if(cT[k].classList.contains("re")){cT[k].className="tu-c ok";}cb();},reduce?1:120);}
+    }
+    for(var k=0;k<10;k++)stepU(k);
+    $("tuUr").textContent="doručeno "+uOk+" z 10, hned";
+    setTimeout(function next(){
+      if(i>=10){$("tuTr").textContent="doručeno 10 z 10, "+re+"× znovu";tuBusy=false;return;}
+      $("tuTr").textContent="paket "+(i+1)+"…";
+      stepT(i,function(){i++;next();});
+    },reduce?1:400);
+  });
+
+  /* ---------- 9: handshake ---------- */
+  var HS=[["SYN →","Klient: chci se spojit, moje počáteční pořadové číslo je x.",false],["← SYN, ACK","Server: souhlasím, potvrzuji x + 1, moje počáteční číslo je y.",true],["ACK →","Klient: potvrzuji y + 1. Spojení je navázané, teprve teď jdou data.",false],["data →","Přenos dat. Každý přijatý úsek příjemce potvrdí (ACK), nepotvrzený se pošle znovu.",false]];
+  var hsI=0;
+  function hsRender(){
+    $("hs3").innerHTML=HS.map(function(h,i){return '<div class="hs3-msg'+(h[2]?" r":"")+(i<hsI?" is-on":"")+'">'+h[0]+"</div>";}).join("");
+    $("hsNote").textContent=hsI?HS[hsI-1][1]:"TCP před odesláním dat nejdřív naváže spojení. Klikni na Další zpráva.";
+    $("hsStep").disabled=hsI>=HS.length;
+  }
+  $("hsStep").addEventListener("click",function(){if(hsI<HS.length){hsI++;hsRender();}});
+  $("hsReset").addEventListener("click",function(){hsI=0;hsRender();});
+  hsRender();
+
+  /* ---------- 10: kdy co ---------- */
+  var TU=[
+    {n:"Web a e-mail",s:"TCP",d:"Stránka, e-mail i stahovaný soubor musí dorazit celé a ve správném pořadí. Chybějící bajt by soubor poškodil. Proto HTTP/1.1, HTTP/2 a SMTP běží nad TCP."},
+    {n:"Videohovor a hry",s:"UDP",d:"Opožděný zvuk nebo poloha hráče jsou k ničemu, je lepší ztracený paket vynechat a pokračovat. Čekání na opakované odeslání by způsobilo zasekávání."},
+    {n:"DNS",s:"UDP (i TCP)",d:"Krátký dotaz a krátká odpověď. Navazovat spojení by trvalo déle než samotný dotaz. Delší odpovědi DNS mohou jít přes TCP."},
+    {n:"HTTP/3",s:"QUIC nad UDP",d:"QUIC si spolehlivost a šifrování řeší sám nad UDP. Ztráta jednoho paketu nezdrží ostatní soubory stránky, každý požadavek má vlastní proud."}
+  ];
+  picker($("tuCards"),TU,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("tuPanel"),function(c){$("tuPanel").innerHTML='<span class="meta">'+c.s+'</span><h3>'+c.n+'</h3><p>'+c.d+'</p>';});
+
+  /* ---------- 12: HTTP ---------- */
+  var REQ=[
+    {n:"Načti stránku",req:'<span class="m">GET</span> /rozvrh HTTP/1.1\n<span class="k">Host:</span> www.skola.cz\n<span class="k">Accept:</span> text/html\n<span class="k">Accept-Language:</span> cs',res:'HTTP/1.1 <span class="s s2">200 OK</span>\n<span class="k">Content-Type:</span> text/html; charset=utf-8\n<span class="k">Content-Length:</span> 5120\n\n&lt;!DOCTYPE html&gt;\n&lt;html lang="cs"&gt; …'},
+    {n:"Odešli formulář",req:'<span class="m">POST</span> /prihlaska HTTP/1.1\n<span class="k">Host:</span> www.skola.cz\n<span class="k">Content-Type:</span> application/x-www-form-urlencoded\n\njmeno=Jana&amp;trida=3A',res:'HTTP/1.1 <span class="s s2">201 Created</span>\n<span class="k">Location:</span> /prihlaska/1043\n<span class="k">Content-Type:</span> text/html; charset=utf-8\n\n&lt;p&gt;Přihláška přijata.&lt;/p&gt;'},
+    {n:"Stará adresa",req:'<span class="m">GET</span> /stary-web HTTP/1.1\n<span class="k">Host:</span> www.skola.cz',res:'HTTP/1.1 <span class="s s3">301 Moved Permanently</span>\n<span class="k">Location:</span> https://www.skola.cz/novy-web\n\n(prohlížeč automaticky přejde na novou adresu)'},
+    {n:"Neexistuje",req:'<span class="m">GET</span> /tajne-znamky HTTP/1.1\n<span class="k">Host:</span> www.skola.cz',res:'HTTP/1.1 <span class="s s4">404 Not Found</span>\n<span class="k">Content-Type:</span> text/html; charset=utf-8\n\n&lt;h1&gt;Stránka nenalezena&lt;/h1&gt;'},
+    {n:"Server spadl",req:'<span class="m">GET</span> /rozvrh HTTP/1.1\n<span class="k">Host:</span> www.skola.cz',res:'HTTP/1.1 <span class="s s5">500 Internal Server Error</span>\n<span class="k">Content-Type:</span> text/html; charset=utf-8\n\n&lt;h1&gt;Chyba serveru&lt;/h1&gt;'}
+  ];
+  picker($("httpSeg"),REQ,function(r){return el("button","calc-btn",r.n);},null,function(r){$("httpReq").innerHTML=r.req;$("httpRes").innerHTML=r.res;});
+  var CODES=[
+    [200,"OK","Požadavek se povedl. U GET server posílá požadovaný obsah."],
+    [201,"Created","Povedlo se a vznikl nový záznam, typicky po POST."],
+    [301,"Moved Permanently","Adresa se trvale změnila, nová je v hlavičce Location."],
+    [302,"Found","Adresa se změnila dočasně."],
+    [304,"Not Modified","Obsah se nezměnil, prohlížeč použije kopii ze své mezipaměti."],
+    [400,"Bad Request","Server požadavku nerozumí, například má chybnou syntaxi."],
+    [401,"Unauthorized","Je potřeba se přihlásit."],
+    [403,"Forbidden","Server ví, kdo jsi, ale přístup nepovolí."],
+    [404,"Not Found","Server požadovanou stránku nenašel. Chyba je na straně klienta: špatná adresa."],
+    [418,"I'm a teapot","Vtip ze standardu RFC 2324: konvice odmítá vařit kávu."],
+    [429,"Too Many Requests","Moc požadavků za krátkou dobu."],
+    [500,"Internal Server Error","Obecná chyba serveru, něco se pokazilo u něj."],
+    [502,"Bad Gateway","Server, který předává požadavky dál, dostal špatnou odpověď."],
+    [503,"Service Unavailable","Server je přetížený nebo v údržbě."]
+  ];
+  var cBtns=[];
+  CODES.forEach(function(c){var b=el("button","c"+String(c[0])[0],String(c[0]));b.addEventListener("click",function(){cBtns.forEach(function(x){x.classList.toggle("is-active",x===b);});$("codeNote").innerHTML="<b>"+c[0]+" "+c[1]+"</b>: "+c[2];});$("codes").appendChild(b);cBtns.push(b);});
+  $("codeNote").innerHTML="1xx informace, <b>2xx úspěch</b>, 3xx přesměrování, <b>4xx chyba klienta</b>, 5xx chyba serveru. Klikni na kód.";
+
+  /* ---------- 13: verze ---------- */
+  (function(){var V=[["HTTP/2",52.46],["HTTP/1.x",27.37],["HTTP/3",20.17]],h="";
+    V.forEach(function(v){h+='<div class="mbar"><span class="mbar-lab">'+v[0]+'</span><div class="mbar-track"><span class="mbar-fill b" data-w="'+(v[1]/60*100)+'"></span><span class="mbar-val">'+fmt(v[1],1)+' %</span></div></div>';});
+    $("verBars").innerHTML=h;Array.prototype.forEach.call($("verBars").querySelectorAll(".mbar-fill"),function(f){f.style.width="calc("+(+f.dataset.w).toFixed(1)+"% - 5rem)";});})();
+
+  /* ---------- 14: cesta stránky ---------- */
+  var WALK=[
+    {n:"Adresa",d:"Prohlížeč rozloží adresu: protokol <b>https</b> (tedy port 443), jméno serveru <b>www.skola.cz</b>, cesta <b>/</b>."},
+    {n:"DNS",d:"Zjistí IP adresu jména: z mezipaměti, nebo dotazem na resolver, kořen, server .cz a server školy. Výsledek: 203.0.113.80."},
+    {n:"TCP",d:"Naváže spojení trojcestným podáním ruky: SYN, SYN-ACK, ACK. U HTTP/3 místo toho použije QUIC nad UDP."},
+    {n:"TLS",d:"Dohodne šifrování (dnes obvykle TLS 1.3) a ověří <b>certifikát</b> serveru: opravdu mluvím s www.skola.cz? TLS má zabránit odposlechu, změně a podvržení zpráv."},
+    {n:"HTTP",d:"Pošle zašifrovaný požadavek <b>GET /</b> s hlavičkou Host. Server odpoví <b>200 OK</b> a pošle HTML."},
+    {n:"Vykreslení",d:"Prohlížeč přečte HTML, zjistí, že potřebuje ještě CSS, obrázky a skripty, a pro každý soubor pošle další požadavek. Pak stránku vykreslí. Celé to obvykle trvá zlomek sekundy."}
+  ];
+  var wI=0;
+  $("walk").innerHTML=WALK.map(function(w,i){return "<div><b>"+(i+1)+"</b>"+w.n+"</div>";}).join("");
+  function walkRender(measure,i){
+    var k=i==null?wI:i;
+    if(!measure)Array.prototype.forEach.call($("walk").children,function(c,j){c.className=j<wI?"is-done":(j===wI?"is-on":"");});
+    $("walkPanel").innerHTML='<span class="meta">krok '+(k+1)+' z '+WALK.length+'</span><h3>'+WALK[k].n+'</h3><p>'+WALK[k].d+'</p>';
+    if(!measure){$("walkPrev").disabled=wI===0;$("walkNext").disabled=wI===WALK.length-1;}
+  }
+  $("walkNext").addEventListener("click",function(){if(wI<WALK.length-1){wI++;walkRender();}});
+  $("walkPrev").addEventListener("click",function(){if(wI>0){wI--;walkRender();}});
+  walkRender();
+  fits.push({slide:$("walk").closest(".slide"),fn:function(){var p=$("walkPanel");p.style.minHeight="0px";var m=0;WALK.forEach(function(_,i){walkRender(true,i);m=Math.max(m,p.offsetHeight);});p.style.minHeight=m+"px";walkRender();}});
+
+  /* ---------- 15: VPN ---------- */
+  var vpnOn=false,httpsOn=true,vsvg=$("vpnSvg");
+  var NODES=[{x:20,t:"Ty",s:"notebook",c:"me"},{x:170,t:"Wi-Fi",s:"kavárna",c:""},{x:320,t:"Poskytovatel",s:"internetu",c:""},{x:470,t:"Server VPN",s:"jiná země",c:"srv"},{x:620,t:"Web",s:"www.skola.cz",c:"web"}];
+  function vpnDraw(){
+    while(vsvg.firstChild)vsvg.removeChild(vsvg.firstChild);
+    if(vpnOn)vsvg.appendChild(sv("rect",{"class":"vpn-tunnel",x:10,y:40,width:590,height:96,rx:48}));
+    if(vpnOn)vsvg.appendChild(sv("text",{"class":"vpn-s",x:305,y:32,"text-anchor":"middle"},"šifrovaný tunel VPN"));
+    var segEnc=[0,1,2,3].map(function(i){if(httpsOn)return true;if(vpnOn)return i<3;return false;});
+    for(var i=0;i<4;i++){
+      var a=NODES[i],b=NODES[i+1];
+      if(!vpnOn&&(i===2||i===3)){if(i===2)vsvg.appendChild(sv("path",{"class":"vpn-link"+(segEnc[2]?" enc":""),d:"M440 100 C 500 165, 560 165, 620 100"}));continue;}
+      vsvg.appendChild(sv("line",{"class":"vpn-link"+(segEnc[i]?" enc":""),x1:a.x+120,y1:88,x2:b.x,y2:88}));
+    }
+    NODES.forEach(function(n,i){
+      var g=sv("g",{"class":(i===3&&!vpnOn)?"vpn-off":""});
+      g.appendChild(sv("rect",{"class":"vpn-node "+n.c,x:n.x,y:58,width:120,height:60,rx:12}));
+      g.appendChild(sv("text",{"class":"vpn-t",x:n.x+60,y:84,"text-anchor":"middle"},n.t));
+      g.appendChild(sv("text",{"class":"vpn-s",x:n.x+60,y:102,"text-anchor":"middle"},n.s));
+      vsvg.appendChild(g);
+    });
+    vsvg.appendChild(sv("text",{"class":"vpn-s",x:20,y:160},"zeleně čárkovaně = šifrovaný úsek"));
+    var rows;
+    if(!vpnOn&&httpsOn)rows=[["Wi-Fi v kavárně a poskytovatel","tvou IP adresu, název domény (např. z dotazu DNS), kdy a kolik dat. Obsah ani adresu stránky za doménou ne.","v"],["Provozovatel VPN","nic, VPN nepoužíváš","h"],["Web","tvou veřejnou IP adresu a vše, co na webu děláš","v"]];
+    else if(!vpnOn&&!httpsOn)rows=[["Wi-Fi v kavárně a poskytovatel","úplně všechno: celé adresy stránek, obsah, vyplněné formuláře i hesla","v"],["Provozovatel VPN","nic, VPN nepoužíváš","h"],["Web","tvou veřejnou IP adresu a vše, co na webu děláš","v"]];
+    else if(vpnOn&&httpsOn)rows=[["Wi-Fi v kavárně a poskytovatel","jen že komunikuješ se serverem VPN, kdy a kolik dat","h"],["Provozovatel VPN","tvou skutečnou IP adresu a které weby navštěvuješ. Musíš mu věřit.","v"],["Web","IP adresu serveru VPN. Když se přihlásíš, ví stejně, kdo jsi.","h"]];
+    else rows=[["Wi-Fi v kavárně a poskytovatel","jen že komunikuješ se serverem VPN, kdy a kolik dat","h"],["Provozovatel VPN","úplně všechno, úsek od VPN k webu není šifrovaný","v"],["Web","IP adresu serveru VPN a vše, co na webu děláš","v"]];
+    $("vpnTbl").innerHTML=rows.map(function(r){return "<tr><td>"+r[0]+'</td><td class="'+(r[2]==="v"?"is-visible-info":"is-hidden-info")+'">'+r[1]+"</td></tr>";}).join("");
+  }
+  modeSwitch($("vpnMode"),function(m){vpnOn=m==="on";vpnDraw();});
+  modeSwitch($("httpsMode"),function(m){httpsOn=m==="on";vpnDraw();});
+  vpnDraw();
+
+  /* ---------- 16: VPN použití ---------- */
+  var VPNU=[
+    {n:"Firemní a školní VPN",s:"přístup dovnitř",d:"Původní účel VPN: zaměstnanec z domova se připojí do vnitřní sítě firmy, jako by seděl v kanceláři. Vidí interní servery, které z internetu dostupné nejsou."},
+    {n:"Veřejná Wi-Fi",s:"ochrana na cestě",d:"Provozovatel sítě v kavárně ani poskytovatel internetu neuvidí, které weby navštěvuješ. Vidí jen spojení se serverem VPN."},
+    {n:"Jiná země",s:"jiná IP adresa",d:"Web vidí IP adresu serveru VPN, takže si myslí, že jsi v jeho zemi. Tak se obchází regionální omezení obsahu."},
+    {n:"Co VPN neumí",s:"pozor na reklamu",d:"Nezajistí anonymitu: provozovatel VPN vidí tvou IP i navštívené weby a jeho slib, že nic neukládá, nejde ověřit. Za serverem VPN data šifruje jen HTTPS, VPN ho nenahrazuje. Nechrání před viry ani před sledováním po přihlášení."},
+    {n:"Protokoly",s:"WireGuard, IPsec, OpenVPN",d:"Tunel vytvářejí protokoly jako <b>IPsec</b>, <b>OpenVPN</b> nebo novější <b>WireGuard</b>, který je od verze 5.6 (2020) přímo v jádru Linuxu. Jeho výhodou je malý kód, který se dá snáz zkontrolovat."}
+  ];
+  picker($("vpnCards"),VPNU,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("vpnPanel"),function(c){$("vpnPanel").innerHTML='<span class="meta">'+c.s+'</span><h3>'+c.n+'</h3><p>'+c.d+'</p>';});
+
+  /* ---------- 17: fyzická vrstva ---------- */
+  var PHYS=[
+    {n:"Metalický kabel",d:"Kroucená dvojlinka (Ethernet) přenáší data elektrickými signály. Doma a ve škole spojuje počítače se switchem a routerem."},
+    {n:"Optické vlákno",d:"Data přenáší světlo ve skleněném vlákně. Vede páteřní sítě mezi městy, státy i kontinenty a stále častěji až do domů."},
+    {n:"Podmořské kabely",d:"Mezi kontinenty vedou optické kabely po dně oceánů. Podle firmy TeleGeography přenášejí přes 99 % mezikontinentálního provozu, satelity jen zlomek."},
+    {n:"Wi-Fi 7",d:"Bezdrátová síť (standard IEEE 802.11be) v pásmech 2,4, 5 a 6 GHz s kanály až 320 MHz. Certifikace zařízení začala v lednu 2024, finální standard vyšel v červenci 2025. Teoretické maximum kolem 23 Gb/s, v praxi mnohem méně."},
+    {n:"MAC adresa",d:"Každé síťové rozhraní má 48bitovou fyzickou adresu, zapisovanou šestnáctkově, např. AA:BB:CC:11:22:33. První polovina určuje výrobce. Používá se jen v rámci jedné místní sítě."}
+  ];
+  picker($("physSeg"),PHYS,function(c){return el("button","calc-btn",c.n);},$("physPanel"),function(c){$("physPanel").innerHTML="<h3>"+c.n+"</h3><p>"+c.d+"</p>";});
+
+  /* ---------- 18: kvíz ---------- */
+  var Q=[
+    {t:"Adresa IPv4 má 32 bitů.",a:1,f:"Čtyři čísla 0 až 255, každé 8 bitů. IPv6 má 128 bitů."},
+    {t:"UDP zaručí, že všechny pakety dorazí.",a:0,f:"UDP nic nezaručuje a nehlídá pořadí. Spolehlivé doručení zajišťuje TCP."},
+    {t:"Adresa 192.168.1.10 je soukromá.",a:1,f:"Patří do rozsahu 192.168.0.0/16 z RFC 1918. V internetu neplatí, ven se dostane přes NAT."},
+    {t:"HTTPS skryje před poskytovatelem i název navštívené domény.",a:0,f:"HTTPS šifruje obsah a cestu za doménou. Název domény poskytovatel obvykle vidí, například z dotazu DNS."},
+    {t:"VPN tě na internetu zcela zanonymizuje.",a:0,f:"Provozovatel VPN vidí tvou IP i navštívené weby. Po přihlášení tě web pozná."},
+    {t:"HTTP/3 běží nad UDP.",a:1,f:"HTTP/3 používá protokol QUIC, který posílá data v datagramech UDP."},
+    {t:"Stavový kód 404 znamená chybu serveru.",a:0,f:"4xx jsou chyby klienta: stránka na zadané adrese neexistuje. Chyby serveru jsou 5xx."},
+    {t:"Internet a web jsou totéž.",a:0,f:"Internet je síť sítí. Web (HTTP, HTML) je jedna z jeho služeb, vedle e-mailu, DNS nebo videohovorů."},
+    {t:"TCP před přenosem dat naváže spojení trojcestným podáním ruky.",a:1,f:"SYN, SYN-ACK, ACK. Pak teprve jdou data."},
+    {t:"Československo se připojilo k internetu v roce 1992.",a:1,f:"13. února 1992, z ČVUT do Lince rychlostí 19,2 kb/s."}
+  ];
+  var qI=0,qOk=0,qAns=false,ansBtns=Array.prototype.slice.call(document.querySelectorAll("[data-a]"));
+  function qRender(){qAns=false;var q=Q[qI];$("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;$("qText").textContent=q.t;$("qFb").innerHTML="";$("qNext").hidden=true;ansBtns.forEach(function(b){b.hidden=false;b.disabled=false;b.classList.remove("is-right","is-wrong");});}
+  ansBtns.forEach(function(b){b.addEventListener("click",function(){
+    if(qAns)return;qAns=true;var q=Q[qI],ok=+b.dataset.a===q.a;if(ok)qOk++;
+    ansBtns.forEach(function(x){if(+x.dataset.a===q.a)x.classList.add("is-right");x.disabled=true;});
+    if(!ok)b.classList.add("is-wrong");
+    $("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qFb").innerHTML="<b>"+(ok?"Správně.":"Tentokrát ne.")+"</b> "+q.f;
+    $("qNext").hidden=false;$("qNext").textContent=qI===Q.length-1?"Výsledek":"Další →";
+  });});
+  $("qNext").addEventListener("click",function(){
+    if(qI===Q.length-1){$("qText").innerHTML="<b>Výsledek: "+qOk+" z "+Q.length+".</b>";$("qFb").innerHTML=qOk>=8?"Výborně.":"Projdi si ještě snímky o TCP a UDP, HTTPS a VPN.";ansBtns.forEach(function(b){b.hidden=true;});$("qNext").textContent="Znovu";qI=-1;qOk=0;return;}
+    qI++;qRender();
+  });
+  qRender();
+
+  mountAll(document);
+  goTo(0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel po pixelu – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Rastr</li>
+    <li><a href="#pixel">Pixel a rozlišení</a></li>
+    <li><a href="#ppi">Rozlišení a hustota (PPI, DPI)</a></li>
+    <li><a href="#hloubka">Barevná hloubka</a></li>
+    <li><a href="#velikost">Kolik obrázek zabírá</a></li>
+    <li class="grp">Vektor</li>
+    <li><a href="#vektor">Vektorová grafika</a></li>
+    <li><a href="#svg">Jak vypadá SVG</a></li>
+    <li><a href="#porovnani">Rastr, nebo vektor?</a></li>
+    <li class="grp">Komprese obrázků</li>
+    <li><a href="#proc">Proč komprimovat</a></li>
+    <li><a href="#png">PNG: bez ztráty</a></li>
+    <li><a href="#jpeg">JPEG: se ztrátou</a></li>
+    <li><a href="#formaty">Přehled formátů</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#zkus">Vyzkoušej si</a></li>
+    <li><a href="#chyby">Časté chyby</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Informace · Studijní text k lekci 05</p>
+  <h1>Pixel po pixelu <span class="t">▦</span></h1>
+  <p class="lead">Jak počítač ukládá obrázek: pixel, rozlišení a barevná hloubka, výpočet velikosti souboru, rozdíl mezi rastrem a vektorem a proč se fotky ukládají jako JPEG, ale screenshoty jako PNG. Text je psaný tak, abys ho zvládl sám, i když jsi na hodině chyběl.</p>
+  <a class="deck-link" href="05_pixel_po_pixelu.html"><span class="ic">▶</span><span class="tx"><b>Prezentace k lekci: Pixel po pixelu</b><span>Interaktivní slajdy z hodiny: kreslení pixelů, zoom rastru a vektoru, simulace JPEGu</span></span></a>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit pojmy pixel a rozlišení</li>
+      <li>rozlišit rozlišení obrázku a hustotu PPI/DPI</li>
+      <li>určit počet bitů na pixel pro černobílý, šedý a barevný obrázek</li>
+      <li>spočítat velikost nekomprimovaného obrázku</li>
+      <li>popsat rozdíl mezi rastrovou a vektorovou grafikou</li>
+      <li>přečíst jednoduchý SVG kód</li>
+      <li>vysvětlit rozdíl mezi bezztrátovou a ztrátovou kompresí</li>
+      <li>vybrat vhodný formát pro fotku, screenshot a logo</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Rastr</p>
+
+<section id="pixel">
+<h2>Pixel a rozlišení</h2>
+<p>Počítač nevidí „obrázek“. Vidí jen <strong>mřížku čísel</strong>. Každé políčko mřížky je <dfn>pixel</dfn> (z anglického <em>picture element</em>, obrazový prvek): nejmenší část obrázku, která má jednu barvu.</p>
+<p><dfn>Rozlišení</dfn> obrázku je počet pixelů na šířku × na výšku. Obrázek uložený jako mřížka pixelů se nazývá <dfn>rastrový</dfn> (bitmapový).</p>
+<div class="tbl"><table>
+<thead><tr><th>označení</th><th>rozlišení</th><th>pixelů</th></tr></thead>
+<tbody>
+<tr><td>HD (720p)</td><td class="num">1280 × 720</td><td class="num">≈ 0,9 milionu</td></tr>
+<tr><td>Full HD (1080p)</td><td class="num">1920 × 1080</td><td class="num">≈ 2,1 milionu</td></tr>
+<tr><td>4K (UHD)</td><td class="num">3840 × 2160</td><td class="num">≈ 8,3 milionu</td></tr>
+<tr><td>fotka z mobilu (12 Mpx)</td><td class="num">4000 × 3000</td><td class="num">12 milionů</td></tr>
+</tbody></table></div>
+<p>Megapixel (Mpx) je milion pixelů. Víc pixelů znamená jemnější detaily, ale také větší soubor.</p>
+</section>
+
+<section id="ppi">
+<h2>Rozlišení a hustota (PPI, DPI)</h2>
+<p>Slovo „rozlišení“ se používá ve dvou významech, které se často pletou:</p>
+<div class="cols2">
+  <div class="card"><h3>Rozlišení obrázku</h3><p>Kolik pixelů obrázek má, třeba 1920 × 1080. Nezávisí na tom, kde se zobrazí.</p></div>
+  <div class="card"><h3>Hustota (PPI, DPI)</h3><p>Kolik pixelů nebo tiskových bodů připadá na jeden palec (2,54 cm). Říká, jak velký bude obrázek na displeji nebo na papíře.</p></div>
+</div>
+<p><dfn>PPI</dfn> (pixels per inch) se používá u displejů, <dfn>DPI</dfn> (dots per inch) u tiskáren. Pro kvalitní tisk se počítá s 300 DPI.</p>
+<p><strong>Příklad:</strong> fotka 3000 × 2000 pixelů vytištěná na 300 DPI bude velká 3000 / 300 = 10 palců × 2000 / 300 ≈ 6,7 palce, tedy asi <strong>25 × 17 cm</strong>.</p>
+</section>
+
+<section id="hloubka">
+<h2>Barevná hloubka</h2>
+<p><dfn>Barevná hloubka</dfn> je počet bitů, které se ukládají pro jeden pixel. Určuje, kolik různých barev může obrázek obsahovat (2ⁿ, viz <a href="03_bit_byte_studijni_text.html">lekce 03</a>).</p>
+<div class="tbl"><table>
+<thead><tr><th>typ obrázku</th><th>bitů na pixel</th><th>barev</th><th>jak</th></tr></thead>
+<tbody>
+<tr><td>černobílý</td><td class="num">1</td><td class="num">2</td><td>0 = bílá, 1 = černá</td></tr>
+<tr><td>odstíny šedi</td><td class="num">8</td><td class="num">256</td><td>0 = černá, 255 = bílá</td></tr>
+<tr><td>indexované barvy (GIF)</td><td class="num">8</td><td class="num">256</td><td>pixel ukládá číslo barvy v paletě</td></tr>
+<tr><td>plné barvy (RGB)</td><td class="num">24</td><td class="num">16 777 216</td><td>3 bajty: červená, zelená, modrá</td></tr>
+<tr><td>RGB s průhledností (RGBA)</td><td class="num">32</td><td class="num">16,7 mil. + 256 úrovní krytí</td><td>4. bajt je alfa kanál</td></tr>
+</tbody></table></div>
+<p>U RGB má každý kanál hodnotu 0–255. Barva <code>rgb(255, 128, 0)</code> je oranžová, <code>rgb(0, 0, 0)</code> černá a <code>rgb(255, 255, 255)</code> bílá. Proč stačí právě tři barvy a jak fungují další modely, rozebírá <a href="07_barva_po_barve_studijni_text.html">lekce 07</a>.</p>
+</section>
+
+<section id="velikost">
+<h2>Kolik obrázek zabírá</h2>
+<p>Velikost <strong>nekomprimovaného</strong> rastrového obrázku spočítáš jednoduše:</p>
+<div class="formula">šířka × výška × bitů na pixel = velikost v bitech<small>vydělením 8 dostaneš bajty</small></div>
+<p><strong>Příklad 1:</strong> ikona 100 × 100 v RGB: 100 × 100 × 24 = 240 000 b = <strong>30 000 B ≈ 29,3 KiB</strong>.</p>
+<p><strong>Příklad 2:</strong> fotka 4000 × 3000 v RGB: 4000 × 3000 × 3 B = 36 000 000 B = <strong>36 MB</strong>.</p>
+<p>Ve skutečnosti má fotka z mobilu kolem 3 MB. Je to díky kompresi, o které je druhá polovina textu.</p>
+</section>
+
+<p class="part">Vektor</p>
+
+<section id="vektor">
+<h2>Vektorová grafika</h2>
+<p>Rastr ukládá barvu <em>každého</em> pixelu. <dfn>Vektorová grafika</dfn> neukládá pixely vůbec. Ukládá <strong>matematický popis tvarů</strong>: úsečky, kružnice, mnohoúhelníky a křivky, a k nim barvu výplně a obrysu.</p>
+<div class="cols2">
+  <div class="card"><h3>Rastr</h3><p>„Pixel [0,0] je bílý, pixel [0,1] je bílý, pixel [0,2] je červený…“ a tak dál pro každý pixel.</p></div>
+  <div class="card"><h3>Vektor</h3><p>„Kruh se středem 50, 50, poloměrem 20, výplň červená.“</p></div>
+</div>
+<p>Obrázek se vykreslí až při zobrazení. Program ze vzorců spočítá, které pixely obrazovky obarvit. Při zvětšení se jen <strong>znovu přepočítá</strong>, takže zůstane ostrý v jakékoli velikosti. Rastr se při zvětšení „rozpixeluje“, protože jeho pixely se jen zvětší na čtverečky.</p>
+<p>Zaoblené tvary se ve vektorové grafice popisují <dfn>Bézierovými křivkami</dfn>. Křivku určují koncové body a kontrolní body, které ji „přitahují“. Jak se s nimi pracuje v praxi, ukazuje příklad <a href="06_priklad_jablko.html">Jablko ve vektoru</a>.</p>
+</section>
+
+<section id="svg">
+<h2>Jak vypadá SVG</h2>
+<p>Nejrozšířenější vektorový formát na webu je <dfn>SVG</dfn> (Scalable Vector Graphics). Je to obyčejný textový soubor, podobný HTML:</p>
+<pre><code>&lt;svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;rect x="10" y="60" width="80" height="30" fill="green"/&gt;
+  &lt;circle cx="50" cy="35" r="20" fill="orange"/&gt;
+  &lt;line x1="10" y1="10" x2="90" y2="10" stroke="black" stroke-width="2"/&gt;
+&lt;/svg&gt;</code></pre>
+<ul>
+  <li><code>viewBox</code> určuje souřadnice plátna (0–100 v obou směrech), ne velikost v pixelech.</li>
+  <li><code>rect</code> je obdélník, <code>circle</code> kruh, <code>line</code> úsečka, <code>path</code> libovolná křivka.</li>
+  <li><code>fill</code> je výplň, <code>stroke</code> obrys.</li>
+</ul>
+<p>Celý obrázek má pár set bajtů a dá se zvětšit na billboard. Stejný obrázek jako rastr 1000 × 1000 v RGB by měl nekomprimovaný 3 MB.</p>
+</section>
+
+<section id="porovnani">
+<h2>Rastr, nebo vektor?</h2>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Rastr</th><th>Vektor</th></tr></thead>
+<tbody>
+<tr><td><strong>ukládá</strong></td><td>barvu každého pixelu</td><td>matematický popis tvarů</td></tr>
+<tr><td><strong>výhody</strong></td><td>zvládne fotky a plynulé přechody; univerzální podpora</td><td>zvětšení beze ztráty kvality; malé soubory u jednoduché grafiky; snadná úprava tvarů</td></tr>
+<tr><td><strong>nevýhody</strong></td><td>při zvětšení se rozpixeluje; velikost roste s rozlišením</td><td>nehodí se na fotky; vykreslení vyžaduje výpočet</td></tr>
+<tr><td><strong>formáty</strong></td><td>JPEG, PNG, GIF, WebP, BMP</td><td>SVG, PDF, AI, EPS, písma (fonty)</td></tr>
+<tr><td><strong>programy</strong></td><td>Photoshop, GIMP, Malování</td><td>Illustrator, Inkscape, Boxy SVG, Figma</td></tr>
+<tr><td><strong>použití</strong></td><td>fotky, screenshoty, malby</td><td>loga, ikony, schémata, technické výkresy (CAD)</td></tr>
+</tbody></table></div>
+<div class="note tip"><b class="lbl">Rychlé pravidlo</b><p>Vznikl obrázek fotoaparátem nebo štětcem? Rastr. Dá se nakreslit pomocí tvarů a čar a potřebuješ ho v různých velikostech (logo na vizitce i na billboardu)? Vektor.</p></div>
+<p>Převod vektoru na rastr (<dfn>rasterizace</dfn>) je snadný, dělá ho každý prohlížeč. Převod rastru na vektor (<dfn>vektorizace</dfn>, trasování) je obtížný a u fotek nedává dobrý výsledek.</p>
+</section>
+
+<p class="part">Komprese obrázků</p>
+
+<section id="proc">
+<h2>Proč komprimovat</h2>
+<p>Fotka z mobilu má nekomprimovaná 36 MB. Do telefonu se 128 GB by se jich vešlo jen asi 3 500 a odeslání jedné přes mobilní data by trvalo dlouho. Proto se obrázky ukládají <dfn>komprimovaně</dfn>. Komprese má dva druhy:</p>
+<div class="cols2">
+  <div class="card"><h3>Bezztrátová</h3><p>Po rozbalení je obrázek <strong>pixel po pixelu shodný</strong> s originálem. Využívá opakování v datech.</p><p>PNG, GIF, WebP (bezztrátový režim)</p></div>
+  <div class="card"><h3>Ztrátová</h3><p>Schválně zahodí detaily, které oko skoro nepozná. Výsledek <strong>není</strong> shodný s originálem, ale je mnohem menší.</p><p>JPEG, WebP, HEIC, AVIF</p></div>
+</div>
+<p>Obecné principy komprese (RLE, Huffman, ZIP) vysvětluje <a href="08_komprese_studijni_text.html">lekce 08</a>.</p>
+</section>
+
+<section id="png">
+<h2>PNG: bez ztráty</h2>
+<p>PNG (Portable Network Graphics, 1996) hledá v obrázku opakující se vzory. Velká jednobarevná plocha jde zapsat zkratkou „100× bílá“ místo sta stejných čísel. Uvnitř používá stejný algoritmus jako ZIP (DEFLATE).</p>
+<ul>
+  <li>Výborně komprimuje obrázky s <strong>velkými plochami stejné barvy</strong>: screenshoty, grafy, loga, text.</li>
+  <li>Podporuje <strong>průhlednost</strong> (alfa kanál).</li>
+  <li>U fotek je soubor velký, protože v nich se sousední pixely skoro nikdy přesně neopakují.</li>
+</ul>
+</section>
+
+<section id="jpeg">
+<h2>JPEG: se ztrátou</h2>
+<p>JPEG (Joint Photographic Experts Group, 1992) využívá vlastnosti lidského oka:</p>
+<ol>
+  <li><strong>Oko je citlivější na jas než na barvu.</strong> JPEG převede obrázek na jas a dvě barevné složky (model YCbCr) a barvu uloží v nižším rozlišení.</li>
+  <li><strong>Oko si jemných detailů všímá méně než hrubých tvarů.</strong> Obrázek se rozdělí na bloky 8 × 8 pixelů. V každém se jemné detaily zjednoduší nebo zahodí. Míru určuje nastavení <dfn>kvality</dfn> (0–100).</li>
+  <li><strong>Zbylá data se zkomprimují bezztrátově</strong> (Huffmanovým kódováním).</li>
+</ol>
+<p>Při kvalitě kolem 80 % je fotka 10× až 20× menší a rozdíl skoro nevidíš. Při nízké kvalitě se objeví <dfn>artefakty</dfn>: viditelné čtverečky 8 × 8 a rozmazané „mušky“ kolem ostrých hran.</p>
+<div class="note warn"><b class="lbl">Pozor na opakované ukládání</b><p>Při každém uložení JPEGu se ztratí další informace. Fotku proto upravuj z originálu a do JPEGu ji ukládej až nakonec.</p></div>
+<h3>Proč screenshot do PNG a fotku do JPEGu</h3>
+<p>Screenshot má ostré hrany písmen a velké plochy stejné barvy. PNG je uloží bez ztráty a malé, JPEG by kolem písmen vytvořil rozmazané artefakty. Fotka má plynulé přechody a šum, PNG by byl obří, a JPEG ji zmenší tak, že ztrátu skoro nepoznáš.</p>
+</section>
+
+<section id="formaty">
+<h2>Přehled formátů</h2>
+<div class="tbl"><table>
+<thead><tr><th>formát</th><th>typ</th><th>komprese</th><th>průhlednost</th><th>použití</th></tr></thead>
+<tbody>
+<tr><td>BMP</td><td>rastr</td><td>žádná (většinou)</td><td>ne</td><td>staré Windows, dnes skoro nic</td></tr>
+<tr><td>GIF</td><td>rastr</td><td>bezztrátová, max. 256 barev</td><td>ano (jen ano/ne)</td><td>jednoduché animace</td></tr>
+<tr><td>PNG</td><td>rastr</td><td>bezztrátová</td><td>ano (alfa)</td><td>screenshoty, grafika, loga v rastru</td></tr>
+<tr><td>JPEG</td><td>rastr</td><td>ztrátová</td><td>ne</td><td>fotky</td></tr>
+<tr><td>WebP, AVIF</td><td>rastr</td><td>ztrátová i bezztrátová</td><td>ano</td><td>moderní web, menší než JPEG</td></tr>
+<tr><td>HEIC</td><td>rastr</td><td>ztrátová</td><td>ano</td><td>fotky z iPhonu</td></tr>
+<tr><td>SVG</td><td>vektor</td><td>(textový soubor)</td><td>ano</td><td>loga a ikony na webu</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">Opakování</p>
+
+<section id="zkus">
+<h2>Vyzkoušej si</h2>
+<details class="sol"><summary>1. Kolik bajtů zabere černobílý obrázek 64 × 64 pixelů?</summary><div><p>64 × 64 × 1 b = 4 096 b = <strong>512 B</strong>.</p></div></details>
+<details class="sol"><summary>2. Kolik zabere nekomprimovaná fotka Full HD v RGB?</summary><div><p>1920 × 1080 × 3 B = 6 220 800 B ≈ <strong>6,2 MB</strong> (5,9 MiB).</p></div></details>
+<details class="sol"><summary>3. Obrázek v odstínech šedi má 2 000 000 bajtů a šířku 2000 px. Jakou má výšku?</summary><div><p>Šedý obrázek = 1 B na pixel → 2 000 000 pixelů. 2 000 000 / 2000 = <strong>1000 px</strong>.</p></div></details>
+<details class="sol"><summary>4. Jak velká vyjde na papíře fotka 2400 × 1800 px při 300 DPI?</summary><div><p>2400 / 300 = 8 palců, 1800 / 300 = 6 palců → asi <strong>20,3 × 15,2 cm</strong>.</p></div></details>
+<details class="sol"><summary>5. Který formát zvolíš pro: logo školy na web, fotku z výletu, screenshot chybové hlášky?</summary><div><p>Logo: <strong>SVG</strong> (nebo PNG). Fotka: <strong>JPEG</strong> (nebo WebP). Screenshot: <strong>PNG</strong>.</p></div></details>
+<details class="sol"><summary>6. Co nakreslí SVG prvek &lt;circle cx="20" cy="20" r="10" fill="blue"/&gt;?</summary><div><p>Modrý kruh se středem v bodě [20, 20] a poloměrem 10.</p></div></details>
+<details class="sol"><summary>7. Proč PNG fotku skoro nezmenší?</summary><div><p>Bezztrátová komprese využívá opakování. Ve fotce mají sousední pixely skoro vždy trochu jinou barvu (šum, přechody), takže se nic přesně neopakuje.</p></div></details>
+</section>
+
+<section id="chyby">
+<h2>Časté chyby</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Správně</th></tr></thead>
+<tbody>
+<tr><td>Zapomenout vydělit 8 při převodu na bajty</td><td>Vzorec dává bity, bajty = bity / 8</td></tr>
+<tr><td>„RGB má 3 bity na pixel“</td><td>3 <strong>bajty</strong> = 24 bitů (8 na každý kanál)</td></tr>
+<tr><td>Zaměňovat rozlišení a DPI</td><td>Rozlišení = počet pixelů, DPI = hustota při tisku</td></tr>
+<tr><td>Uložit logo nebo screenshot jako JPEG</td><td>PNG nebo SVG</td></tr>
+<tr><td>„Zvětšením rastru získám víc detailů“</td><td>Chybějící detail se dá jen odhadnout, ne obnovit</td></tr>
+<tr><td>Opakovaně upravovat a ukládat JPEG</td><td>Pracovat s originálem, do JPEGu ukládat jen výsledek</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<details class="q"><summary>Co je pixel a co rozlišení?</summary><div class="a"><p>Pixel je nejmenší jednobarevná část rastrového obrázku. Rozlišení je počet pixelů na šířku × na výšku.</p></div></details>
+<details class="q"><summary>Kolik bitů na pixel potřebuje černobílý, šedý a barevný obrázek?</summary><div class="a"><p>1 bit, 8 bitů (256 odstínů), 24 bitů (RGB, 3 × 8).</p></div></details>
+<details class="q"><summary>Jak se spočítá velikost nekomprimovaného obrázku?</summary><div class="a"><p>šířka × výška × bitů na pixel (v bitech), pak / 8 na bajty.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi rastrem a vektorem?</summary><div class="a"><p>Rastr ukládá barvu každého pixelu, vektor matematický popis tvarů. Vektor jde zvětšit beze ztráty kvality, rastr se rozpixeluje; rastr zato zvládne fotky.</p></div></details>
+<details class="q"><summary>Co znamená DPI a k čemu slouží?</summary><div class="a"><p>Dots per inch, počet bodů na palec. Určuje, jak velký bude obrázek při tisku.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi bezztrátovou a ztrátovou kompresí?</summary><div class="a"><p>Bezztrátová obnoví přesně původní data (PNG). Ztrátová zahodí detaily, které člověk skoro nepozná, a výsledek je menší, ale ne totožný (JPEG).</p></div></details>
+<details class="q"><summary>Na jakých vlastnostech oka stojí JPEG?</summary><div class="a"><p>Oko je citlivější na jas než na barvu a všímá si víc hrubých tvarů než jemných detailů. JPEG proto ukládá barvu a jemné detaily hruběji.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Pixel</dt><dd>Obrazový bod, nejmenší jednobarevná část rastru</dd>
+  <dt>Rozlišení</dt><dd>Počet pixelů na šířku × na výšku</dd>
+  <dt>PPI, DPI</dt><dd>Počet pixelů (bodů) na palec, hustota zobrazení nebo tisku</dd>
+  <dt>Barevná hloubka</dt><dd>Počet bitů na jeden pixel</dd>
+  <dt>Rastrová grafika</dt><dd>Obrázek uložený jako mřížka pixelů</dd>
+  <dt>Vektorová grafika</dt><dd>Obrázek uložený jako popis tvarů</dd>
+  <dt>SVG</dt><dd>Scalable Vector Graphics, textový vektorový formát pro web</dd>
+  <dt>Bézierova křivka</dt><dd>Křivka určená koncovými a kontrolními body</dd>
+  <dt>Rasterizace</dt><dd>Převod vektoru na pixely</dd>
+  <dt>Komprese</dt><dd>Zmenšení dat; bezztrátová, nebo ztrátová</dd>
+  <dt>Artefakty</dt><dd>Viditelné chyby obrazu po silné ztrátové kompresi</dd>
+</dl>
+</section>
+
+<p class="foot">Studijní text k lekci „Pixel po pixelu“ z bloku Informace. Interaktivní verzi najdeš v <a href="05_pixel_po_pixelu.html">prezentaci</a>.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    var d = document.querySelector('.toc details'); if (d) d.open = false;
+  }
+})();
+</script>
+</body>
+</html>

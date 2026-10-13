@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bit po bitu – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Bit</li>
+    <li><a href="#bit">Co je bit</a></li>
+    <li><a href="#proc-dva">Proč zrovna dva stavy</a></li>
+    <li><a href="#soustavy">Desítková a dvojková soustava</a></li>
+    <li><a href="#prevody">Převody mezi soustavami</a></li>
+    <li><a href="#hex">Šestnáctková soustava</a></li>
+    <li class="grp">Kolik bitů</li>
+    <li><a href="#vic-stavu">Víc stavů než dva</a></li>
+    <li><a href="#vzorec">n bitů = 2ⁿ stavů</a></li>
+    <li><a href="#opacne">Kolik bitů na N stavů</a></li>
+    <li class="grp">Bajt a jednotky</li>
+    <li><a href="#byte">Bajt</a></li>
+    <li><a href="#proc-8">Proč má bajt 8 bitů</a></li>
+    <li><a href="#nasobky">Kilo, mega, giga…</a></li>
+    <li><a href="#rychlost">Rychlost: b/s a B/s</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#zkus">Vyzkoušej si</a></li>
+    <li><a href="#chyby">Časté chyby</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Informace · Studijní text k lekci 03</p>
+  <h1>Bit po bitu <span class="t">0 1</span></h1>
+  <p class="lead">Co je bit a bajt, proč počítače počítají ve dvojkové soustavě, kolik bitů je potřeba na kolik stavů a jak se nespletou megabity s megabajty. Text je psaný tak, abys ho zvládl sám, i když jsi na hodině chyběl.</p>
+  <a class="deck-link" href="03_bit_byte.html"><span class="ic">▶</span><span class="tx"><b>Prezentace k lekci: Bit po bitu</b><span>Interaktivní slajdy z hodiny, se žárovkou, semaforem a kalkulačkou bitů</span></span></a>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit, co je bit a proč má dva stavy</li>
+      <li>převést číslo mezi desítkovou a dvojkovou soustavou</li>
+      <li>zapsat bajt šestnáctkově</li>
+      <li>spočítat, kolik stavů popíše n bitů</li>
+      <li>určit, kolik bitů je potřeba na N stavů</li>
+      <li>vysvětlit, co je bajt a proč má 8 bitů</li>
+      <li>rozlišit kB a KiB</li>
+      <li>převádět rychlost v Mb/s na MB/s a počítat dobu stahování</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Bit</p>
+
+<section id="bit">
+<h2>Co je bit</h2>
+<p><dfn>Bit</dfn> je nejmenší jednotka informace. Má přesně <strong>dva možné stavy</strong>, které zapisujeme jako <code>0</code> a <code>1</code>. Nic mezi tím neexistuje: bit není „trochu jednička“.</p>
+<p>Bit je odpověď na jednu otázku typu ano/ne. Svítí žárovka? Jsou dveře zamčené? Padla panna, nebo orel? Každá taková odpověď nese právě jeden bit informace.</p>
+<p>Slovo <em>bit</em> vzniklo zkrácením anglického <em>binary digit</em>, tedy „dvojková číslice“. Poprvé ho v tisku použil Claude Shannon v roce 1948 ve slavném článku <em>A Mathematical Theory of Communication</em>, kterým založil teorii informace. Samotné slovo navrhl jeho kolega John Tukey.</p>
+<div class="note mat"><b class="lbl">Zapamatuj si</b><p>Bit = jedna odpověď ano/ne = jeden ze dvou stavů. Značka jednotky je malé <strong>b</strong>.</p></div>
+</section>
+
+<section id="proc-dva">
+<h2>Proč zrovna dva stavy</h2>
+<p>Počítač je elektronické zařízení. Rozlišit dva stavy je pro elektroniku snadné a spolehlivé:</p>
+<div class="tbl"><table>
+<thead><tr><th>Kde</th><th>Stav 0</th><th>Stav 1</th></tr></thead>
+<tbody>
+<tr><td>vodič v procesoru</td><td>nízké napětí</td><td>vysoké napětí</td></tr>
+<tr><td>tranzistor</td><td>zavřený</td><td>otevřený</td></tr>
+<tr><td>pevný disk (HDD)</td><td>magnetizace jedním směrem</td><td>druhým směrem</td></tr>
+<tr><td>CD, DVD</td><td>hladký povrch</td><td>prohlubeň (změna)</td></tr>
+<tr><td>optický kabel</td><td>tma</td><td>světlo</td></tr>
+</tbody></table></div>
+<p>Kdyby počítač rozlišoval třeba deset úrovní napětí, stačilo by malé rušení a z „sedmičky“ by byla „osmička“. Dva stavy jsou daleko od sebe, takže se tak snadno nespletou.</p>
+</section>
+
+<section id="soustavy">
+<h2>Desítková a dvojková soustava</h2>
+<p>Obě soustavy jsou <dfn>poziční</dfn>: hodnota číslice závisí na tom, na kterém místě stojí. Rozdíl je v <dfn>základu</dfn>, tedy kolik různých číslic soustava má.</p>
+<div class="cols2">
+  <div class="card"><h3>Desítková (základ 10)</h3><p>Číslice 0–9. Pozice mají váhu 1, 10, 100, 1000…</p><p><code>352 = 3·100 + 5·10 + 2·1</code></p></div>
+  <div class="card"><h3>Dvojková (základ 2)</h3><p>Číslice 0 a 1. Pozice mají váhu 1, 2, 4, 8, 16…</p><p><code>1011 = 1·8 + 0·4 + 1·2 + 1·1 = 11</code></p></div>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>desítkově</th><th>dvojkově</th><th>desítkově</th><th>dvojkově</th></tr></thead>
+<tbody>
+<tr><td class="num">0</td><td class="num">0</td><td class="num">8</td><td class="num">1000</td></tr>
+<tr><td class="num">1</td><td class="num">1</td><td class="num">9</td><td class="num">1001</td></tr>
+<tr><td class="num">2</td><td class="num">10</td><td class="num">10</td><td class="num">1010</td></tr>
+<tr><td class="num">3</td><td class="num">11</td><td class="num">11</td><td class="num">1011</td></tr>
+<tr><td class="num">4</td><td class="num">100</td><td class="num">12</td><td class="num">1100</td></tr>
+<tr><td class="num">5</td><td class="num">101</td><td class="num">13</td><td class="num">1101</td></tr>
+<tr><td class="num">6</td><td class="num">110</td><td class="num">14</td><td class="num">1110</td></tr>
+<tr><td class="num">7</td><td class="num">111</td><td class="num">15</td><td class="num">1111</td></tr>
+</tbody></table></div>
+<p>Dvojkový zápis je delší, protože má jen dvě číslice. Za to ho elektronika zvládne spolehlivě uložit i zpracovat.</p>
+</section>
+
+<section id="prevody">
+<h2>Převody mezi soustavami</h2>
+<h3>Z dvojkové do desítkové</h3>
+<p>Napiš nad každou číslici její váhu (zprava 1, 2, 4, 8, …) a sečti váhy tam, kde je jednička.</p>
+<div class="formula">1 1 0 1 0 1<small>32 + 16 + 0 + 4 + 0 + 1 = 53</small></div>
+<h3>Z desítkové do dvojkové</h3>
+<p>Číslo opakovaně dělíš dvěma a zapisuješ zbytky. Výsledek čteš <strong>zdola nahoru</strong> (poslední zbytek je první číslice).</p>
+<div class="tbl"><table>
+<thead><tr><th>dělení</th><th>výsledek</th><th>zbytek</th></tr></thead>
+<tbody>
+<tr><td class="num">53 : 2</td><td class="num">26</td><td class="num">1</td></tr>
+<tr><td class="num">26 : 2</td><td class="num">13</td><td class="num">0</td></tr>
+<tr><td class="num">13 : 2</td><td class="num">6</td><td class="num">1</td></tr>
+<tr><td class="num">6 : 2</td><td class="num">3</td><td class="num">0</td></tr>
+<tr><td class="num">3 : 2</td><td class="num">1</td><td class="num">1</td></tr>
+<tr><td class="num">1 : 2</td><td class="num">0</td><td class="num">1</td></tr>
+</tbody></table></div>
+<p>Zbytky zdola nahoru: <span class="bits">110101</span>. Zkouška: 32 + 16 + 4 + 1 = 53. ✓</p>
+<div class="note tip"><b class="lbl">Rychlejší cesta</b><p>U menších čísel jde i „odčítání vah“: najdi největší mocninu dvou, která se vejde (53 → 32), odečti ji, napiš 1 a pokračuj se zbytkem (21 → 16, 5 → 4, 1 → 1). Na pozice vah, které jsi nepoužil, napiš 0.</p></div>
+</section>
+
+<section id="hex">
+<h2>Šestnáctková soustava</h2>
+<p>Dlouhé řady nul a jedniček se lidem špatně čtou. Proto se v informatice často používá <dfn>šestnáctková (hexadecimální) soustava</dfn> se základem 16. Má číslice 0–9 a pak písmena A–F (A = 10, B = 11, …, F = 15).</p>
+<p>Trik je v tom, že jedna šestnáctková číslice odpovídá přesně <strong>čtyřem bitům</strong> (2⁴ = 16). Bajt (8 bitů) se tedy vždy zapíše dvěma šestnáctkovými číslicemi.</p>
+<div class="formula">0100 1101 → 4 D → 4D<small>4D₁₆ = 4·16 + 13 = 77</small></div>
+<p>Šestnáctkovou soustavu potkáš u kódů znaků (lekce 04), u barev na webu, třeba <code>#FF8000</code> (lekce 07), nebo u adres v paměti.</p>
+</section>
+
+<p class="part">Kolik bitů</p>
+
+<section id="vic-stavu">
+<h2>Když dva stavy nestačí</h2>
+<p>Semafor má tři barvy: červenou, oranžovou a zelenou. Jeden bit rozliší jen dva stavy, takže na semafor nestačí. Vezmeme proto <strong>dva bity vedle sebe</strong>. Ty mají čtyři kombinace:</p>
+<div class="tbl"><table>
+<thead><tr><th>bity</th><th>hodnota</th><th>stav semaforu</th></tr></thead>
+<tbody>
+<tr><td class="num">00</td><td class="num">0</td><td>zhasnuto</td></tr>
+<tr><td class="num">01</td><td class="num">1</td><td>zelená</td></tr>
+<tr><td class="num">10</td><td class="num">2</td><td>oranžová</td></tr>
+<tr><td class="num">11</td><td class="num">3</td><td>červená</td></tr>
+</tbody></table></div>
+<p>Které kombinaci přiřadíme kterou barvu, je čistě <strong>dohoda</strong>. Důležité je jen to, aby ji znal ten, kdo zapisuje, i ten, kdo čte. Takové dohodě se říká <dfn>kódování</dfn> a podrobně se jí věnuje lekce 04.</p>
+</section>
+
+<section id="vzorec">
+<h2>n bitů = 2ⁿ stavů</h2>
+<p>Každý přidaný bit <strong>zdvojnásobí</strong> počet kombinací: všechny dosavadní kombinace jdou zapsat jednou s nulou navíc a jednou s jedničkou navíc.</p>
+<div class="formula">n bitů → 2ⁿ různých stavů</div>
+<div class="tbl"><table>
+<thead><tr><th>bitů</th><th>stavů</th><th>příklad</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td class="num">2</td><td>žárovka, ano/ne</td></tr>
+<tr><td class="num">2</td><td class="num">4</td><td>semafor (3 barvy + zhasnuto)</td></tr>
+<tr><td class="num">3</td><td class="num">8</td><td>dny v týdnu (7 se vejde)</td></tr>
+<tr><td class="num">7</td><td class="num">128</td><td>tabulka ASCII</td></tr>
+<tr><td class="num">8</td><td class="num">256</td><td>jeden bajt, odstín šedi</td></tr>
+<tr><td class="num">16</td><td class="num">65 536</td><td>CD zvuk (hlasitost jednoho vzorku)</td></tr>
+<tr><td class="num">24</td><td class="num">16 777 216</td><td>barva v RGB</td></tr>
+<tr><td class="num">32</td><td class="num">4 294 967 296</td><td>adresy IPv4</td></tr>
+</tbody></table></div>
+<p>Růst je <dfn>exponenciální</dfn>. Přidání pár bitů nevypadá jako nic, ale počet stavů rychle vyletí do milionů a miliard.</p>
+</section>
+
+<section id="opacne">
+<h2>Kolik bitů potřebuju na N stavů</h2>
+<p>Obrácená otázka: mám N různých věcí, kolik bitů potřebuju, aby každá měla svůj kód? Hledáme nejmenší n, pro které platí 2ⁿ ≥ N.</p>
+<div class="formula">n = ⌈log₂ N⌉<small>⌈ ⌉ znamená zaokrouhlit nahoru</small></div>
+<p>Bez logaritmu: zdvojuj 1, 2, 4, 8, 16, 32… a zastav se u prvního čísla, které je větší nebo rovno N. Počet zdvojení je počet bitů.</p>
+<ul>
+  <li>3 barvy semaforu: 2 bity (4 ≥ 3).</li>
+  <li>26 písmen anglické abecedy: 5 bitů (32 ≥ 26).</li>
+  <li>30 žáků ve třídě: 5 bitů (32 ≥ 30).</li>
+  <li>100 žáků ve škole: 7 bitů (128 ≥ 100).</li>
+</ul>
+<div class="note mat"><b class="lbl">K teorii informace</b><p>Bit je i jednotka <em>množství informace</em>. Výběr z N stejně pravděpodobných možností nese log₂ N bitů. Hod mincí nese 1 bit, výběr jedné karty z 32 nese 5 bitů. Tohle je jádro Shannonovy teorie informace.</p></div>
+</section>
+
+<p class="part">Bajt a jednotky</p>
+
+<section id="byte">
+<h2>Bajt</h2>
+<p>Jeden bit sám o sobě moc neřekne, proto se bity skládají do skupin. Nejběžnější skupina má <strong>8 bitů</strong> a jmenuje se <dfn>bajt</dfn> (anglicky <em>byte</em>). Značka je velké <strong>B</strong>.</p>
+<div class="formula">1 B = 8 b<small>jeden bajt má 2⁸ = 256 stavů, hodnoty 0 až 255</small></div>
+<div class="tbl"><table>
+<thead><tr><th></th><th>bit</th><th>bajt</th></tr></thead>
+<tbody>
+<tr><td>značka</td><td><strong>b</strong> (malé)</td><td><strong>B</strong> (velké)</td></tr>
+<tr><td>bitů</td><td class="num">1</td><td class="num">8</td></tr>
+<tr><td>stavů</td><td class="num">2</td><td class="num">256</td></tr>
+<tr><td>příklad</td><td>jeden vypínač</td><td>jeden znak textu, jeden odstín šedi</td></tr>
+</tbody></table></div>
+<p>Bajt je nejmenší kus paměti, který má v počítači vlastní <dfn>adresu</dfn>. Proto se velikosti souborů a paměti udávají v bajtech, ne v bitech.</p>
+</section>
+
+<section id="proc-8">
+<h2>Proč má bajt zrovna 8 bitů</h2>
+<p>U bitu jsou dva stavy fyzikální nutnost. Osm bitů v bajtu je ale jen <strong>dohoda</strong>, která se historicky ustálila:</p>
+<ul>
+  <li><strong>IBM System/360 (1964).</strong> Tento sálový počítač používal 8bitový bajt. Byl tak rozšířený, že se jeho návrh stal průmyslovým standardem.</li>
+  <li><strong>Dost stavů, ne zbytečně moc.</strong> Starší 6bitové kódy měly jen 64 stavů: stačily na velká písmena a číslice, ale ne na malá písmena. 8 bitů (256 stavů) bylo první „kulaté“ číslo nad touto potřebou.</li>
+  <li><strong>Mocnina dvou.</strong> 8 = 2³, s tím se hardwaru dobře počítá i adresuje. A bajt jde rozdělit na dvě poloviny po 4 bitech, tedy na dvě šestnáctkové číslice.</li>
+</ul>
+<p>V historii existovaly i „bajty“ o 6, 7 nebo 9 bitech. Kde je nutné vyloučit nejasnost (třeba v telekomunikačních normách), používá se proto přesné slovo <dfn>oktet</dfn>, tedy přesně 8 bitů.</p>
+</section>
+
+<section id="nasobky">
+<h2>Kilo, mega, giga…</h2>
+<p>Pro velká množství dat se používají předpony soustavy SI, stejně jako u metrů nebo gramů. Každý krok je <strong>× 1000</strong>.</p>
+<div class="tbl"><table>
+<thead><tr><th>jednotka</th><th>značka</th><th>bajtů</th><th>představa</th></tr></thead>
+<tbody>
+<tr><td>bajt</td><td>B</td><td class="num">1</td><td>jedno písmeno</td></tr>
+<tr><td>kilobajt</td><td>kB</td><td class="num">1 000</td><td>krátký e-mail</td></tr>
+<tr><td>megabajt</td><td>MB</td><td class="num">1 000 000</td><td>fotka, minuta hudby v MP3</td></tr>
+<tr><td>gigabajt</td><td>GB</td><td class="num">1 000 000 000</td><td>film</td></tr>
+<tr><td>terabajt</td><td>TB</td><td class="num">1 000 000 000 000</td><td>celý disk počítače</td></tr>
+</tbody></table></div>
+<h3>Proč se někdy počítá s 1024</h3>
+<p>Paměť počítače má velikost v mocninách dvou a 2¹⁰ = 1024 je blízko 1000. Dlouho se proto „kilobajt“ používal pro obě hodnoty a vznikal zmatek. Od roku 1998 jsou pro dvojkové násobky samostatné předpony (norma IEC):</p>
+<div class="tbl"><table>
+<thead><tr><th>desítkově (SI)</th><th>dvojkově (IEC)</th><th>rozdíl</th></tr></thead>
+<tbody>
+<tr><td>1 kB = 1 000 B</td><td>1 KiB (kibibajt) = 1 024 B</td><td class="num">2,4 %</td></tr>
+<tr><td>1 MB = 10⁶ B</td><td>1 MiB (mebibajt) = 2²⁰ B</td><td class="num">4,9 %</td></tr>
+<tr><td>1 GB = 10⁹ B</td><td>1 GiB (gibibajt) = 2³⁰ B</td><td class="num">7,4 %</td></tr>
+<tr><td>1 TB = 10¹² B</td><td>1 TiB (tebibajt) = 2⁴⁰ B</td><td class="num">10 %</td></tr>
+</tbody></table></div>
+<div class="note warn"><b class="lbl">Proč má nový disk „méně“ místa</b><p>Výrobce prodá disk 1 TB = 10¹² bajtů. Windows ale počítá v mocninách dvou a ukáže 10¹² / 2⁴⁰ ≈ <strong>931 GB</strong> (správně by mělo psát GiB). Nikdo tě neokradl, jen každý počítá jinou jednotkou.</p></div>
+</section>
+
+<section id="rychlost">
+<h2>Rychlost přenosu: b/s a B/s</h2>
+<p>Velikost souborů se udává v <strong>bajtech</strong> (MB, GB). Rychlost internetu a sítí se ale udává v <strong>bitech za sekundu</strong> (Mb/s, často psáno Mbps). Stejné písmeno, jiná jednotka, rozdíl je přesně 8×.</p>
+<div class="formula">100 Mb/s ÷ 8 = 12,5 MB/s</div>
+<p>Poskytovatelé internetu uvádějí rychlost v bitech, protože číslo vypadá 8× větší. Proto se při stahování nediv, že prohlížeč ukazuje „jen“ 12 MB/s.</p>
+<h3>Jak počítat dobu stahování</h3>
+<ol>
+  <li>Převeď rychlost na bajty: vyděl osmi.</li>
+  <li>Vyděl velikost souboru rychlostí.</li>
+</ol>
+<p><strong>Příklad:</strong> soubor 100 MB, internet 40 Mb/s. Rychlost 40 ÷ 8 = 5 MB/s. Čas 100 ÷ 5 = <strong>20 s</strong>.</p>
+<div class="note tip"><b class="lbl">Pravidlo</b><p>Malé „b“ nejdřív převeď na bajty (÷ 8) a teprve pak počítej cokoliv dalšího. Ve skutečnosti bude stahování o něco pomalejší, protože část přenosu spotřebuje režie protokolů.</p></div>
+</section>
+
+<p class="part">Opakování</p>
+
+<section id="zkus">
+<h2>Vyzkoušej si</h2>
+<p>Nejdřív vypočítej sám, pak si rozbal řešení.</p>
+<details class="sol"><summary>1. Převeď 1001110 do desítkové soustavy.</summary><div><p>64 + 8 + 4 + 2 = <strong>78</strong>.</p></div></details>
+<details class="sol"><summary>2. Převeď 200 do dvojkové soustavy.</summary><div><p>200 = 128 + 64 + 8 → <span class="bits">11001000</span>. Dělením dvěma: zbytky 0, 0, 0, 1, 0, 0, 1, 1, čteno zdola nahoru 11001000.</p></div></details>
+<details class="sol"><summary>3. Zapiš bajt 11001000 šestnáctkově.</summary><div><p>1100 = C, 1000 = 8 → <strong>C8</strong>.</p></div></details>
+<details class="sol"><summary>4. Kolik bitů potřebuješ na čísla dnů v měsíci (1–31)?</summary><div><p>31 hodnot, 2⁵ = 32 ≥ 31, tedy <strong>5 bitů</strong>.</p></div></details>
+<details class="sol"><summary>5. Kolik různých hodnot popíšeš 10 bity? A 20 bity?</summary><div><p>2¹⁰ = 1 024, 2²⁰ = 1 048 576 (zhruba milion).</p></div></details>
+<details class="sol"><summary>6. Kolik je 3 MB v bitech?</summary><div><p>3 000 000 B × 8 = <strong>24 000 000 b</strong> (24 Mb).</p></div></details>
+<details class="sol"><summary>7. Internet má 250 Mb/s. Jak dlouho se stahuje hra 50 GB?</summary><div><p>250 ÷ 8 = 31,25 MB/s. 50 GB = 50 000 MB. 50 000 ÷ 31,25 = 1 600 s ≈ <strong>26,7 minuty</strong>.</p></div></details>
+<details class="sol"><summary>8. Kolik GiB ukáže počítač u disku prodaného jako 500 GB?</summary><div><p>500 · 10⁹ / 2³⁰ ≈ <strong>465,7 GiB</strong>.</p></div></details>
+</section>
+
+<section id="chyby">
+<h2>Časté chyby</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Správně</th></tr></thead>
+<tbody>
+<tr><td>Záměna b a B (Mb/s jako MB/s)</td><td>b = bit, B = bajt, 1 B = 8 b</td></tr>
+<tr><td>Při převodu dělením číst zbytky shora dolů</td><td>Číst <strong>zdola nahoru</strong></td></tr>
+<tr><td>Váhy pozic číst zleva (1, 2, 4… od první číslice)</td><td>Váha 1 je vždy u <strong>poslední</strong> (pravé) číslice</td></tr>
+<tr><td>„3 stavy potřebují 1,5 bitu“</td><td>Bity jsou celé, zaokrouhluje se nahoru: 2 bity</td></tr>
+<tr><td>Myslet si, že 2 bity = 2 stavy</td><td>2 bity = 2² = 4 stavy</td></tr>
+<tr><td>Psát velké K u kilo (KB)</td><td>Podle SI malé <strong>k</strong> (kB), velké K jen u KiB</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<details class="q"><summary>Co je bit a odkud pochází jeho název?</summary><div class="a"><p>Nejmenší jednotka informace se dvěma stavy 0 a 1. Název je zkratka z <em>binary digit</em>, v tisku ho poprvé použil Claude Shannon v roce 1948.</p></div></details>
+<details class="q"><summary>Proč počítače používají dvojkovou soustavu?</summary><div class="a"><p>Elektronika snadno a spolehlivě rozliší dva stavy (napětí ano/ne, tranzistor otevřený/zavřený). Dva stavy jsou odolné proti rušení.</p></div></details>
+<details class="q"><summary>Kolik stavů popíše n bitů a proč?</summary><div class="a"><p>2ⁿ. Každý přidaný bit zdvojnásobí počet kombinací, protože ke každé dosavadní kombinaci může přibýt 0 nebo 1.</p></div></details>
+<details class="q"><summary>Jak zjistíš, kolik bitů potřebuješ na N stavů?</summary><div class="a"><p>Najdeš nejmenší n, pro které 2ⁿ ≥ N, tedy n = log₂ N zaokrouhlený nahoru.</p></div></details>
+<details class="q"><summary>Proč má bajt 8 bitů?</summary><div class="a"><p>Je to dohoda. Prosadil ji počítač IBM System/360 (1964). 256 stavů stačí na písmena obou velikostí, číslice i znaky, a 8 je mocnina dvou.</p></div></details>
+<details class="q"><summary>Proč se jeden bajt zapisuje dvěma šestnáctkovými číslicemi?</summary><div class="a"><p>Jedna šestnáctková číslice má 16 hodnot = 4 bity. Bajt má 8 bitů, tedy dvě takové číslice.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi kB a KiB?</summary><div class="a"><p>kB = 1 000 B (předpona SI), KiB = 1 024 B (dvojková předpona IEC).</p></div></details>
+<details class="q"><summary>Kolik MB/s je 80 Mb/s?</summary><div class="a"><p>80 ÷ 8 = 10 MB/s.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Bit (b)</dt><dd>Nejmenší jednotka informace, dva stavy 0 a 1</dd>
+  <dt>Bajt (B)</dt><dd>Skupina 8 bitů, 256 stavů</dd>
+  <dt>Oktet</dt><dd>Přesně 8 bitů, používá se v síťových normách</dd>
+  <dt>Poziční soustava</dt><dd>Hodnota číslice závisí na její pozici</dd>
+  <dt>Základ soustavy</dt><dd>Počet různých číslic (10, 2, 16)</dd>
+  <dt>Dvojková (binární)</dt><dd>Soustava se základem 2, číslice 0 a 1</dd>
+  <dt>Šestnáctková (hexadecimální)</dt><dd>Soustava se základem 16, číslice 0–9 a A–F</dd>
+  <dt>Kódování</dt><dd>Dohoda, která přiřazuje stavům (kombinacím bitů) význam</dd>
+  <dt>KiB, MiB, GiB</dt><dd>Dvojkové násobky 2¹⁰, 2²⁰, 2³⁰ bajtů</dd>
+  <dt>b/s (bps)</dt><dd>Bitů za sekundu, jednotka přenosové rychlosti</dd>
+</dl>
+</section>
+
+<p class="foot">Studijní text k lekci „Bit po bitu“ z bloku Informace. Interaktivní verzi najdeš v <a href="03_bit_byte.html">prezentaci</a>.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    var d = document.querySelector('.toc details'); if (d) d.open = false;
+  }
+})();
+</script>
+</body>
+</html>
