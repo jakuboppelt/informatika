@@ -1017,14 +1017,27 @@ body.doc { background: var(--bg); color: var(--fg); font-family: var(--f-body); 
 
 .doc .foot { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; }
 
-/* rozcestník (index.html) */
+/* rozcestník (index.html) — karta tématu s tlačítky na prezentaci, studijní text atd. */
 .doc .index { max-width: 46rem; margin: 0 auto; }
-.doc .items { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 12px; }
-.doc .items a { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 18px; align-items: baseline; text-decoration: none; color: var(--fg); background: var(--surface); border: 1px solid transparent; border-radius: 20px; padding: 18px 22px; transition: border-color .2s ease; }
-.doc .items a:hover, .doc .items a:focus-visible { border-color: var(--accent); }
-.doc .items .n { font-family: var(--f-mono); font-weight: 700; color: var(--accent); grid-row: span 2; font-size: 1.4rem; }
-.doc .items .tt { font-weight: 600; font-size: 1.15rem; color: var(--fg); }
-.doc .items .ds { color: var(--muted); font-size: .95rem; }
+.doc .index .hero { padding-block: 48px 24px; }
+.doc .index .hero h1 { margin: 0; }
+.doc .topics { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 12px; }
+.doc .topic { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 18px; align-items: baseline; background: var(--surface); border: 1px solid transparent; border-radius: 20px; padding: 18px 22px; transition: border-color .2s ease; }
+.doc .topic:hover, .doc .topic:focus-within { border-color: var(--line); }
+.doc .topic .n { font-family: var(--f-mono); font-weight: 700; color: var(--accent); grid-row: span 3; font-size: 1.4rem; }
+.doc .topic .tt { font-weight: 600; font-size: 1.15rem; line-height: 1.3; color: var(--fg); margin: 0; letter-spacing: 0; }
+.doc .topic .ds { color: var(--muted); font-size: .95rem; margin: 0; }
+.doc .acts { grid-column: 2; display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+.doc .act { display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px 7px 13px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg); text-decoration: none; font-size: .9rem; font-weight: 500; line-height: 1.2; transition: border-color .15s ease, color .15s ease, background-color .15s ease; }
+.doc .act:hover, .doc .act:focus-visible { border-color: var(--accent); color: var(--accent); }
+.doc .act.main { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.doc .act.main:hover, .doc .act.main:focus-visible { background: transparent; color: var(--accent); }
+.doc .act .ic { width: 18px; height: 18px; flex: none; }
+@media (max-width: 520px) {
+  .doc .topic { grid-template-columns: minmax(0, 1fr); padding: 16px 18px; }
+  .doc .topic .n { grid-row: auto; font-size: 1.1rem; }
+  .doc .acts { grid-column: 1; }
+}
 .doc .soon { color: var(--muted); font-size: .95rem; }
 
 /* příklad krok za krokem (seminar/03_priklad_jablko) */
