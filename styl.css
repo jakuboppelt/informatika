@@ -1799,3 +1799,30 @@ body.doc { background: var(--bg); color: var(--fg); font-family: var(--f-body); 
 .doc .perm-grid input { width: 1.2rem; height: 1.2rem; accent-color: var(--accent); justify-self: center; }
 .doc .perm-out { font-family: var(--f-mono); font-size: 1.05rem; }
 .doc .perm-out b { color: var(--accent); }
+
+
+/* =====================================================================
+   SOCIÁLNÍ SÍTĚ  —  doplňky pro <body class="deck"> (bezpecnost/02_socialni_site.html)
+   Simulace feedu, příspěvky profilu, metadata fotek, kontrola účtu.
+   ===================================================================== */
+.deck .feed { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+.deck .post { appearance: none; cursor: pointer; text-align: left; border: 1px solid var(--border); background: var(--surface); color: var(--ink); border-radius: 14px; padding: .75rem .9rem; min-height: 4.6rem; display: flex; flex-direction: column; gap: .3rem; font-size: .92rem; font-weight: 500; line-height: 1.35; transition: border-color .2s ease; }
+.deck .post span { font-family: var(--font-mono); font-size: .68rem; color: var(--ink-muted); letter-spacing: .04em; text-transform: uppercase; }
+.deck .post:hover { border-color: var(--accent); }
+.deck .pf-post { border-top: 1px solid var(--border); padding-top: .5rem; }
+.deck .pf-post:first-child { border-top: none; padding-top: 0; }
+.deck table.datatable td.is-kept { color: var(--c-warm); font-weight: 600; }
+.deck table.datatable td.is-gone { color: var(--good); }
+.deck .checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+@media (max-width: 560px) { .deck .checks { grid-template-columns: minmax(0, 1fr); } }
+.deck .chk { appearance: none; cursor: pointer; text-align: left; border: 1px solid var(--border); background: var(--surface); color: var(--ink); border-radius: 12px; padding: .6rem .8rem .6rem 2.4rem; position: relative; display: flex; flex-direction: column; gap: .15rem; font-size: .85rem; }
+.deck .chk b { font-size: .95rem; }
+.deck .chk span { color: var(--ink-muted); }
+.deck .chk::before { content: ""; position: absolute; left: .8rem; top: .75rem; width: 1rem; height: 1rem; border: 2px solid var(--ink-muted); border-radius: 5px; }
+.deck .chk.is-done { border-color: var(--good); }
+.deck .chk.is-done::before { background: var(--good); border-color: var(--good); }
+.deck .chk.is-done::after { content: ""; position: absolute; left: 1.13rem; top: .86rem; width: .32rem; height: .6rem; border: solid var(--c-bg); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.deck .chk-track { height: .5rem; background: var(--surface); border-radius: 999px; overflow: hidden; }
+.deck .chk-bar { height: 100%; width: 0; background: var(--good); border-radius: 999px; transition: width .3s ease; }
+.deck .feed-foot { display: flex; gap: .8rem; align-items: center; flex-wrap: wrap; min-height: 2.6rem; }
+.deck .feed-foot b { color: var(--ink); }

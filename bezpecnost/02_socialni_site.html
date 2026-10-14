@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sociální sítě</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Bezpečnost · 2. materiál</div>
+        <h1>Sociální sítě</h1>
+        <p class="lede">Co o tobě sítě vědí, proč se od nich těžko odtrhneš a jak se na nich chránit před podvodníky. Všechny osoby a účty v materiálu jsou vymyšlené.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="1"><div class="slide-inner">
+      <div class="eyebrow">Byznys model</div>
+      <h2 class="slide-title">Proč tě sociální síť nic nestojí?</h2>
+      <p class="lede">Platíš, jen ne penězi. Klikni na jednotlivé kroky a sleduj, jak se z tvého času stávají peníze.</p>
+      <div class="chain" id="chain"></div>
+      <div class="panel" id="chainPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="2"><div class="slide-inner">
+      <div class="eyebrow">Sběr dat</div>
+      <h2 class="slide-title">Co o tobě platforma ví</h2>
+      <p class="lede">To, co sám zveřejníš, je jen malá část. Mnohem víc platforma pozná z toho, jak se chováš.</p>
+      <div class="cards4" id="knowCards"></div>
+      <div class="panel" id="knowPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="3"><div class="slide-inner">
+      <div class="eyebrow">Vyzkoušej algoritmus</div>
+      <h2 class="slide-title">Tvůj feed se učí z každého zastavení</h2>
+      <p class="note">Klikni na příspěvek, u kterého by ses zastavil. Algoritmus nepotřebuje lajk, stačí, že se díváš o chvíli déle. <span id="feedRound">Várka 1</span></p>
+      <div class="feed" id="feed"></div>
+      <div class="size-bars" id="feedBars"></div>
+      <div class="feed-foot"><span class="note grow" id="feedMsg">Zatím ukazuje od všeho trochu.</span><button class="calc-btn" id="feedReset">Začít znovu</button></div>
+    </div></section>
+
+    <section class="slide" data-index="4"><div class="slide-inner">
+      <div class="eyebrow">Návykovost</div>
+      <h2 class="slide-title">Nejsi slabý. Aplikace je navržená, abys zůstal.</h2>
+      <p class="lede">Sítě využívají poznatky z psychologie chování. Cílem je, abys v aplikaci strávil co nejvíc času.</p>
+      <div class="cards4" id="hookCards"></div>
+      <div class="panel" id="hookPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="5"><div class="slide-inner">
+      <div class="eyebrow">Bublina</div>
+      <h2 class="slide-title">Filtrační bublina a echo chamber</h2>
+      <p class="lede">Dva pojmy, které se často zaměňují. Jeden dělá stroj, druhý lidé. Navzájem se posilují.</p>
+      <div class="compare-grid">
+        <div class="compare-col">
+          <div class="compare-head">Filtrační bublina</div>
+          <div class="compare-row"><span>původ</span><span>algoritmus</span></div>
+          <div class="compare-body">Platforma ti <b>bez tvého vědomí</b> vybírá obsah podle toho, na co jsi reagoval. Odlišné názory postupně mizí z feedu.</div>
+        </div>
+        <div class="compare-col">
+          <div class="compare-head">Echo chamber (ozvěna)</div>
+          <div class="compare-row"><span>původ</span><span>lidé</span></div>
+          <div class="compare-body">Skupina lidí, kteří si <b>navzájem potvrzují</b> názory. Kdo nesouhlasí, odejde nebo je vyloučen.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Proč je to problém</h3>
+        <p>Lidé v různých bublinách vidí různá „fakta“. Hůř se pak domluví, snáz uvěří dezinformaci a druhou stranu si představují mnohem extrémnější, než ve skutečnosti je.</p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="6"><div class="slide-inner">
+      <div class="eyebrow">Emoce jako palivo</div>
+      <h2 class="slide-title">Co algoritmus odměňuje</h2>
+      <div class="seg" id="emoSeg"></div>
+      <div class="panel" id="emoPanel"></div>
+    </div></section>
+
+    <section class="slide pause-slide" data-index="7"><div class="slide-inner">
+      <div class="qmark">?</div>
+      <h2>Kolik času denně strávíš na sítích?</h2>
+      <p class="lede">Nejdřív odhadni. Pak otevři v telefonu <b>Čas u obrazovky</b> (iPhone) nebo <b>Digitální pohodu</b> (Android) a porovnej to se skutečností. Kolik odemknutí telefonu máš za den?</p>
+    </div></section>
+
+    <section class="slide" data-index="8"><div class="slide-inner">
+      <div class="eyebrow">OSINT: co jde vyčíst z veřejných zdrojů</div>
+      <h2 class="slide-title">Najdi 6 věcí, které profil prozrazuje</h2>
+      <p class="note">Klikej na označená místa. <span id="pfCount">Nalezeno 0 z 6</span></p>
+      <div class="mail">
+        <div class="mail-h">
+          <div><span class="k">Profil</span><b>Adéla K. · @adela.k</b></div>
+          <div><span class="k">Bio</span><button class="hs" data-h="0">3.B · Gymnázium Lipová · volejbal TJ Lipová 🏐</button></div>
+        </div>
+        <div class="mail-b">
+          <div class="pf-post"><button class="hs" data-h="1">Všechno nejlepší mně! Dneska 12. 3. je mi 17 🎂</button></div>
+          <div class="pf-post">Nové kolo! 🚲 <button class="hs" data-h="2">[foto: kolo před domem, vidět číslo popisné 214 a název ulice]</button></div>
+          <div class="pf-post"><button class="hs" data-h="3">Každé úterý a čtvrtek v 17:00 trénink 💪 📍 Sportovní hala Lipová</button></div>
+          <div class="pf-post"><button class="hs" data-h="4">Rexík dnes slaví 5 let 🐶❤️</button></div>
+          <div class="pf-post"><button class="hs" data-h="5">Zítra ráno letíme na 2 týdny do Řecka ✈️🌴 Konečně!</button></div>
+        </div>
+      </div>
+      <div class="panel p-mail" id="pfPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="9"><div class="slide-inner">
+      <div class="eyebrow">Metadata fotek</div>
+      <h2 class="slide-title">Fotka nese víc, než je na ní vidět</h2>
+      <p class="lede">Telefon do každé fotky zapisuje metadata EXIF. Záleží, jakou cestou fotku pošleš. Vyber způsob.</p>
+      <div class="seg" id="exifSeg"></div>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Údaj</th><th>Příklad</th><th>Zůstane?</th></tr></thead>
+          <tbody id="exifBody"></tbody>
+        </table>
+      </div>
+      <p class="note" id="exifNote"></p>
+    </div></section>
+
+    <section class="slide" data-index="10"><div class="slide-inner">
+      <div class="eyebrow">Nastavení soukromí</div>
+      <h2 class="slide-title">Soukromý účet neznamená, že o tobě síť neví</h2>
+      <div class="compare-grid">
+        <div class="compare-col">
+          <div class="compare-head">Co nastavením ovlivníš</div>
+          <div class="compare-body">Kdo vidí tvoje příspěvky a příběhy<br>Kdo ti může psát a označovat tě<br>Jestli tě lidé najdou podle čísla<br>Sdílení polohy s přáteli</div>
+        </div>
+        <div class="compare-col">
+          <div class="compare-head">Co tím neovlivníš</div>
+          <div class="compare-body">Co si platforma o tobě ukládá<br>Jak dlouho se díváš a na co<br>Profil zájmů pro reklamu<br>Co o tobě zveřejní kamarádi</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Kde se podívat</h3>
+        <p><b>Instagram, Facebook:</b> Centrum účtů → Vaše informace a oprávnění → Vaše aktivita mimo technologie Meta. <b>TikTok:</b> Nastavení a soukromí → Soukromí. Na všech sítích jde stáhnout kopii vlastních dat. Je to tvoje právo podle GDPR.</p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="11"><div class="slide-inner">
+      <div class="eyebrow">Podvody na sítích</div>
+      <h2 class="slide-title">Nejčastější triky</h2>
+      <div class="seg" id="scamSeg"></div>
+      <div class="panel" id="scamPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="12"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Sdílet, nebo raději ne?</h2>
+      <p class="score" id="qScore">Příspěvek 1 z 6 · správně 0</p>
+      <div class="msg"><div class="who" id="qWho"></div><div class="text" id="qText"></div></div>
+      <div class="seg"><button class="calc-btn" id="qOk">Sdílet</button><button class="calc-btn" id="qBad">Raději ne</button><button class="calc-btn" id="qNext" hidden>Další →</button></div>
+      <div class="feedback" id="qFb"></div>
+    </div></section>
+
+    <section class="slide" data-index="13"><div class="slide-inner">
+      <div class="eyebrow">Když se to stane</div>
+      <h2 class="slide-title">Co dělat, když se něco pokazí</h2>
+      <div class="seg" id="helpSeg"></div>
+      <div class="panel" id="helpPanel"></div>
+      <p class="note">Linka bezpečí <b>116 111</b> (zdarma, nonstop) · poradna <b>e-bezpeci.cz</b> · Policie ČR <b>158</b></p>
+    </div></section>
+
+    <section class="slide" data-index="14"><div class="slide-inner">
+      <div class="eyebrow">Udělej hned</div>
+      <h2 class="slide-title">Bezpečnostní kontrola účtu za 10 minut</h2>
+      <p class="note">Vezmi telefon a odškrtávej, co máš hotové. <span id="chkCount">Hotovo 0 z 8</span></p>
+      <div class="chk-track"><div class="chk-bar" id="chkBar"></div></div>
+      <div class="checks" id="checks"></div>
+    </div></section>
+
+    <section class="slide" data-index="15"><div class="slide-inner">
+      <div class="eyebrow">Pravidla</div>
+      <h2 class="slide-title">Co říká zákon</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Pravidlo</th><th>Co znamená pro tebe</th></tr></thead>
+          <tbody>
+            <tr><td><b>Věk 15 let</b></td><td>V Česku můžeš sám souhlasit se zpracováním svých dat od 15 let. Mladší potřebuje souhlas rodiče. Většina sítí v podmínkách vyžaduje alespoň 13 let.</td></tr>
+            <tr><td><b>GDPR</b></td><td>Máš právo zjistit, co o tobě firma ví, nechat data opravit nebo smazat.</td></tr>
+            <tr><td><b>DSA</b></td><td>Velké platformy v EU nesmí nezletilým zobrazovat reklamu cílenou na základě profilování a musí umožnit feed, který na profilování nestojí.</td></tr>
+            <tr><td><b>Pokuty</b></td><td>Meta 1,2 mld. € (2023, přenos dat do USA) · TikTok 345 mil. € (2023, ochrana dětí) · TikTok 530 mil. € (2025, přenos dat do Číny)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Stížnost v Česku přijímá Úřad pro ochranu osobních údajů (uoou.gov.cz).</p>
+    </div></section>
+
+    <section class="slide pause-slide" data-index="16"><div class="slide-inner">
+      <div class="eyebrow">Než něco zveřejníš</div>
+      <div class="rule3">
+        <div><b>Kdo?</b><span>Kdo všechno to uvidí. Včetně těch, komu to někdo přepošle.</span></div>
+        <div><b>Co?</b><span>Co se z toho dá vyčíst: místo, čas, rutina, jména.</span></div>
+        <div><b>Za 5 let?</b><span>Budu chtít, aby to viděl budoucí zaměstnavatel nebo partner?</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="17"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Sítě vydělávají na <b>reklamě</b>. Prodávají tvou pozornost a profil.</li>
+        <li><b>Algoritmus</b> se učí z každého zastavení a přidává, co tě drží: často emoce a pobouření.</li>
+        <li>Návykovost je <b>záměr</b>: nejistá odměna, lajky, nekonečný scroll, notifikace.</li>
+        <li>Z veřejného profilu jde poskládat <b>adresa, rutina i odpovědi na bezpečnostní otázky</b>.</li>
+        <li>Nastavení soukromí řídí, <b>kdo vidí</b> tvůj obsah, ne co o tobě ví platforma.</li>
+        <li>Kód z SMS nikomu, <b>dvoufázové ověření</b> zapnout, a když se něco stane, řekni to hned.</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 18</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=document.getElementById("dots"),counterEl=document.getElementById("counter");
+  var prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=document.createElement("button");d.className="dot"+(i===0?" is-active":"");
+    d.setAttribute("aria-label","Snímek "+(i+1));d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  /* výběr jedné z N možností: tlačítka + panel se stálou výškou */
+  function picker(btnHost,items,mk,panel,showFn){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;showFn(it,i);
+      });btnHost.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");showFn(items[0],0);
+    fits.push({slide:btnHost.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){showFn(it,i);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";showFn(items[act],act);
+    }});
+  }
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function panelHtml(p,title,text,extra){p.innerHTML="<h3>"+title+"</h3><p>"+text+"</p>"+(extra||"");}
+  function stepsHtml(title,list){var h="<h3>"+title+"</h3><ol class=\"steps\">";list.forEach(function(x){h+="<li>"+x+"</li>";});return h+"</ol>";}
+
+  /* ---- 1: byznys model ---- */
+  var chain=[
+    {n:"Tvůj čas",s:"krok 1",t:"Pozornost je to, co platforma prodává",d:"Čím déle scrolluješ, tím víc reklam uvidíš. Každá minuta v aplikaci má pro platformu cenu."},
+    {n:"Data",s:"krok 2",t:"Každý pohyb se zaznamená",d:"Na co klikneš, u čeho se zastavíš, co přeskočíš, kdy aplikaci zavřeš a co tě do ní vrátilo."},
+    {n:"Profil",s:"krok 3",t:"Z chování vznikne tvůj profil",d:"Zájmy, nálady, denní rytmus, okruh přátel. Platforma pak dokáže odhadnout i věci, které jsi nikdy nenapsal."},
+    {n:"Reklama",s:"krok 4",t:"Inzerent platí za přesné cílení",d:"Reklama „pro šestnáctileté fanoušky volejbalu v Lipové“ je mnohem cennější než obecný banner. Meta v roce 2023 utržila přes 130 miliard dolarů, přes 97 % z reklamy."}
+  ];
+  picker($("chain"),chain,function(c){return el("button","",esc(c.n)+"<span>"+c.s+"</span>");},$("chainPanel"),function(c){panelHtml($("chainPanel"),c.t,c.d);});
+
+  /* ---- 2: co platforma ví ---- */
+  var know=[
+    {n:"Co zveřejníš",s:"vědomě",d:"Jméno, fotky, příspěvky, komentáře, škola, koho sleduješ. To je jen špička ledovce.",q:"profil, příspěvky, příběhy, zprávy, označení na fotkách"},
+    {n:"Jak se chováš",s:"bez přemýšlení",d:"Jak dlouho se díváš na každý příspěvek, kde zpomalíš scroll, co přetočíš znovu, kdy jsi online. Stačí sekundy navíc a algoritmus ví, co tě zajímá.",q:"doba sledování, rychlost scrollu, opakované přehrání, čas a místo přihlášení"},
+    {n:"Co odvodí",s:"odhadem",d:"Z chování se dá odhadnout věk, nálada, vztah, zájmy i názory, aniž bys je kdy napsal. Odhad nemusí být pravdivý, ale stejně se podle něj cílí.",q:"„pravděpodobně: student, sport, smutná nálada večer“"},
+    {n:"Mimo aplikaci",s:"na cizích webech",d:"Sledovací kód sítí (třeba Meta Pixel) je vložený na tisících e-shopů a webů. Síť se tak dozví, co si prohlížíš, i když ji zrovna nemáš otevřenou.",q:"e-shop → „zobrazil boty, nekoupil“ → reklama na Instagramu"}
+  ];
+  picker($("knowCards"),know,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("knowPanel"),function(c){panelHtml($("knowPanel"),c.n,c.d,'<div class="quote">'+esc(c.q)+"</div>");});
+
+  /* ---- 3: simulace feedu ---- */
+  var topics=[
+    {n:"Sport",p:["Nejlepší smeč sezóny 🏐","Trénink na doma za 10 minut","Finále v posledních sekundách"]},
+    {n:"Hudba",p:["Nový singl, který všichni hrajou","Kytarový trik pro začátečníky","Zákulisí koncertu"]},
+    {n:"Hry",p:["Skrytá zbraň, o které nevíš","Speedrun pod 20 minut","Nejhorší bug v historii"]},
+    {n:"Zvířata",p:["Kočka vs. okurka 🐱","Pes, který umí otevřít lednici","Záchrana ježka"]},
+    {n:"Móda",p:["Outfit na podzim za 500 Kč","Tenisky, které letos frčí","3 chyby, které dělá každý"]},
+    {n:"Drama",p:["Tohle tě NAŠTVE 😡","Influencer se pohádal s fanoušky","Nikdo o tom nemluví, ale…"]}
+  ];
+  var w,round;
+  function feedInit(){w=topics.map(function(){return 1;});round=1;feedRender();}
+  function pickTopic(full){
+    var sum=0,i;for(i=0;i<w.length;i++)if(full.indexOf(i)<0)sum+=w[i];
+    var r=Math.random()*sum;
+    for(i=0;i<w.length;i++){if(full.indexOf(i)>=0)continue;r-=w[i];if(r<=0)return i;}
+    return w.length-1;
+  }
+  function feedRender(){
+    var host=$("feed");host.innerHTML="";
+    var shown=[],used={},full=[],i;
+    for(i=0;i<4;i++){
+      var t=pickTopic(full);
+      used[t]=used[t]||[];
+      var free=topics[t].p.filter(function(x){return used[t].indexOf(x)<0;});
+      var txt=free[Math.floor(Math.random()*free.length)];
+      used[t].push(txt);if(used[t].length===topics[t].p.length)full.push(t);
+      shown.push({t:t,txt:txt});
+    }
+    shown.forEach(function(s){
+      var b=el("button","post","<span>"+topics[s.t].n+"</span>"+esc(s.txt));
+      b.addEventListener("click",function(){
+        shown.forEach(function(o){w[o.t]*=o.t===s.t?1.7:0.85;});
+        round++;feedRender();
+      });
+      host.appendChild(b);
+    });
+    $("feedRound").textContent="Várka "+round;
+    var sum=w.reduce(function(a,b){return a+b;},0),max=0,mi=0,bars=$("feedBars");bars.innerHTML="";
+    topics.forEach(function(t,k){
+      var pct=Math.round(w[k]/sum*100);if(pct>max){max=pct;mi=k;}
+      var row=el("div","size-row");
+      row.appendChild(el("span","size-lab",t.n));
+      var tr=el("div","size-track"),bar=el("div","size-bar"+(k===5?" is-raw":""));bar.style.width=pct+"%";tr.appendChild(bar);row.appendChild(tr);
+      row.appendChild(el("span","size-val",pct+" %"));
+      bars.appendChild(row);
+    });
+    var msg;
+    if(round===1)msg="Zatím ukazuje od všeho trochu.";
+    else if(max>=60)msg="<b>Bublina hotová.</b> "+max+" % feedu je teď "+topics[mi].n.toLowerCase()+". Ostatní témata skoro nevidíš, a to stačilo jen pár kliknutí.";
+    else msg="Algoritmus si všímá. Nejvíc teď ukazuje: <b>"+topics[mi].n+"</b> ("+max+" %).";
+    $("feedMsg").innerHTML=msg;
+  }
+  $("feedReset").addEventListener("click",feedInit);
+  feedInit();
+
+  /* ---- 4: návykovost ---- */
+  var hooks=[
+    {n:"Nejistá odměna",s:"jako automat",d:"Nikdy nevíš, jestli další příspěvek bude skvělý. Právě nejistota drží pozornost víc než jistá odměna. Stejně fungují hrací automaty.",q:"stáhnout dolů pro obnovení = zatáhnout za páku automatu"},
+    {n:"Lajky",s:"sociální potvrzení",d:"Reakce ostatních aktivují v mozku systém odměny. Čekání na lajky vytváří napětí a nutkání se podívat znovu.",q:"„Kolik to má lajků?“ po 5 minutách, po 10, po 30…"},
+    {n:"Nekonečný scroll",s:"žádný konec",d:"Stránka nikdy neskončí, takže chybí přirozený okamžik, kdy si řekneš „dost“. Rozhodnutí přestat musíš udělat sám.",q:"autoplay dalšího videa, žádné „to je vše“"},
+    {n:"Notifikace",s:"tahají tě zpět",d:"Upozornění přicházejí ve chvíli, kdy jsi offline. Přeruší pozornost a naučí tě sahat po telefonu na každý podnět.",q:"„Adéla přidala nový příběh“ · „Podívej, co jsi zmeškal“"}
+  ];
+  picker($("hookCards"),hooks,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("hookPanel"),function(c){panelHtml($("hookPanel"),c.n,c.d,'<div class="quote">'+esc(c.q)+"</div>");});
+
+  /* ---- 6: emoce ---- */
+  var emo=[
+    {n:"Pobouření",d:"Hněv a rozhořčení vyvolávají nejvíc komentářů a sdílení. Algoritmus optimalizovaný na zapojení proto zvýhodňuje obsah, který provokuje, i když je nepřesný. Dezinformace se šíří rychleji než jejich opravy, protože jsou emotivnější.",q:"Než sdílíš: sdílím to, protože je to pravda, nebo protože mě to naštvalo?"},
+    {n:"FOMO",d:"Fear of Missing Out, strach, že ti něco uteče. Lidé sdílí jen nejlepší momenty, takže feed ukazuje zkreslený obraz: všichni ostatní žijí zajímavěji. Výzkumy spojují silné FOMO s nižší spokojeností a vyšší úzkostí.",q:"Příběh zmizí za 24 hodin → musíš se podívat hned"},
+    {n:"Krátká videa",d:"TikTok, Reels a Shorts se učí nejrychleji: video začne samo a algoritmus dostane zpětnou vazbu každých pár sekund. Nový účet bez historie má profilovaný feed během minut. Čínská verze Douyin má pro děti do 14 let limit 40 minut denně, evropský TikTok takový limit nemá.",q:"Cíl: „flow stav“, kdy sleduješ bez vědomého rozhodnutí"},
+    {n:"JOMO",d:"Joy of Missing Out, radost z toho, že nemusíš být u všeho. Vědomé odpojení: telefon mimo ložnici, vypnuté notifikace, chronologický feed místo doporučeného.",q:"Nemusíš vědět všechno hned. Většina věcí počká."}
+  ];
+  picker($("emoSeg"),emo,function(c){return el("button","calc-btn",esc(c.n));},$("emoPanel"),function(c){panelHtml($("emoPanel"),c.n,c.d,'<div class="quote">'+esc(c.q)+"</div>");});
+
+  /* ---- 8: OSINT profil ---- */
+  var pf=[
+    {t:"Škola, třída a klub",d:"Kdokoli ví, kde tě najde každý den dopoledne i odpoledne. Ze jména klubu dohledá soupisku, fotky z turnajů a jména trenérů."},
+    {t:"Datum narození",d:"Jedna z nejčastějších bezpečnostních otázek a součást mnoha hesel. Spolu se jménem a adresou stačí na vydávání se za tebe."},
+    {t:"Adresa v pozadí fotky",d:"Číslo popisné a ulice se dají najít za pár vteřin v mapách. Pozor i na výhled z okna, poznávací značky a cedule."},
+    {t:"Pravidelná rutina",d:"Kdo zná tvůj rozvrh, ví, kdy a kde budeš sama, a kdy je doma prázdno."},
+    {t:"Jméno mazlíčka",d:"Klasická bezpečnostní otázka („Jak se jmenoval váš první mazlíček?“) a častá součást hesla. Rexík2019 není silné heslo."},
+    {t:"Prázdný dům",d:"Ohlášená dovolená říká, že dva týdny nikdo nebude doma. Fotky z dovolené sdílej až po návratu."}
+  ];
+  var found={};
+  $("pfPanel").innerHTML="<p>Vyber označené místo a uvidíš, co z něj jde vyčíst.</p>";
+  Array.prototype.forEach.call(document.querySelectorAll(".hs"),function(b){
+    b.addEventListener("click",function(){
+      var i=+b.dataset.h;found[i]=1;b.classList.add("is-found");
+      Array.prototype.forEach.call(document.querySelectorAll(".hs"),function(x){x.classList.remove("is-active");});
+      b.classList.add("is-active");panelHtml($("pfPanel"),pf[i].t,pf[i].d);
+      var n=Object.keys(found).length;$("pfCount").textContent="Nalezeno "+n+" z 6"+(n===6?". Z pěti příspěvků víš, kde Adéla bydlí, kdy je mimo domov a jak asi zní její heslo.":"");
+    });
+  });
+
+  /* ---- 9: EXIF ---- */
+  var exifRows=[["Poloha GPS","49.5938, 17.2509"],["Datum a čas","12. 3. 2026 18:42:07"],["Model telefonu","Telefon X 12 Pro"],["Nastavení snímku","f/1.8 · ISO 400"]];
+  var exif=[
+    {n:"Příspěvek na síti",k:[0,0,0,0],note:"Instagram, Facebook i TikTok metadata z veřejné fotky odstraní. Platforma sama si je ale uložit může. A polohu často prozradí obsah fotky nebo štítek s místem."},
+    {n:"Fotka v messengeru",k:[0,0,0,0],note:"Běžné messengery fotku při odeslání zmenší a metadata odstraní. Pokud ale zvolíš „poslat v původní kvalitě“ nebo „jako dokument“, posílá se původní soubor."},
+    {n:"Soubor nebo e-mail",k:[1,1,1,1],note:"Příloha e-mailu, cloudový odkaz, AirDrop nebo fotka poslaná jako dokument obsahují všechno. Přesnou polohu lze zobrazit v mapě. Polohu vypneš v nastavení fotoaparátu nebo ji odstraníš ve vlastnostech souboru."}
+  ];
+  picker($("exifSeg"),exif,function(c){return el("button","calc-btn",esc(c.n));},$("exifNote"),function(c){
+    var h="";exifRows.forEach(function(r,i){
+      var kept=c.k[i];h+="<tr><td>"+r[0]+'</td><td class="mono">'+r[1]+'</td><td class="'+(kept?"is-kept":"is-gone")+'">'+(kept?"ano, posílá se":"odstraněno")+"</td></tr>";
+    });
+    $("exifBody").innerHTML=h;$("exifNote").textContent=c.note;
+  });
+
+  /* ---- 11: podvody ---- */
+  var scams=[
+    {n:"Hlasuj pro mě",d:"Kamarád ti napíše, ať pro něj hlasuješ v soutěži a pošleš mu kód z SMS. Jenže jeho účet už útočník ovládá a kód je ve skutečnosti <b>přihlašovací kód k tvému účtu</b>. Po odeslání přijdeš o WhatsApp nebo Instagram a útočník pokračuje s tvými kontakty.",q:"Ahoj, hlasuješ prosím pro mě? Přišla ti SMS s kódem, pošli mi ho sem 🙏"},
+    {n:"Klon profilu",d:"Někdo zkopíruje fotky a jméno tvého kamaráda, založí nový profil a přidává si jeho přátele. Pak žádá peníze nebo posílá podvodné odkazy. Když ti „známý“ pošle žádost o přátelství podruhé, ověř si to jinou cestou.",q:"Ahoj, starý účet mi zablokovali, tohle je nový. Mám malý problém…"},
+    {n:"Falešná soutěž",d:"Účet s logem známé značky slibuje výhru. Stačí sledovat, sdílet a „ověřit se“ na webu, kde vyplníš přihlášení nebo kartu na poštovné. Oficiální účty mívají ověřovací odznak a tisíce starších příspěvků.",q:"🎁 GIVEAWAY! 100 iPhonů. Klikni na odkaz v biu a potvrď výhru do 24 h"},
+    {n:"Falešná identita",d:"Za profilem vrstevníka může být kdokoli. Buduje důvěru, chválí, chce soukromé fotky a nakonec vydírá. Kdo tlačí na tajemství před rodiči a na přesun do jiné aplikace, je varovný signál. Intimní fotky nikomu neposílej, ani „jen tak“.",q:"Jsi úplně jiná než ostatní. Ale tohle nikomu neříkej, jo? Pojď na Snap."},
+    {n:"Deepfake",d:"Z obyčejných veřejných fotek a nahrávek hlasu jde dnes vyrobit falešné video, hlas nebo upravenou fotku. Čím víc materiálu o tobě je veřejně, tím snáz. Podvodníci tak napodobují i hlas příbuzných v telefonu.",q:"Mami, to jsem já, nemůžu mluvit, pošli rychle peníze na tenhle účet."}
+  ];
+  picker($("scamSeg"),scams,function(c){return el("button","calc-btn",esc(c.n));},$("scamPanel"),function(c){panelHtml($("scamPanel"),c.n,c.d,'<div class="quote">'+esc(c.q)+"</div>");});
+
+  /* ---- 12: kvíz ---- */
+  var qs=[
+    {w:"Příběh · veřejný účet",t:"Fotka palubní vstupenky s čárovým kódem: „Za 3 hodiny letíme! ✈️“",bad:true,fb:"Čárový kód obsahuje jméno a rezervační kód. S nimi jde někdy změnit nebo zrušit let. A navíc oznamuješ prázdný byt."},
+    {w:"Příspěvek · po návratu",t:"Fotky z hor, které jsi sdílel týden po výletu, bez štítku s polohou.",bad:false,fb:"V pořádku. Výlet už je za tebou a z fotek nejde vyčíst, kde bydlíš ani kdy nebudeš doma."},
+    {w:"Příběh · živá poloha",t:"„Rodiče odjeli, jsem celý víkend sama doma 🍕“ se štítkem polohy.",bad:true,fb:"Kombinace „sama“ + „doma“ + poloha je přesně informace, kterou nechceš dávat cizím lidem. Sdílej to jen v soukromé zprávě s přáteli."},
+    {w:"Skupinový chat · přeposlat dál",t:"Screenshot zprávy, ve které se ti kamarádka svěřila s problémem.",bad:true,fb:"Svěřila se tobě, ne celé třídě. Screenshot už nikdy nevezmeš zpět. Cizí soukromí chraň stejně jako svoje."},
+    {w:"Příspěvek",t:"Fotka tvého hotového projektu z informatiky.",bad:false,fb:"V pořádku. Vlastní práci se můžeš chlubit. Jen zkontroluj, že na fotce v pozadí není nic navíc, třeba papírek s heslem."},
+    {w:"Příspěvek · veřejný účet",t:"Fotka celé třídy ze školní akce, kterou jsi označil všemi jmény.",bad:true,fb:"Fotka může zůstat, ale zeptej se ostatních. Ne každý chce být veřejně označený a dohledatelný jménem."}
+  ];
+  var qI=0,qOk=0,qAns=false;
+  function qRender(){
+    var q=qs[qI];qAns=false;
+    $("qWho").textContent=q.w;$("qText").textContent=q.t;
+    $("qScore").textContent="Příspěvek "+(qI+1)+" z "+qs.length+" · správně "+qOk;
+    $("qFb").innerHTML="";$("qNext").hidden=true;$("qBad").hidden=false;$("qOk").hidden=false;
+  }
+  function qAnswer(isBad){
+    if(qAns)return;qAns=true;
+    var q=qs[qI],ok=isBad===q.bad;if(ok)qOk++;
+    $("qScore").textContent="Příspěvek "+(qI+1)+" z "+qs.length+" · správně "+qOk;
+    $("qFb").innerHTML='<span class="badge '+(q.bad?"bad":"good")+'">'+(q.bad?"raději ne":"klidně sdílej")+"</span> <b>"+(ok?"Správně.":"Tentokrát ne.")+"</b> "+q.fb;
+    $("qBad").hidden=true;$("qOk").hidden=true;$("qNext").hidden=false;
+    $("qNext").textContent=qI===qs.length-1?"Výsledek":"Další →";
+  }
+  $("qBad").addEventListener("click",function(){qAnswer(true);});
+  $("qOk").addEventListener("click",function(){qAnswer(false);});
+  $("qNext").addEventListener("click",function(){
+    if(qI===qs.length-1){
+      $("qFb").innerHTML="<b>Výsledek: "+qOk+" z "+qs.length+".</b> "+(qOk>=5?"Výborně. Než něco zveřejníš, zkus si vždycky položit stejné otázky.":"Vrať se k profilu Adély a zkus najít, co všechno prozrazuje.");
+      $("qNext").textContent="Znovu";qI=-1;qOk=0;
+      return;
+    }
+    qI++;qRender();
+  });
+  qRender();
+
+  /* ---- 13: co dělat ---- */
+  var help=[
+    {n:"Ukradený účet",s:["Zkus obnovit přístup přes „Zapomenuté heslo“ nebo stránku pomoci dané sítě (hacked).","Hned dej vědět přátelům jinou cestou, ať na zprávy z tvého účtu nereagují.","Po obnovení změň heslo, zapni dvoufázové ověření a odhlas všechna cizí zařízení.","Pokud jsi stejné heslo používal jinde, změň ho i tam."]},
+    {n:"Kyberšikana",s:["Neodpovídej útočníkovi a nevracej to.","Ulož důkazy: screenshoty s datem a jménem účtu.","Útočníka zablokuj a nahlas platformě.","Řekni to dospělému, kterému věříš: rodiči, třídnímu, metodikovi prevence."]},
+    {n:"Vydírání",s:["Neplať a nic dalšího neposílej. Platba vydírání nezastaví.","Nemaž konverzaci, ulož důkazy a útočníka zablokuj.","Řekni to hned dospělému a obrať se na Linku bezpečí nebo policii.","U intimních fotek nezletilých pomůže s odstraněním služba Take It Down (takeitdown.ncmec.org)."]},
+    {n:"Fotka bez souhlasu",s:["Požádej autora, ať fotku smaže.","Nahlas ji platformě jako porušení soukromí.","Máš právo požadovat výmaz svých osobních údajů, fotka obličeje mezi ně patří.","Když nic nepomůže, obrať se na dospělého, školu nebo poradnu e-Bezpečí."]}
+  ];
+  picker($("helpSeg"),help,function(c){return el("button","calc-btn",esc(c.n));},$("helpPanel"),function(c){$("helpPanel").innerHTML=stepsHtml("Postup",c.s);});
+
+  /* ---- 14: kontrola účtu ---- */
+  var checks=[
+    ["Unikátní heslo","Na každé síti jiné, nejlépe ze správce hesel."],
+    ["Dvoufázové ověření","Zapnuté, ideálně přes aplikaci nebo přístupový klíč."],
+    ["Přihlášená zařízení","Projdi seznam a odhlas, co neznáš."],
+    ["Kdo vidí moje příspěvky","Soukromý účet nebo jen přátelé."],
+    ["Sdílení polohy","Vypnuté v aplikaci i na mapě přátel."],
+    ["Připojené aplikace","Odeber kvízy a hry, které mají přístup k účtu."],
+    ["Notifikace","Nech jen zprávy od lidí, zbytek vypni."],
+    ["Stažení dat","Vyžádej si kopii dat a podívej se, co o tobě síť má."]
+  ];
+  var done={};
+  checks.forEach(function(c,i){
+    var b=el("button","chk","<b>"+c[0]+"</b><span>"+c[1]+"</span>");
+    b.addEventListener("click",function(){
+      if(done[i])delete done[i];else done[i]=1;
+      b.classList.toggle("is-done",!!done[i]);
+      var n=Object.keys(done).length;
+      $("chkCount").textContent="Hotovo "+n+" z "+checks.length+(n===checks.length?". Účet máš zabezpečený líp než většina lidí.":"");
+      $("chkBar").style.width=(n/checks.length*100)+"%";
+    });
+    $("checks").appendChild(b);
+  });
+
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>
