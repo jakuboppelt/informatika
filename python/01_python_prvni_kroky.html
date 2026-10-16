@@ -18,7 +18,7 @@
   <p class="back"><a href="../index.html">← Všechny materiály</a></p>
   <p class="eyebrow">Informatika · Programování · Cvičení</p>
   <h1>Python: první <span class="t">kroky</span></h1>
-  <p class="lead">Krátké úlohy pro úplné začátečníky: výpis, proměnné, vstup, podmínky a cykly. Každá úloha má vlastní editor, ve kterém Python běží přímo v prohlížeči. Nic se neinstaluje a nic se nikam neodesílá.</p>
+  <p class="lead">Krátké úlohy pro úplné začátečníky: výpis, proměnné, vstup, podmínky a cykly. Programy píšeš a spouštíš u sebe na počítači, výchozí kód si zkopíruješ jedním kliknutím.</p>
   <div class="facts">
     <div><span class="k">Úkolů</span><span class="v">14 + 1 bonus, od nejlehčího</span></div>
     <div><span class="k">Čas</span><span class="v">dvě vyučovací hodiny</span></div>
@@ -28,14 +28,16 @@
 
 <section id="jak">
 <h2>Jak pracovat</h2>
-<ul>
-  <li>Program spustíš tlačítkem <em>▶ Spustit</em> nebo zkratkou <kbd>Ctrl</kbd> + <kbd>Enter</kbd>. Poprvé se Python pár sekund načítá.</li>
-  <li>Klávesa <kbd>Tab</kbd> v editoru odsadí řádek o čtyři mezery, <kbd>Shift</kbd> + <kbd>Tab</kbd> odsazení ubere. V Pythonu na odsazení záleží.</li>
-  <li>Když program chce něco od uživatele (<code>input</code>), vezme si odpověď z pole <em>Vstup</em>, každý řádek je jedna odpověď. Vstup si klidně přepiš a zkoušej různé hodnoty.</li>
-  <li>Chybová hláška není trest. Řekne ti číslo řádku a druh chyby. Naučit se ji číst je půlka programování.</li>
+<ol>
+  <li>Otevři editor pro Python. Pro začátek je nejlepší <a href="https://thonny.org" target="_blank" rel="noopener">Thonny</a> (Python má v sobě), stačí ale i IDLE, který se instaluje spolu s Pythonem z <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+  <li>Pro každou úlohu si založ nový soubor, třeba <code>uloha01.py</code>. Výchozí kód zkopíruj tlačítkem <em>Kopírovat</em> a vlož ho do souboru.</li>
+  <li>Program spustíš klávesou <kbd>F5</kbd>. Výstup se objeví v dolní části okna (v Thonny v panelu <em>Shell</em>).</li>
+  <li>Když program chce něco od uživatele (<code>input</code>), zastaví se a čeká. Napiš odpověď a stiskni <kbd>Enter</kbd>.</li>
+  <li>Odsazuj klávesou <kbd>Tab</kbd>. Editor odsadí o čtyři mezery a za dvojtečkou odsadí nový řádek sám. V Pythonu na odsazení záleží.</li>
+  <li>Program, který se zasekl (třeba v nekonečném cyklu), zastavíš klávesami <kbd>Ctrl</kbd> + <kbd>C</kbd> nebo tlačítkem <em>Stop</em>.</li>
   <li>Řešení si otevři až <strong>po</strong> vlastním pokusu. Je jen jedno z možných, tvoje může vypadat jinak a být správně.</li>
-</ul>
-<div class="note warn"><b class="lbl">Neuloží se</b><p>Po zavření nebo obnovení stránky se tvůj kód smaže. Co si chceš nechat, zkopíruj si.</p></div>
+</ol>
+<div class="note tip"><b class="lbl">Chyba není trest</b><p>Chybová hláška je anglicky a nejdůležitější je její <strong>poslední řádek</strong>: typ chyby a popis. O řádek výš je číslo řádku v tvém programu (<code>line 3</code>). Naučit se hlášky číst je půlka programování, tahák níž ti s tím pomůže.</p></div>
 </section>
 
 <section id="tahak">
@@ -71,40 +73,30 @@
 <p class="part">Výpis</p>
 <section id="u1" class="task">
 <div class="task-head"><h2><span class="num">1</span> Ahoj, světe!</h2><span class="time">2 min</span></div>
-<p>Program už jeden řádek vypisuje. Spusť ho tlačítkem <em>Spustit</em> (nebo <kbd>Ctrl</kbd> + <kbd>Enter</kbd>). Pak ho doplň tak, aby vypsal přesně tyto tři řádky, jen s tvým jménem.</p>
+<p>Program už jeden řádek vypisuje. Zkopíruj ho do editoru, ulož a spusť (<kbd>F5</kbd>). Pak ho doplň tak, aby vypsal přesně tyto tři řádky, jen s tvým jménem.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python"># Řádek začínající # je komentář, Python ho přeskočí.
+print(&quot;Ahoj, světe!&quot;)</code></pre>
 <p class="expect-h">Očekávaný výstup</p><pre><code>Ahoj, světe!
 Jmenuji se Eliška.
 Učím se Python.</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p>Každý příkaz <code>print</code> vypíše jeden řádek. Text patří do uvozovek a celý do kulatých závorek.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u1">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u1" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off"># Řádek začínající # je komentář, Python ho přeskočí.
-print(&quot;Ahoj, světe!&quot;)
-</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 1"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">print(&quot;Ahoj, světe!&quot;)
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">print(&quot;Ahoj, světe!&quot;)
 print(&quot;Jmenuji se Eliška.&quot;)
 print(&quot;Učím se Python.&quot;)</code></pre><p>Tři příkazy, tři řádky. Python provádí příkazy shora dolů, jeden po druhém.</p></div></details>
 </section>
 <section id="u2" class="task">
 <div class="task-head"><h2><span class="num">2</span> Najdi a oprav chyby</h2><span class="time">4 min</span></div>
 <p>V programu jsou <strong>tři chyby</strong>, na každém řádku jedna. Spusť ho a přečti si, co Python hlásí. Hláška ti řekne číslo řádku. Oprav jednu chybu, spusť znovu a pokračuj.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">Print(&quot;Dobrý den&quot;)
+print(&quot;Dnes je pátek)
+print(&quot;Výsledek je&quot; 5)</code></pre>
 <p class="expect-h">Očekávaný výstup</p><pre><code>Dobrý den
 Dnes je pátek
 Výsledek je 5</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p>Python rozlišuje velká a malá písmena. Každé uvozovky se musí zavřít. Když chceš v <code>print</code> vypsat víc věcí za sebou, odděl je čárkou.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u2">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u2" rows="5" spellcheck="false" autocomplete="off" autocapitalize="off">Print(&quot;Dobrý den&quot;)
-print(&quot;Dnes je pátek)
-print(&quot;Výsledek je&quot; 5)
-</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 2"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">print(&quot;Dobrý den&quot;)
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">print(&quot;Dobrý den&quot;)
 print(&quot;Dnes je pátek&quot;)
 print(&quot;Výsledek je&quot;, 5)</code></pre><p>1) <code>Print</code> a <code>print</code> jsou pro Python dvě různá slova a zná jen to druhé. 2) Chyběly koncové uvozovky. 3) Chyběla čárka mezi textem a číslem. Všimni si, že <code>print</code> mezi ně sám vloží mezeru.</p></div></details>
 </section>
@@ -112,19 +104,14 @@ print(&quot;Výsledek je&quot;, 5)</code></pre><p>1) <code>Print</code> a <code>
 <section id="u3" class="task">
 <div class="task-head"><h2><span class="num">3</span> Co vypíše?</h2><span class="time">3 min</span></div>
 <p><strong>Nejdřív nespouštěj.</strong> Na papír napiš, jaká tři čísla program vypíše. Teprve potom ho spusť a porovnej.</p>
-<details class="hint"><summary>Nápověda</summary><div><p>Rovnítko v Pythonu neznamená rovnost, ale <em>ulož</em>: vyhodnoť pravou stranu a výsledek ulož do proměnné vlevo. Co se stane s <code>b</code>, když později změníš <code>a</code>?</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u3">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u3" rows="8" spellcheck="false" autocomplete="off" autocapitalize="off">a = 5
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">a = 5
 b = a
 a = a + 3
 print(a)
 print(b)
-print(a * b)
-</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 3"></pre>
-</div>
+print(a * b)</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Rovnítko v Pythonu neznamená rovnost, ale <em>ulož</em>: vyhodnoť pravou stranu a výsledek ulož do proměnné vlevo. Co se stane s <code>b</code>, když později změníš <code>a</code>?</p></div></details>
 <details class="sol"><summary>Řešení</summary><div><pre><code>8
 5
 40</code></pre><p><code>b = a</code> uloží do <code>b</code> hodnotu, kterou má <code>a</code> právě teď, tedy 5. Pozdější změna <code>a</code> už <code>b</code> neovlivní. Zápis <code>a = a + 3</code> čti zprava: vezmi starou hodnotu <code>a</code>, přičti 3 a výsledek ulož zpět do <code>a</code>.</p></div></details>
@@ -132,13 +119,8 @@ print(a * b)
 <section id="u4" class="task">
 <div class="task-head"><h2><span class="num">4</span> Pizza pro třídu</h2><span class="time">5 min</span></div>
 <p>Třída má 28 studentů, každý sní 3 kousky a jedna pizza má 8 kousků. Doplň program tak, aby spočítal a vypsal, kolik kousků se sní celkem, kolik je to <strong>celých</strong> pizz a kolik kousků zbývá do další pizzy.</p>
-<p class="expect-h">Očekávaný výstup</p><pre><code>Kousků celkem: 84
-Celých pizz: 10
-Kousků navíc: 4</code></pre>
-<details class="hint"><summary>Nápověda</summary><div><p>Kromě <code>+ - * /</code> má Python ještě <code>//</code> (celočíselné dělení: 17 // 5 je 3) a <code>%</code> (zbytek po dělení: 17 % 5 je 2).</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u4">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u4" rows="13" spellcheck="false" autocomplete="off" autocapitalize="off">studentu = 28
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">studentu = 28
 kousku_na_studenta = 3
 kousku_v_pizze = 8
 
@@ -148,12 +130,12 @@ zbyva = 0         # oprav
 
 print(&quot;Kousků celkem:&quot;, kousku)
 print(&quot;Celých pizz:&quot;, cele_pizzy)
-print(&quot;Kousků navíc:&quot;, zbyva)
-</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 4"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">studentu = 28
+print(&quot;Kousků navíc:&quot;, zbyva)</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Kousků celkem: 84
+Celých pizz: 10
+Kousků navíc: 4</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Kromě <code>+ - * /</code> má Python ještě <code>//</code> (celočíselné dělení: 17 // 5 je 3) a <code>%</code> (zbytek po dělení: 17 % 5 je 2).</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">studentu = 28
 kousku_na_studenta = 3
 kousku_v_pizze = 8
 
@@ -168,20 +150,15 @@ print(&quot;Kousků navíc:&quot;, zbyva)</code></pre><p>84 kousků je 10 celýc
 <section id="u5" class="task">
 <div class="task-head"><h2><span class="num">5</span> Kolik je to hodin?</h2><span class="time">4 min</span></div>
 <p>Stopky ukazují počet sekund. Převeď ho na hodiny, minuty a sekundy. Program musí fungovat pro libovolné číslo, ne jen pro 3725.</p>
-<p class="expect-h">Očekávaný výstup</p><pre><code>1 h 2 min 5 s</code></pre>
-<details class="hint"><summary>Nápověda</summary><div><p>Kolik celých hodin je v 3725 sekundách? <code>3725 // 3600</code>. Kolik sekund zbude? <code>3725 % 3600</code>. Se zbytkem udělej totéž pro minuty.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u5">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u5" rows="7" spellcheck="false" autocomplete="off" autocapitalize="off">sekundy = 3725
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">sekundy = 3725
 
 # tvůj kód
 
-print(hodiny, &quot;h&quot;, minuty, &quot;min&quot;, zbytek, &quot;s&quot;)
-</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 5"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">sekundy = 3725
+print(hodiny, &quot;h&quot;, minuty, &quot;min&quot;, zbytek, &quot;s&quot;)</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>1 h 2 min 5 s</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Kolik celých hodin je v 3725 sekundách? <code>3725 // 3600</code>. Kolik sekund zbude? <code>3725 % 3600</code>. Se zbytkem udělej totéž pro minuty.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">sekundy = 3725
 hodiny = sekundy // 3600
 zbytek = sekundy % 3600
 minuty = zbytek // 60
@@ -191,69 +168,48 @@ print(hodiny, &quot;h&quot;, minuty, &quot;min&quot;, zbytek, &quot;s&quot;)</co
 <p class="part">Vstup</p>
 <section id="u6" class="task">
 <div class="task-head"><h2><span class="num">6</span> Pozdrav</h2><span class="time">3 min</span></div>
-<p>Funkce <code>input</code> se zeptá uživatele a vrátí, co napsal. Tady uživatele zastupuje pole <em>Vstup</em>: každý jeho řádek je jedna odpověď. Doplň program tak, aby pozdravil jménem a zeptal se i na oblíbené jídlo.</p>
+<p>Funkce <code>input</code> se zeptá uživatele a vrátí, co napsal. Program se zastaví a čeká, až odpověď napíšeš a stiskneš <kbd>Enter</kbd>. Doplň program tak, aby pozdravil jménem a zeptal se i na oblíbené jídlo.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmeno = input(&quot;Jak se jmenuješ? &quot;)
+print(f&quot;Ahoj, {jmeno}!&quot;)</code></pre>
+<p>Při spuštění zadej například: <code>Eliška</code>, <code>svíčková</code>. Pak zkus i jiné hodnoty.</p>
 <p class="expect-h">Očekávaný výstup</p><pre><code>Jak se jmenuješ? Eliška
 Co rád(a) jíš? svíčková
 Ahoj, Eliška!
 Mňam, svíčková!</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p>Do <code>f"…"</code> řetězce vložíš proměnnou tak, že ji napíšeš do složených závorek: <code>f"Ahoj, {jmeno}!"</code>.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u6">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u6" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off">jmeno = input(&quot;Jak se jmenuješ? &quot;)
-print(f&quot;Ahoj, {jmeno}!&quot;)
-</textarea>
-  <div class="stdin-h"><label for="in-u6">Vstup</label><small>co by napsal uživatel, jedna odpověď na řádek</small></div>
-  <textarea id="in-u6" class="stdin" rows="2" spellcheck="false" autocomplete="off">Eliška
-svíčková</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 6"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">jmeno = input(&quot;Jak se jmenuješ? &quot;)
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">jmeno = input(&quot;Jak se jmenuješ? &quot;)
 jidlo = input(&quot;Co rád(a) jíš? &quot;)
 print(f&quot;Ahoj, {jmeno}!&quot;)
-print(f&quot;Mňam, {jidlo}!&quot;)</code></pre><p><code>input</code> zastaví program, dokud uživatel neodpoví. Když v poli Vstup chybí řádek, program skončí hláškou, že mu došel vstup.</p></div></details>
+print(f&quot;Mňam, {jidlo}!&quot;)</code></pre><p><code>input</code> zastaví program, dokud uživatel neodpoví. Text otázky je dobré ukončit mezerou, jinak se odpověď nalepí hned za otazník.</p></div></details>
 </section>
 <section id="u7" class="task">
 <div class="task-head"><h2><span class="num">7</span> Proč je 5 + 3 = 53?</h2><span class="time">4 min</span></div>
 <p>Program má sečíst dvě čísla, ale pro 5 a 3 vypíše 53. Spusť ho, zjisti proč a oprav ho.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">a = input(&quot;První číslo: &quot;)
+b = input(&quot;Druhé číslo: &quot;)
+print(&quot;Součet je&quot;, a + b)</code></pre>
+<p>Při spuštění zadej například: <code>5</code>, <code>3</code>. Pak zkus i jiné hodnoty.</p>
 <p class="expect-h">Očekávaný výstup</p><pre><code>První číslo: 5
 Druhé číslo: 3
 Součet je 8</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p><code>input</code> vždycky vrací <strong>text</strong>, i když uživatel napíše číslice. Text a text se „sčítá“ tak, že se slepí. Funkce <code>int(…)</code> převede text na celé číslo.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u7">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u7" rows="5" spellcheck="false" autocomplete="off" autocapitalize="off">a = input(&quot;První číslo: &quot;)
-b = input(&quot;Druhé číslo: &quot;)
-print(&quot;Součet je&quot;, a + b)
-</textarea>
-  <div class="stdin-h"><label for="in-u7">Vstup</label><small>co by napsal uživatel, jedna odpověď na řádek</small></div>
-  <textarea id="in-u7" class="stdin" rows="2" spellcheck="false" autocomplete="off">5
-3</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 7"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">a = int(input(&quot;První číslo: &quot;))
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">a = int(input(&quot;První číslo: &quot;))
 b = int(input(&quot;Druhé číslo: &quot;))
-print(&quot;Součet je&quot;, a + b)</code></pre><p>Hodnoty mají <em>typ</em>: <code>"5"</code> je text (<code>str</code>), <code>5</code> je celé číslo (<code>int</code>), <code>5.0</code> desetinné číslo (<code>float</code>). Zkus do Vstupu napsat <code>pět</code>: <code>int</code> takový text převést neumí a ohlásí <code>ValueError</code>.</p></div></details>
+print(&quot;Součet je&quot;, a + b)</code></pre><p>Hodnoty mají <em>typ</em>: <code>"5"</code> je text (<code>str</code>), <code>5</code> je celé číslo (<code>int</code>), <code>5.0</code> desetinné číslo (<code>float</code>). Zkus místo čísla napsat <code>pět</code>: <code>int</code> takový text převést neumí a ohlásí <code>ValueError</code>.</p></div></details>
 </section>
 <section id="u8" class="task">
 <div class="task-head"><h2><span class="num">8</span> Kdy ti bude sto?</h2><span class="time">4 min</span></div>
 <p>Zeptej se na rok narození a vypiš, kolik let ti bude letos (2026) a ve kterém roce oslavíš sté narozeniny.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">rok = 0  # načti od uživatele</code></pre>
+<p>Při spuštění zadej například: <code>2010</code>. Pak zkus i jiné hodnoty.</p>
 <p class="expect-h">Očekávaný výstup</p><pre><code>Rok narození: 2010
 Letos ti bude 16 let.
 Sto ti bude v roce 2110.</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p>Načti rok jako číslo (vzpomeň si na minulý úkol). Věk letos je rozdíl dvou letopočtů, sté narozeniny jsou rok narození plus sto.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u8">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u8" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off">rok = 0  # načti od uživatele
-
-</textarea>
-  <div class="stdin-h"><label for="in-u8">Vstup</label><small>co by napsal uživatel, jedna odpověď na řádek</small></div>
-  <textarea id="in-u8" class="stdin" rows="1" spellcheck="false" autocomplete="off">2010</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 8"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">rok = int(input(&quot;Rok narození: &quot;))
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">rok = int(input(&quot;Rok narození: &quot;))
 letos = 2026
 print(f&quot;Letos ti bude {letos - rok} let.&quot;)
 print(f&quot;Sto ti bude v roce {rok + 100}.&quot;)</code></pre><p>Uložit 2026 do proměnné <code>letos</code> je lepší než psát číslo přímo do výpočtu: za rok změníš jedno místo a pojmenovaná hodnota se líp čte.</p></div></details>
@@ -262,22 +218,16 @@ print(f&quot;Sto ti bude v roce {rok + 100}.&quot;)</code></pre><p>Uložit 2026 
 <section id="u9" class="task">
 <div class="task-head"><h2><span class="num">9</span> Sudé, nebo liché?</h2><span class="time">4 min</span></div>
 <p>Načti celé číslo a vypiš, jestli je sudé, nebo liché. Vyzkoušej víc čísel, třeba i 0 a záporná.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">n = int(input(&quot;Zadej číslo: &quot;))
+
+if ...:
+    print(&quot;sudé&quot;)</code></pre>
+<p>Při spuštění zadej například: <code>7</code>. Pak zkus i jiné hodnoty.</p>
 <p class="expect-h">Očekávaný výstup</p><pre><code>Zadej číslo: 7
 liché</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p>Sudé číslo má po dělení dvěma zbytek 0. Porovnání se píše <code>==</code> (dvě rovnítka), jedno rovnítko je přiřazení. Řádky uvnitř <code>if</code> a <code>else</code> musí být odsazené (klávesa <kbd>Tab</kbd>).</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u9">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u9" rows="6" spellcheck="false" autocomplete="off" autocapitalize="off">n = int(input(&quot;Zadej číslo: &quot;))
-
-if ...:
-    print(&quot;sudé&quot;)
-</textarea>
-  <div class="stdin-h"><label for="in-u9">Vstup</label><small>co by napsal uživatel, jedna odpověď na řádek</small></div>
-  <textarea id="in-u9" class="stdin" rows="1" spellcheck="false" autocomplete="off">7</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 9"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">n = int(input(&quot;Zadej číslo: &quot;))
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">n = int(input(&quot;Zadej číslo: &quot;))
 
 if n % 2 == 0:
     print(&quot;sudé&quot;)
@@ -287,20 +237,13 @@ else:
 <section id="u10" class="task">
 <div class="task-head"><h2><span class="num">10</span> Známka z testu</h2><span class="time">6 min</span></div>
 <p>Z testu se dá získat 0 až 50 bodů. Načti body a vypiš známku podle tabulky.</p><div class="tbl"><table><thead><tr><th>Body</th><th>Známka</th></tr></thead><tbody><tr><td>45 a víc</td><td>1</td></tr><tr><td>38 až 44</td><td>2</td></tr><tr><td>30 až 37</td><td>3</td></tr><tr><td>20 až 29</td><td>4</td></tr><tr><td>méně než 20</td><td>5</td></tr></tbody></table></div>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">body = int(input(&quot;Body: &quot;))</code></pre>
+<p>Při spuštění zadej například: <code>41</code>. Pak zkus i jiné hodnoty.</p>
 <p class="expect-h">Očekávaný výstup</p><pre><code>Body: 41
 Známka: 2</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p>Použij <code>if</code>, několikrát <code>elif</code> a na konci <code>else</code>. Podmínky se testují shora: jakmile jedna platí, zbytek se přeskočí. Proto stačí psát jen dolní hranice, pokud začneš od nejvyšší.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u10">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u10" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off">body = int(input(&quot;Body: &quot;))
-
-</textarea>
-  <div class="stdin-h"><label for="in-u10">Vstup</label><small>co by napsal uživatel, jedna odpověď na řádek</small></div>
-  <textarea id="in-u10" class="stdin" rows="1" spellcheck="false" autocomplete="off">41</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 10"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">body = int(input(&quot;Body: &quot;))
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">body = int(input(&quot;Body: &quot;))
 
 if body &gt;= 45:
     print(&quot;Známka: 1&quot;)
@@ -316,20 +259,13 @@ else:
 <section id="u11" class="task">
 <div class="task-head"><h2><span class="num">11</span> Přestupný rok</h2><span class="time">6 min</span></div>
 <p>Rok je přestupný, když je dělitelný 4, ale ne 100. Výjimka: roky dělitelné 400 přestupné jsou. Takže 2024 ano, 1900 ne, 2000 ano. Napiš program, který o zadaném roce rozhodne.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">rok = int(input(&quot;Rok: &quot;))</code></pre>
+<p>Při spuštění zadej například: <code>1900</code>. Pak zkus i jiné hodnoty.</p>
 <p class="expect-h">Očekávaný výstup</p><pre><code>Rok: 1900
 nepřestupný</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p>Podmínky můžeš spojovat slovy <code>and</code> (musí platit obě) a <code>or</code> (stačí jedna). „Dělitelný 4“ zapíšeš jako <code>rok % 4 == 0</code>, „není dělitelný 100“ jako <code>rok % 100 != 0</code>.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u11">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u11" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off">rok = int(input(&quot;Rok: &quot;))
-
-</textarea>
-  <div class="stdin-h"><label for="in-u11">Vstup</label><small>co by napsal uživatel, jedna odpověď na řádek</small></div>
-  <textarea id="in-u11" class="stdin" rows="1" spellcheck="false" autocomplete="off">1900</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 11"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">rok = int(input(&quot;Rok: &quot;))
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">rok = int(input(&quot;Rok: &quot;))
 
 if (rok % 4 == 0 and rok % 100 != 0) or rok % 400 == 0:
     print(&quot;přestupný&quot;)
@@ -340,6 +276,9 @@ else:
 <section id="u12" class="task">
 <div class="task-head"><h2><span class="num">12</span> Odpočet startu</h2><span class="time">3 min</span></div>
 <p>Program vypisuje čísla od 0 do 9. Uprav ho tak, aby odpočítával od 10 do 1 a nakonec vypsal <code>Start!</code>.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">for i in range(10):
+    print(i)</code></pre>
 <p class="expect-h">Očekávaný výstup</p><pre><code>10
 9
 8
@@ -352,38 +291,23 @@ else:
 1
 Start!</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p><code>range(a, b, krok)</code> začne na <code>a</code> a skončí <strong>před</strong> <code>b</code>. Krok může být záporný. Řádek se <code>Start!</code> už do cyklu nepatří, takže nebude odsazený.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u12">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u12" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off">for i in range(10):
-    print(i)
-</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 12"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">for i in range(10, 0, -1):
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">for i in range(10, 0, -1):
     print(i)
 print(&quot;Start!&quot;)</code></pre><p><code>range(10, 0, -1)</code> dá 10, 9, …, 1. Nula už ne, protože horní mez se nikdy nezahrnuje. Kdyby byl <code>print("Start!")</code> odsazený, vypsal by se desetkrát.</p></div></details>
 </section>
 <section id="u13" class="task">
 <div class="task-head"><h2><span class="num">13</span> Malá násobilka</h2><span class="time">5 min</span></div>
 <p>Načti číslo a vypiš jeho násobilku od 1 do 10 přesně v tomto tvaru.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">n = int(input(&quot;Násobilka čísla: &quot;))</code></pre>
+<p>Při spuštění zadej například: <code>7</code>. Pak zkus i jiné hodnoty.</p>
 <p class="expect-h">Očekávaný výstup</p><pre><code>Násobilka čísla: 7
 7 × 1 = 7
 7 × 2 = 14
 …
 7 × 10 = 70</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p>Kolikrát se má cyklus opakovat a jakých hodnot má proměnná nabývat? Pozor, <code>range(10)</code> začíná nulou. Výpis nejsnáz poskládáš přes <code>f"…"</code>.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u13">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u13" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off">n = int(input(&quot;Násobilka čísla: &quot;))
-
-</textarea>
-  <div class="stdin-h"><label for="in-u13">Vstup</label><small>co by napsal uživatel, jedna odpověď na řádek</small></div>
-  <textarea id="in-u13" class="stdin" rows="1" spellcheck="false" autocomplete="off">7</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 13"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">n = int(input(&quot;Násobilka čísla: &quot;))
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">n = int(input(&quot;Násobilka čísla: &quot;))
 
 for i in range(1, 11):
     print(f&quot;{n} × {i} = {n * i}&quot;)</code></pre><p>Uvnitř složených závorek ve f-řetězci může být i výpočet, třeba <code>{n * i}</code>.</p></div></details>
@@ -391,43 +315,37 @@ for i in range(1, 11):
 <section id="u14" class="task">
 <div class="task-head"><h2><span class="num">14</span> Sčítej, dokud nezadám nulu</h2><span class="time">6 min</span></div>
 <p>Program má načítat čísla tak dlouho, dokud uživatel nezadá 0. Pak vypíše jejich součet. Dopředu nevíš, kolik čísel přijde, a proto se tu hodí cyklus <code>while</code>.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">soucet = 0
+cislo = int(input(&quot;Číslo: &quot;))
+
+while ...:
+    ...
+
+print(&quot;Součet:&quot;, soucet)</code></pre>
+<p>Při spuštění zadej například: <code>4</code>, <code>7</code>, <code>-2</code>, <code>0</code>. Pak zkus i jiné hodnoty.</p>
 <p class="expect-h">Očekávaný výstup</p><pre><code>Číslo: 4
 Číslo: 7
 Číslo: -2
 Číslo: 0
 Součet: 9</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p>Potřebuješ proměnnou na průběžný součet, na začátku 0. Načti první číslo ještě před cyklem. V cyklu ho přičti a načti další. Cyklus běží, dokud <code>cislo != 0</code>.</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u14">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u14" rows="9" spellcheck="false" autocomplete="off" autocapitalize="off">soucet = 0
-cislo = int(input(&quot;Číslo: &quot;))
-
-while ...:
-    ...
-
-print(&quot;Součet:&quot;, soucet)
-</textarea>
-  <div class="stdin-h"><label for="in-u14">Vstup</label><small>co by napsal uživatel, jedna odpověď na řádek</small></div>
-  <textarea id="in-u14" class="stdin" rows="4" spellcheck="false" autocomplete="off">4
-7
--2
-0</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 14"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">soucet = 0
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">soucet = 0
 cislo = int(input(&quot;Číslo: &quot;))
 
 while cislo != 0:
     soucet = soucet + cislo
     cislo = int(input(&quot;Číslo: &quot;))
 
-print(&quot;Součet:&quot;, soucet)</code></pre><p><code>for</code> použij, když víš, kolikrát opakovat. <code>while</code> použij, když opakuješ, dokud platí podmínka. Když zapomeneš uvnitř cyklu načíst další číslo, podmínka bude platit pořád a cyklus nikdy neskončí. Editor takový program po pěti sekundách zastaví.</p></div></details>
+print(&quot;Součet:&quot;, soucet)</code></pre><p><code>for</code> použij, když víš, kolikrát opakovat. <code>while</code> použij, když opakuješ, dokud platí podmínka. Když zapomeneš uvnitř cyklu načíst další číslo, podmínka bude platit pořád a cyklus nikdy neskončí. Takový program zastavíš klávesami <kbd>Ctrl</kbd> + <kbd>C</kbd>.</p></div></details>
 </section>
 <p class="part">Bonus</p>
 <section id="u15" class="task">
 <div class="task-head"><h2><span class="num">15</span> Stromeček</h2><span class="time">8 min</span></div>
 <p>Načti výšku a nakresli z hvězdiček stromeček. Na řádku 1 je jedna hvězdička, na každém dalším o dvě víc, a celý je zarovnaný na střed.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">vyska = int(input(&quot;Výška: &quot;))</code></pre>
+<p>Při spuštění zadej například: <code>4</code>. Pak zkus i jiné hodnoty.</p>
 <p class="expect-h">Očekávaný výstup</p><pre><code>Výška: 4
    *
   ***
@@ -435,17 +353,7 @@ print(&quot;Součet:&quot;, soucet)</code></pre><p><code>for</code> použij, kdy
 *******
    |</code></pre>
 <details class="hint"><summary>Nápověda</summary><div><p>Text jde násobit číslem: <code>"*" * 3</code> je <code>***</code>. Pro řádek <code>i</code> (od 0) potřebuješ <code>2*i + 1</code> hvězdiček. Kolik mezer před nimi? Na posledním řádku žádná, na předposledním jedna…</p></div></details>
-<div class="ed py" data-py>
-  <div class="bar"><label for="ed-u15">Kód</label><span class="btns"><span class="status" aria-live="polite"></span><button type="button" class="reset" data-reset>Začít znovu</button><button type="button" class="run" data-run>▶ Spustit</button></span></div>
-  <textarea id="ed-u15" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off">vyska = int(input(&quot;Výška: &quot;))
-
-</textarea>
-  <div class="stdin-h"><label for="in-u15">Vstup</label><small>co by napsal uživatel, jedna odpověď na řádek</small></div>
-  <textarea id="in-u15" class="stdin" rows="1" spellcheck="false" autocomplete="off">4</textarea>
-  <div class="out-h">Výstup</div>
-  <pre class="out" aria-live="polite" aria-label="Výstup programu úkolu 15"></pre>
-</div>
-<details class="sol"><summary>Řešení</summary><div><pre><code class="language-python">vyska = int(input(&quot;Výška: &quot;))
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">vyska = int(input(&quot;Výška: &quot;))
 
 for i in range(vyska):
     mezery = vyska - i - 1
@@ -462,148 +370,24 @@ print(&quot; &quot; * (vyska - 1) + &quot;|&quot;)</code></pre><p>Klíčové je 
 <script>
 (function () {
   try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
-
-  /* ---------- Python ve Web Workeru (Pyodide) ---------- */
-  var PYODIDE = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
-  var TIMEOUT = 5000, MAX_OUT = 20000;
-  var workerSrc = [
-    "importScripts('" + PYODIDE + "pyodide.js');",
-    "var py = null;",
-    "var RUNNER = " + JSON.stringify([
-      "import traceback",
-      "HINTS = {",
-      " 'SyntaxError': 'Python větě nerozumí. Zkontroluj uvozovky, závorky, čárky a dvojtečky.',",
-      " 'IndentationError': 'Špatné odsazení. Za if, for a while patří odsazený blok.',",
-      " 'NameError': 'Python to jméno nezná. Překlep, velké písmeno, chybějící uvozovky, nebo proměnná ještě nemá hodnotu?',",
-      " 'TypeError': 'Mícháš typy, třeba text a číslo. Nechybí int(...)?',",
-      " 'ValueError': 'Hodnotu nejde převést. int() dostal text, který není celé číslo?',",
-      " 'ZeroDivisionError': 'Dělení nulou.',",
-      " 'EOFError': 'Program chce další vstup, ale v poli Vstup už nic nezbylo. Přidej řádek.',",
-      "}",
-      "def __run(code, data):",
-      "    lines = iter(data.split('\\n') if data else [])",
-      "    def _input(prompt=''):",
-      "        print(prompt, end='')",
-      "        try:",
-      "            v = next(lines)",
-      "        except StopIteration:",
-      "            print()",
-      "            raise EOFError('došel vstup')",
-      "        print(v)",
-      "        return v",
-      "    g = {'__name__': '__main__', 'input': _input}",
-      "    try:",
-      "        exec(compile(code, 'program.py', 'exec'), g)",
-      "    except BaseException as ex:",
-      "        name = type(ex).__name__",
-      "        line = getattr(ex, 'lineno', None) if isinstance(ex, SyntaxError) else None",
-      "        if line is None:",
-      "            for fr in traceback.extract_tb(ex.__traceback__):",
-      "                if fr.filename == 'program.py': line = fr.lineno",
-      "        msg = ex.msg if isinstance(ex, SyntaxError) else str(ex)",
-      "        hint = HINTS.get(name, '')",
-      "        return ('Chyba na řádku %s: ' % line if line else 'Chyba: ') + name + (': ' + msg if msg else '') + ('\\n→ ' + hint if hint else '')",
-      "    return ''"
-    ].join('\n')) + ";",
-    "async function init(){ py = await loadPyodide({ indexURL: '" + PYODIDE + "' });",
-    "  py.setStdout({ batched: function(s){ postMessage({ t: 'out', s: s + '\\n' }); } });",
-    "  py.setStderr({ batched: function(s){ postMessage({ t: 'out', s: s + '\\n' }); } });",
-    "  py.runPython(RUNNER); postMessage({ t: 'ready' }); }",
-    "var ready = init().catch(function(e){ postMessage({ t: 'fatal', s: String(e) }); });",
-    "onmessage = async function(m){ await ready; var err = '';",
-    "  try { err = py.globals.get('__run')(m.data.code, m.data.stdin); } catch (e) { err = String(e); }",
-    "  postMessage({ t: 'done', err: err }); };"
-  ].join('\n');
-  var workerUrl = URL.createObjectURL(new Blob([workerSrc], { type: 'text/javascript' }));
-
-  var worker = null, isReady = false, job = null, timer = null;
-  function spawn() {
-    worker = new Worker(workerUrl); isReady = false;
-    worker.onmessage = function (m) {
-      var d = m.data;
-      if (d.t === 'ready') { isReady = true; if (job) start(); return; }
-      if (!job) return;
-      if (d.t === 'out') { job.write(d.s); }
-      else if (d.t === 'done') { finish(d.err ? d.err : null, d.err ? 'e' : null); }
-      else if (d.t === 'fatal') { finish('Python se nepodařilo načíst. Zkontroluj připojení k internetu a zkus to znovu.', 'e'); kill(); }
-    };
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
   }
-  function kill() { if (worker) worker.terminate(); worker = null; isReady = false; }
-  function start() {
-    job.status('Běží…');
-    worker.postMessage({ code: job.code, stdin: job.stdin });
-    timer = setTimeout(function () {
-      kill(); spawn();
-      finish('Program běžel déle než ' + (TIMEOUT / 1000) + ' s, a tak byl zastaven.\n→ Nekonečný cyklus? Zkontroluj, že se podmínka ve while někdy přestane plnit.', 'e');
-    }, TIMEOUT);
-  }
-  function finish(msg, cls) {
-    clearTimeout(timer);
-    var j = job; job = null; if (!j) return;
-    if (msg) j.write(msg + '\n', cls);
-    j.done(!msg);
-  }
-  function run(j) {
-    if (job) { kill(); finish('Přerušeno, spouštíš jiný program.', 'i'); }
-    job = j;
-    if (!worker) spawn();
-    if (isReady) start(); else j.status('Načítám Python…');
-  }
-
-  /* ---------- editory ---------- */
-  function indent(ta, e) {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); return 'run'; }
-    var s = ta.selectionStart, en = ta.selectionEnd, v = ta.value;
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      var ls = v.lastIndexOf('\n', s - 1) + 1;
-      if (e.shiftKey) {
-        var cut = v.slice(ls, ls + 4).match(/^ {0,4}/)[0].length;
-        ta.setRangeText('', ls, ls + cut, 'preserve');
-      } else if (s === en) {
-        ta.setRangeText('    ', s, en, 'end');
-      } else {
-        var block = v.slice(ls, en).replace(/^/gm, '    ');
-        ta.setRangeText(block, ls, en, 'select');
-      }
-    } else if (e.key === 'Enter' && !e.shiftKey) {
-      var start = v.lastIndexOf('\n', s - 1) + 1, line = v.slice(start, s);
-      var ind = line.match(/^ */)[0];
-      if (/:\s*$/.test(line)) ind += '    ';
-      e.preventDefault();
-      ta.setRangeText('\n' + ind, s, en, 'end');
-    }
-  }
-
-  Array.prototype.slice.call(document.querySelectorAll('[data-py]')).forEach(function (ed) {
-    var tas = ed.querySelectorAll('textarea'), code = tas[0], stdin = ed.querySelector('textarea.stdin');
-    var out = ed.querySelector('.out'), btn = ed.querySelector('[data-run]'), st = ed.querySelector('.status');
-    var initCode = code.value, initIn = stdin ? stdin.value : '';
-    function go() {
-      out.textContent = ''; btn.disabled = true;
-      var written = 0;
-      run({
-        code: code.value, stdin: stdin ? stdin.value : '',
-        status: function (s) { st.textContent = s; },
-        write: function (s, cls) {
-          if (written > MAX_OUT && !cls) return;
-          written += s.length;
-          if (written > MAX_OUT && !cls) s = s.slice(0, Math.max(0, s.length - (written - MAX_OUT))) + '\n… výstupu je moc, zbytek se nezobrazí\n';
-          if (cls) { var sp = document.createElement('span'); sp.className = cls; sp.textContent = s; out.appendChild(sp); }
-          else out.appendChild(document.createTextNode(s));
-          out.scrollTop = out.scrollHeight;
-        },
-        done: function (ok) { btn.disabled = false; st.textContent = ok ? 'Hotovo' : ''; }
-      });
-    }
-    btn.addEventListener('click', go);
-    code.addEventListener('keydown', function (e) { if (indent(code, e) === 'run') go(); });
-    if (stdin) stdin.addEventListener('keydown', function (e) { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); go(); } });
-    ed.querySelector('[data-reset]').addEventListener('click', function () {
-      code.value = initCode; if (stdin) stdin.value = initIn; out.textContent = ''; st.textContent = '';
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
     });
   });
-
   if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
 })();
 </script>
