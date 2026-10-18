@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python: větvení a cykly</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open><summary>Obsah</summary><h2>Úkoly</h2>
+  <ol><li><a href="#jak">Jak pracovat</a></li><li><a href="#tahak">Tahák</a></li><li class="grp">Podmínky</li><li><a href="#u1">1 · Sudé, nebo liché?</a></li><li><a href="#u2">2 · Známka z testu</a></li><li><a href="#u3">3 · Přestupný rok</a></li><li class="grp">Cykly</li><li><a href="#u4">4 · Odpočet startu</a></li><li><a href="#u5">5 · Malá násobilka</a></li><li><a href="#u6">6 · Sčítej, dokud nezadám nulu</a></li><li class="grp">Bonus</li><li><a href="#u7">7 · Stromeček</a></li></ol></details>
+</aside>
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Programování · Cvičení</p>
+  <h1>Python: větvení a <span class="t">cykly</span></h1>
+  <p class="lead">Navazuje na <a href="01_python_prvni_kroky.html">první kroky</a>: podmínky (<code>if</code>, <code>elif</code>, <code>else</code>) a cykly (<code>for</code>, <code>while</code>). Programy píšeš a spouštíš u sebe na počítači, výchozí kód si zkopíruješ jedním kliknutím.</p>
+  <div class="facts">
+    <div><span class="k">Úkolů</span><span class="v">6 + 1 bonus, od nejlehčího</span></div>
+    <div><span class="k">Čas</span><span class="v">jedna vyučovací hodina</span></div>
+    <div><span class="k">Když se zasekneš</span><span class="v">přečti chybu, pak Nápověda, až nakonec Řešení</span></div>
+  </div>
+</header>
+
+<section id="jak">
+<h2>Jak pracovat</h2>
+<ol>
+  <li>Otevři editor pro Python. Ve škole použij <strong>Python IDLE</strong>, který je na školních počítačích nainstalovaný (najdeš ho v nabídce Start). Doma doporučuji <strong>Visual Studio Code</strong>, postup instalace a prvního programu najdeš v návodu <a href="https://code.visualstudio.com/docs/python/python-tutorial" target="_blank" rel="noopener">Getting Started with Python in VS Code</a>. Kromě samotného <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VS Code</a> musíš mít nainstalovaný ještě <a href="https://code.visualstudio.com/docs/python/python-tutorial#_install-a-python-interpreter" target="_blank" rel="noopener">Python 3</a> a <a href="https://marketplace.visualstudio.com/items?itemName=ms-python.python" target="_blank" rel="noopener">rozšíření Python pro VS Code</a> (jak se instalují rozšíření, viz <a href="https://code.visualstudio.com/docs/configure/extensions/extension-marketplace" target="_blank" rel="noopener">Extension Marketplace</a>). Pokud chceš začít jednodušeji, poslouží stejně dobře <a href="https://thonny.org" target="_blank" rel="noopener">Thonny</a>, který má Python rovnou v sobě a nic dalšího nepotřebuje. Je jedno, co si vybereš.</li>
+  <li>Pro každou úlohu si založ nový soubor, třeba <code>vetveni01.py</code>. Výchozí kód zkopíruj tlačítkem <em>Kopírovat</em> a vlož ho do souboru.</li>
+  <li>Program spustíš v IDLE a v Thonny klávesou <kbd>F5</kbd>, ve VS Code tlačítkem <em>▷ Run Python File</em> vpravo nahoře. Výstup se v IDLE objeví v samostatném okně <em>Shell</em>, v Thonny v panelu <em>Shell</em> a ve VS Code v panelu <em>Terminal</em> dole.</li>
+  <li>Když program chce něco od uživatele (<code>input</code>), zastaví se a čeká. Napiš odpověď a stiskni <kbd>Enter</kbd>.</li>
+  <li>Odsazuj klávesou <kbd>Tab</kbd>. Editor odsadí o čtyři mezery a za dvojtečkou odsadí nový řádek sám. V Pythonu na odsazení záleží.</li>
+  <li>Program, který se zasekl (třeba v nekonečném cyklu), zastavíš klávesami <kbd>Ctrl</kbd> + <kbd>C</kbd> nebo tlačítkem <em>Stop</em>.</li>
+  <li>Řešení si otevři až <strong>po</strong> vlastním pokusu. Je jen jedno z možných, tvoje může vypadat jinak a být správně.</li>
+</ol>
+<div class="note tip"><b class="lbl">Chyba není trest</b><p>Chybová hláška je anglicky a nejdůležitější je její <strong>poslední řádek</strong>: typ chyby a popis. O řádek výš je číslo řádku v tvém programu (<code>line 3</code>). Naučit se hlášky číst je půlka programování, tahák níž ti s tím pomůže.</p></div>
+</section>
+
+<section id="tahak">
+<h2>Tahák</h2>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Co dělá</th></tr></thead>
+<tbody>
+<tr><td><code>print("Ahoj", x)</code></td><td>vypíše hodnoty na jeden řádek, oddělené mezerou</td></tr>
+<tr><td><code>x = 5</code></td><td>uloží hodnotu do proměnné <code>x</code></td></tr>
+<tr><td><code>+ - * /</code></td><td>sčítání, odčítání, násobení, dělení (výsledek je desetinné číslo)</td></tr>
+<tr><td><code>// %</code></td><td>celočíselné dělení a zbytek: <code>17 // 5</code> je 3, <code>17 % 5</code> je 2</td></tr>
+<tr><td><code>input("Otázka: ")</code></td><td>zeptá se uživatele, vrátí <strong>text</strong></td></tr>
+<tr><td><code>int(text)</code></td><td>převede text na celé číslo</td></tr>
+<tr><td><code>f"Je mi {vek} let"</code></td><td>vloží hodnotu proměnné do textu</td></tr>
+<tr><td><code>== != &lt; &gt; &lt;= &gt;=</code></td><td>porovnání: rovná se, nerovná se, menší, větší…</td></tr>
+<tr><td><code>if … elif … else:</code></td><td>podmínka, odsazený blok se provede, jen když platí</td></tr>
+<tr><td><code>for i in range(1, 11):</code></td><td>opakuj pro <code>i</code> = 1, 2, …, 10</td></tr>
+<tr><td><code>while podmínka:</code></td><td>opakuj, dokud podmínka platí</td></tr>
+</tbody></table></div>
+
+<h3>Nejčastější chyby</h3>
+<div class="tbl"><table>
+<thead><tr><th>Hláška</th><th>Co obvykle znamená</th></tr></thead>
+<tbody>
+<tr><td><code>SyntaxError</code></td><td>Python větě nerozumí: chybí uvozovka, závorka, čárka nebo dvojtečka.</td></tr>
+<tr><td><code>IndentationError</code></td><td>Špatné odsazení: chybí za <code>if</code>, <code>for</code> nebo <code>while</code>, nebo je navíc.</td></tr>
+<tr><td><code>NameError</code></td><td>Python nezná to jméno: překlep, velké písmeno, nebo proměnná ještě nemá hodnotu.</td></tr>
+<tr><td><code>TypeError</code></td><td>Míchání typů, třeba text + číslo. Často chybí <code>int(…)</code>.</td></tr>
+<tr><td><code>ValueError</code></td><td><code>int</code> dostal text, který není číslo.</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">Podmínky</p>
+<section id="u1" class="task">
+<div class="task-head"><h2><span class="num">1</span> Sudé, nebo liché?</h2><span class="time">4 min</span></div>
+<p>Načti celé číslo a vypiš, jestli je sudé, nebo liché. Vyzkoušej víc čísel, třeba i 0 a záporná.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">n = int(input(&quot;Zadej číslo: &quot;))
+
+if ...:
+    print(&quot;sudé&quot;)</code></pre>
+<p>Při spuštění zadej například: <code>7</code>. Pak zkus i jiné hodnoty.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Zadej číslo: 7
+liché</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Sudé číslo má po dělení dvěma zbytek 0. Porovnání se píše <code>==</code> (dvě rovnítka), jedno rovnítko je přiřazení. Řádky uvnitř <code>if</code> a <code>else</code> musí být odsazené (klávesa <kbd>Tab</kbd>).</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">n = int(input(&quot;Zadej číslo: &quot;))
+
+if n % 2 == 0:
+    print(&quot;sudé&quot;)
+else:
+    print(&quot;liché&quot;)</code></pre><p>Za <code>if</code> a <code>else</code> je dvojtečka a odsazený blok. Odsazení není ozdoba: podle něj Python pozná, které řádky k podmínce patří. Výsledek pro <code>-3</code> je „liché“, protože <code>-3 % 2</code> je v Pythonu 1.</p></div></details>
+</section>
+<section id="u2" class="task">
+<div class="task-head"><h2><span class="num">2</span> Známka z testu</h2><span class="time">6 min</span></div>
+<p>Z testu se dá získat 0 až 50 bodů. Načti body a vypiš známku podle tabulky.</p><div class="tbl"><table><thead><tr><th>Body</th><th>Známka</th></tr></thead><tbody><tr><td>45 a víc</td><td>1</td></tr><tr><td>38 až 44</td><td>2</td></tr><tr><td>30 až 37</td><td>3</td></tr><tr><td>20 až 29</td><td>4</td></tr><tr><td>méně než 20</td><td>5</td></tr></tbody></table></div>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">body = int(input(&quot;Body: &quot;))</code></pre>
+<p>Při spuštění zadej například: <code>41</code>. Pak zkus i jiné hodnoty.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Body: 41
+Známka: 2</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Použij <code>if</code>, několikrát <code>elif</code> a na konci <code>else</code>. Podmínky se testují shora: jakmile jedna platí, zbytek se přeskočí. Proto stačí psát jen dolní hranice, pokud začneš od nejvyšší.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">body = int(input(&quot;Body: &quot;))
+
+if body &gt;= 45:
+    print(&quot;Známka: 1&quot;)
+elif body &gt;= 38:
+    print(&quot;Známka: 2&quot;)
+elif body &gt;= 30:
+    print(&quot;Známka: 3&quot;)
+elif body &gt;= 20:
+    print(&quot;Známka: 4&quot;)
+else:
+    print(&quot;Známka: 5&quot;)</code></pre><p>Otestuj hranice: 45, 44, 38, 37, 30, 20, 19. Chyby se schovávají právě tam. Zkus také prohodit pořadí podmínek (začít <code>body &gt;= 20</code>) a sleduj, co se pokazí.</p></div></details>
+</section>
+<section id="u3" class="task">
+<div class="task-head"><h2><span class="num">3</span> Přestupný rok</h2><span class="time">6 min</span></div>
+<p>Rok je přestupný, když je dělitelný 4, ale ne 100. Výjimka: roky dělitelné 400 přestupné jsou. Takže 2024 ano, 1900 ne, 2000 ano. Napiš program, který o zadaném roce rozhodne.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">rok = int(input(&quot;Rok: &quot;))</code></pre>
+<p>Při spuštění zadej například: <code>1900</code>. Pak zkus i jiné hodnoty.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Rok: 1900
+nepřestupný</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Podmínky můžeš spojovat slovy <code>and</code> (musí platit obě) a <code>or</code> (stačí jedna). „Dělitelný 4“ zapíšeš jako <code>rok % 4 == 0</code>, „není dělitelný 100“ jako <code>rok % 100 != 0</code>.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">rok = int(input(&quot;Rok: &quot;))
+
+if (rok % 4 == 0 and rok % 100 != 0) or rok % 400 == 0:
+    print(&quot;přestupný&quot;)
+else:
+    print(&quot;nepřestupný&quot;)</code></pre><p>Závorky tu nejsou nutné, protože <code>and</code> má přednost před <code>or</code>, ale pomáhají čtení. Vyzkoušej všechny čtyři případy: 2023, 2024, 1900, 2000.</p></div></details>
+</section>
+<p class="part">Cykly</p>
+<section id="u4" class="task">
+<div class="task-head"><h2><span class="num">4</span> Odpočet startu</h2><span class="time">3 min</span></div>
+<p>Program vypisuje čísla od 0 do 9. Uprav ho tak, aby odpočítával od 10 do 1 a nakonec vypsal <code>Start!</code>.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">for i in range(10):
+    print(i)</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+Start!</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p><code>range(a, b, krok)</code> začne na <code>a</code> a skončí <strong>před</strong> <code>b</code>. Krok může být záporný. Řádek se <code>Start!</code> už do cyklu nepatří, takže nebude odsazený.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">for i in range(10, 0, -1):
+    print(i)
+print(&quot;Start!&quot;)</code></pre><p><code>range(10, 0, -1)</code> dá 10, 9, …, 1. Nula už ne, protože horní mez se nikdy nezahrnuje. Kdyby byl <code>print("Start!")</code> odsazený, vypsal by se desetkrát.</p></div></details>
+</section>
+<section id="u5" class="task">
+<div class="task-head"><h2><span class="num">5</span> Malá násobilka</h2><span class="time">5 min</span></div>
+<p>Načti číslo a vypiš jeho násobilku od 1 do 10 přesně v tomto tvaru.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">n = int(input(&quot;Násobilka čísla: &quot;))</code></pre>
+<p>Při spuštění zadej například: <code>7</code>. Pak zkus i jiné hodnoty.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Násobilka čísla: 7
+7 × 1 = 7
+7 × 2 = 14
+…
+7 × 10 = 70</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Kolikrát se má cyklus opakovat a jakých hodnot má proměnná nabývat? Pozor, <code>range(10)</code> začíná nulou. Výpis nejsnáz poskládáš přes <code>f"…"</code>.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">n = int(input(&quot;Násobilka čísla: &quot;))
+
+for i in range(1, 11):
+    print(f&quot;{n} × {i} = {n * i}&quot;)</code></pre><p>Uvnitř složených závorek ve f-řetězci může být i výpočet, třeba <code>{n * i}</code>.</p></div></details>
+</section>
+<section id="u6" class="task">
+<div class="task-head"><h2><span class="num">6</span> Sčítej, dokud nezadám nulu</h2><span class="time">6 min</span></div>
+<p>Program má načítat čísla tak dlouho, dokud uživatel nezadá 0. Pak vypíše jejich součet. Dopředu nevíš, kolik čísel přijde, a proto se tu hodí cyklus <code>while</code>.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">soucet = 0
+cislo = int(input(&quot;Číslo: &quot;))
+
+while ...:
+    ...
+
+print(&quot;Součet:&quot;, soucet)</code></pre>
+<p>Při spuštění zadej například: <code>4</code>, <code>7</code>, <code>-2</code>, <code>0</code>. Pak zkus i jiné hodnoty.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Číslo: 4
+Číslo: 7
+Číslo: -2
+Číslo: 0
+Součet: 9</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Potřebuješ proměnnou na průběžný součet, na začátku 0. Načti první číslo ještě před cyklem. V cyklu ho přičti a načti další. Cyklus běží, dokud <code>cislo != 0</code>.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">soucet = 0
+cislo = int(input(&quot;Číslo: &quot;))
+
+while cislo != 0:
+    soucet = soucet + cislo
+    cislo = int(input(&quot;Číslo: &quot;))
+
+print(&quot;Součet:&quot;, soucet)</code></pre><p><code>for</code> použij, když víš, kolikrát opakovat. <code>while</code> použij, když opakuješ, dokud platí podmínka. Když zapomeneš uvnitř cyklu načíst další číslo, podmínka bude platit pořád a cyklus nikdy neskončí. Takový program zastavíš klávesami <kbd>Ctrl</kbd> + <kbd>C</kbd>.</p></div></details>
+</section>
+<p class="part">Bonus</p>
+<section id="u7" class="task">
+<div class="task-head"><h2><span class="num">7</span> Stromeček</h2><span class="time">8 min</span></div>
+<p>Načti výšku a nakresli z hvězdiček stromeček. Na řádku 1 je jedna hvězdička, na každém dalším o dvě víc, a celý je zarovnaný na střed.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">vyska = int(input(&quot;Výška: &quot;))</code></pre>
+<p>Při spuštění zadej například: <code>4</code>. Pak zkus i jiné hodnoty.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Výška: 4
+   *
+  ***
+ *****
+*******
+   |</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Text jde násobit číslem: <code>"*" * 3</code> je <code>***</code>. Pro řádek <code>i</code> (od 0) potřebuješ <code>2*i + 1</code> hvězdiček. Kolik mezer před nimi? Na posledním řádku žádná, na předposledním jedna…</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">vyska = int(input(&quot;Výška: &quot;))
+
+for i in range(vyska):
+    mezery = vyska - i - 1
+    hvezdy = 2 * i + 1
+    print(&quot; &quot; * mezery + &quot;*&quot; * hvezdy)
+print(&quot; &quot; * (vyska - 1) + &quot;|&quot;)</code></pre><p>Klíčové je najít vzorec, jak počet mezer a hvězdiček závisí na čísle řádku. Nakresli si to do tabulky (řádek, mezery, hvězdy) a vzorec uvidíš. Kmen pod stromečkem je dobrovolný.</p></div></details>
+</section>
+
+<p class="foot">Hotovo? Vrať se k úkolu, který ti dal nejvíc práce, a zkus ho napsat znovu bez nápovědy. Tak se to naučíš nejrychleji.</p>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
+    });
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>
