@@ -14,82 +14,290 @@
   <symbol id="i-task" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12l2.5 2.5 5-5"/></symbol>
   <symbol id="i-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4-1L19 8l-3-3L5 16z"/><path d="M14 7l3 3"/></symbol>
 </svg>
+<div class="matrix" aria-hidden="true"><canvas></canvas></div>
 <main class="index">
 <header class="hero">
-  <h1>Materiály k Informatice <span class="t">&lt;/&gt;</span></h1>
+  <h1 id="titul">Materiály k Informatice <span class="t">&lt;/&gt;</span></h1>
+  <p class="tagline">Všechno je nakonec jen hromada bitů.</p>
 </header>
+<p class="fold-all"><button type="button" id="foldAll">Rozbalit vše</button></p>
 
-<section>
-<h2>Informace</h2>
+<details class="block" id="informace">
+<summary><h2>Informace</h2><span class="cnt"></span><span class="peek"></span></summary>
 <ul class="topics">
-  <li class="topic"><span class="n">03</span><h3 class="tt">Bit po bitu</h3><p class="ds">Dvojková soustava, bit a byte, kolik bitů potřebuje kolik stavů, jednotky od bajtu po terabajt.</p>
+  <li class="topic" id="informace-03" data-short="Bit"><span class="tg" aria-hidden="true"><span class="glyph g-bit">0 1</span><span class="no">03</span></span><h3 class="tt">Bit po bitu</h3><p class="ds">Dvojková soustava, bit a byte, kolik bitů potřebuje kolik stavů, jednotky od bajtu po terabajt.</p>
     <p class="acts"><a class="act main" href="informace/03_bit_byte.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a><a class="act" href="informace/03_bit_byte_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
-  <li class="topic"><span class="n">04</span><h3 class="tt">Znak po znaku</h3><p class="ds">Jak se kóduje text: ASCII, čeština, Unicode a UTF-8.</p>
+  <li class="topic" id="informace-04" data-short="Znak"><span class="tg" aria-hidden="true"><span class="glyph g-chr">Ř</span><span class="no">04</span></span><h3 class="tt">Znak po znaku</h3><p class="ds">Jak se kóduje text: ASCII, čeština, Unicode a UTF-8.</p>
     <p class="acts"><a class="act main" href="informace/04_Znak_po_znaku.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a><a class="act" href="informace/04_znak_po_znaku_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
-  <li class="topic"><span class="n">05</span><h3 class="tt">Pixel po pixelu</h3><p class="ds">Jak se kóduje obrázek: pixel a rozlišení, RGB, rastr vs vektor, velikost souboru a komprese PNG a JPEG.</p>
+  <li class="topic" id="informace-05" data-short="Pixel"><span class="tg" aria-hidden="true"><span class="glyph"><span class="g-px"><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i></span></span><span class="no">05</span></span><h3 class="tt">Pixel po pixelu</h3><p class="ds">Jak se kóduje obrázek: pixel a rozlišení, RGB, rastr vs vektor, velikost souboru a komprese PNG a JPEG.</p>
     <p class="acts"><a class="act main" href="informace/05_pixel_po_pixelu.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a><a class="act" href="informace/05_pixel_po_pixelu_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
-  <li class="topic"><span class="n">06</span><h3 class="tt">Jablko ve vektoru</h3><p class="ds">Vektorová grafika v Boxy SVG krok za krokem: z kruhu jablko se stopkou, listem, přechodem a stínem. Plus pohled do SVG kódu.</p>
+  <li class="topic" id="informace-06" data-short="Vektor"><span class="tg" aria-hidden="true"><span class="glyph"><svg width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 9c-4-3-12-2-12 6s5 11 8 11c2 0 3-1 4-1s2 1 4 1c3 0 8-4 8-11s-8-9-12-6z" stroke="#F28B82"/><path d="M17 9c0-3 1-5 3-6" stroke="#A8E6B0"/></svg></span><span class="no">06</span></span><h3 class="tt">Jablko ve vektoru</h3><p class="ds">Vektorová grafika v Boxy SVG krok za krokem: z kruhu jablko se stopkou, listem, přechodem a stínem. Plus pohled do SVG kódu.</p>
     <p class="acts"><a class="act main" href="informace/06_priklad_jablko.html"><svg class="ic"><use href="#i-pen"/></svg>Příklad</a></p></li>
-  <li class="topic"><span class="n">07</span><h3 class="tt">Barva po barvě</h3><p class="ds">Barevné modely: proč stačí tři čísla, RGB a hex, CMYK a tisk, gamut, HSL a HSV, průhlednost, kontrast a YCbCr.</p>
+  <li class="topic" id="informace-07" data-short="Barva"><span class="tg" aria-hidden="true"><span class="glyph"><span class="g-rgb"><i class="r"></i><i class="g"></i><i class="b"></i></span></span><span class="no">07</span></span><h3 class="tt">Barva po barvě</h3><p class="ds">Barevné modely: proč stačí tři čísla, RGB a hex, CMYK a tisk, gamut, HSL a HSV, průhlednost, kontrast a YCbCr.</p>
     <p class="acts"><a class="act main" href="informace/07_barva_po_barve.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a><a class="act" href="informace/07_barva_po_barve_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
-  <li class="topic"><span class="n">08</span><h3 class="tt">Ztrátová a bezztrátová komprese</h3><p class="ds">Jak se vejde film do mobilu: RLE, Huffman a ZIP, proč nejde zmenšit všechno, co zahazuje JPEG, MP3 a video.</p>
+  <li class="topic" id="informace-08" data-short="Komprese"><span class="tg" aria-hidden="true"><span class="glyph g-zip">AAAAB<b>4A1B</b></span><span class="no">08</span></span><h3 class="tt">Ztrátová a bezztrátová komprese</h3><p class="ds">Jak se vejde film do mobilu: RLE, Huffman a ZIP, proč nejde zmenšit všechno, co zahazuje JPEG, MP3 a video.</p>
     <p class="acts"><a class="act main" href="informace/08_komprese.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a><a class="act" href="informace/08_komprese_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
-  <li class="topic"><span class="n">09</span><h3 class="tt">Snímek po snímku</h3><p class="ds">Jak se kóduje video: snímky a fps, syrová data, klíčové snímky, barva a jas, kodek a kontejner, bitrate a streamování.</p>
+  <li class="topic" id="informace-09" data-short="Video"><span class="tg" aria-hidden="true"><span class="glyph"><svg class="g-film" width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="1" width="32" height="26" rx="3"/><path class="holes" d="M1 7h32M1 21h32M8 1v6M17 1v6M26 1v6M8 21v6M17 21v6M26 21v6"/><path d="M14 11l6 3-6 3z" fill="currentColor" stroke="none"/></svg></span><span class="no">09</span></span><h3 class="tt">Snímek po snímku</h3><p class="ds">Jak se kóduje video: snímky a fps, syrová data, klíčové snímky, barva a jas, kodek a kontejner, bitrate a streamování.</p>
     <p class="acts"><a class="act main" href="informace/09_snimek_po_snimku.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a><a class="act" href="informace/09_snimek_po_snimku_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
-  <li class="topic"><span class="n">10</span><h3 class="tt">Vzorek po vzorku</h3><p class="ds">Jak se kóduje zvuk: vlna, frekvence a decibely, vzorkování a kvantování, aliasing, velikost souborů, maskování, spektrogram a MIDI.</p>
+  <li class="topic" id="informace-10" data-short="Zvuk"><span class="tg" aria-hidden="true"><span class="glyph"><svg class="g-wave" width="40" height="26" viewBox="0 0 40 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 13 Q5 1 9 13 T17 13 T25 13 T33 13 T39 13"/><g fill="currentColor" stroke="none"><circle cx="5" cy="5" r="1.6"/><circle cx="13" cy="21" r="1.6"/><circle cx="21" cy="5" r="1.6"/><circle cx="29" cy="21" r="1.6"/></g></svg></span><span class="no">10</span></span><h3 class="tt">Vzorek po vzorku</h3><p class="ds">Jak se kóduje zvuk: vlna, frekvence a decibely, vzorkování a kvantování, aliasing, velikost souborů, maskování, spektrogram a MIDI.</p>
     <p class="acts"><a class="act main" href="informace/10_vzorek_po_vzorku.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a><a class="act" href="informace/10_vzorek_po_vzorku_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
 </ul>
-</section>
+</details>
 
-<section>
-<h2>Seminář</h2>
+<details class="block" id="seminar">
+<summary><h2>Seminář</h2><span class="cnt"></span><span class="peek"></span></summary>
 <ul class="topics">
-  <li class="topic"><span class="n">03</span><h3 class="tt">Programování: HTML a CSS</h3><p class="ds">Maturitní otázka: tvorba webu, kostra stránky, sémantika, kaskáda, box model, Flexbox a Grid. K tomu deset cvičení s živým editorem a samostatný úkol.</p>
+  <li class="topic" id="seminar-03" data-short="HTML a CSS"><span class="tg" aria-hidden="true"><span class="glyph g-tag">&lt;/&gt;</span><span class="no">03</span></span><h3 class="tt">Programování: HTML a CSS</h3><p class="ds">Maturitní otázka: tvorba webu, kostra stránky, sémantika, kaskáda, box model, Flexbox a Grid. K tomu deset cvičení s živým editorem a samostatný úkol.</p>
     <p class="acts"><a class="act main" href="seminar/03_HTML_a_CSS_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a><a class="act" href="seminar/03_cviceni.html"><svg class="ic"><use href="#i-code"/></svg>Cvičení</a><a class="act" href="seminar/03_ukol.html"><svg class="ic"><use href="#i-task"/></svg>Úkol</a></p></li>
-  <li class="topic"><span class="n">05</span><h3 class="tt">Operační systémy</h3><p class="ds">Maturitní otázka: jádro a systémová volání, spuštění počítače, procesy a plánování se simulátorem, virtuální paměť, souborové systémy a práva, Windows, macOS, Linux a mobilní systémy.</p>
+  <li class="topic" id="seminar-05" data-short="Operační systémy"><span class="tg" aria-hidden="true"><span class="glyph"><svg width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="#7DD3E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="32" height="26" rx="3"/><path d="M1 8h32"/><circle cx="5" cy="4.5" r=".6" fill="#7DD3E8"/><circle cx="8.5" cy="4.5" r=".6" fill="#7DD3E8"/><path d="M7 14l4 3-4 3M14 20h7" stroke="#A8E6B0"/></svg></span><span class="no">05</span></span><h3 class="tt">Operační systémy</h3><p class="ds">Maturitní otázka: jádro a systémová volání, spuštění počítače, procesy a plánování se simulátorem, virtuální paměť, souborové systémy a práva, Windows, macOS, Linux a mobilní systémy.</p>
     <p class="acts"><a class="act main" href="seminar/05_operacni_systemy.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
 </ul>
-</section>
+</details>
 
-<section>
-<h2>Programování</h2>
+<details class="block" id="programovani">
+<summary><h2>Programování</h2><span class="cnt"></span><span class="peek"></span></summary>
 <ul class="topics">
-  <li class="topic"><span class="n">01</span><h3 class="tt">Python: první kroky</h3><p class="ds">Úlohy pro úplné začátečníky na zkoušení u sebe v Thonny nebo IDLE: výpis, proměnné a počítání, vstup od uživatele, podmínky a cykly. Nápověda a řešení u každé úlohy.</p>
+  <li class="topic" id="programovani-01" data-short="První kroky"><span class="tg" aria-hidden="true"><span class="glyph g-py">&gt;&gt;&gt;</span><span class="no">01</span></span><h3 class="tt">Python: první kroky</h3><p class="ds">Úlohy pro úplné začátečníky na zkoušení u sebe v Thonny nebo IDLE: výpis, proměnné a počítání, vstup od uživatele, podmínky a cykly. Nápověda a řešení u každé úlohy.</p>
     <p class="acts"><a class="act main" href="python/01_python_prvni_kroky.html"><svg class="ic"><use href="#i-code"/></svg>Cvičení</a></p></li>
+  <li class="topic" id="programovani-02" data-short="Větvení a cykly"><span class="tg" aria-hidden="true"><span class="glyph"><svg width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="#C9B6FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="4" r="2.5"/><path d="M17 6.5v5M17 11.5l-9 8M17 11.5l9 8"/><rect x="3" y="19.5" width="10" height="6" rx="2" stroke="#A8E6B0"/><rect x="21" y="19.5" width="10" height="6" rx="2" stroke="#F2A07B"/></svg></span><span class="no">02</span></span><h3 class="tt">Python: větvení a cykly</h3><p class="ds">Navazuje na první kroky: podmínky if, elif a else, cykly for a while. Sudé a liché, známka z testu, přestupný rok, odpočet, malá násobilka a stromeček.</p>
+    <p class="acts"><a class="act main" href="python/02_vetveni.html"><svg class="ic"><use href="#i-code"/></svg>Cvičení</a></p></li>
 </ul>
-</section>
+</details>
 
-<section>
-<h2>Hardware a operační systémy</h2>
+<details class="block" id="hardware">
+<summary><h2>Hardware a operační systémy</h2><span class="cnt"></span><span class="peek"></span></summary>
 <ul class="topics">
-  <li class="topic"><span class="n">01</span><h3 class="tt">Od sálu do kapsy</h3><p class="ds">Historie počítačů: od Pascaliny přes ENIAC a sálové počítače po mobil a cloud. Generace, děrný štítek, Moorův zákon a dobová videa.</p>
+  <li class="topic" id="hardware-01" data-short="Historie"><span class="tg" aria-hidden="true"><span class="glyph"><svg width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="#F2C14E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 1h27v26H1V5z"/><g fill="#F2C14E" stroke="none"><rect x="6" y="7" width="3" height="5" rx="1"/><rect x="12" y="13" width="3" height="5" rx="1"/><rect x="18" y="7" width="3" height="5" rx="1"/><rect x="24" y="17" width="3" height="5" rx="1"/><rect x="6" y="17" width="3" height="5" rx="1"/></g></svg></span><span class="no">01</span></span><h3 class="tt">Od sálu do kapsy</h3><p class="ds">Historie počítačů: od Pascaliny přes ENIAC a sálové počítače po mobil a cloud. Generace, děrný štítek, Moorův zákon a dobová videa.</p>
     <p class="acts"><a class="act main" href="hardware/01_historie.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a></p></li>
-  <li class="topic"><span class="n">02</span><h3 class="tt">Lidé za stroji</h3><p class="ds">Osobnosti, které formovaly svět IT: galerie, časová osa jejich životů a kvíz.</p>
+  <li class="topic" id="hardware-02" data-short="Osobnosti"><span class="tg" aria-hidden="true"><span class="glyph"><svg width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="#EDEDED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="9" r="6"/><path d="M5 27c1-7 6-10 12-10s11 3 12 10"/></svg></span><span class="no">02</span></span><h3 class="tt">Lidé za stroji</h3><p class="ds">Osobnosti, které formovaly svět IT: galerie, časová osa jejich životů a kvíz.</p>
     <p class="acts"><a class="act main" href="hardware/02_osobnosti.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a></p></li>
-  <li class="topic"><span class="n">03</span><h3 class="tt">Jak je počítač postavený</h3><p class="ds">Von Neumannova a Harvardská architektura: interaktivní schéma, simulace programu krok za krokem a závod sběrnic.</p>
+  <li class="topic" id="hardware-03" data-short="Architektura"><span class="tg" aria-hidden="true"><span class="glyph"><svg width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="12" height="10" rx="2" stroke="#7DD3E8"/><rect x="21" y="3" width="12" height="10" rx="2" stroke="#A8E6B0"/><path d="M13 8h8" stroke="#EDEDED"/><path d="M7 13v8h20v-8" stroke="#F2C14E"/><rect x="11" y="19" width="12" height="7" rx="2" stroke="#F2C14E"/></svg></span><span class="no">03</span></span><h3 class="tt">Jak je počítač postavený</h3><p class="ds">Von Neumannova a Harvardská architektura: interaktivní schéma, simulace programu krok za krokem a závod sběrnic.</p>
     <p class="acts"><a class="act main" href="hardware/03_architektura.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a></p></li>
-  <li class="topic"><span class="n">04</span><h3 class="tt">Co je uvnitř počítače</h3><p class="ds">Základní deska jako von Neumannovo schéma, procesor a cache, hierarchie pamětí, RAM, SSD a HDD, sběrnice.</p>
+  <li class="topic" id="hardware-04" data-short="Uvnitř PC"><span class="tg" aria-hidden="true"><span class="glyph"><svg width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="#7DD3E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="6" width="16" height="16" rx="2"/><rect x="13" y="10" width="8" height="8" rx="1" fill="#7DD3E8" stroke="none"/><path d="M13 2v4M17 2v4M21 2v4M13 22v4M17 22v4M21 22v4M5 10h4M5 14h4M5 18h4M25 10h4M25 14h4M25 18h4"/></svg></span><span class="no">04</span></span><h3 class="tt">Co je uvnitř počítače</h3><p class="ds">Základní deska jako von Neumannovo schéma, procesor a cache, hierarchie pamětí, RAM, SSD a HDD, sběrnice.</p>
     <p class="acts"><a class="act main" href="hardware/04_hardware_pc.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a><a class="act" href="hardware/04_hardware_pc_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
 </ul>
-</section>
+</details>
 
-<section>
-<h2>Sítě a internet</h2>
+<details class="block" id="site">
+<summary><h2>Sítě a internet</h2><span class="cnt"></span><span class="peek"></span></summary>
 <ul class="topics">
-  <li class="topic"><span class="n">01</span><h3 class="tt">Jak funguje internet</h3><p class="ds">Historie, pakety, vrstvy TCP/IP a OSI, IP adresy a NAT, DNS, TCP a UDP, HTTP a HTTPS, kdo co vidí s VPN a bez ní.</p>
+  <li class="topic" id="site-01" data-short="Internet"><span class="tg" aria-hidden="true"><span class="glyph"><svg width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="#7DD3E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="14" r="12"/><path d="M5 14h24M17 2c-4 4-5 8-5 12s1 8 5 12M17 2c4 4 5 8 5 12s-1 8-5 12"/></svg></span><span class="no">01</span></span><h3 class="tt">Jak funguje internet</h3><p class="ds">Historie, pakety, vrstvy TCP/IP a OSI, IP adresy a NAT, DNS, TCP a UDP, HTTP a HTTPS, kdo co vidí s VPN a bez ní.</p>
     <p class="acts"><a class="act main" href="site/01_internet.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a><a class="act" href="site/01_internet_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
 </ul>
-</section>
+</details>
 
-<section>
-<h2>Bezpečnost</h2>
+<details class="block" id="bezpecnost">
+<summary><h2>Bezpečnost</h2><span class="cnt"></span><span class="peek"></span></summary>
 <ul class="topics">
-  <li class="topic"><span class="n">01</span><h3 class="tt">Phishing</h3><p class="ds">Jak poznat podvodný e-mail, SMS nebo odkaz: anatomie zprávy, čtení adres, podobné domény, kvíz a postup, když se to stane.</p>
+  <li class="topic" id="bezpecnost-01" data-short="Phishing"><span class="tg" aria-hidden="true"><span class="glyph"><svg width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="#F2A07B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 2v15a6 6 0 0 1-12 0v-3l4 3"/><circle cx="20" cy="2" r="1" fill="#F2A07B"/><path d="M24 6c3 0 5 1 6 3" stroke="#7DD3E8"/><path d="M24 10c2 0 4 1 5 2" stroke="#7DD3E8"/></svg></span><span class="no">01</span></span><h3 class="tt">Phishing</h3><p class="ds">Jak poznat podvodný e-mail, SMS nebo odkaz: anatomie zprávy, čtení adres, podobné domény, kvíz a postup, když se to stane.</p>
     <p class="acts"><a class="act main" href="bezpecnost/01_phishing.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a><a class="act" href="bezpecnost/01_phishing_studijni_text.html"><svg class="ic"><use href="#i-text"/></svg>Studijní text</a></p></li>
-  <li class="topic"><span class="n">02</span><h3 class="tt">Sociální sítě</h3><p class="ds">Proč jsou sítě zdarma a co o tobě vědí, simulace algoritmu a bubliny, návykovost, co prozradí profil a fotka, podvody na sítích a kontrola účtu.</p>
+  <li class="topic" id="bezpecnost-02" data-short="Sociální sítě"><span class="tg" aria-hidden="true"><span class="glyph"><svg width="34" height="28" viewBox="0 0 34 28" fill="none" stroke="#F28B82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 25s-11-6-11-14a6 6 0 0 1 11-3 6 6 0 0 1 11 3c0 8-11 14-11 14z"/><circle cx="27" cy="6" r="4" fill="#F2A07B" stroke="none"/></svg></span><span class="no">02</span></span><h3 class="tt">Sociální sítě</h3><p class="ds">Proč jsou sítě zdarma a co o tobě vědí, simulace algoritmu a bubliny, návykovost, co prozradí profil a fotka, podvody na sítích a kontrola účtu.</p>
     <p class="acts"><a class="act main" href="bezpecnost/02_socialni_site.html"><svg class="ic"><use href="#i-deck"/></svg>Prezentace</a></p></li>
 </ul>
-</section>
+</details>
 </main>
+<script>
+/* rozcestník: matice bitů, sbalitelné bloky s přehledem, skok na téma podle #odkazu */
+(function () {
+  var klid = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var nahodny = function (s) { return s.charAt(Math.floor(Math.random() * s.length)); };
+
+  /* ---------- matice bitů: každý bajt je ASCII kód písmene ze slov z kurzu ---------- */
+  var plocha = document.querySelector(".matrix canvas");
+  if (plocha) (function () {
+    var ctx = plocha.getContext("2d");
+    var SLOVA = ["INFORMATIKA", "BIT", "BAJT", "ZNAK", "ASCII", "UNICODE", "UTF-8", "PIXEL", "RGB", "BARVA", "HEX", "KOMPRESE", "ZIP", "JPEG", "VIDEO", "SNIMEK", "ZVUK", "VZOREK", "MIDI", "PYTHON", "HTML", "CSS", "INTERNET", "TCP/IP", "DNS", "HTTP", "PAKET", "CPU", "RAM", "SSD", "CACHE", "PHISHING", "HESLO", "ALGORITMUS", "DATA", "KOD", "0+1"];
+    var styl = getComputedStyle(document.body);
+    var barva = function (n, z) { return (styl.getPropertyValue(n) || "").trim() || z; };
+    var C = { nula: "#343434", jedna: "#5C5C5C", cyan: barva("--c-accent", "#7DD3E8"), mint: barva("--c-mint", "#A8E6B0"), pismeno: barva("--c-ink", "#EDEDED") };
+    var hex = function (h) { h = h.replace("#", ""); return [parseInt(h.substr(0, 2), 16), parseInt(h.substr(2, 2), 16), parseInt(h.substr(4, 2), 16)]; };
+    var RGB = { nula: hex(C.nula), jedna: hex(C.jedna), cyan: hex(C.cyan), mint: hex(C.mint) };
+    var mix = function (a, b, t) { return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * t) + "," + Math.round(a[1] + (b[1] - a[1]) * t) + "," + Math.round(a[2] + (b[2] - a[2]) * t) + ")"; };
+
+    var W, H, dpr, pismo, sirka, radek, sloupcu, radku, bajtuNaRadek, odsazX, odsazY, bajty = [], kapky = [];
+    var mys = null, vlna = null, start = performance.now(), bezi = false, videt = true;
+
+    var text = function (r, n) {           // řádek textu: slova za sebou, každý řádek jinak posunutý
+      var s = "", i = (r * 7) % SLOVA.length;
+      while (s.length < n + 12) { s += SLOVA[i % SLOVA.length] + " "; i += 3; }
+      return s.substr((r * 5) % 9, n);
+    };
+
+    var postav = function () {
+      var box = plocha.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = box.width; H = box.height;
+      plocha.width = Math.round(W * dpr); plocha.height = Math.round(H * dpr);
+      pismo = W < 560 ? 11 : 13;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.font = pismo + "px " + barva("--f-mono", "monospace");
+      ctx.textBaseline = "middle"; ctx.textAlign = "center";
+      sirka = ctx.measureText("0").width; radek = Math.round(pismo * 1.55);
+      sloupcu = Math.floor(W / sirka); radku = Math.max(1, Math.floor(H / radek));
+      bajtuNaRadek = Math.floor((sloupcu + 1) / 9);
+      odsazX = (W - (bajtuNaRadek * 9 - 1) * sirka) / 2 + sirka / 2;
+      odsazY = (H - radku * radek) / 2 + radek / 2;
+      bajty = [];
+      var stred = Math.floor(radku * .3);
+      for (var r = 0; r < radku; r++) {
+        var t = text(r, bajtuNaRadek), hlOd;
+        if (r === stred && bajtuNaRadek >= 11) {   // řádek ve horní (nezatmavené) části nese INFORMATIKA uprostřed
+          var z = Math.floor((bajtuNaRadek - 11) / 2);
+          t = t.substr(0, z) + "INFORMATIKA" + t.substr(z + 11);
+          var hlOd = z;
+        }
+        for (var b = 0; b < bajtuNaRadek; b++) {
+          var znak = t.charAt(b) || " ";
+          var kod = znak.charCodeAt(0).toString(2).padStart(8, "0");
+          bajty.push({
+            r: r, b: b, znak: znak, kod: kod,
+            x: odsazX + (b * 9 + 3.5) * sirka, y: odsazY + r * radek,
+            zobraz: kod.split(""), jas: [0, 0, 0, 0, 0, 0, 0, 0],
+            hl: r === stred && hlOd !== undefined && b >= hlOd && b < hlOd + 11,
+            odhal: 0, usadi: klid ? 0 : start + 150 + b * 28 + r * 18 + Math.random() * 220
+          });
+        }
+      }
+      kapky = [];
+      kresli(performance.now());
+    };
+
+    var bajtNa = function (r, sl) {          // sloupec znaku -> bajt a bit
+      var b = Math.floor(sl / 9), bit = sl % 9;
+      if (b >= bajtuNaRadek || bit === 8 || r < 0 || r >= radku) return null;
+      return { B: bajty[r * bajtuNaRadek + b], i: bit };
+    };
+
+    var kresli = function (ted) {
+      ctx.clearRect(0, 0, W, H);
+      var R = W < 560 ? 70 : 110, RX = W < 560 ? 150 : 270, RY = W < 560 ? 34 : 46;
+      // kapky: světlo, které stéká po sloupcích bitů (bity samy zůstávají na místě)
+      if (!klid) {
+        if (kapky.length < sloupcu / 10 && Math.random() < .5) kapky.push({ sl: Math.floor(Math.random() * sloupcu), y: -1, v: .12 + Math.random() * .22 });
+        kapky = kapky.filter(function (k) {
+          k.y += k.v;
+          var hit = bajtNa(Math.floor(k.y), k.sl);
+          if (hit) hit.B.jas[hit.i] = 1;
+          return k.y < radku + 1;
+        });
+        // náhodné problikání
+        if (Math.random() < .25) { var B = bajty[Math.floor(Math.random() * bajty.length)], j = Math.floor(Math.random() * 8); B.zobraz[j] = B.kod[j] === "1" ? "0" : "1"; B.jas[j] = .7; B._vrat = ted + 220; }
+      }
+      for (var n = 0; n < bajty.length; n++) {
+        var B = bajty[n], cil = 0;
+        if (mys) { var dx = (B.x - mys.x) / RX, dy = (B.y - mys.y) / RY, d = Math.sqrt(dx * dx + dy * dy); if (d < 1) cil = 1; else if (d < 1.25) cil = .35; }
+        if (vlna) { var tv = ted - vlna, f = tv / 1100 * (W + 200) - 100; if (B.x < f && tv < 2900) cil = 1; }
+        B.odhal += (cil - B.odhal) * (klid ? 1 : .18);
+        var sum = ted < B.usadi || (B.odhal > .12 && B.odhal < .88);
+        if (B._vrat && ted > B._vrat) { B.zobraz = B.kod.split(""); B._vrat = 0; }
+        var a = 1 - Math.min(1, B.odhal * 1.6);
+        if (a > .02) {
+          ctx.globalAlpha = a;
+          for (var i = 0; i < 8; i++) {
+            var d1 = sum ? (Math.random() < .5 ? "0" : "1") : B.zobraz[i];
+            var jas = B.jas[i]; if (sum) jas = Math.max(jas, .55);
+            if (mys) { var ex = (B.x + (i - 3.5) * sirka - mys.x) / (RX + 70), ey = (B.y - mys.y) / (RY + 40), e = Math.sqrt(ex * ex + ey * ey); if (e < 1) jas = Math.max(jas, (1 - e) * .8); }
+            ctx.fillStyle = jas > .02 ? mix(d1 === "1" ? RGB.jedna : RGB.nula, sum ? RGB.mint : RGB.cyan, Math.min(1, jas)) : (d1 === "1" ? C.jedna : C.nula);
+            ctx.fillText(d1, B.x + (i - 3.5) * sirka, B.y);
+            B.jas[i] *= .93;
+          }
+        }
+        if (B.odhal > .45) {          // rozluštěné písmeno
+          ctx.globalAlpha = Math.min(1, (B.odhal - .45) * 2.2) * (vlna && !B.hl ? .5 : 1);
+          ctx.fillStyle = B.znak === " " ? C.jedna : (B.hl ? C.pismeno : C.cyan);
+          ctx.font = "700 " + Math.round(pismo * (B.hl ? 1.5 : 1.25)) + "px " + barva("--f-mono", "monospace");
+          ctx.fillText(B.znak === " " ? "·" : B.znak, B.x, B.y);
+          ctx.font = pismo + "px " + barva("--f-mono", "monospace");
+        }
+      }
+      ctx.globalAlpha = 1;
+      if (vlna && ted - vlna > 3500) vlna = null;
+    };
+
+    var smycka = function (ted) {
+      if (videt && !document.hidden) kresli(ted);
+      requestAnimationFrame(smycka);
+    };
+
+    var poloha = function (e) { var r = plocha.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    // matice leží pod obsahem, proto se myš sleduje na celé stránce a počítá se jen nad plochou matice
+    var uvnitr = function (m) { return m.x >= 0 && m.y >= 0 && m.x <= W && m.y <= H; };
+    document.addEventListener("pointermove", function (e) {
+      if (e.pointerType !== "mouse") return;
+      var m = poloha(e); mys = uvnitr(m) ? m : null; if (klid) kresli(performance.now());
+    });
+    document.documentElement.addEventListener("pointerleave", function () { mys = null; if (klid) kresli(performance.now()); });
+    document.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse" || e.target.closest("a, button, summary")) return;
+      var m = poloha(e); if (!uvnitr(m)) return;
+      mys = m; if (klid) kresli(performance.now());
+      clearTimeout(plocha._t); plocha._t = setTimeout(function () { mys = null; if (klid) kresli(performance.now()); }, 1600);
+    });
+    var titul = document.getElementById("titul");
+    if (titul) titul.addEventListener("mouseenter", function () { if (!vlna) { vlna = performance.now(); if (klid) { vlna = null; } } });
+
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (z) { videt = z[0].isIntersecting; }).observe(plocha);
+    var obnov; window.addEventListener("resize", function () { clearTimeout(obnov); obnov = setTimeout(postav, 150); });
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () {
+      start = performance.now(); postav();
+      if (!klid) requestAnimationFrame(smycka);
+    });
+  })();
+
+  /* ---------- sbalitelné bloky ---------- */
+  var bloky = Array.prototype.slice.call(document.querySelectorAll("details.block"));
+  var tvar = function (n) { return n === 1 ? "1 téma" : (n >= 2 && n <= 4 ? n + " témata" : n + " témat"); };
+  bloky.forEach(function (d) {
+    var c = d.querySelector(".cnt");
+    if (c) c.textContent = tvar(d.querySelectorAll(".topic").length);
+    var pk = d.querySelector(".peek");
+    if (pk) pk.textContent = Array.prototype.map.call(d.querySelectorAll(".topic"), function (t) {
+      return t.dataset.short || t.querySelector(".tt").textContent;
+    }).join(" · ");
+  });
+
+  var KLIC = "informatika-otevrene";
+  try {
+    var ulozene = JSON.parse(localStorage.getItem(KLIC) || "[]");
+    bloky.forEach(function (d) { if (ulozene.indexOf(d.id) >= 0) d.open = true; });
+  } catch (e) {}
+  var uloz = function () {
+    try { localStorage.setItem(KLIC, JSON.stringify(bloky.filter(function (d) { return d.open; }).map(function (d) { return d.id; }))); } catch (e) {}
+  };
+
+  var tlacitko = document.getElementById("foldAll");
+  var popisTlacitka = function () {
+    if (tlacitko) tlacitko.textContent = bloky.every(function (d) { return d.open; }) ? "Sbalit vše" : "Rozbalit vše";
+  };
+  bloky.forEach(function (d) { d.addEventListener("toggle", function () { uloz(); popisTlacitka(); }); });
+  if (tlacitko) tlacitko.addEventListener("click", function () {
+    var otevrit = !bloky.every(function (d) { return d.open; });
+    bloky.forEach(function (d) { d.open = otevrit; });
+  });
+  popisTlacitka();
+
+  /* ---------- skok na téma (#odkaz v adrese) ---------- */
+  var skoc = function (id) {
+    var cil = id && document.getElementById(id);
+    if (!cil) return;
+    var blok = cil.closest("details");
+    if (blok) blok.open = true;
+    cil.scrollIntoView({ behavior: klid ? "auto" : "smooth", block: cil.matches(".topic") ? "center" : "start" });
+    if (cil.matches(".topic")) {
+      cil.classList.remove("found"); void cil.offsetWidth; cil.classList.add("found");
+    }
+  };
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    e.preventDefault();
+    var id = a.getAttribute("href").slice(1);
+    history.replaceState(null, "", "#" + id);
+    skoc(id);
+  });
+  if (location.hash) skoc(decodeURIComponent(location.hash.slice(1)));
+  window.addEventListener("hashchange", function () { skoc(decodeURIComponent(location.hash.slice(1))); });
+})();
+</script>
 </body>
 </html>

@@ -1017,15 +1017,16 @@ body.doc { background: var(--bg); color: var(--fg); font-family: var(--f-body); 
 
 .doc .foot { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; }
 
-/* rozcestník (index.html) — karta tématu s tlačítky na prezentaci, studijní text atd. */
+/* rozcestník (index.html) — karta tématu: ikonka s číslem, název, popis, tlačítka */
 .doc .index { max-width: 46rem; margin: 0 auto; }
-.doc .index .hero { padding-block: 48px 24px; }
-.doc .index .hero h1 { margin: 0; }
 .doc .topics { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 12px; }
-.doc .topic { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 18px; align-items: baseline; background: var(--surface); border: 1px solid transparent; border-radius: 20px; padding: 18px 22px; transition: border-color .2s ease; }
+.doc .topic { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 4px 20px; align-items: start; background: var(--surface); border: 1px solid transparent; border-radius: 20px; padding: 18px 22px; transition: border-color .2s ease; scroll-margin: 24px; }
 .doc .topic:hover, .doc .topic:focus-within { border-color: var(--line); }
-.doc .topic .n { font-family: var(--f-mono); font-weight: 700; color: var(--accent); grid-row: span 3; font-size: 1.4rem; }
-.doc .topic .tt { font-weight: 600; font-size: 1.15rem; line-height: 1.3; color: var(--fg); margin: 0; letter-spacing: 0; }
+.doc .topic .tg { grid-row: span 3; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.doc .topic .glyph { width: 64px; height: 64px; border-radius: 16px; background: var(--bg); border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; transition: border-color .2s ease, transform .2s ease; }
+.doc .topic:hover .glyph { border-color: var(--accent); transform: translateY(-2px); }
+.doc .topic .no { font-family: var(--f-mono); font-size: .78rem; font-weight: 700; line-height: 1; color: var(--accent); }
+.doc .topic .tt { font-weight: 600; font-size: 1.15rem; line-height: 1.3; color: var(--fg); margin: 2px 0 0; letter-spacing: 0; }
 .doc .topic .ds { color: var(--muted); font-size: .95rem; margin: 0; }
 .doc .acts { grid-column: 2; display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
 .doc .act { display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px 7px 13px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg); text-decoration: none; font-size: .9rem; font-weight: 500; line-height: 1.2; transition: border-color .15s ease, color .15s ease, background-color .15s ease; }
@@ -1034,10 +1035,74 @@ body.doc { background: var(--bg); color: var(--fg); font-family: var(--f-body); 
 .doc .act.main:hover, .doc .act.main:focus-visible { background: transparent; color: var(--accent); }
 .doc .act .ic { width: 18px; height: 18px; flex: none; }
 @media (max-width: 520px) {
-  .doc .topic { grid-template-columns: minmax(0, 1fr); padding: 16px 18px; }
-  .doc .topic .n { grid-row: auto; font-size: 1.1rem; }
-  .doc .acts { grid-column: 1; }
+  .doc .topic { grid-template-columns: 48px minmax(0, 1fr); gap: 4px 14px; padding: 16px 16px; }
+  .doc .topic .glyph { width: 48px; height: 48px; border-radius: 12px; }
+  .doc .topic .glyph > * { transform: scale(.78); }
+  .doc .topic .g-bit { font-size: 1.1rem; }
+  .doc .topic .g-chr { font-size: 1.35rem; }
+  .doc .topic .g-tag { font-size: .95rem; }
+  .doc .topic .g-py { font-size: .9rem; }
+  .doc .acts { grid-column: 1 / -1; }
 }
+
+/* ikonky témat (uvnitř .glyph); při najetí na kartu se jemně rozhýbou */
+.doc .g-bit { font-family: var(--f-mono); font-weight: 700; font-size: 1.45rem; color: var(--accent); }
+.doc .g-chr { font-weight: 700; font-size: 1.7rem; color: var(--fg); }
+.doc .g-tag { font-family: var(--f-mono); font-weight: 700; font-size: 1.2rem; color: var(--c-warm); }
+.doc .g-py { font-family: var(--f-mono); font-weight: 700; font-size: 1.15rem; color: var(--c-yellow); }
+.doc .g-px { display: grid; grid-template-columns: repeat(4, 8px); gap: 2px; }
+.doc .g-px i { width: 8px; height: 8px; border-radius: 1px; background: var(--line); }
+.doc .g-px i.on { background: var(--accent); }
+.doc .topic:hover .g-px i.on { animation: px-blik 1.2s steps(2) infinite; }
+.doc .topic:hover .g-px i:nth-child(3n) { animation-delay: .3s; }
+.doc .topic:hover .g-px i:nth-child(4n+1) { animation-delay: .6s; }
+@keyframes px-blik { 50% { background: var(--c-mint); } }
+.doc .g-rgb { display: flex; gap: 3px; }
+.doc .g-rgb i { width: 10px; height: 28px; border-radius: 3px; transition: height .25s ease; }
+.doc .g-rgb .r { background: var(--c-red); }
+.doc .g-rgb .g { background: var(--c-mint); }
+.doc .g-rgb .b { background: var(--c-accent); }
+.doc .topic:hover .g-rgb .r { height: 18px; }
+.doc .topic:hover .g-rgb .b { height: 22px; }
+.doc .g-zip { display: flex; flex-direction: column; align-items: center; gap: 3px; font-family: var(--f-mono); font-size: .68rem; line-height: 1; color: var(--muted); }
+.doc .g-zip b { color: var(--c-mint); }
+.doc .g-film { color: var(--c-lavender); }
+.doc .topic:hover .g-film .holes { animation: film 0.6s linear infinite; }
+@keyframes film { to { transform: translateX(-9px); } }
+.doc .g-wave { color: var(--c-yellow); }
+.doc .topic:hover .g-wave path { stroke-dasharray: 6 3; animation: vlna .8s linear infinite; }
+@keyframes vlna { to { stroke-dashoffset: -18; } }
+
+/* rozcestník: hlavička — matice bitů (každý bajt je ASCII kód písmene) */
+.doc .index .hero { padding-block: 4px 28px; }
+.doc .index .hero h1 { margin: 0 0 10px; cursor: default; }
+.doc .tagline { margin: 0; color: var(--muted); font-size: 1rem; }
+.doc .matrix { position: relative; height: 30vh; min-height: 170px; max-height: 340px; margin: 0 -16px; }
+.doc .matrix canvas { position: absolute; top: 0; left: 0; display: block; width: 100%; height: 50vh; min-height: 280px; max-height: 560px; pointer-events: none; }
+.doc .matrix::after { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 50vh; min-height: 280px; max-height: 560px; background: linear-gradient(to bottom, transparent 0, transparent 38%, color-mix(in srgb, var(--bg) 72%, transparent) 62%, var(--bg) 100%); pointer-events: none; }
+.doc .matrix::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 10%; background: linear-gradient(to top, transparent, var(--bg)); pointer-events: none; z-index: 1; }
+.doc .matrix + .index { position: relative; z-index: 1; }
+
+/* rozcestník: sbalitelné bloky; sbalený ukazuje drobným písmem přehled témat */
+.doc .fold-all { display: flex; justify-content: flex-end; margin: 18px 0 0; }
+.doc .fold-all button { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 5px 14px; font-size: .85rem; cursor: pointer; transition: color .15s ease, border-color .15s ease; }
+.doc .fold-all button:hover, .doc .fold-all button:focus-visible { color: var(--accent); border-color: var(--accent); }
+.doc .block { border-bottom: 1px solid var(--line); }
+.doc .block > summary { list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 4px 14px; padding: 20px 4px; cursor: pointer; }
+.doc .block > summary::-webkit-details-marker { display: none; }
+.doc .block > summary h2 { margin: 0; font-size: clamp(1.35rem, 3.4vw, 1.8rem); transition: color .15s ease; }
+.doc .block > summary .cnt { color: var(--muted); font-size: .9rem; font-family: var(--f-mono); white-space: nowrap; }
+.doc .block > summary::after { content: ""; width: 10px; height: 10px; margin: 0 6px 4px 4px; border: solid var(--muted); border-width: 0 2px 2px 0; transform: rotate(45deg); transition: transform .2s ease, border-color .15s ease; }
+.doc .block > summary .peek { grid-column: 1 / -1; grid-row: 2; color: var(--c-faint); font-size: .85rem; line-height: 1.45; }
+.doc .block[open] > summary .peek { display: none; }
+.doc .block[open] > summary::after { transform: rotate(-135deg); margin-bottom: -4px; }
+.doc .block > summary:hover h2, .doc .block > summary:focus-visible h2 { color: var(--accent); }
+.doc .block > summary:hover .peek { color: var(--muted); }
+.doc .block > summary:hover::after { border-color: var(--accent); }
+.doc .block > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 12px; }
+.doc .block > .topics { margin: 0 0 24px; }
+.doc .topic.found { animation: nalezeno 1.6s ease; }
+@keyframes nalezeno { 0%, 40% { border-color: var(--accent); background: var(--accent-soft); } 100% { border-color: transparent; background: var(--surface); } }
 .doc .soon { color: var(--muted); font-size: .95rem; }
 
 /* příklad krok za krokem (seminar/03_priklad_jablko) */
