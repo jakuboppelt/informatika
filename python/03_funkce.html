@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python: funkce</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open><summary>Obsah</summary><h2>Lekce</h2>
+  <ol><li class="grp">Výklad</li><li><a href="#co">Co je funkce</a></li><li><a href="#syntaxe">Syntaxe</a></li><li><a href="#parametry">Parametry a volání</a></li><li><a href="#return">Návratová hodnota</a></li><li><a href="#tahak">Tahák</a></li><li class="grp">Volání funkcí</li><li><a href="#u1">1 · Co vypíše?</a></li><li><a href="#u2">2 · Zavolej funkci</a></li><li class="grp">Vlastní funkce</li><li><a href="#u3">3 · Představení</a></li><li><a href="#u4">4 · Obvod a obsah</a></li><li><a href="#u5">5 · Je plnoletý?</a></li><li class="grp">Opravujeme</li><li><a href="#u6">6 · Najdi a oprav chyby</a></li><li><a href="#u7">7 · Proč tam stojí None?</a></li><li class="grp">Bonus</li><li><a href="#u8">8 · Převodník času</a></li></ol></details>
+</aside>
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Programování · Výklad a cvičení</p>
+  <h1>Python: <span class="t">funkce</span></h1>
+  <p class="lead">Navazuje na <a href="02_promenne.html">proměnné a typy</a>. Naučíš se dát kusu kódu jméno, předat mu vstup a získat z něj výsledek. Nejdřív krátký výklad s ukázkami, které si můžeš zkopírovat a vyzkoušet, potom úkoly. Jak programy psát a spouštět, najdeš v <a href="01_python_prvni_kroky.html#jak">prvních krocích</a>.</p>
+  <div class="facts">
+    <div><span class="k">Úkolů</span><span class="v">7 + 1 bonus, od nejlehčího</span></div>
+    <div><span class="k">Čas</span><span class="v">jedna vyučovací hodina</span></div>
+    <div><span class="k">Když se zasekneš</span><span class="v">přečti chybu, pak Nápověda, až nakonec Řešení</span></div>
+  </div>
+</header>
+
+<p class="part">Výklad</p>
+
+<section id="co">
+<h2>Co je funkce</h2>
+<p>Funkce už používáš od první hodiny: <code>print("Ahoj")</code>, <code>input("Jméno: ")</code>, <code>int("5")</code>, <code>len("ahoj")</code>. Každá má <strong>jméno</strong>, v závorkách dostane <strong>vstup</strong> a něco udělá nebo vrátí výsledek. Jejich kód ale psal někdo jiný. Dnes se naučíš psát vlastní.</p>
+<p><strong>Funkce je pojmenovaný kus kódu, který spustíš zavoláním jeho jména.</strong> Je to jako recept: jednou ho sepíšeš a pak podle něj vaříš, kdykoli chceš, a třeba pokaždé z jiných surovin.</p>
+<h3>Proč funkce používat</h3>
+<ul>
+  <li>Nemusíš dokola opisovat stejný kód.</li>
+  <li>Když v kódu najdeš chybu, opravíš ji na jednom místě.</li>
+  <li>Velký program rozdělíš na malé části s dobrými jmény a lépe se čte.</li>
+</ul>
+<h3>Příklad bez funkce</h3>
+<p>Tři řádky s hlavičkou se tu opakují dvakrát. Kdybys chtěl(a) změnit nápis, musíš opravit obě místa, a čím delší program, tím víc míst.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print("====================")
+print("   Školní kalkulačka")
+print("====================")
+print("Součet:", 2 + 3)
+
+print("====================")
+print("   Školní kalkulačka")
+print("====================")
+print("Součin:", 4 * 5)</code></pre>
+</section>
+
+<section id="syntaxe">
+<h2>Syntaxe: jak funkci napsat a zavolat</h2>
+<p>Stejný program s funkcí. Opakující se tři řádky se napíšou jednou a pak se jen zavolají jménem.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def hlavicka():
+    print("====================")
+    print("   Školní kalkulačka")
+    print("====================")
+
+hlavicka()
+print("Součet:", 2 + 3)
+
+hlavicka()
+print("Součin:", 4 * 5)</code></pre>
+<p class="expect-h">Výstup</p><pre><code>====================
+   Školní kalkulačka
+====================
+Součet: 5
+====================
+   Školní kalkulačka
+====================
+Součin: 20</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Část</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>def</code></td><td>klíčové slovo: „definuji funkci“</td></tr>
+<tr><td><code>hlavicka</code></td><td>jméno funkce, pravidla jako u proměnných (malá písmena, bez diakritiky, místo mezery podtržítko). Dobré jméno říká, co funkce dělá.</td></tr>
+<tr><td><code>()</code></td><td>závorky; tady jsou prázdné, parametry přijdou za chvíli</td></tr>
+<tr><td><code>:</code></td><td>dvojtečka na konci řádku, za ní následuje odsazený blok; zapomenutá dvojtečka je <code>SyntaxError</code></td></tr>
+<tr><td>odsazený blok</td><td><strong>tělo funkce</strong>: příkazy, které se provedou při každém zavolání</td></tr>
+<tr><td><code>hlavicka()</code></td><td><strong>volání</strong>: jméno a závorky, tím se tělo funkce provede</td></tr>
+</tbody></table></div>
+<div class="note tip"><b class="lbl">Definice není volání</b><p>Řádek <code>def</code> funkci jen <strong>vytvoří</strong>, nic se při něm nevypíše. Tělo se provede, až když funkci <strong>zavoláš</strong>. Zkus smazat obě volání <code>hlavicka()</code> a program neudělá nic z hlavičky. Python čte shora dolů, takže funkce musí být definovaná dřív, než ji poprvé zavoláš.</p></div>
+</section>
+
+<section id="parametry">
+<h2>Parametry a volání</h2>
+<p>Funkce, která dělá pokaždé totéž, je užitečná málo. Mnohem lepší je, když jí při volání předáš vstup a ona s ním pracuje.</p>
+<h3>Jeden parametr</h3>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def pozdrav(jmeno):
+    print("Ahoj,", jmeno)
+
+pozdrav("Eliška")
+pozdrav("Tomáš")</code></pre>
+<p class="expect-h">Výstup</p><pre><code>Ahoj, Eliška
+Ahoj, Tomáš</code></pre>
+<p><code>jmeno</code> v závorkách u <code>def</code> je <strong>parametr</strong>: jméno, pod kterým funkce vidí vstup. Hodnota, kterou při volání dosadíš (<code>"Eliška"</code>), se jmenuje <strong>argument</strong>. Parametr je jako prázdná krabička uvnitř funkce, při každém volání do ní Python vloží jiný argument.</p>
+<h3>Víc parametrů</h3>
+<p>Parametry se oddělují čárkou a argumenty se při volání přiřadí podle <strong>pořadí</strong>: první argument do prvního parametru, druhý do druhého.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def odecti(a, b):
+    print(f"{a} - {b} = {a - b}")
+
+odecti(10, 3)
+odecti(3, 10)
+odecti(b=3, a=10)</code></pre>
+<p class="expect-h">Výstup</p><pre><code>10 - 3 = 7
+3 - 10 = -7
+10 - 3 = 7</code></pre>
+<p>První dvě volání se liší jen pořadím argumentů, a výsledek je jiný. Třetí volání předává argumenty <strong>jménem</strong> (<code>b=3, a=10</code>), a pak na pořadí nezáleží.</p>
+<h3>Co všechno může být argument</h3>
+<p>Argumentem je jakýkoli výraz. Python ho nejdřív vyhodnotí a výsledek teprve předá funkci.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">pozdrav("Eliška")             # hodnota přímo
+jmeno = "Tomáš"
+pozdrav(jmeno)                # proměnná
+pozdrav("Ma" + "rie")         # výpočet
+pozdrav(input("Jméno: "))     # výsledek jiné funkce</code></pre>
+<h3>Špatný počet argumentů</h3>
+<p>Kolik parametrů funkce má, tolik argumentů musíš při volání dát. Jinak Python skončí s <code>TypeError</code> a v hlášce řekne, kolik jich čekal.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">pozdrav()                     # TypeError: pozdrav() missing 1 required positional argument: 'jmeno'
+pozdrav("Eliška", "Tomáš")    # TypeError: pozdrav() takes 1 positional argument but 2 were given</code></pre>
+<h3>Vestavěné funkce</h3>
+<p>Python jich má spoustu a volají se úplně stejně. Některé, třeba <code>len</code> a <code>round</code>, už znáš z minulé lekce. Různé funkce chtějí různý počet argumentů:</p>
+<div class="tbl"><table>
+<thead><tr><th>Volání</th><th>Výsledek</th><th>Co dělá</th></tr></thead>
+<tbody>
+<tr><td><code>len("ahoj")</code></td><td><code>4</code></td><td>počet znaků v textu</td></tr>
+<tr><td><code>abs(-7)</code></td><td><code>7</code></td><td>absolutní hodnota</td></tr>
+<tr><td><code>max(3, 8, 2)</code></td><td><code>8</code></td><td>největší z hodnot (argumentů může být kolik chceš)</td></tr>
+<tr><td><code>round(3.14159, 2)</code></td><td><code>3.14</code></td><td>zaokrouhlí na 2 desetinná místa</td></tr>
+</tbody></table></div>
+<p>Všimni si, že tyhle funkce nic nevypisují. Výsledek <strong>vrátí</strong>, a co s ním bude, je na tobě: vypsat ho (<code>print(len("ahoj"))</code>), uložit do proměnné, nebo ho použít ve výpočtu. Právě to se teď naučíš i u vlastních funkcí.</p>
+</section>
+
+<section id="return">
+<h2>Návratová hodnota</h2>
+<p><code>print</code> hodnotu jen <strong>vypíše</strong> na obrazovku, program se k ní už nedostane. <code>return</code> hodnotu <strong>vrátí</strong> tomu, kdo funkci zavolal, a ten ji může uložit, vypsat nebo s ní dál počítat.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def na_druhou(x):
+    return x * x
+
+a = na_druhou(5)
+print(a)
+print(na_druhou(2) + na_druhou(3))</code></pre>
+<p class="expect-h">Výstup</p><pre><code>25
+13</code></pre>
+<p>Volání <code>na_druhou(5)</code> se v programu chová jako hodnota <code>25</code>: dá se uložit do <code>a</code> a dá se sčítat. Kdyby funkce místo <code>return</code> používala <code>print</code>, nešlo by ani jedno.</p>
+<h3>Vrátit jde cokoli</h3>
+<p>Funkce může vrátit číslo, text i logickou hodnotu. Funkce, které odpovídají na otázku ano/ne, vracejí <code>True</code> nebo <code>False</code>. Stačí k tomu porovnání z minulé lekce:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def je_sude(n):
+    return n % 2 == 0
+
+print(je_sude(4))
+print(je_sude(7))</code></pre>
+<p class="expect-h">Výstup</p><pre><code>True
+False</code></pre>
+<p>Výraz <code>n % 2 == 0</code> se vyhodnotí na <code>True</code>, nebo <code>False</code> a právě tuhle hodnotu <code>return</code> vrátí.</p>
+<h3>Return funkci ukončí</h3>
+<p>Jakmile se provede <code>return</code>, funkce skončí a řádky pod ním se už neprovedou:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def zkus():
+    print("před return")
+    return 1
+    print("za return")    # tenhle řádek se nikdy neprovede
+
+zkus()</code></pre>
+<p class="expect-h">Výstup</p><pre><code>před return</code></pre>
+<p>Dává to smysl hlavně tehdy, když funkce může skončit už v půlce. To využiješ, až se naučíš podmínky.</p>
+<h3>Past: funkce bez return</h3>
+<p>Funkce, která nic nevrací, vrátí speciální hodnotu <code>None</code> (česky „nic“). Je to jedna z nejčastějších chyb začátečníků.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def secti(a, b):
+    print(a + b)
+
+x = secti(2, 3)
+print("x je", x)</code></pre>
+<p class="expect-h">Výstup</p><pre><code>5
+x je None</code></pre>
+<p>Funkce výsledek jen vypsala (to je ta <code>5</code>), ale nevrátila, takže do <code>x</code> se nic nedostalo.</p>
+<div class="note tip"><b class="lbl">Proměnné uvnitř funkce</b><p>Proměnné vytvořené v těle funkce, včetně parametrů, existují <strong>jen uvnitř ní</strong>. Venku je Python nezná a ohlásí <code>NameError</code>. Ven se z funkce dostane jedině to, co vrátíš pomocí <code>return</code>.</p></div>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def vypocet():
+    vysledek = 42
+
+vypocet()
+print(vysledek)    # NameError: name 'vysledek' is not defined</code></pre>
+</section>
+
+<section id="tahak">
+<h2>Tahák</h2>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Co dělá</th></tr></thead>
+<tbody>
+<tr><td><code>print("Ahoj", x)</code></td><td>vypíše hodnoty na jeden řádek, oddělené mezerou</td></tr>
+<tr><td><code>x = 5</code></td><td>uloží hodnotu do proměnné <code>x</code></td></tr>
+<tr><td><code>+ - * / **</code></td><td>sčítání, odčítání, násobení, dělení (výsledek je desetinné číslo), mocnina</td></tr>
+<tr><td><code>// %</code></td><td>celočíselné dělení a zbytek: <code>17 // 5</code> je 3, <code>17 % 5</code> je 2</td></tr>
+<tr><td><code>input("Otázka: ")</code></td><td>zeptá se uživatele, vrátí <strong>text</strong></td></tr>
+<tr><td><code>int(x)</code> <code>float(x)</code> <code>str(x)</code></td><td>převede hodnotu na celé číslo, desetinné číslo, text</td></tr>
+<tr><td><code>f"Je mi {vek} let"</code></td><td>vloží hodnotu proměnné do textu</td></tr>
+<tr><td><code>== != &lt; &gt; &lt;= &gt;=</code></td><td>porovnání: rovná se, nerovná se, menší, větší…</td></tr>
+<tr><td><code>def jmeno(a, b):</code></td><td>definice funkce s parametry <code>a</code>, <code>b</code>; odsazené tělo se provede až při volání</td></tr>
+<tr><td><code>jmeno(1, 2)</code></td><td>volání funkce: argumenty se dosadí do parametrů podle pořadí</td></tr>
+<tr><td><code>return hodnota</code></td><td>ukončí funkci a vrátí hodnotu tomu, kdo ji zavolal</td></tr>
+<tr><td><code>print</code> × <code>return</code></td><td><code>print</code> hodnotu jen vypíše, <code>return</code> ji vrátí programu, aby s ní mohl dál pracovat</td></tr>
+<tr><td><code>None</code></td><td>„nic“: hodnota, kterou vrací funkce bez <code>return</code></td></tr>
+</tbody></table></div>
+
+<h3>Nejčastější chyby</h3>
+<div class="tbl"><table>
+<thead><tr><th>Hláška nebo příznak</th><th>Co obvykle znamená</th></tr></thead>
+<tbody>
+<tr><td><code>SyntaxError</code></td><td>Python větě nerozumí: chybí uvozovka, závorka, čárka nebo dvojtečka (u <code>def</code> také).</td></tr>
+<tr><td><code>IndentationError</code></td><td>Špatné odsazení: tělo funkce za <code>def</code> není odsazené, nebo je odsazení navíc.</td></tr>
+<tr><td><code>NameError</code></td><td>Python nezná to jméno: překlep, velké písmeno, funkce nebo proměnná ještě neexistuje, nebo je proměnná uvnitř funkce a ty ji chceš venku.</td></tr>
+<tr><td><code>TypeError</code></td><td>Míchání typů, třeba text + číslo (často chybí <code>int(…)</code>). U funkcí také špatný počet argumentů: <code>missing 1 required positional argument</code>, <code>takes 1 positional argument but 2 were given</code>.</td></tr>
+<tr><td><code>ValueError</code></td><td><code>int</code> dostal text, který není číslo.</td></tr>
+<tr><td><code>'return' outside function</code></td><td><code>return</code> není odsazený, a proto nepatří do funkce.</td></tr>
+<tr><td><code>None</code> ve výstupu, nebo <code>NoneType</code> v hlášce</td><td>Funkce nic nevrátila: chybí <code>return</code>, nebo je tam místo něj <code>print</code>.</td></tr>
+<tr><td>funkce nic nevypíše</td><td>Funkci jsi jen napsal(a), ale nezavolal(a). <code>def</code> sám nic neprovede.</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">Volání funkcí</p>
+<section id="u1" class="task">
+<div class="task-head"><h2><span class="num">1</span> Co vypíše?</h2><span class="time">3 min</span></div>
+<p><strong>Nejdřív nespouštěj.</strong> Na papír napiš, co program vypíše. Teprve potom ho spusť a porovnej.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def pozdrav(jmeno):
+    print("Ahoj,", jmeno)
+
+pozdrav("Eliška")
+jmeno = "Tomáš"
+pozdrav(jmeno)
+pozdrav("Ma" + "rie")
+pozdrav(jmeno + "ek")</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Tělo funkce se provede při <strong>každém volání</strong>, ne při <code>def</code>. Argument se nejdřív vyhodnotí (proměnná na svou hodnotu, součet textů na jeden text) a výsledek se uloží do parametru.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><pre><code>Ahoj, Eliška
+Ahoj, Tomáš
+Ahoj, Marie
+Ahoj, Tomášek</code></pre><p>Funkce se provedla čtyřikrát, jednou za každé volání. Řádek <code>def</code> nevypsal nic. Parametr <code>jmeno</code> uvnitř funkce a proměnná <code>jmeno</code> mimo ni jsou dvě různé věci, i když se jmenují stejně: při druhém volání se hodnota proměnné jen zkopírovala do parametru.</p></div></details>
+</section>
+<section id="u2" class="task">
+<div class="task-head"><h2><span class="num">2</span> Zavolej funkci</h2><span class="time">4 min</span></div>
+<p>Funkce <code>obsah_obdelniku</code> je hotová. Pod ni napiš tři volání: pro obdélník 4 × 6, pro obdélník 7 × 5 a pro rozměry, které načteš od uživatele.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def obsah_obdelniku(a, b):
+    print(f"Obdélník {a} × {b} má obsah {a * b}.")
+
+# tvůj kód</code></pre>
+<p>Při spuštění zadej například: <code>3</code>, <code>5</code>. Pak zkus i jiné hodnoty.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Obdélník 4 × 6 má obsah 24.
+Obdélník 7 × 5 má obsah 35.
+Šířka: 3
+Výška: 5
+Obdélník 3 × 5 má obsah 15.</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Volání má tvar <code>obsah_obdelniku(4, 6)</code>, argumenty jsou v pořadí parametrů. Pro třetí volání nejdřív načti dvě čísla pomocí <code>int(input(…))</code> do proměnných a ty pak předej funkci.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">def obsah_obdelniku(a, b):
+    print(f"Obdélník {a} × {b} má obsah {a * b}.")
+
+obsah_obdelniku(4, 6)
+obsah_obdelniku(7, 5)
+
+sirka = int(input("Šířka: "))
+vyska = int(input("Výška: "))
+obsah_obdelniku(sirka, vyska)</code></pre><p>Argumentem může být číslo i proměnná. Funkci ani nezajímá, odkud hodnoty pocházejí. Zkus ji zavolat jen s jedním argumentem a přečti si hlášku: <code>TypeError</code> ti řekne, který argument chybí.</p></div></details>
+</section>
+<p class="part">Vlastní funkce</p>
+<section id="u3" class="task">
+<div class="task-head"><h2><span class="num">3</span> Představení</h2><span class="time">3 min</span></div>
+<p>Napiš tělo funkce <code>predstav_se(jmeno, vek)</code>, která vypíše větu o jedné osobě. Volání pod ní už jsou hotová.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def predstav_se(jmeno, vek):
+    ...
+
+predstav_se("Eliška", 16)
+predstav_se("Tomáš", 17)</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Jmenuji se Eliška a je mi 16 let.
+Jmenuji se Tomáš a je mi 17 let.</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Uvnitř funkce používej parametry <code>jmeno</code> a <code>vek</code> jako obyčejné proměnné. Větu nejsnáz poskládáš přes <code>f"…"</code>. Tři tečky <code>...</code> nahraď svým kódem.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">def predstav_se(jmeno, vek):
+    print(f"Jmenuji se {jmeno} a je mi {vek} let.")
+
+predstav_se("Eliška", 16)
+predstav_se("Tomáš", 17)</code></pre><p>Parametry nemají hodnotu, dokud funkci nezavoláš. Při každém volání dostanou jiné argumenty a stejné tělo vypíše jinou větu. Přidej třetí volání s vlastním jménem a věkem.</p></div></details>
+</section>
+<section id="u4" class="task">
+<div class="task-head"><h2><span class="num">4</span> Obvod a obsah</h2><span class="time">5 min</span></div>
+<p>Dopiš dvě funkce, které výsledek <strong>vracejí</strong>, a nevypisují ho. Výpis zařídí až program pod nimi. Když program spustíš hned, uvidíš <code>Obvod: None</code>. Rozmysli si proč.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def obvod_obdelniku(a, b):
+    ...
+
+def obsah_obdelniku(a, b):
+    ...
+
+print("Obvod:", obvod_obdelniku(4, 6))
+print("Obsah:", obsah_obdelniku(4, 6))</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Obvod: 20
+Obsah: 24</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Místo <code>print</code> použij <code>return</code>. Obvod obdélníku je <code>2 * (a + b)</code>. Funkce bez <code>return</code> vrací <code>None</code>, proto ta první hláška.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">def obvod_obdelniku(a, b):
+    return 2 * (a + b)
+
+def obsah_obdelniku(a, b):
+    return a * b
+
+print("Obvod:", obvod_obdelniku(4, 6))
+print("Obsah:", obsah_obdelniku(4, 6))</code></pre><p>Funkce vrátí hodnotu a o tom, co s ní bude, rozhoduje ten, kdo ji zavolal: vypíše ji, uloží, nebo s ní dál počítá. Zkus <code>plocha = obsah_obdelniku(4, 6)</code> a pak <code>print(plocha * 2)</code>. S funkcí, která jen vypisuje, by to nešlo.</p></div></details>
+</section>
+<section id="u5" class="task">
+<div class="task-head"><h2><span class="num">5</span> Je plnoletý?</h2><span class="time">3 min</span></div>
+<p>Napiš funkci <code>je_plnoleta(vek)</code>, která vrátí <code>True</code>, když je věk alespoň 18, jinak <code>False</code>. Program pod ní načte věk a výsledek vypíše. Když ho spustíš hned, vypíše <code>None</code>. Rozmysli si proč.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def je_plnoleta(vek):
+    ...
+
+vek = int(input("Věk: "))
+print("Plnoletý:", je_plnoleta(vek))</code></pre>
+<p>Při spuštění zadej například: <code>17</code>. Pak zkus <code>18</code> a <code>25</code>.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Věk: 17
+Plnoletý: False</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Funkce má <strong>vrátit</strong> logickou hodnotu, ne ji vypsat. Porovnání z minulé lekce je samo o sobě <code>True</code> nebo <code>False</code>: zkus si <code>print(17 &gt;= 18)</code>. Tři tečky <code>...</code> nahraď svým kódem.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">def je_plnoleta(vek):
+    return vek &gt;= 18
+
+vek = int(input("Věk: "))
+print("Plnoletý:", je_plnoleta(vek))</code></pre><p>Výraz <code>vek &gt;= 18</code> se vyhodnotí na <code>True</code>, nebo <code>False</code> a <code>return</code> ho vrátí. Dokud v těle funkce nebylo <code>return</code>, vracela funkce <code>None</code>, proto se na začátku vypsalo <code>Plnoletý: None</code>. Hotová funkce se dá použít jako hodnota: <code>print(je_plnoleta(20) and je_plnoleta(30))</code>. V příští lekci ji využiješ v podmínce.</p></div></details>
+</section>
+<p class="part">Opravujeme</p>
+<section id="u6" class="task">
+<div class="task-head"><h2><span class="num">6</span> Najdi a oprav chyby</h2><span class="time">5 min</span></div>
+<p>V programu jsou <strong>tři chyby</strong>. Funkce má spočítat průměr dvou čísel. Spusť program, přečti si hlášku, oprav jednu chybu a spusť znovu.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def prumer(a, b)
+    soucet = a + b
+return soucet / 2
+
+prumer(4, 9)
+print("Průměr je", vysledek)</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Průměr je 6.5</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Postupuj podle hlášek jednu po druhé. První se týká řádku s <code>def</code>, druhá slova <code>return</code> (co patří do funkce, musí být odsazené), třetí proměnné <code>vysledek</code>. Hodnotu, kterou funkce vrátí, musíš při volání někam uložit.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">def prumer(a, b):
+    soucet = a + b
+    return soucet / 2
+
+vysledek = prumer(4, 9)
+print("Průměr je", vysledek)</code></pre><p>1) Na konci řádku s <code>def</code> chyběla dvojtečka: <code>SyntaxError</code>. 2) <code>return</code> nebyl odsazený, a proto nepatřil do funkce: <code>SyntaxError: 'return' outside function</code>. 3) Funkce sice vrátila 6.5, ale nikdo si hodnotu nezapamatoval, proměnná <code>vysledek</code> proto neexistuje: <code>NameError</code>. Vrácenou hodnotu ulož (<code>vysledek = prumer(4, 9)</code>), nebo ji rovnou použij (<code>print(prumer(4, 9))</code>).</p></div></details>
+</section>
+<section id="u7" class="task">
+<div class="task-head"><h2><span class="num">7</span> Proč tam stojí None?</h2><span class="time">4 min</span></div>
+<p>Program má vypsat čtvrtinu ze 100. Místo toho vypíše jedno číslo a skončí chybou. Přečti si hlášku, zjisti, co se stalo, a oprav <strong>jedno místo</strong>.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def polovina(x):
+    print(x / 2)
+
+def ctvrtina(x):
+    return polovina(polovina(x))
+
+print("Čtvrtina ze 100 je", ctvrtina(100))</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Čtvrtina ze 100 je 25.0</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>V hlášce je <code>NoneType</code>. <code>None</code> je hodnota „nic“, kterou vrací funkce bez <code>return</code>. Co dostane vnější <code>polovina</code>, když vnitřní nic nevrátí? A co s tím pak udělá?</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">def polovina(x):
+    return x / 2
+
+def ctvrtina(x):
+    return polovina(polovina(x))
+
+print("Čtvrtina ze 100 je", ctvrtina(100))</code></pre><p>Vnitřní <code>polovina(100)</code> jen vypsala <code>50.0</code> a nic nevrátila. Vnější <code>polovina</code> proto dostala <code>None</code> a zkusila ho dělit dvěma: <code>TypeError: unsupported operand type(s) for /: 'NoneType' and 'int'</code>. Po záměně <code>print</code> za <code>return</code> se výsledek vnitřního volání předá vnějšímu. Pravidlo: když chceš výsledek funkce dál používat, funkce ho musí <strong>vrátit</strong>, nestačí ho vypsat.</p></div></details>
+</section>
+<p class="part">Bonus</p>
+<section id="u8" class="task">
+<div class="task-head"><h2><span class="num">8</span> Převodník času</h2><span class="time">8 min</span></div>
+<p>Pamatuješ úkol <em>Kolik je to hodin?</em> z první lekce? Tehdy ses musel(a) pokaždé přepsat číslo přímo v programu. Udělej z něj funkci <code>na_cas(sekundy)</code>, která <strong>vrátí</strong> text ve tvaru <code>1 h 2 min 5 s</code>. Tři volání pod ní ji vyzkoušejí.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def na_cas(sekundy):
+    ...
+
+print(na_cas(3725))
+print(na_cas(59))
+print(na_cas(100000))</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>1 h 2 min 5 s
+0 h 0 min 59 s
+27 h 46 min 40 s</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Vezmi řešení úkolu <em>Kolik je to hodin?</em> z první lekce a vlož ho do těla funkce (odsazené). Číslo 3725 nahraď parametrem <code>sekundy</code>. Místo <code>print</code> na konci použij <code>return</code> a text poskládej f-řetězcem.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">def na_cas(sekundy):
+    hodiny = sekundy // 3600
+    zbytek = sekundy % 3600
+    minuty = zbytek // 60
+    zbytek = zbytek % 60
+    return f"{hodiny} h {minuty} min {zbytek} s"
+
+print(na_cas(3725))
+print(na_cas(59))
+print(na_cas(100000))</code></pre><p>Hotový výpočet jsi jen „zabalil(a)“ do funkce. Teď ho zavoláš pro libovolné číslo a nemusíš nic přepisovat. Proměnné <code>hodiny</code>, <code>zbytek</code> a <code>minuty</code> existují jen uvnitř funkce, ven se dostane jen to, co vrátí <code>return</code>. Zkus místo textu vrátit tři hodnoty najednou: <code>return hodiny, minuty, zbytek</code>.</p></div></details>
+</section>
+
+<p class="foot">Hotovo? Vrať se k úkolu, který ti dal nejvíc práce, a zkus ho napsat znovu bez nápovědy. Tak se to naučíš nejrychleji.</p>
+<p class="foot">Pokračuj: <a href="04_vetveni.html">Python: větvení a cykly →</a></p>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
+    });
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

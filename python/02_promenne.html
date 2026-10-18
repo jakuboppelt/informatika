@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python: proměnné a typy</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open><summary>Obsah</summary><h2>Lekce</h2>
+  <ol><li class="grp">Výklad</li><li><a href="#promenna">Proměnná</a></li><li><a href="#typy">Datové typy</a></li><li><a href="#cisla">Čísla</a></li><li><a href="#text">Text</a></li><li><a href="#bool">Logické hodnoty</a></li><li><a href="#prevody">Převody typů</a></li><li><a href="#tahak">Tahák</a></li><li class="grp">Proměnné</li><li><a href="#u1">1 · Životy ve hře</a></li><li class="grp">Typy</li><li><a href="#u2">2 · Jaký je to typ?</a></li><li><a href="#u3">3 · Plus, nebo slepit?</a></li><li><a href="#u4">4 · Převody: co vypíše?</a></li><li class="grp">Čísla a text</li><li><a href="#u5">5 · Cena s DPH</a></li><li><a href="#u6">6 · Práce s textem</a></li><li class="grp">Logické hodnoty</li><li><a href="#u7">7 · Pravda, nebo nepravda?</a></li><li class="grp">Opravujeme</li><li><a href="#u8">8 · Najdi a oprav chyby</a></li><li class="grp">Bonus</li><li><a href="#u9">9 · Počítač a desetinná čísla</a></li></ol></details>
+</aside>
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Programování · Výklad a cvičení</p>
+  <h1>Python: proměnné a <span class="t">typy</span></h1>
+  <p class="lead">Navazuje na <a href="01_python_prvni_kroky.html">první kroky</a>. Podíváme se důkladněji na proměnné a na to, jaké hodnoty v nich mohou být: čísla, text a logické hodnoty. Nejdřív krátký výklad s ukázkami, které si můžeš zkopírovat a vyzkoušet, potom úkoly. Jak programy psát a spouštět, najdeš v <a href="01_python_prvni_kroky.html#jak">prvních krocích</a>.</p>
+  <div class="facts">
+    <div><span class="k">Úkolů</span><span class="v">8 + 1 bonus, od nejlehčího</span></div>
+    <div><span class="k">Čas</span><span class="v">jedna vyučovací hodina</span></div>
+    <div><span class="k">Když se zasekneš</span><span class="v">přečti chybu, pak Nápověda, až nakonec Řešení</span></div>
+  </div>
+</header>
+
+<p class="part">Výklad</p>
+
+<section id="promenna">
+<h2>Proměnná</h2>
+<p>V první lekci jsi proměnné už používal(a). Teď si řekneme přesněji, co to je, a naučíš se, jaké hodnoty v nich mohou být.</p>
+<p><strong>Proměnná je jméno, pod kterým si program pamatuje hodnotu.</strong> Hodnota je uložená v paměti počítače a jméno je štítek, podle kterého ji program najde. Proměnnou vytvoříš tím, že jí poprvé něco přiřadíš:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmeno = "Eliška"
+vek = 16
+print(jmeno, vek)</code></pre>
+<p class="expect-h">Výstup</p><pre><code>Eliška 16</code></pre>
+<h3>Rovnítko není rovnost</h3>
+<p>V programování <code>=</code> neznamená „je rovno“, ale <strong>ulož</strong>. Python nejdřív vypočítá pravou stranu a výsledek uloží do proměnné vlevo. Proto má smysl i tento zápis, který by v matematice nedával smysl:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">x = 5
+x = x + 1      # vezmi x (5), přičti 1, výsledek ulož zpět do x
+print(x)       # 6</code></pre>
+<h3>Zkrácené zápisy</h3>
+<p>Změnit proměnnou podle její staré hodnoty se dělá tak často, že pro to existují zkratky. Stejně fungují i <code>/=</code> a <code>//=</code>.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">body = 10
+body += 5      # totéž co body = body + 5, tedy 15
+body -= 3      # body = body - 3, tedy 12
+body *= 2      # body = body * 2, tedy 24
+print(body)    # 24</code></pre>
+<h3>Jména proměnných</h3>
+<ul>
+  <li>Píšou se malými písmeny, bez diakritiky, místo mezery je podtržítko: <code>cena_s_dph</code>.</li>
+  <li>Nesmí začínat číslicí a nesmí obsahovat mezeru. Velká a malá písmena se rozlišují: <code>Mesto</code> a <code>mesto</code> jsou dvě různé proměnné.</li>
+  <li>Nesmí být shodná s klíčovým slovem Pythonu (<code>if</code>, <code>for</code>, <code>def</code>, <code>class</code>, <code>True</code> a další), ty mají pevný význam.</li>
+  <li>Jméno má říkat, co v proměnné je: <code>vek</code> je lepší než <code>x</code>.</li>
+</ul>
+<div class="note tip"><b class="lbl">Hodnoty, které se nemění</b><p>Hodnotu, která se v programu nemá měnit (třeba sazba daně), podle dohody píšeme <strong>VELKÝMI písmeny</strong>: <code>DPH = 0.21</code>. Python tě nezastaví, kdybys ji přepsal(a), je to upozornění pro člověka, který kód čte. Když se sazba změní, upravíš jedno místo v programu.</p></div>
+</section>
+
+<section id="typy">
+<h2>Datové typy</h2>
+<p>Každá hodnota v Pythonu má <strong>typ</strong>. Typ říká, co hodnota je a co s ní jde dělat. Zatím nám stačí čtyři základní:</p>
+<div class="tbl"><table>
+<thead><tr><th>Typ</th><th>Význam</th><th>Příklady</th></tr></thead>
+<tbody>
+<tr><td><code>int</code></td><td>celé číslo</td><td><code>42</code>, <code>-7</code>, <code>0</code></td></tr>
+<tr><td><code>float</code></td><td>desetinné číslo, píše se s <strong>tečkou</strong></td><td><code>3.14</code>, <code>-0.5</code>, <code>2.0</code></td></tr>
+<tr><td><code>str</code></td><td>text (řetězec, anglicky <em>string</em>)</td><td><code>"ahoj"</code>, <code>'ahoj'</code>, <code>""</code>, <code>"42"</code></td></tr>
+<tr><td><code>bool</code></td><td>logická hodnota: pravda, nebo nepravda</td><td><code>True</code>, <code>False</code></td></tr>
+</tbody></table></div>
+<p>Typ hodnoty zjistíš funkcí <code>type</code>:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print(type(42))
+print(type(3.14))
+print(type("ahoj"))
+print(type(True))
+print(type("42"))</code></pre>
+<p class="expect-h">Výstup</p><pre><code>&lt;class 'int'&gt;
+&lt;class 'float'&gt;
+&lt;class 'str'&gt;
+&lt;class 'bool'&gt;
+&lt;class 'str'&gt;</code></pre>
+<p>Pozor na poslední řádek: <code>"42"</code> je v uvozovkách, takže je to <strong>text</strong>, ne číslo.</p>
+<h3>Typ určuje, co s hodnotou jde dělat</h3>
+<p>Stejný zápis může mít podle typu jiný význam, nebo nemusí fungovat vůbec:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print(5 + 3)        # 8      čísla se sečtou
+print("5" + "3")    # 53     texty se slepí
+print("ha" * 3)     # hahaha text se zopakuje
+print("5" + 3)      # TypeError: can only concatenate str (not "int") to str</code></pre>
+<p>Poslední řádek skončí chybou, protože Python neví, jestli má text a číslo sečíst, nebo slepit. Musíš mu to říct sám: buď převedeš text na číslo, nebo číslo na text (viz <a href="#prevody">Převody typů</a>).</p>
+<h3>Typ patří hodnotě, ne proměnné</h3>
+<p>Proměnná si může vzít hodnotu jiného typu, než jakou měla dřív. Python ti v tom nebrání, ale musíš si hlídat, co v ní zrovna je.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">x = 5
+print(type(x))      # &lt;class 'int'&gt;
+x = "pět"
+print(type(x))      # &lt;class 'str'&gt;</code></pre>
+</section>
+
+<section id="cisla">
+<h2>Čísla</h2>
+<p>Se čísly typu <code>int</code> a <code>float</code> se počítá takto:</p>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Význam</th><th>Příklad</th><th>Výsledek</th></tr></thead>
+<tbody>
+<tr><td><code>+</code></td><td>sčítání</td><td><code>7 + 2</code></td><td><code>9</code></td></tr>
+<tr><td><code>-</code></td><td>odčítání</td><td><code>7 - 2</code></td><td><code>5</code></td></tr>
+<tr><td><code>*</code></td><td>násobení</td><td><code>7 * 2</code></td><td><code>14</code></td></tr>
+<tr><td><code>/</code></td><td>dělení</td><td><code>7 / 2</code></td><td><code>3.5</code></td></tr>
+<tr><td><code>//</code></td><td>celočíselné dělení</td><td><code>7 // 2</code></td><td><code>3</code></td></tr>
+<tr><td><code>%</code></td><td>zbytek po dělení</td><td><code>7 % 2</code></td><td><code>1</code></td></tr>
+<tr><td><code>**</code></td><td>mocnina</td><td><code>7 ** 2</code></td><td><code>49</code></td></tr>
+</tbody></table></div>
+<ul>
+  <li><strong>Dělení <code>/</code> dává vždy <code>float</code>,</strong> i když vyjde celé číslo: <code>10 / 2</code> je <code>5.0</code>, ne <code>5</code>. Celé číslo dostaneš až z <code>//</code>.</li>
+  <li><strong>Když se smíchá <code>int</code> a <code>float</code>, výsledek je <code>float</code>:</strong> <code>3 + 0.5</code> je <code>3.5</code>.</li>
+  <li><strong>Pořadí operací je jako v matematice:</strong> nejdřív <code>**</code>, potom <code>*</code> <code>/</code> <code>//</code> <code>%</code>, nakonec <code>+</code> <code>-</code>. Závorky mají přednost před vším.</li>
+</ul>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print(2 + 3 * 4)       # 14
+print((2 + 3) * 4)     # 20
+print(2 * 3 ** 2)      # 18
+print(round(3.14159, 2))   # 3.14   zaokrouhlení na 2 desetinná místa</code></pre>
+<div class="note tip"><b class="lbl">Desetinná tečka, ne čárka</b><p>Python zná jen desetinnou <strong>tečku</strong>: <code>3.5</code>. Zápis <code>3,5</code> by pochopil úplně jinak. Desetinná čísla se v počítači ukládají přibližně a občas se to projeví drobnou odchylkou. Proč, uvidíš v bonusovém úkolu.</p></div>
+</section>
+
+<section id="text">
+<h2>Text</h2>
+<p>Text (<code>str</code>) píšeme do uvozovek, dvojitých <code>"…"</code> nebo jednoduchých <code>'…'</code>. Záleží jen na tom, aby konec byl stejný jako začátek.</p>
+<h3>Spojování, opakování, délka</h3>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">a = "Python"
+b = "rulez"
+print(a + " " + b)     # Python rulez   spojení textů
+print(a * 2)           # PythonPython   opakování
+print(len(a))          # 6              počet znaků</code></pre>
+<h3>Jednotlivé znaky</h3>
+<p>Znaky v textu se <strong>číslují od nuly</strong>. Číslo znaku se píše do hranatých závorek za text. Záporné číslo počítá od konce.</p>
+<div class="tbl"><table>
+<thead><tr><th>Řádek</th><th colspan="6">Slovo „Python“</th></tr></thead>
+<tbody>
+<tr><td>Znak</td><td><code>P</code></td><td><code>y</code></td><td><code>t</code></td><td><code>h</code></td><td><code>o</code></td><td><code>n</code></td></tr>
+<tr><td>Číslo od začátku</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+<tr><td>Číslo od konce</td><td>-6</td><td>-5</td><td>-4</td><td>-3</td><td>-2</td><td>-1</td></tr>
+</tbody></table></div>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">slovo = "Python"
+print(slovo[0])      # P
+print(slovo[1])      # y
+print(slovo[-1])     # n   poslední znak</code></pre>
+<p>Číslo mimo text skončí chybou <code>IndexError: string index out of range</code>, třeba <code>slovo[6]</code>.</p>
+<h3>Velká a malá písmena</h3>
+<p>K textu patří i vlastní funkce, které se volají <strong>za tečkou</strong>:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmeno = "Eliška"
+print(jmeno.upper())    # ELIŠKA
+print(jmeno.lower())    # eliška</code></pre>
+<h3>Formátování čísel v textu</h3>
+<p>Do f-řetězce můžeš za proměnnou napsat <code>:.2f</code>, tedy „desetinné číslo na 2 místa“. Hodí se na ceny a měření:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">cena = 12.5
+print(f"Cena: {cena}")            # Cena: 12.5
+print(f"Cena: {cena:.2f} Kč")     # Cena: 12.50 Kč</code></pre>
+</section>
+
+<section id="bool">
+<h2>Logické hodnoty</h2>
+<p>Typ <code>bool</code> má jen dvě hodnoty: <code>True</code> (pravda) a <code>False</code> (nepravda). Píšou se <strong>velkým prvním písmenem a bez uvozovek</strong>. Zápis <code>"True"</code> v uvozovkách je text, a <code>true</code> Python vůbec nezná.</p>
+<h3>Porovnání</h3>
+<p>Porovnání dá jako výsledek logickou hodnotu:</p>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>==</code></td><td>rovná se</td></tr>
+<tr><td><code>!=</code></td><td>nerovná se</td></tr>
+<tr><td><code>&lt;</code> <code>&gt;</code></td><td>menší, větší</td></tr>
+<tr><td><code>&lt;=</code> <code>&gt;=</code></td><td>menší nebo rovno, větší nebo rovno</td></tr>
+</tbody></table></div>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print(5 &gt; 3)         # True
+print(5 == 6)        # False
+print(5 != 6)        # True
+print("a" == "a")    # True</code></pre>
+<div class="note warn"><b class="lbl">Jedno rovnítko, nebo dvě?</b><p><code>x = 5</code> hodnotu <strong>uloží</strong>. <code>x == 5</code> se <strong>zeptá</strong>, jestli se rovná, a vrátí <code>True</code> nebo <code>False</code>. Záměna je jedna z nejčastějších chyb začátečníků.</p></div>
+<h3>and, or, not</h3>
+<p>Logické hodnoty se dají spojovat:</p>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Význam</th><th>Platí, když…</th></tr></thead>
+<tbody>
+<tr><td><code>a and b</code></td><td>a zároveň</td><td>platí <strong>obě</strong> části</td></tr>
+<tr><td><code>a or b</code></td><td>nebo</td><td>platí <strong>aspoň jedna</strong> část</td></tr>
+<tr><td><code>not a</code></td><td>opak</td><td>část <code>a</code> <strong>neplatí</strong></td></tr>
+</tbody></table></div>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">vek = 17
+print(vek &gt;= 15 and vek &lt; 18)    # True    obě části platí
+print(vek &lt; 10 or vek &gt; 60)      # False   ani jedna neplatí
+print(not (vek == 17))           # False</code></pre>
+<p>Podle logických hodnot se rozhodují podmínky (<code>if</code>), které se naučíš až po funkcích. Logické hodnoty ale použiješ už v příští lekci.</p>
+</section>
+
+<section id="prevody">
+<h2>Převody typů</h2>
+<p>Hodnotu jednoho typu můžeš převést na jiný funkcemi se jménem typu:</p>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Výsledek</th><th>Poznámka</th></tr></thead>
+<tbody>
+<tr><td><code>int("42")</code></td><td><code>42</code></td><td>text na celé číslo</td></tr>
+<tr><td><code>int(3.99)</code></td><td><code>3</code></td><td>desetinnou část <strong>ořízne</strong>, nezaokrouhluje</td></tr>
+<tr><td><code>float("2.5")</code></td><td><code>2.5</code></td><td>text na desetinné číslo</td></tr>
+<tr><td><code>float(7)</code></td><td><code>7.0</code></td><td>celé číslo na desetinné</td></tr>
+<tr><td><code>str(123)</code></td><td><code>"123"</code></td><td>číslo na text</td></tr>
+</tbody></table></div>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print(int("42") + 1)         # 43
+print(float("2.5") * 2)      # 5.0
+print("Věk: " + str(16))     # Věk: 16
+print(int(float("3.5")))     # 3</code></pre>
+<h3>Když převod nejde</h3>
+<p>Text, který nevypadá jako číslo, převést nejde. Python skončí s chybou <code>ValueError</code>:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">int("pět")      # ValueError: invalid literal for int() with base 10: 'pět'
+int("3.5")      # ValueError: text s tečkou na int nejde, nejdřív float
+float("3,5")    # ValueError: could not convert string to float: '3,5'</code></pre>
+<p>Poslední dva řádky jsou častá past: <code>int</code> nepřijme text s desetinnou tečkou a <code>float</code> nepřijme desetinnou čárku.</p>
+<h3>input a převody</h3>
+<p><code>input</code> vrací vždy <strong>text</strong>. Když chceš s odpovědí počítat, převeď ji hned při načtení: <code>int(input("Věk: "))</code> pro celé číslo, <code>float(input("Cena: "))</code> pro desetinné. F-řetězec naopak převádí sám, proto <code>f"Věk: {vek}"</code> funguje s číslem i s textem, kdežto <code>"Věk: " + vek</code> jen s textem.</p>
+</section>
+
+<section id="tahak">
+<h2>Tahák</h2>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Co dělá</th></tr></thead>
+<tbody>
+<tr><td><code>print("Ahoj", x)</code></td><td>vypíše hodnoty na jeden řádek, oddělené mezerou</td></tr>
+<tr><td><code>x = 5</code></td><td>uloží hodnotu do proměnné <code>x</code></td></tr>
+<tr><td><code>x += 1</code></td><td>zkrácený zápis za <code>x = x + 1</code> (podobně <code>-=</code>, <code>*=</code>, <code>/=</code>)</td></tr>
+<tr><td><code>DPH = 0.21</code></td><td>jméno velkými písmeny: hodnota, která se nemá měnit (dohoda)</td></tr>
+<tr><td><code>type(x)</code></td><td>zjistí typ hodnoty</td></tr>
+<tr><td><code>int</code> <code>float</code> <code>str</code> <code>bool</code></td><td>celé číslo, desetinné číslo (s tečkou), text, <code>True</code> a <code>False</code></td></tr>
+<tr><td><code>+ - * /</code></td><td>sčítání, odčítání, násobení, dělení (výsledek je vždy desetinné číslo)</td></tr>
+<tr><td><code>// %</code></td><td>celočíselné dělení a zbytek: <code>17 // 5</code> je 3, <code>17 % 5</code> je 2</td></tr>
+<tr><td><code>**</code></td><td>mocnina: <code>2 ** 10</code> je 1024</td></tr>
+<tr><td><code>round(x, 2)</code></td><td>zaokrouhlí na 2 desetinná místa</td></tr>
+<tr><td><code>"ab" + "cd"</code>, <code>"ab" * 3</code></td><td>spojí texty (<code>abcd</code>), zopakuje text (<code>ababab</code>)</td></tr>
+<tr><td><code>len(text)</code></td><td>počet znaků v textu</td></tr>
+<tr><td><code>text[0]</code>, <code>text[-1]</code></td><td>první a poslední znak (číslování od nuly)</td></tr>
+<tr><td><code>text.upper()</code>, <code>text.lower()</code></td><td>velká a malá písmena</td></tr>
+<tr><td><code>int(x)</code> <code>float(x)</code> <code>str(x)</code></td><td>převody mezi typy; <code>int(3.99)</code> je 3 (ořízne)</td></tr>
+<tr><td><code>input("Otázka: ")</code></td><td>zeptá se uživatele, vrátí <strong>text</strong></td></tr>
+<tr><td><code>f"Cena: {x:.2f}"</code></td><td>vloží hodnotu do textu; <code>:.2f</code> znamená 2 desetinná místa</td></tr>
+<tr><td><code>== != &lt; &gt; &lt;= &gt;=</code></td><td>porovnání, výsledek je <code>True</code> nebo <code>False</code></td></tr>
+<tr><td><code>and</code> <code>or</code> <code>not</code></td><td>a zároveň, nebo, opak</td></tr>
+</tbody></table></div>
+
+<h3>Nejčastější chyby</h3>
+<div class="tbl"><table>
+<thead><tr><th>Hláška</th><th>Co obvykle znamená</th></tr></thead>
+<tbody>
+<tr><td><code>SyntaxError</code></td><td>Python větě nerozumí: chybí uvozovka nebo závorka, mezera ve jméně proměnné.</td></tr>
+<tr><td><code>NameError</code></td><td>Python nezná to jméno: překlep, velké písmeno, proměnná ještě nemá hodnotu, chybí uvozovky kolem textu, nebo je napsáno <code>true</code> místo <code>True</code>.</td></tr>
+<tr><td><code>TypeError</code></td><td>Míchání typů: <code>"text" + 5</code> nebo <code>"3" * 2.5</code>. Převeď typ (<code>int(…)</code>, <code>str(…)</code>), nebo použij f-řetězec.</td></tr>
+<tr><td><code>ValueError</code></td><td>Hodnotu nejde převést: <code>int("pět")</code>, <code>int("3.5")</code>, <code>float("3,5")</code> (čárka místo tečky).</td></tr>
+<tr><td><code>IndexError</code></td><td><code>string index out of range</code>: číslo znaku je mimo text, třeba <code>""[0]</code> u prázdného textu.</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">Proměnné</p>
+<section id="u1" class="task">
+<div class="task-head"><h2><span class="num">1</span> Životy ve hře</h2><span class="time">3 min</span></div>
+<p><strong>Nejdřív nespouštěj.</strong> Na papír napiš, co program vypíše. Po každém řádku si zapiš, kolik mají proměnné právě teď. Teprve potom ho spusť a porovnej.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">zivoty = 3
+zivoty = zivoty - 1
+zivoty -= 1
+zivoty += 5
+bonus = zivoty * 2
+zivoty = zivoty // 2
+print(zivoty, bonus)</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Jdi řádek po řádku. <code>zivoty -= 1</code> je zkratka za <code>zivoty = zivoty - 1</code>. Proměnná <code>bonus</code> se spočítá z hodnoty <code>zivoty</code> v tu chvíli a později se už nemění.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><pre><code>3 12</code></pre><div class="tbl"><table>
+<thead><tr><th>Řádek</th><th>Životy</th><th>Bonus</th></tr></thead>
+<tbody>
+<tr><td><code>zivoty = 3</code></td><td>3</td><td>zatím neexistuje</td></tr>
+<tr><td><code>zivoty = zivoty - 1</code></td><td>2</td><td></td></tr>
+<tr><td><code>zivoty -= 1</code></td><td>1</td><td></td></tr>
+<tr><td><code>zivoty += 5</code></td><td>6</td><td></td></tr>
+<tr><td><code>bonus = zivoty * 2</code></td><td>6</td><td>12</td></tr>
+<tr><td><code>zivoty = zivoty // 2</code></td><td>3</td><td>12</td></tr>
+</tbody></table></div><p>Každé přiřazení nejdřív vyhodnotí pravou stranu se starými hodnotami a teprve výsledek uloží. Proto se <code>bonus</code> po svém vzniku už nemění, i když <code>zivoty</code> o řádek níž klesne.</p></div></details>
+</section>
+<p class="part">Typy</p>
+<section id="u2" class="task">
+<div class="task-head"><h2><span class="num">2</span> Jaký je to typ?</h2><span class="time">3 min</span></div>
+<p><strong>Nejdřív nespouštěj.</strong> Na papír napiš, jakého typu je každá z osmi hodnot (<code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>). Teprve potom program spusť a porovnej.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print(type(42))
+print(type(3.14))
+print(type("42"))
+print(type(True))
+print(type("True"))
+print(type(10 / 2))
+print(type(10 // 3))
+print(type(5 &gt; 3))</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Uvozovky dělají z čehokoli text. Dělení <code>/</code> dává vždy desetinné číslo, <code>//</code> celé. Porovnání dává logickou hodnotu.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><pre><code>&lt;class 'int'&gt;
+&lt;class 'float'&gt;
+&lt;class 'str'&gt;
+&lt;class 'bool'&gt;
+&lt;class 'str'&gt;
+&lt;class 'float'&gt;
+&lt;class 'int'&gt;
+&lt;class 'bool'&gt;</code></pre><p>Nejčastější omyly jsou dva. <code>"42"</code> a <code>"True"</code> jsou kvůli uvozovkám <strong>texty</strong>, i když vypadají jako číslo a logická hodnota. A <code>10 / 2</code> je <code>float</code> (<code>5.0</code>), i když by výsledek šel zapsat jako celé číslo.</p></div></details>
+</section>
+<section id="u3" class="task">
+<div class="task-head"><h2><span class="num">3</span> Plus, nebo slepit?</h2><span class="time">4 min</span></div>
+<p><strong>Nejdřív nespouštěj.</strong> Na papír napiš, co program vypíše. Teprve potom ho spusť a porovnej.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print(5 + 3)
+print("5" + "3")
+print("5" * 3)
+print("ha" * 2 + "!")
+print(2 * 3 ** 2)
+print((2 * 3) ** 2)</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Plus u čísel sčítá, u textů je lepí. Hvězdička u textu opakuje. Mocnina <code>**</code> má přednost před násobením a závorky mají přednost před vším.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><pre><code>8
+53
+555
+haha!
+18
+36</code></pre><p>Řádky 2 a 3 pracují s <strong>texty</strong>: <code>"5" + "3"</code> je <code>53</code> a <code>"5" * 3</code> je <code>555</code>. U posledních dvou záleží na pořadí: <code>2 * 3 ** 2</code> je <code>2 * 9</code>, ale <code>(2 * 3) ** 2</code> je <code>6 ** 2</code>.</p></div></details>
+</section>
+<section id="u4" class="task">
+<div class="task-head"><h2><span class="num">4</span> Převody: co vypíše?</h2><span class="time">4 min</span></div>
+<p><strong>Nejdřív nespouštěj.</strong> Na papír napiš, co program vypíše. Jeden řádek skončí chybou: poznamenej si který a jaká to bude chyba. Teprve potom program spusť a porovnej.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print(int("42") + 1)
+print(int(3.99))
+print(float("2.5") * 2)
+print("Věk: " + str(16))
+print(int(float("3.5")))
+print(int("3.5"))</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p><code>int</code> desetinnou část <strong>ořízne</strong>. Funkce <code>float</code> umí číst text s tečkou, ale <code>int</code> ne. Co se stane s řádky pod chybou? Python je už nespustí.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><pre><code>43
+3
+5.0
+Věk: 16
+3
+ValueError: invalid literal for int() with base 10: '3.5'</code></pre><p>Pátý řádek jde, protože <code>float("3.5")</code> dá <code>3.5</code> a <code>int</code> z toho oříznutím udělá <code>3</code>. Poslední řádek dá <code>int</code> rovnou text s tečkou a ten nepřijme: <code>ValueError</code>. Vedle chybové hlášky se vypíše i číslo řádku a kus programu (to si pamatuj z první lekce).</p></div></details>
+</section>
+<p class="part">Čísla a text</p>
+<section id="u5" class="task">
+<div class="task-head"><h2><span class="num">5</span> Cena s DPH</h2><span class="time">5 min</span></div>
+<p>Zboží stojí určitou cenu bez DPH a DPH je 21 %. Vypiš cenu s DPH na dvě desetinná místa. Cenu načti od uživatele a pamatuj, že může mít i haléře.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">DPH = 0.21
+cena = float(input("Cena bez DPH: "))
+
+# tvůj kód</code></pre>
+<p>Při spuštění zadej například: <code>249</code>. Pak zkus i <code>249.90</code>.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Cena bez DPH: 249
+Cena s DPH: 301.29 Kč</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Cena s DPH je <code>cena * (1 + DPH)</code>. Výsledek ulož do proměnné a vypiš ho f-řetězcem. Za proměnnou ve složených závorkách může být <code>:.2f</code>, tedy desetinné číslo na 2 místa.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">DPH = 0.21
+cena = float(input("Cena bez DPH: "))
+
+s_dph = cena * (1 + DPH)
+print(f"Cena s DPH: {s_dph:.2f} Kč")</code></pre><p>Cenu je potřeba načíst jako <code>float</code>, protože <code>int</code> by nepřijal <code>249.90</code>. Zkus v posledním řádku vynechat <code>:.2f</code>: pro 249 vyjde <code>301.28999999999996</code>. Proč se to děje, zjistíš v bonusovém úkolu. Díky pojmenované hodnotě <code>DPH</code> stačí při změně sazby upravit jediné místo.</p></div></details>
+</section>
+<section id="u6" class="task">
+<div class="task-head"><h2><span class="num">6</span> Práce s textem</h2><span class="time">5 min</span></div>
+<p>Načti od uživatele slovo a vypiš o něm pět údajů přesně v tomto tvaru.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">slovo = input("Slovo: ")
+
+# tvůj kód</code></pre>
+<p>Při spuštění zadej například: <code>Python</code>. Pak zkus i jiné slovo a nakonec jen stiskni <kbd>Enter</kbd> (prázdný text).</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Slovo: Python
+Délka: 6
+První písmeno: P
+Poslední písmeno: n
+Velkými písmeny: PYTHON
+Třikrát za sebou: PythonPythonPython</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Počet znaků zjistí <code>len(slovo)</code>. První znak je <code>slovo[0]</code> (číslování začíná nulou), poslední <code>slovo[-1]</code>. Velká písmena dá <code>slovo.upper()</code> a opakování <code>*</code>. Výpisy nejsnáz poskládáš přes <code>print("Délka:", …)</code>.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">slovo = input("Slovo: ")
+
+print("Délka:", len(slovo))
+print("První písmeno:", slovo[0])
+print("Poslední písmeno:", slovo[-1])
+print("Velkými písmeny:", slovo.upper())
+print("Třikrát za sebou:", slovo * 3)</code></pre><p>Pro prázdný text program skončí chybou <code>IndexError: string index out of range</code>: v prázdném textu není žádný první znak. Poslední znak by šel zapsat i jako <code>slovo[len(slovo) - 1]</code>, ale záporné číslo je kratší.</p></div></details>
+</section>
+<p class="part">Logické hodnoty</p>
+<section id="u7" class="task">
+<div class="task-head"><h2><span class="num">7</span> Pravda, nebo nepravda?</h2><span class="time">4 min</span></div>
+<p><strong>Nejdřív nespouštěj.</strong> Na papír napiš u každého řádku <code>True</code>, nebo <code>False</code>. Teprve potom program spusť a porovnej.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print(5 &gt; 3)
+print(5 == 5.0)
+print("5" == 5)
+print(10 % 3 == 1)
+print(not (2 &lt; 1))
+print(3 &gt; 2 and 3 &gt; 5)
+print(3 &gt; 2 or 3 &gt; 5)</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Porovnání vždy dává <code>True</code> nebo <code>False</code>. Spojka <code>and</code> dá <code>True</code>, jen když platí obě strany, <code>or</code> když platí aspoň jedna. Pozor na řádky 2 a 3: porovnává se hodnota a <strong>text není číslo</strong>.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><pre><code>True
+True
+False
+True
+True
+False
+True</code></pre><p>Celé číslo <code>5</code> a desetinné <code>5.0</code> mají stejnou hodnotu, proto <code>5 == 5.0</code> je <code>True</code>. Text <code>"5"</code> se ale číslu <code>5</code> nerovná, i když se vypíše stejně. Řádek 4: <code>10 % 3</code> je 1, takže <code>1 == 1</code>. Řádek 5: <code>2 &lt; 1</code> je <code>False</code> a <code>not</code> ho obrátí. Řádky 6 a 7 se liší jedinou spojkou: <code>3 &gt; 2</code> platí, <code>3 &gt; 5</code> neplatí, a proto <code>and</code> dá <code>False</code>, kdežto <code>or</code> dá <code>True</code>.</p></div></details>
+</section>
+<p class="part">Opravujeme</p>
+<section id="u8" class="task">
+<div class="task-head"><h2><span class="num">8</span> Najdi a oprav chyby</h2><span class="time">5 min</span></div>
+<p>V programu jsou <strong>tři chyby</strong> a všechny souvisejí s typy. Spusť ho a přečti si, co Python hlásí. Oprav jednu chybu, spusť znovu a pokračuj.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">vek = int(input("Kolik ti je? "))
+print("Příští rok ti bude " + vek + 1)
+cena = float("12,50")
+print("Cena:", cena)
+pocet = "3"
+print("Celkem:", pocet * cena)</code></pre>
+<p>Při spuštění zadej například: <code>16</code>.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Kolik ti je? 16
+Příští rok ti bude 17
+Cena: 12.5
+Celkem: 37.5</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Postupuj podle hlášek jednu po druhé. První se týká spojování textu s číslem, druhá desetinné čárky, třetí násobení textu desetinným číslem. Zvaž, kdy je vhodnější čárka v <code>print</code> a kdy převod <code>str(…)</code> nebo <code>int(…)</code>.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div><pre><code class="language-python">vek = int(input("Kolik ti je? "))
+print("Příští rok ti bude", vek + 1)
+cena = float("12.50")
+print("Cena:", cena)
+pocet = 3
+print("Celkem:", pocet * cena)</code></pre><p>1) <code>"…" + vek</code> je text plus číslo: <code>TypeError: can only concatenate str (not "int") to str</code>. Nejjednodušší oprava je čárka v <code>print</code>, ten si číslo převede sám. Šlo by i <code>f"Příští rok ti bude {vek + 1}"</code>. 2) Python chce desetinnou <strong>tečku</strong>: <code>float("12,50")</code> dá <code>ValueError</code>. 3) <code>"3"</code> je text a text se desetinným číslem násobit nedá: <code>TypeError: can't multiply sequence by non-int of type 'float'</code>. Oprava je psát <code>3</code> bez uvozovek, nebo převést <code>int(pocet)</code>.</p></div></details>
+</section>
+<p class="part">Bonus</p>
+<section id="u9" class="task">
+<div class="task-head"><h2><span class="num">9</span> Počítač a desetinná čísla</h2><span class="time">5 min</span></div>
+<p><strong>Nejdřív nespouštěj.</strong> Napiš, co podle tebe program vypíše. Pak ho spusť a zkus vysvětlit, co tě překvapilo.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">print(0.1 + 0.2)
+print(0.1 + 0.2 == 0.3)
+print(round(0.1 + 0.2, 2) == 0.3)
+print(2 ** 100)</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Počítač ukládá čísla ve dvojkové soustavě. Zlomek 0,1 se v ní nedá zapsat přesně, podobně jako 1/3 se nedá přesně zapsat desetinným číslem. Celá čísla (<code>int</code>) jsou naopak přesná.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><pre><code>0.30000000000000004
+False
+True
+1267650600228229401496703205376</code></pre><p>Desetinná čísla (<code>float</code>) jsou v počítači uložená <strong>přibližně</strong>, a proto <code>0.1 + 0.2</code> není přesně <code>0.3</code>. Dvě desetinná čísla se proto neporovnávají pomocí <code>==</code>. Buď se nejdřív zaokrouhlí (třetí řádek), nebo se porovná, jestli je jejich rozdíl dost malý. Ze stejného důvodu se peníze v programech často počítají v haléřích jako celá čísla. Celá čísla jsou naproti tomu přesná a v Pythonu mohou být libovolně velká: <code>2 ** 100</code> se vejde bez problému.</p></div></details>
+</section>
+
+<p class="foot">Hotovo? Vrať se k úkolu, který ti dal nejvíc práce, a zkus ho napsat znovu bez nápovědy. Tak se to naučíš nejrychleji.</p>
+<p class="foot">Pokračuj: <a href="03_funkce.html">Python: funkce →</a></p>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
+    });
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>
