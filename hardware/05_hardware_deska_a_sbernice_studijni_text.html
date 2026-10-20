@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Základní deska a sběrnice – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Základní deska</li>
+    <li><a href="#deska">Co je na desce</a></li>
+    <li><a href="#formaty">Formáty desek</a></li>
+    <li><a href="#patice">Patice a čipset</a></li>
+    <li><a href="#topologie">Kdo je připojený kam</a></li>
+    <li class="grp">Sběrnice a rozhraní</li>
+    <li><a href="#seriove">Paralelně, nebo sériově</a></li>
+    <li><a href="#pcie">PCI Express</a></li>
+    <li><a href="#disky">M.2, NVMe a SATA</a></li>
+    <li><a href="#usb">USB</a></li>
+    <li><a href="#jednotky">Gb/s a GB/s</a></li>
+    <li class="grp">Firmware a start</li>
+    <li><a href="#uefi">BIOS a UEFI</a></li>
+    <li><a href="#start">Spuštění počítače</a></li>
+    <li class="grp">Napájení a teplo</li>
+    <li><a href="#zdroj">Zdroj</a></li>
+    <li><a href="#chlazeni">Chlazení</a></li>
+    <li><a href="#vyber">Jak vybrat díly</a></li>
+    <li><a href="#omyly">Časté omyly</a></li>
+    <li class="grp">K maturitě</li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Hardware a operační systémy · Studijní text</p>
+  <h1>Základní deska a sběrnice <span class="t">PCIe · USB · UEFI</span></h1>
+  <p class="lead">Jak se součásti počítače propojí, napájí a uchladí. Navazuje na text <a href="04_hardware_cpu_a_pameti_studijni_text.html">Procesor a paměti</a>. Údaje o konkrétních platformách platí k říjnu 2026, malá čísla u textu odkazují na zdroje na konci.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>popsat hlavní části základní desky</li>
+      <li>vysvětlit, co určuje patice a co čipset</li>
+      <li>vyjmenovat formáty desek</li>
+      <li>vysvětlit, proč paralelní sběrnice nahradily sériové linky</li>
+      <li>spočítat propustnost PCIe z generace a počtu linek</li>
+      <li>rozlišit M.2, NVMe a SATA</li>
+      <li>vyznat se v názvech USB a převádět Gb/s na GB/s</li>
+      <li>porovnat BIOS a UEFI a popsat Secure Boot</li>
+      <li>popsat průběh spuštění počítače</li>
+      <li>dimenzovat zdroj a vysvětlit účinnost</li>
+      <li>vysvětlit TDP a druhy chlazení</li>
+      <li>zkontrolovat kompatibilitu sestavy</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Základní deska</p>
+
+<section id="deska">
+<h2>Co je na základní desce</h2>
+<p><dfn>Základní deska</dfn> (motherboard) je deska plošných spojů, do které se zapojují všechny ostatní součásti. Měděné cesty na ní propojují procesor s pamětí, kartami, disky a konektory. Ve von Neumannově schématu odpovídá hlavně <strong>sběrnici</strong>.</p>
+<div class="tbl"><table>
+<thead><tr><th>Část</th><th>K čemu slouží</th></tr></thead>
+<tbody>
+<tr><td><strong>Patice procesoru</strong> (socket)</td><td>mechanické a elektrické spojení s procesorem; určuje, které procesory deska podporuje</td></tr>
+<tr><td><strong>Sloty pro RAM</strong> (DIMM)</td><td>obvykle 2 nebo 4; dva moduly do párových slotů běží ve dvou kanálech</td></tr>
+<tr><td><strong>Sloty PCI Express</strong></td><td>grafická karta (×16) a další rozšiřující karty</td></tr>
+<tr><td><strong>Sloty M.2</strong></td><td>SSD ve tvaru destičky, případně karta Wi-Fi</td></tr>
+<tr><td><strong>Čipset</strong></td><td>rozbočovač pro pomalejší zařízení: další USB, SATA, síť</td></tr>
+<tr><td><strong>VRM</strong> (měniče napětí)</td><td>z 12 V ze zdroje vyrobí přesné nízké napětí pro procesor</td></tr>
+<tr><td><strong>Napájecí konektory</strong></td><td>24pinový ATX pro desku, 8pinový (nebo dva) pro procesor</td></tr>
+<tr><td><strong>Porty SATA</strong></td><td>pevné disky a starší 2,5palcová SSD</td></tr>
+<tr><td><strong>Zadní panel</strong> (I/O)</td><td>USB, síť, zvuk, video výstupy integrované grafiky</td></tr>
+<tr><td><strong>Čip s UEFI</strong> a baterie</td><td>firmware, který spouští počítač; baterie drží nastavení a hodiny</td></tr>
+<tr><td><strong>Konektory předního panelu</strong></td><td>tlačítko zapnutí, kontrolky, přední USB a zvuk ze skříně</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="formaty">
+<h2>Formáty desek</h2>
+<p>Formát předepisuje rozměry desky, rozmístění otvorů pro šrouby a polohu zadního panelu. Díky tomu se deska vejde do skříně stejného nebo většího formátu. Standard ATX zavedl Intel v roce 1995.<sup class="ref"><a href="#z1">1</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th>Formát</th><th>Rozměry</th><th>Rok</th><th>Typicky</th></tr></thead>
+<tbody>
+<tr><td><strong>ATX</strong></td><td class="num">305 × 244 mm</td><td class="num">1995</td><td>4 sloty RAM, více slotů PCIe a M.2; běžné stolní PC</td></tr>
+<tr><td><strong>microATX</strong></td><td class="num">244 × 244 mm</td><td class="num">1996</td><td>méně slotů PCIe; menší a levnější sestavy</td></tr>
+<tr><td><strong>Mini-ITX</strong></td><td class="num">170 × 170 mm</td><td class="num">2001</td><td>jeden slot PCIe, 2 sloty RAM; malé počítače</td></tr>
+</tbody></table></div>
+<p class="small-muted">Rozměry podle Wikipedie.<sup class="ref"><a href="#z1">1</a></sup> Deska microATX se vejde do skříně ATX, deska ATX do skříně Mini-ITX ne.</p>
+</section>
+
+<section id="patice">
+<h2>Patice a čipset</h2>
+<p><dfn>Patice</dfn> (socket) je místo, kam se vkládá procesor. Každá platforma má vlastní patici, takže procesor AMD do desky pro Intel nepasuje a naopak. Ani starší procesor Intel nepasuje do novější patice Intel. U obou současných platforem jde o typ <dfn>LGA</dfn> (land grid array): pružné kontakty jsou v patici na desce, procesor má jen plošky.</p>
+<p><dfn>Čipset</dfn> je obvod na desce, přes který jsou k procesoru připojená pomalejší zařízení. Podle čipsetu se liší výbava desky (počet USB, SATA, slotů M.2) i to, zda jde procesor přetaktovat.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>AMD AM5</th><th>Intel LGA1851</th></tr></thead>
+<tbody>
+<tr><td>Uvedení</td><td>27. 9. 2022<sup class="ref"><a href="#z2">2</a></sup></td><td>24. 10. 2024<sup class="ref"><a href="#z3">3</a></sup></td></tr>
+<tr><td>Kontakty</td><td>1 718</td><td>1 851</td></tr>
+<tr><td>Paměti</td><td>jen DDR5<sup class="ref"><a href="#z2">2</a></sup></td><td>jen DDR5<sup class="ref"><a href="#z3">3</a></sup></td></tr>
+<tr><td>Linky PCIe z procesoru</td><td>podle procesoru a čipsetu, až PCIe 5.0</td><td>PCIe 5.0 ×16 + ×4 a PCIe 4.0 ×4<sup class="ref"><a href="#z3">3</a></sup></td></tr>
+<tr><td>Spojení procesor–čipset</td><td>PCIe 4.0 ×4<sup class="ref"><a href="#z2">2</a></sup></td><td>DMI 4.0 ×8 (Z890), ×4 (B860, H810)<sup class="ref"><a href="#z4">4</a></sup></td></tr>
+<tr><td>Čipsety</td><td>A620, B650, B850, X670, X870 a varianty E<sup class="ref"><a href="#z2">2</a></sup></td><td>H810, B860, Z890 a další<sup class="ref"><a href="#z3">3</a></sup></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="topologie">
+<h2>Kdo je připojený kam</h2>
+<p>V dnešním počítači je řadič paměti i řadič PCI Express přímo v procesoru. Nejrychlejší zařízení proto mají vlastní spojení s procesorem a všechno ostatní je připojené přes čipset.</p>
+<svg class="mb" viewBox="0 0 640 400" role="img" aria-label="Schéma: RAM, grafika a hlavní SSD jsou připojené přímo k procesoru, ostatní zařízení přes čipset">
+  <path class="topo-line fast" d="M150 180 H240"/><path class="topo-line fast" d="M320 70 V140"/><path class="topo-line mid" d="M400 180 H470"/><path class="topo-line mid" d="M320 220 V290"/>
+  <path class="topo-line" d="M240 310 H150 V300"/><path class="topo-line" d="M240 340 H150 V355"/><path class="topo-line" d="M400 310 H470 V300"/><path class="topo-line" d="M400 340 H470 V355"/>
+  <text class="topo-tag" x="195" y="172" text-anchor="middle">~96 GB/s</text><text class="topo-tag" x="330" y="110">~63 GB/s</text><text class="topo-tag" x="435" y="172" text-anchor="middle">~16 GB/s</text><text class="topo-tag" x="330" y="260">8–16 GB/s, sdílené</text>
+  <rect class="mb-part" x="240" y="140" width="160" height="80" rx="8"/><text class="mb-lab" x="250" y="168">Procesor</text><text class="mb-sub" x="250" y="188">řadič paměti + PCIe</text>
+  <rect class="mb-part" x="20" y="140" width="130" height="80" rx="8"/><text class="mb-lab" x="30" y="168">RAM</text><text class="mb-sub" x="30" y="188">2 kanály DDR5</text>
+  <rect class="mb-part" x="240" y="10" width="160" height="60" rx="8"/><text class="mb-lab" x="250" y="36">Grafická karta</text><text class="mb-sub" x="250" y="56">PCIe 5.0 ×16</text>
+  <rect class="mb-part" x="470" y="140" width="150" height="80" rx="8"/><text class="mb-lab" x="480" y="168">M.2 SSD</text><text class="mb-sub" x="480" y="188">PCIe 5.0 ×4</text>
+  <rect class="mb-part" x="240" y="290" width="160" height="70" rx="8"/><text class="mb-lab" x="250" y="318">Čipset</text><text class="mb-sub" x="250" y="338">rozbočovač</text>
+  <rect class="mb-part" x="20" y="280" width="130" height="40" rx="8"/><text class="mb-lab" x="30" y="306">USB</text>
+  <rect class="mb-part" x="20" y="335" width="130" height="40" rx="8"/><text class="mb-lab" x="30" y="361">SATA</text>
+  <rect class="mb-part" x="470" y="280" width="150" height="40" rx="8"/><text class="mb-lab" x="480" y="306">Síť, Wi-Fi</text>
+  <rect class="mb-part" x="470" y="335" width="150" height="40" rx="8"/><text class="mb-lab" x="480" y="361">Další M.2</text>
+</svg>
+<p>Zařízení za čipsetem se dělí o jedno spojení s procesorem: u AM5 PCIe 4.0 ×4 (asi 8 GB/s), u desek Intel Z890 DMI 4.0 ×8 (asi 16 GB/s).<sup class="ref"><a href="#z2">2</a>,</sup><sup class="ref"><a href="#z4">4</a></sup> Když se zároveň kopíruje mezi dvěma disky za čipsetem a stahuje ze sítě, mohou se navzájem brzdit. Proto se hlavní SSD vkládá do slotu M.2 připojeného přímo k procesoru.</p>
+<div class="note tip"><b class="lbl">Souvislost s von Neumannem</b><p>Von Neumann kreslil jednu sběrnici, po které jde všechno. V dnešním počítači je místo ní síť samostatných spojení s různou rychlostí. Princip zůstal stejný: procesor si data a instrukce bere z operační paměti a se vším ostatním komunikuje jako se vstupem a výstupem.</p></div>
+</section>
+
+<p class="part">Sběrnice a rozhraní</p>
+
+<section id="seriove">
+<h2>Paralelně, nebo sériově</h2>
+<p>Starší počítače používaly <dfn>paralelní sdílené sběrnice</dfn>, například PCI. Měly mnoho vodičů vedle sebe, každý nesl jeden bit, a všechna zařízení sdílela tytéž vodiče, takže v jednu chvíli mohlo vysílat jen jedno.<sup class="ref"><a href="#z5">5</a></sup></p>
+<p>Při vyšších frekvencích narazily na problém: signály po různě dlouhých vodičích dorazí v trochu jiný čas (anglicky <dfn>skew</dfn>). Všechny bity jednoho slova přitom musí dorazit v témže taktu, a to omezuje, jak rychlý může takt být.<sup class="ref"><a href="#z5">5</a></sup></p>
+<p><dfn>PCI Express</dfn> (od roku 2003) proto používá <strong>sériové linky bod–bod</strong>. Každé zařízení má vlastní spojení. Jedna <dfn>linka</dfn> (lane) má jeden pár vodičů pro každý směr, takže data mohou jít oběma směry současně, a takt je zakódovaný přímo v datech. Problém se skew odpadá a linka může běžet na desítkách gigatransferů za sekundu. Větší rychlosti se dosáhne více linkami vedle sebe.<sup class="ref"><a href="#z5">5</a></sup></p>
+<p>Stejně se vyvíjely i další rozhraní: paralelní ATA pro disky nahradila sériová SATA a paralelní port pro tiskárny nahradilo sériové USB.</p>
+</section>
+
+<section id="pcie">
+<h2>PCI Express</h2>
+<p>Každá generace PCIe zhruba zdvojnásobí rychlost jedné linky. Zápis ×1, ×4, ×8 nebo ×16 udává počet linek. Užší karta funguje i v širším slotu: linka se dohodne na nejvyšším počtu linek, který zvládnou obě strany.<sup class="ref"><a href="#z5">5</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th>Verze</th><th>Rok</th><th>Přenosová rychlost linky</th><th>Propustnost ×1</th><th>Propustnost ×16</th></tr></thead>
+<tbody>
+<tr><td>1.0</td><td class="num">2003</td><td class="num">2,5 GT/s</td><td class="num">0,25 GB/s</td><td class="num">4 GB/s</td></tr>
+<tr><td>2.0</td><td class="num">2007</td><td class="num">5 GT/s</td><td class="num">0,5 GB/s</td><td class="num">8 GB/s</td></tr>
+<tr><td>3.0</td><td class="num">2010</td><td class="num">8 GT/s</td><td class="num">0,985 GB/s</td><td class="num">15,8 GB/s</td></tr>
+<tr><td>4.0</td><td class="num">2017</td><td class="num">16 GT/s</td><td class="num">1,97 GB/s</td><td class="num">31,5 GB/s</td></tr>
+<tr><td>5.0</td><td class="num">2019</td><td class="num">32 GT/s</td><td class="num">3,94 GB/s</td><td class="num">63 GB/s</td></tr>
+<tr><td>6.0</td><td class="num">2022</td><td class="num">64 GT/s</td><td class="num">7,56 GB/s</td><td class="num">121 GB/s</td></tr>
+<tr><td>7.0</td><td class="num">2025</td><td class="num">128 GT/s</td><td class="num">15,1 GB/s</td><td class="num">242 GB/s</td></tr>
+</tbody></table></div>
+<p class="small-muted">Propustnost v jednom směru po odečtení kódování. Rok vydání specifikace, zařízení přicházejí později.<sup class="ref"><a href="#z5">5</a>,</sup><sup class="ref"><a href="#z6">6</a></sup></p>
+<div class="calc">
+  <div class="calc-row">
+    <label>Generace<select id="pGen"><option value="0.25">1.0</option><option value="0.5">2.0</option><option value="0.985">3.0</option><option value="1.969">4.0</option><option value="3.938" selected>5.0</option><option value="7.563">6.0</option><option value="15.125">7.0</option></select></label>
+    <label>Linky<select id="pLan"><option>1</option><option>2</option><option selected>4</option><option>8</option><option>16</option></select></label>
+  </div>
+  <p class="calc-out" id="pOut"></p>
+</div>
+<p>Všimni si, že PCIe 5.0 ×4 má zhruba stejnou propustnost jako PCIe 4.0 ×8. Nová generace tedy umožní připojit stejně rychlé zařízení polovinou linek. Typické použití: ×16 grafická karta, ×4 NVMe SSD, ×1 síťová nebo zvuková karta.</p>
+</section>
+
+<section id="disky">
+<h2>M.2, NVMe a SATA</h2>
+<p>Tyto tři pojmy se často pletou, protože každý popisuje něco jiného:</p>
+<ul>
+  <li><dfn>M.2</dfn> je <strong>tvar</strong> destičky a konektoru na desce.</li>
+  <li><dfn>NVMe</dfn> je <strong>protokol</strong>, kterým SSD komunikuje s procesorem přes linky PCI Express, typicky čtyři.</li>
+  <li><dfn>SATA</dfn> je starší <strong>rozhraní</strong> pro disky s rychlostí 6 Gb/s, navržené ještě pro pevné disky.</li>
+</ul>
+<p>Disk M.2 tak může být NVMe (rychlý) i SATA (pomalejší, stejně rychlý jako 2,5palcové SSD na kabelu). Podrobnosti o SSD a HDD jsou v textu <a href="04_hardware_cpu_a_pameti_studijni_text.html">Procesor a paměti</a>.</p>
+</section>
+
+<section id="usb">
+<h2>USB</h2>
+<p><dfn>USB</dfn> (Universal Serial Bus) je univerzální sériové rozhraní pro periferie. Jeho názvy se několikrát měnily, takže stejné rozhraní může mít více jmen:</p>
+<div class="tbl"><table>
+<thead><tr><th>Název ve specifikaci</th><th>Dřívější název</th><th>Rychlost</th><th>Rok</th></tr></thead>
+<tbody>
+<tr><td>USB 1.1 Full-Speed</td><td></td><td class="num">12 Mb/s</td><td class="num">1998</td></tr>
+<tr><td>USB 2.0 Hi-Speed</td><td></td><td class="num">480 Mb/s</td><td class="num">2000</td></tr>
+<tr><td>USB 3.2 Gen 1</td><td>USB 3.0</td><td class="num">5 Gb/s</td><td class="num">2008</td></tr>
+<tr><td>USB 3.2 Gen 2</td><td>USB 3.1</td><td class="num">10 Gb/s</td><td class="num">2013</td></tr>
+<tr><td>USB 3.2 Gen 2×2</td><td></td><td class="num">20 Gb/s</td><td class="num">2017</td></tr>
+<tr><td>USB4</td><td></td><td class="num">40 Gb/s</td><td class="num">2019</td></tr>
+<tr><td>USB4 verze 2.0</td><td></td><td class="num">80 Gb/s</td><td class="num">2022</td></tr>
+</tbody></table></div>
+<p class="small-muted">Podle Corsair.<sup class="ref"><a href="#z7">7</a></sup></p>
+<div class="note warn"><b class="lbl">USB-C není rychlost</b><p>USB-C je jen <strong>tvar konektoru</strong>. Port USB-C může vést USB 2.0 s 480 Mb/s stejně jako USB4 s 80 Gb/s.<sup class="ref"><a href="#z7">7</a></sup> Skutečnou rychlost určuje port, kabel i zařízení a platí ta nejpomalejší z nich.</p></div>
+</section>
+
+<section id="jednotky">
+<h2>Gb/s a GB/s</h2>
+<p>Rychlosti rozhraní se udávají v <strong>bitech</strong> za sekundu (Mb/s, Gb/s), velikosti souborů a rychlosti disků v <strong>bajtech</strong> (MB, GB/s). 1 bajt = 8 bitů. Navíc část kapacity spotřebuje režie protokolu, takže skutečný přenos je ještě pomalejší.</p>
+<pre><code>GB/s = Gb/s ÷ 8
+čas přenosu (s) = velikost (GB) ÷ rychlost (GB/s)</code></pre>
+<div class="calc">
+  <div class="calc-row">
+    <label>Rozhraní (Gb/s)<input type="number" id="uG" value="10" min="0.01" step="1"></label>
+    <label>Soubor (GB)<input type="number" id="uS" value="50" min="0.001" step="1"></label>
+  </div>
+  <p class="calc-out" id="uOut"></p>
+</div>
+</section>
+
+<p class="part">Firmware a start</p>
+
+<section id="uefi">
+<h2>BIOS a UEFI</h2>
+<p><dfn>Firmware</dfn> je program uložený v čipu na základní desce. Spustí se jako první po zapnutí, otestuje hardware a spustí operační systém. Dříve to byl <dfn>BIOS</dfn>, dnes <dfn>UEFI</dfn> (Unified Extensible Firmware Interface).</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>BIOS</th><th>UEFI</th></tr></thead>
+<tbody>
+<tr><td>Vznik</td><td>80. léta</td><td>specifikace EFI od roku 2000, UEFI Forum od roku 2005<sup class="ref"><a href="#z8">8</a></sup></td></tr>
+<tr><td>Tabulka oddílů disku</td><td>MBR: nejvýš 4 primární oddíly, disky do 2,2 TB</td><td>GPT: více oddílů, větší disky<sup class="ref"><a href="#z8">8</a></sup></td></tr>
+<tr><td>Ovládání</td><td>textové, klávesnice</td><td>grafické, i myš</td></tr>
+<tr><td>Další možnosti</td><td>–</td><td>rychlejší start, síť před startem systému, Secure Boot<sup class="ref"><a href="#z8">8</a></sup></td></tr>
+</tbody></table></div>
+<p><dfn>Secure Boot</dfn> před spuštěním ověří digitální podpis zavaděče a jádra operačního systému. Kód, který není podepsaný nebo byl pozměněn, se nespustí. Chrání to před malwarem, který by se jinak spustil dřív než ochrana operačního systému.<sup class="ref"><a href="#z8">8</a></sup> Pro starší systémy umí UEFI režim kompatibility <dfn>CSM</dfn>, v něm ale Secure Boot nefunguje.<sup class="ref"><a href="#z8">8</a></sup></p>
+<p>Windows 11 vyžadují firmware UEFI s podporou Secure Boot a čip <dfn>TPM 2.0</dfn>, který bezpečně uchovává šifrovací klíče.<sup class="ref"><a href="#z9">9</a></sup> Nastavení UEFI (pořadí disků, čas) se ukládá do paměti, kterou napájí malá baterie na desce.<sup class="ref"><a href="#z8">8</a></sup></p>
+</section>
+
+<section id="start">
+<h2>Spuštění počítače</h2>
+<ol class="plan">
+  <li><b>Napájení.</b> Tlačítko dá zdroji pokyn k zapnutí. Zdroj stabilizuje napětí a dá desce signál, že je napájení v pořádku.</li>
+  <li><b>UEFI a POST.</b> Procesor spustí firmware z čipu na desce. Ten provede POST (power-on self-test): zkontroluje procesor, paměť a grafiku a najde připojená zařízení. Při chybě počítač pípá nebo rozsvítí diagnostickou diodu.</li>
+  <li><b>Výběr disku.</b> UEFI podle nastaveného pořadí najde disk se zavaděčem, se Secure Boot nejdřív ověří jeho podpis.</li>
+  <li><b>Zavaděč</b> (Windows Boot Manager, GRUB) nahraje jádro operačního systému do RAM a předá mu řízení.</li>
+  <li><b>Jádro</b> inicializuje ovladače, připojí disky a spustí služby. Na konci se objeví přihlášení.</li>
+</ol>
+<p>Od čtvrtého kroku přebírá řízení operační systém. Podrobněji v materiálu <a href="../seminar/05_operacni_systemy.html#start">Operační systémy</a>.</p>
+</section>
+
+<p class="part">Napájení a teplo</p>
+
+<section id="zdroj">
+<h2>Zdroj</h2>
+<p><dfn>Zdroj</dfn> (PSU, power supply unit) mění střídavé napětí 230 V ze zásuvky na stejnosměrná napětí pro součástky. Zdroj typu ATX dodává <strong>12 V</strong>, <strong>5 V</strong> a <strong>3,3 V</strong>. Větev 12 V napájí nejžravější součásti: procesor (přes měniče VRM na desce) a grafickou kartu. Napětí <strong>5 V v pohotovostním režimu</strong> (5VSB) zůstává zapnuté i u vypnutého počítače, aby ho šlo zapnout tlačítkem nebo po síti.<sup class="ref"><a href="#z11">11</a></sup></p>
+<p>Napájecí kabely: 24pinový konektor ATX pro desku, 8pinový konektor (nebo dva) pro procesor a konektory pro grafickou kartu. Nové výkonné karty používají konektor 12V-2x6 se zkrácenými signálními kolíky, které hlídají, aby byl konektor zasunutý celý.<sup class="ref"><a href="#z12">12</a></sup></p>
+<h3>Výkon a účinnost</h3>
+<p>Údaj ve wattech na zdroji je <strong>maximum</strong>, které zdroj umí dodat. Zdroj odebírá ze zásuvky jen tolik, kolik počítač právě potřebuje, plus ztráty. <dfn>Účinnost</dfn> říká, jaká část odebrané energie se dostane do součástek. Zbytek se ve zdroji změní v teplo.</p>
+<div class="tbl"><table>
+<thead><tr><th>Certifikace 80 PLUS</th><th>20 % zátěže</th><th>50 % zátěže</th><th>100 % zátěže</th></tr></thead>
+<tbody>
+<tr><td>80 PLUS</td><td class="num">82 %</td><td class="num">85 %</td><td class="num">82 %</td></tr>
+<tr><td>Bronze</td><td class="num">85 %</td><td class="num">88 %</td><td class="num">85 %</td></tr>
+<tr><td>Silver</td><td class="num">87 %</td><td class="num">90 %</td><td class="num">87 %</td></tr>
+<tr><td>Gold</td><td class="num">90 %</td><td class="num">92 %</td><td class="num">89 %</td></tr>
+<tr><td>Platinum</td><td class="num">92 %</td><td class="num">94 %</td><td class="num">90 %</td></tr>
+<tr><td>Titanium</td><td class="num">93 %</td><td class="num">95 %</td><td class="num">91 %</td></tr>
+</tbody></table></div>
+<p class="small-muted">Minimální účinnost pro 230 V v EU podle programu 80 Plus, který vznikl v roce 2004.<sup class="ref"><a href="#z10">10</a></sup> Zdroj je nejúčinnější kolem poloviny svého výkonu.</p>
+<pre><code>odběr ze zásuvky = příkon součástek ÷ účinnost
+teplo ve zdroji  = odběr ze zásuvky − příkon součástek</code></pre>
+<div class="calc">
+  <div class="calc-row">
+    <label>Procesor (W)<input type="number" id="zC" value="150" min="0" step="10"></label>
+    <label>Grafika (W)<input type="number" id="zG" value="250" min="0" step="10"></label>
+    <label>Ostatní (W)<input type="number" id="zO" value="60" min="0" step="10"></label>
+    <label>Účinnost (%)<input type="number" id="zE" value="92" min="50" max="100" step="1"></label>
+  </div>
+  <p class="calc-out" id="zOut"></p>
+</div>
+<p>Při výběru zdroje se k odhadnutému příkonu běžně přidává rezerva (zhruba 20 až 30 %). Zdroj pak pracuje blíž oblasti nejvyšší účinnosti a zvládne krátké špičky odběru, které mají hlavně grafické karty.</p>
+</section>
+
+<section id="chlazeni">
+<h2>Chlazení</h2>
+<p>Prakticky všechna elektrická energie, kterou počítač spotřebuje, se nakonec změní v <strong>teplo</strong>. Počítač s odběrem 400 W topí jako topení se 400 W. Teplo vzniká na malé ploše čipu a musí se dostat do vzduchu dřív, než se čip přehřeje. Když se přehřeje, sám sníží takt (<dfn>throttling</dfn>) a zpomalí se. Proč se čip s vyšším taktem tolik hřeje, vysvětluje text <a href="04_takt_studijni_text.html#spotreba">Takt procesoru</a>.</p>
+<ul>
+  <li><strong>Vzduchový chladič</strong>: kovová základna, tepelné trubice a hliníková žebra, přes která ventilátor fouká vzduch. Spolehlivý a levný.</li>
+  <li><strong>Vodní chlazení</strong> (AIO, all-in-one): kapalina odvádí teplo do radiátoru s ventilátory. Hodí se pro procesory s vysokým příkonem.</li>
+  <li><strong>Pasivní chlazení</strong>: jen žebra nebo kovové tělo, bez hluku. Pro čipy s malým příkonem, například v mobilech a některých noteboocích.</li>
+  <li><strong>Proudění ve skříni</strong>: ventilátory vpředu nasávají studený vzduch, vzadu a nahoře vyfukují teplý.</li>
+  <li><strong>Teplovodivá pasta</strong> vyplní mikroskopické nerovnosti mezi čipem a chladičem, kde by jinak byl vzduch, který vede teplo špatně.</li>
+</ul>
+<h3>TDP</h3>
+<p><dfn>TDP</dfn> (thermal design power) je největší množství tepla, které má chlazení dlouhodobě odvádět.<sup class="ref"><a href="#z13">13</a></sup> <strong>Není to maximální příkon</strong>: skutečná spotřeba může být vyšší i výrazně nižší a krátkodobá špička bývá kolem 1,5násobku TDP. Výrobci navíc TDP počítají různě, Intel ho od 12. generace nahradil údajem Processor Base Power.<sup class="ref"><a href="#z13">13</a></sup> Chladič se proto vybírá s rezervou.</p>
+</section>
+
+<section id="vyber">
+<h2>Jak vybrat díly, aby spolu fungovaly</h2>
+<ol class="plan">
+  <li><b>Procesor a deska:</b> stejná patice (AM5, LGA1851…). Deska musí mít aktualizaci UEFI pro daný procesor.</li>
+  <li><b>Paměť a deska:</b> stejný typ (DDR4 nebo DDR5). Moduly DDR4 a DDR5 mají zářez jinde a do cizího slotu nejdou zasunout.</li>
+  <li><b>Deska a skříň:</b> formát desky stejný nebo menší než skříň.</li>
+  <li><b>Grafická karta a skříň:</b> délka karty a místo pro její chlazení.</li>
+  <li><b>Zdroj:</b> dost výkonu s rezervou a správné konektory pro grafiku.</li>
+  <li><b>Chladič:</b> pasuje na patici, uchladí příkon procesoru a vejde se do skříně.</li>
+  <li><b>Disky:</b> dost slotů M.2 a vědět, které jsou připojené k procesoru a které k čipsetu.</li>
+</ol>
+</section>
+
+<section id="omyly">
+<h2>Časté omyly</h2>
+<div class="tbl"><table>
+<thead><tr><th>Omyl</th><th>Jak to je</th></tr></thead>
+<tbody>
+<tr><td>Port USB-C je vždy rychlý.</td><td>USB-C je tvar konektoru. Může vést USB 2.0 s 480 Mb/s.</td></tr>
+<tr><td>M.2 disk je vždy NVMe.</td><td>M.2 je tvar. Disk M.2 může používat i pomalejší SATA.</td></tr>
+<tr><td>Zdroj 850 W pořád odebírá 850 W.</td><td>Odebírá jen to, co počítač právě potřebuje, plus ztráty.</td></tr>
+<tr><td>Víc vodičů vedle sebe = vždy rychlejší.</td><td>Paralelní sběrnice brzdí rozdílné zpoždění signálů. Dnes vítězí sériové linky.</td></tr>
+<tr><td>TDP je maximální spotřeba.</td><td>TDP je teplo, které má chlazení dlouhodobě odvést. Špičky jsou vyšší.</td></tr>
+<tr><td>BIOS a UEFI je totéž.</td><td>UEFI je nástupce BIOSu: GPT, Secure Boot, grafické nastavení.</td></tr>
+<tr><td>10 Gb/s = 10 GB/s.</td><td>10 Gb/s ÷ 8 = 1,25 GB/s, ve skutečnosti méně.</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">K maturitě</p>
+
+<section id="osnova">
+<h2>Jak odpovídat u maturity</h2>
+<ol class="plan">
+  <li><b>Základní deska:</b> úloha, hlavní části, formáty ATX, microATX, Mini-ITX.</li>
+  <li><b>Patice a čipset:</b> co určují, příklad AM5 a LGA1851, připojení přímo k procesoru a přes čipset.</li>
+  <li><b>Sběrnice:</b> od paralelních sdílených sběrnic k sériovým linkám, PCIe (generace, linky, výpočet propustnosti).</li>
+  <li><b>Rozhraní:</b> M.2, NVMe a SATA; USB a jeho názvy; USB-C jako konektor; Gb/s a GB/s.</li>
+  <li><b>Firmware:</b> BIOS a UEFI, POST, Secure Boot, TPM, průběh spuštění.</li>
+  <li><b>Napájení a chlazení:</b> napětí zdroje, výkon a účinnost, 80 PLUS, teplo, TDP, druhy chlazení.</li>
+  <li><b>Kompatibilita</b> sestavy na příkladu.</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Co určuje patice procesoru a co čipset?</summary><div class="a"><p>Patice určuje, které procesory lze do desky vložit (a nepřímo i typ paměti). Čipset připojuje pomalejší zařízení (USB, SATA, síť, další M.2) a určuje výbavu desky a možnosti přetaktování.</p></div></details>
+<details class="q"><summary>Proč je grafická karta připojená přímo k procesoru a síťová karta přes čipset?</summary><div class="a"><p>Grafika potřebuje obrovskou propustnost (PCIe ×16). Pomalejší zařízení se mohou dělit o jedno spojení čipsetu s procesorem.</p></div></details>
+<details class="q"><summary>Proč paralelní sběrnice nahradily sériové linky?</summary><div class="a"><p>U paralelní sběrnice dorazí signály po různých vodičích v trochu jiný čas (skew), což omezuje takt. Navíc ji sdílí všechna zařízení. Sériová linka nese takt v datech, nemá problém se skew a každé zařízení má vlastní spojení.</p></div></details>
+<details class="q"><summary>Spočítej propustnost PCIe 4.0 ×4 a PCIe 5.0 ×16.</summary><div class="a"><p>PCIe 4.0: 1,97 GB/s × 4 ≈ 7,9 GB/s. PCIe 5.0: 3,94 GB/s × 16 ≈ 63 GB/s.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi M.2, NVMe a SATA?</summary><div class="a"><p>M.2 je tvar destičky a konektoru, NVMe protokol pro SSD přes PCIe, SATA starší rozhraní s 6 Gb/s.</p></div></details>
+<details class="q"><summary>Kolik nejvýš GB/s přenese USB4 se 40 Gb/s?</summary><div class="a"><p>40 ÷ 8 = 5 GB/s, ve skutečnosti méně kvůli režii.</p></div></details>
+<details class="q"><summary>Proč kabel USB-C nezaručuje rychlost?</summary><div class="a"><p>USB-C je tvar konektoru. Rychlost určuje verze USB podporovaná portem, kabelem i zařízením.</p></div></details>
+<details class="q"><summary>Čím se liší UEFI od BIOSu?</summary><div class="a"><p>UEFI podporuje disky s GPT nad 2,2 TB, grafické ovládání, rychlejší start, síť před startem a Secure Boot. BIOS používal MBR a textové ovládání.</p></div></details>
+<details class="q"><summary>K čemu je Secure Boot?</summary><div class="a"><p>Ověří digitální podpis zavaděče a jádra. Nepodepsaný nebo pozměněný kód se nespustí, což brání malwaru, který by naběhl před operačním systémem.</p></div></details>
+<details class="q"><summary>Popiš spuštění počítače od stisku tlačítka po přihlášení.</summary><div class="a"><p>Napájení, UEFI a POST, výběr disku podle pořadí (a ověření podpisu), zavaděč nahraje jádro, jádro spustí ovladače a služby, přihlášení.</p></div></details>
+<details class="q"><summary>Součástky odebírají 400 W a zdroj má účinnost 90 %. Kolik odebírá ze zásuvky a kolik tepla vznikne ve zdroji?</summary><div class="a"><p>400 ÷ 0,9 ≈ 444 W ze zásuvky, ve zdroji vznikne asi 44 W tepla.</p></div></details>
+<details class="q"><summary>Proč se zdroj volí s rezervou?</summary><div class="a"><p>Kvůli krátkým špičkám odběru (hlavně grafika) a protože zdroj je nejúčinnější kolem poloviny výkonu.</p></div></details>
+<details class="q"><summary>Co je TDP a proč to není maximální příkon?</summary><div class="a"><p>Teplo, které má chlazení dlouhodobě odvádět. Krátkodobě, třeba v turbu, může procesor odebírat víc.</p></div></details>
+<details class="q"><summary>Sestava: procesor pro AM5, deska LGA1851, paměť DDR4. Co je špatně?</summary><div class="a"><p>Procesor nepasuje do patice desky. A paměť DDR4 nejde do žádné z obou platforem, AM5 i LGA1851 podporují jen DDR5.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Základní deska</dt><dd>deska, která propojuje všechny součásti počítače</dd>
+  <dt>Patice (socket)</dt><dd>místo pro procesor; určuje kompatibilní procesory</dd>
+  <dt>LGA</dt><dd>patice s kontakty na desce, procesor má jen plošky</dd>
+  <dt>Čipset</dt><dd>obvod na desce, který připojuje pomalejší zařízení k procesoru</dd>
+  <dt>VRM</dt><dd>měniče, které vyrábějí napětí pro procesor</dd>
+  <dt>ATX, microATX, Mini-ITX</dt><dd>formáty základních desek a skříní</dd>
+  <dt>Sběrnice</dt><dd>spojení, po kterém se přenášejí data mezi součástmi</dd>
+  <dt>Skew</dt><dd>rozdílné zpoždění signálů na paralelních vodičích</dd>
+  <dt>PCI Express (PCIe)</dt><dd>sériové rozhraní s linkami bod–bod pro karty a SSD</dd>
+  <dt>Linka (lane)</dt><dd>pár vodičů pro každý směr; zápis ×4, ×16 udává jejich počet</dd>
+  <dt>GT/s</dt><dd>miliardy přenosů za sekundu na jedné lince</dd>
+  <dt>M.2</dt><dd>tvar destičky a konektoru pro SSD</dd>
+  <dt>NVMe</dt><dd>protokol pro SSD přes PCIe</dd>
+  <dt>SATA</dt><dd>starší rozhraní pro disky, 6 Gb/s</dd>
+  <dt>USB</dt><dd>univerzální sériová sběrnice pro periferie</dd>
+  <dt>USB-C</dt><dd>tvar konektoru, nezávislý na rychlosti</dd>
+  <dt>Firmware</dt><dd>program v čipu zařízení, který se spouští jako první</dd>
+  <dt>BIOS / UEFI</dt><dd>starší / současný firmware základní desky</dd>
+  <dt>POST</dt><dd>test hardwaru po zapnutí</dd>
+  <dt>Secure Boot</dt><dd>ověřování podpisu zavaděče a jádra před spuštěním</dd>
+  <dt>TPM</dt><dd>bezpečnostní čip pro šifrovací klíče</dd>
+  <dt>MBR / GPT</dt><dd>starší / novější tabulka oddílů disku</dd>
+  <dt>PSU</dt><dd>zdroj napájení</dd>
+  <dt>Účinnost</dt><dd>podíl energie, který zdroj dodá součástkám</dd>
+  <dt>80 PLUS</dt><dd>certifikace účinnosti zdrojů</dd>
+  <dt>TDP</dt><dd>teplo, které má chlazení dlouhodobě odvádět</dd>
+  <dt>Throttling</dt><dd>snížení taktu při přehřátí</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v říjnu 2026.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://en.wikipedia.org/wiki/Motherboard_form_factor">Wikipedia: Motherboard form factor</a></li>
+  <li id="z2"><a href="https://en.wikipedia.org/wiki/Socket_AM5">Wikipedia: Socket AM5</a></li>
+  <li id="z3"><a href="https://en.wikipedia.org/wiki/LGA_1851">Wikipedia: LGA 1851</a></li>
+  <li id="z4"><a href="https://www.pugetsystems.com/labs/articles/z890-vs-b860-vs-h810/">Puget Systems: Z890 vs B860 vs H810</a></li>
+  <li id="z5"><a href="https://en.wikipedia.org/wiki/PCI_Express">Wikipedia: PCI Express</a></li>
+  <li id="z6"><a href="https://hardware.slashdot.org/story/25/06/12/2037225/pci-express-70-specs-released">Slashdot: PCI Express 7.0 Specs Released</a></li>
+  <li id="z7"><a href="https://www.corsair.com/fr/en/explorer/gamer/gaming-pcs/usb-speeds-explained-a-clear-guide-to-usb-20-usb-3-and-usb4/">Corsair: USB speeds explained</a></li>
+  <li id="z8"><a href="https://www.ionos.co.uk/digitalguide/server/know-how/uefi-unified-extensible-firmware-interface/">IONOS Digital Guide: UEFI</a></li>
+  <li id="z9"><a href="https://microsoft.com/windows/windows-11-specifications">Microsoft: Windows 11 specifications</a></li>
+  <li id="z10"><a href="https://en.wikipedia.org/wiki/80_Plus">Wikipedia: 80 Plus</a></li>
+  <li id="z11"><a href="https://hardwaresecrets.com/everything-you-need-to-know-about-power-supplies/6">Hardware Secrets: Everything You Need to Know About Power Supplies</a></li>
+  <li id="z12"><a href="https://www.coolermaster.com/what-is-atx-3-1">Cooler Master: What is ATX 3.1</a></li>
+  <li id="z13"><a href="https://en.wikipedia.org/wiki/Thermal_design_power">Wikipedia: Thermal design power</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k tématu Hardware a operační systémy. Navazuje na Procesor a paměti, pokračuje Grafickou kartou.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function num(id) { var v = parseFloat($(id).value); return isFinite(v) ? v : 0; }
+  function cz(v, d) { return v.toLocaleString('cs-CZ', { maximumFractionDigits: d == null ? 2 : d }); }
+  function bind(ids, fn) { ids.forEach(function (i) { $(i).addEventListener('input', fn); $(i).addEventListener('change', fn); }); fn(); }
+  function dur(s) { if (s < 1) return cz(s * 1000, 0) + ' ms'; if (s < 60) return cz(s, 1) + ' s'; if (s < 3600) return cz(s / 60, 1) + ' min'; return cz(s / 3600, 1) + ' h'; }
+
+  bind(['pGen', 'pLan'], function () {
+    var one = num('pGen'), n = num('pLan'), t = one * n;
+    $('pOut').innerHTML = 'jedna linka <b>' + cz(one, 2) + ' GB/s</b> · celkem <b>' + cz(t, 1) + ' GB/s</b> v každém směru · 50 GB za <b>' + dur(50 / t) + '</b>';
+  });
+  bind(['uG', 'uS'], function () {
+    var g = num('uG'), s = num('uS'); if (g <= 0) { $('uOut').textContent = ''; return; }
+    $('uOut').innerHTML = 'nejvýš <b>' + cz(g / 8, 3) + ' GB/s</b> · soubor ' + cz(s, 3) + ' GB nejdřív za <b>' + dur(s / (g / 8)) + '</b>';
+  });
+  bind(['zC', 'zG', 'zO', 'zE'], function () {
+    var dc = num('zC') + num('zG') + num('zO'), e = num('zE') / 100; if (e <= 0) { $('zOut').textContent = ''; return; }
+    var ac = dc / e;
+    $('zOut').innerHTML = 'součástky <b>' + cz(dc, 0) + ' W</b> · ze zásuvky <b>' + cz(ac, 0) + ' W</b> · teplo ve zdroji <b>' + cz(ac - dc, 0) + ' W</b> · zdroj s rezervou 30 % aspoň <b>' + cz(Math.ceil(dc * 1.3 / 50) * 50, 0) + ' W</b>';
+  });
+
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grafická karta – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Grafický čip</li>
+    <li><a href="#cpu-gpu">CPU a GPU</a></li>
+    <li><a href="#karta">Co je na kartě</a></li>
+    <li><a href="#snimek">Jak vzniká snímek</a></li>
+    <li><a href="#fps">Snímky za sekundu</a></li>
+    <li><a href="#vram">Grafická paměť</a></li>
+    <li><a href="#typy">Integrovaná a samostatná</a></li>
+    <li><a href="#ai">GPU a umělá inteligence</a></li>
+    <li><a href="#historie">Historie</a></li>
+    <li class="grp">Zobrazení</li>
+    <li><a href="#monitor">Monitor</a></li>
+    <li><a href="#kabely">HDMI a DisplayPort</a></li>
+    <li><a href="#omyly">Časté omyly</a></li>
+    <li class="grp">K maturitě</li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Hardware a operační systémy · Studijní text</p>
+  <h1>Grafická karta <span class="t">GPU · VRAM</span></h1>
+  <p class="lead">Proč má grafický čip tisíce jednoduchých jader, jak vzniká snímek hry, k čemu je grafická paměť, proč se na GPU trénuje umělá inteligence a co rozhoduje u monitoru. Navazuje na texty <a href="04_hardware_cpu_a_pameti_studijni_text.html">Procesor a paměti</a> a <a href="05_hardware_deska_a_sbernice_studijni_text.html">Základní deska a sběrnice</a>.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit rozdíl v návrhu CPU a GPU</li>
+      <li>popsat hlavní části grafické karty</li>
+      <li>popsat kroky vykreslení snímku</li>
+      <li>přepočítat fps na čas snímku</li>
+      <li>vysvětlit, proč má karta vlastní paměť</li>
+      <li>porovnat integrovanou a samostatnou grafiku</li>
+      <li>vysvětlit, proč se AI počítá na GPU</li>
+      <li>popsat parametry monitoru</li>
+      <li>spočítat datový tok obrazu</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Grafický čip</p>
+
+<section id="cpu-gpu">
+<h2>CPU a GPU</h2>
+<p><dfn>GPU</dfn> (graphics processing unit) je procesor specializovaný na úlohy, kde se <strong>stejný výpočet opakuje na obrovském množství dat</strong>: pixely obrazu, vrcholy 3D modelů, prvky matic.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>CPU</th><th>GPU</th></tr></thead>
+<tbody>
+<tr><td>Cíl návrhu</td><td>co nejrychleji provést jednu posloupnost instrukcí</td><td>provést tisíce vláken najednou</td></tr>
+<tr><td>Tranzistory jdou hlavně na</td><td>cache a řízení (předpovídání skoků, provádění mimo pořadí)</td><td>výpočetní jednotky</td></tr>
+<tr><td>Počet jader</td><td>jednotky až desítky silných jader</td><td>tisíce jednoduchých jader</td></tr>
+<tr><td>Hodí se na</td><td>operační systém, logiku programu, závislé kroky</td><td>grafiku, video, simulace, neuronové sítě</td></tr>
+</tbody></table></div>
+<p class="small-muted">Podle NVIDIA CUDA Programming Guide.<sup class="ref"><a href="#z1">1</a></sup></p>
+<p>Jedno jádro GPU je pomalejší a jednodušší než jádro CPU. Celková propustnost GPU je ale mnohem vyšší, pokud se úloha dá rozdělit na tisíce nezávislých částí.<sup class="ref"><a href="#z1">1</a></sup> Úlohu, kde každý krok závisí na předchozím, GPU nezrychlí. Proto počítač potřebuje oba čipy.</p>
+<div class="note tip"><b class="lbl">Přirovnání</b><p>CPU je pár zkušených řemeslníků, kteří zvládnou cokoli. GPU je tisíc brigádníků, kteří umí jen natírat. Na natření plotu je tisíc brigádníků rychlejších, na stavbu domu ne.</p></div>
+</section>
+
+<section id="karta">
+<h2>Co je na grafické kartě</h2>
+<p>Samostatná grafická karta je vlastně počítač v počítači: má vlastní procesor, paměť, napájení a chlazení.</p>
+<ul>
+  <li><strong>Grafický čip (GPU)</strong>: tisíce jader seskupených do bloků a specializované obvody (dekódování videa, sledování paprsků, výpočty AI).</li>
+  <li><strong>Grafická paměť (VRAM)</strong>: rychlá paměť kolem čipu.</li>
+  <li><strong>Napájení</strong>: výkonná karta odebírá víc než zbytek počítače, proto má kabely přímo ze zdroje.</li>
+  <li><strong>Chladič</strong> s ventilátory, který zabírá většinu objemu karty.</li>
+  <li><strong>Konektor PCIe ×16</strong>, kterým je karta připojená přímo k procesoru.</li>
+  <li><strong>Výstupy</strong> HDMI a DisplayPort pro monitory.</li>
+</ul>
+<p>Příklad: Nvidia GeForce RTX 5090 (2025) má 21 760 jader CUDA, 92,2 miliardy tranzistorů, 32 GB paměti GDDR7 na 512bitové sběrnici s propustností 1 792 GB/s, příkon 575 W a rozhraní PCIe 5.0.<sup class="ref"><a href="#z2">2</a></sup></p>
+</section>
+
+<section id="snimek">
+<h2>Jak vzniká snímek</h2>
+<p>3D scéna ve hře je složená z trojúhelníků. Grafická karta z nich v každém snímku spočítá obraz v několika krocích:<sup class="ref"><a href="#z3">3</a></sup></p>
+<ol class="plan">
+  <li><b>Zpracování vrcholů.</b> Každý vrchol trojúhelníku se přepočítá z prostoru scény do pohledu kamery (vertex shader).</li>
+  <li><b>Rasterizace.</b> Každý trojúhelník se převede na fragmenty, tedy kandidáty na pixely. Hodnoty z vrcholů (barva, souřadnice textury, hloubka) se dopočítají pro každý pixel uvnitř.</li>
+  <li><b>Stínování pixelů.</b> Pro každý fragment se spočítá barva: textura, osvětlení, stíny (pixel shader).</li>
+  <li><b>Test hloubky.</b> Pro každý pixel se pamatuje vzdálenost od kamery (z-buffer). Bližší fragment přepíše vzdálenější, takže předměty správně zakrývají ty za sebou.</li>
+</ol>
+<p>Vrcholy i fragmenty se zpracovávají nezávisle na sobě,<sup class="ref"><a href="#z3">3</a></sup> a proto se práce dá rozdělit mezi tisíce jader.</p>
+<p><dfn>Sledování paprsků</dfn> (ray tracing) je jiný přístup: sleduje paprsky světla od kamery do scény a jejich odrazy. Dává realistické stíny a odrazy, ale je velmi náročné. Herní karty pro ně mají vlastní jádra od roku 2018 (řada GeForce RTX 20).<sup class="ref"><a href="#z5">5</a></sup></p>
+</section>
+
+<section id="fps">
+<h2>Snímky za sekundu</h2>
+<p>Plynulost hry se měří v <dfn>fps</dfn> (frames per second). Čím víc snímků za sekundu, tím méně času má karta na každý z nich:</p>
+<pre><code>čas na snímek (ms) = 1000 / fps
+pixelů za sekundu  = šířka × výška × fps</code></pre>
+<div class="calc">
+  <div class="calc-row">
+    <label>fps<input type="number" id="fF" value="144" min="1" step="1"></label>
+    <label>Šířka<input type="number" id="fW" value="2560" min="1" step="1"></label>
+    <label>Výška<input type="number" id="fH" value="1440" min="1" step="1"></label>
+  </div>
+  <p class="calc-out" id="fOut"></p>
+</div>
+<p>Při 60 fps má karta na snímek asi 16,7 ms, při 144 fps jen 6,9 ms. Monitor ale zobrazí nejvýš tolik snímků, kolik je jeho obnovovací frekvence.</p>
+</section>
+
+<section id="vram">
+<h2>Grafická paměť</h2>
+<p>GPU potřebuje neustále číst textury a modely a zapisovat rozpracované snímky, a to všemi jádry najednou. Běžná RAM by nestačila: dvoukanálová DDR5-6000 má asi 96 GB/s, spojení PCIe 5.0 ×16 asi 63 GB/s. Karta proto má vlastní <dfn>VRAM</dfn> s mnohem vyšší propustností, u RTX 5090 asi 1 792 GB/s.<sup class="ref"><a href="#z2">2</a></sup></p>
+<ul>
+  <li><dfn>GDDR</dfn> (herní karty): samostatné paměťové čipy kolem GPU, kompromis mezi propustností, cenou a kapacitou.<sup class="ref"><a href="#z7">7</a></sup></li>
+  <li><dfn>HBM</dfn> (akcelerátory AI): paměťové čipy naskládané na sebe, propojené svisle skrz křemík a umístěné v jednom pouzdře s čipem. Výrazně vyšší propustnost, ale dražší.<sup class="ref"><a href="#z7">7</a></sup></li>
+</ul>
+<p>Když se data hry do VRAM nevejdou, musí se dočítat přes PCIe z RAM a hra se zadrhává. Kapacita VRAM proto omezuje rozlišení a kvalitu textur.</p>
+</section>
+
+<section id="typy">
+<h2>Integrovaná a samostatná grafika</h2>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Integrovaná</th><th>Samostatná</th><th>Sdílená paměť (unified)</th></tr></thead>
+<tbody>
+<tr><td>Kde je</td><td>v procesoru</td><td>na kartě v PCIe slotu</td><td>v jednom pouzdře s procesorem</td></tr>
+<tr><td>Paměť</td><td>část běžné RAM</td><td>vlastní VRAM</td><td>jedna společná paměť pro CPU i GPU</td></tr>
+<tr><td>Výkon</td><td>kancelář, video, lehčí hry</td><td>nejvyšší</td><td>podle čipu, vysoká propustnost paměti</td></tr>
+<tr><td>Spotřeba a cena</td><td>nízká</td><td>vysoká</td><td>nízká až střední</td></tr>
+<tr><td>Příklad</td><td>většina notebooků</td><td>herní PC</td><td>Apple M1 a novější<sup class="ref"><a href="#z8">8</a></sup></td></tr>
+</tbody></table></div>
+<p>U sdílené paměti se data nemusí kopírovat mezi RAM a VRAM a procesor i grafika k nim mají rychlý přístup.<sup class="ref"><a href="#z8">8</a></sup></p>
+</section>
+
+<section id="ai">
+<h2>GPU a umělá inteligence</h2>
+<p>Výpočet neuronové sítě je z velké části <strong>násobení matic</strong>. Při násobení dvou matic n × n vznikne n² prvků výsledku a každý se počítá nezávisle na ostatních, celkem n³ násobení. Pro n = 4096 je to přes 68 miliard násobení, která se dají rozdělit mezi tisíce jader stejně jako pixely.</p>
+<div class="calc">
+  <div class="calc-row"><label>n<input type="number" id="mN" value="4096" min="1" step="1"></label></div>
+  <p class="calc-out" id="mOut"></p>
+</div>
+<ul>
+  <li><strong>2006:</strong> Nvidia vydala platformu <dfn>CUDA</dfn>, se kterou jde grafickou kartu použít na libovolné výpočty, nejen na grafiku.<sup class="ref"><a href="#z1">1</a></sup></li>
+  <li><strong>2012:</strong> neuronová síť <strong>AlexNet</strong> (Krizhevsky, Sutskever, Hinton) s velkým náskokem vyhrála soutěž v rozpoznávání obrázků ImageNet. Trénovala se pět až šest dní na dvou herních kartách GTX 580. Práce pomohla ustavit GPU jako hlavní nástroj pro trénování hlubokých sítí.<sup class="ref"><a href="#z6">6</a></sup></li>
+  <li><strong>2018:</strong> herní karty dostaly <dfn>Tensor jádra</dfn> specializovaná na výpočty AI. Hry je využívají například k dopočítání obrazu ve vyšším rozlišení (DLSS).<sup class="ref"><a href="#z5">5</a></sup></li>
+</ul>
+</section>
+
+<section id="historie">
+<h2>Historie</h2>
+<ol class="timeline">
+  <li><span class="yr">1999</span> <span class="ev">GeForce 256</span><span class="d">Nvidia ji představila jako první GPU. Na jeden čip přesunula transformace a osvětlení 3D scény, které dřív počítal procesor.<sup class="ref"><a href="#z4">4</a></sup></span></li>
+  <li><span class="yr">2006</span> <span class="ev">CUDA</span><span class="d">Grafická karta se otevřela obecným výpočtům.<sup class="ref"><a href="#z1">1</a></sup></span></li>
+  <li><span class="yr">2012</span> <span class="ev">AlexNet</span><span class="d">Začátek moderní AI trénované na GPU.<sup class="ref"><a href="#z6">6</a></sup></span></li>
+  <li><span class="yr">2018</span> <span class="ev">GeForce RTX 20</span><span class="d">První spotřebitelské karty se sledováním paprsků v reálném čase a jádry pro AI.<sup class="ref"><a href="#z5">5</a></sup></span></li>
+  <li><span class="yr">2025</span> <span class="ev">GeForce RTX 5090</span><span class="d">92,2 miliardy tranzistorů a příkon 575 W.<sup class="ref"><a href="#z2">2</a></sup></span></li>
+</ol>
+</section>
+
+<p class="part">Zobrazení</p>
+
+<section id="monitor">
+<h2>Monitor</h2>
+<ul>
+  <li><strong>Rozlišení</strong>: počet pixelů. Full HD 1920 × 1080, QHD 2560 × 1440, 4K 3840 × 2160. Ostrost záleží i na úhlopříčce: stejné rozlišení na větším monitoru znamená větší pixely.</li>
+  <li><strong>Obnovovací frekvence</strong> v Hz: kolikrát za sekundu monitor překreslí obraz. 60 Hz stačí na práci, pro hry se volí 144 Hz a víc.</li>
+  <li><strong>Typ panelu</strong>: IPS (věrné barvy, dobré pozorovací úhly), VA (vyšší kontrast), OLED (každý pixel svítí sám, dokonalá černá a rychlá odezva, statický obraz ale může panel časem opotřebovat).</li>
+  <li><strong>Odezva</strong>: jak rychle pixel změní barvu. Pomalá odezva rozmazává pohyb.</li>
+  <li><strong>Adaptivní synchronizace</strong>: monitor přizpůsobí frekvenci tomu, jak rychle karta posílá snímky, a obraz se netrhá.</li>
+</ul>
+</section>
+
+<section id="kabely">
+<h2>HDMI a DisplayPort</h2>
+<p>Obraz se do monitoru posílá nekomprimovaný. Jeho datový tok je obrovský a dá se spočítat stejně jako velikost obrázku v tématu Pixel po pixelu, jen se ještě vynásobí počtem snímků za sekundu:</p>
+<pre><code>datový tok (b/s) = šířka × výška × bitů na pixel × obnovovací frekvence
+4K, 24 bitů, 144 Hz: 3840 × 2160 × 24 × 144 ≈ 28,7 Gb/s</code></pre>
+<div class="calc">
+  <div class="calc-row">
+    <label>Šířka<input type="number" id="dW" value="3840" min="1" step="1"></label>
+    <label>Výška<input type="number" id="dH" value="2160" min="1" step="1"></label>
+    <label>Bitů na pixel<input type="number" id="dB" value="24" min="1" step="1"></label>
+    <label>Hz<input type="number" id="dF" value="144" min="1" step="1"></label>
+  </div>
+  <p class="calc-out" id="dOut"></p>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Rozhraní</th><th>Kapacita</th></tr></thead>
+<tbody>
+<tr><td>HDMI 2.1 (2017)</td><td class="num">až 48 Gb/s; 4K při 120 Hz, 8K při 60 Hz<sup class="ref"><a href="#z9">9</a></sup></td></tr>
+<tr><td>DisplayPort 2.1</td><td class="num">až 80 Gb/s (UHBR20, 4 linky po 20 Gb/s)<sup class="ref"><a href="#z10">10</a></sup></td></tr>
+</tbody></table></div>
+<p>Skutečný tok je o něco vyšší kvůli synchronizační režii. Když se obraz do kabelu nevejde, přenáší se komprimovaně (DSC).<sup class="ref"><a href="#z10">10</a></sup> HDMI je běžné u televizí a konzolí, DisplayPort u počítačových monitorů.</p>
+</section>
+
+<section id="omyly">
+<h2>Časté omyly</h2>
+<div class="tbl"><table>
+<thead><tr><th>Omyl</th><th>Jak to je</th></tr></thead>
+<tbody>
+<tr><td>GPU je prostě rychlejší procesor.</td><td>GPU je rychlejší jen na úlohy, které jdou rozdělit na tisíce nezávislých částí.</td></tr>
+<tr><td>Víc VRAM = rychlejší karta.</td><td>Kapacita určuje, kolik dat se vejde. Rychlost závisí na čipu a propustnosti paměti.</td></tr>
+<tr><td>Monitor 60 Hz ukáže 200 fps.</td><td>Zobrazí jen 60 snímků za sekundu.</td></tr>
+<tr><td>Integrovaná grafika má vlastní paměť.</td><td>Používá část RAM.</td></tr>
+<tr><td>Grafická karta slouží jen na hry.</td><td>Používá se na střih videa, 3D, vědecké výpočty a hlavně AI.</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">K maturitě</p>
+
+<section id="osnova">
+<h2>Jak odpovídat u maturity</h2>
+<ol class="plan">
+  <li><b>CPU a GPU:</b> rozdíl v návrhu, kdy se hodí které.</li>
+  <li><b>Grafická karta:</b> čip, VRAM, napájení, chlazení, PCIe ×16, výstupy.</li>
+  <li><b>Vykreslování:</b> vrcholy, rasterizace, stínování, z-buffer; sledování paprsků.</li>
+  <li><b>VRAM:</b> proč existuje, GDDR a HBM, porovnání propustnosti s RAM.</li>
+  <li><b>Typy grafiky:</b> integrovaná, samostatná, sdílená paměť.</li>
+  <li><b>GPU a AI:</b> násobení matic, CUDA, AlexNet.</li>
+  <li><b>Monitor:</b> rozlišení, Hz, panel; výpočet datového toku; HDMI a DisplayPort.</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Proč má GPU tisíce jader a CPU jen desítky?</summary><div class="a"><p>CPU věnuje tranzistory cache a řízení, aby co nejrychleji provedl jednu posloupnost instrukcí. GPU je věnuje výpočetním jednotkám, aby zpracovalo tisíce vláken najednou. Jádra GPU jsou proto jednodušší a je jich víc.</p></div></details>
+<details class="q"><summary>Proč GPU nenahradí CPU?</summary><div class="a"><p>Úlohy, kde každý krok závisí na předchozím (logika programu, operační systém), nejdou rozdělit mezi tisíce jader. Na ty je rychlejší CPU.</p></div></details>
+<details class="q"><summary>Popiš kroky vykreslení snímku.</summary><div class="a"><p>Zpracování vrcholů (přepočet do pohledu kamery), rasterizace (trojúhelníky na fragmenty), stínování pixelů (barva, textura, světlo), test hloubky (z-buffer).</p></div></details>
+<details class="q"><summary>Kolik času má karta na snímek při 144 fps?</summary><div class="a"><p>1000 ÷ 144 ≈ 6,9 ms.</p></div></details>
+<details class="q"><summary>Proč má grafická karta vlastní paměť?</summary><div class="a"><p>GPU potřebuje obrovskou propustnost: RTX 5090 má asi 1 792 GB/s, běžná RAM asi 96 GB/s a spojení PCIe 5.0 ×16 asi 63 GB/s.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi integrovanou a samostatnou grafikou?</summary><div class="a"><p>Integrovaná je v procesoru a používá část RAM, je úsporná a levná. Samostatná má vlastní čip, VRAM, napájení a chlazení a je mnohem výkonnější.</p></div></details>
+<details class="q"><summary>Proč se neuronové sítě trénují na GPU?</summary><div class="a"><p>Jejich výpočet je hlavně násobení matic, kde se každý prvek výsledku počítá nezávisle, takže se dá rozdělit mezi tisíce jader.</p></div></details>
+<details class="q"><summary>Co znamenala AlexNet pro GPU?</summary><div class="a"><p>V roce 2012 vyhrála soutěž ImageNet s velkým náskokem a trénovala se na dvou herních kartách GTX 580. Ukázala, že GPU umožní trénovat hluboké sítě.</p></div></details>
+<details class="q"><summary>Spočítej nekomprimovaný datový tok pro Full HD, 24 bitů, 60 Hz.</summary><div class="a"><p>1920 × 1080 × 24 × 60 ≈ 2,99 Gb/s.</p></div></details>
+<details class="q"><summary>Čím se liší panely IPS, VA a OLED?</summary><div class="a"><p>IPS: věrné barvy a úhly. VA: vyšší kontrast. OLED: každý pixel svítí sám, dokonalá černá, rychlá odezva, riziko opotřebení statickým obrazem.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>GPU</dt><dd>grafický procesor s tisíci jednoduchých jader</dd>
+  <dt>VRAM</dt><dd>grafická paměť karty</dd>
+  <dt>GDDR</dt><dd>typ grafické paměti pro herní karty</dd>
+  <dt>HBM</dt><dd>paměť z čipů naskládaných na sebe, v pouzdře s procesorem</dd>
+  <dt>Shader</dt><dd>program, který GPU spouští pro každý vrchol nebo pixel</dd>
+  <dt>Rasterizace</dt><dd>převod trojúhelníků na pixely</dd>
+  <dt>Z-buffer</dt><dd>paměť hloubky pro každý pixel</dd>
+  <dt>Ray tracing</dt><dd>vykreslování sledováním paprsků světla</dd>
+  <dt>fps</dt><dd>snímky za sekundu</dd>
+  <dt>Integrovaná grafika</dt><dd>grafika v procesoru, používá RAM</dd>
+  <dt>Unified memory</dt><dd>jedna paměť sdílená procesorem a grafikou</dd>
+  <dt>CUDA</dt><dd>platforma Nvidie pro obecné výpočty na GPU</dd>
+  <dt>Tensor jádra</dt><dd>obvody GPU pro násobení matic v AI</dd>
+  <dt>Obnovovací frekvence</dt><dd>kolikrát za sekundu monitor překreslí obraz</dd>
+  <dt>HDMI, DisplayPort</dt><dd>rozhraní pro přenos obrazu do monitoru</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v říjnu 2026.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/introduction.html">NVIDIA: CUDA Programming Guide, Introduction</a></li>
+  <li id="z2"><a href="https://www.notebookcheck.net/NVIDIA-GeForce-RTX-5090-Benchmarks-and-Specs.935680.0.html">Notebookcheck: NVIDIA GeForce RTX 5090</a></li>
+  <li id="z3"><a href="https://cg.informatik.uni-freiburg.de/course_notes/graphics_05_rasterization.pdf">Univerzita Freiburg: Rasterization (přednáška)</a></li>
+  <li id="z4"><a href="https://en.wikipedia.org/wiki/GeForce_256">Wikipedia: GeForce 256</a></li>
+  <li id="z5"><a href="https://en.wikipedia.org/wiki/Turing_(microarchitecture)">Wikipedia: Turing (microarchitecture)</a></li>
+  <li id="z6"><a href="https://en.wikipedia.org/wiki/AlexNet">Wikipedia: AlexNet</a></li>
+  <li id="z7"><a href="https://www.cadence.com/en_US/home/explore/high-bandwidth-memory-hbm.html">Cadence: High Bandwidth Memory</a></li>
+  <li id="z8"><a href="https://techterms.com/definition/unified_memory_architecture">TechTerms: Unified Memory Architecture</a></li>
+  <li id="z9"><a href="https://www.cepro.com/news/new_hdmi_2_1_specification_supports_8k60hz_with_hdr_4k120hz/">CE Pro: HDMI 2.1 Specification</a></li>
+  <li id="z10"><a href="https://kb.plugable.com/docking-stations-and-video/understanding-displayport-21">Plugable: Understanding DisplayPort 2.1</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k tématu Hardware a operační systémy.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function num(id) { var v = parseFloat($(id).value); return isFinite(v) ? v : 0; }
+  function cz(v, d) { return v.toLocaleString('cs-CZ', { maximumFractionDigits: d == null ? 2 : d }); }
+  function big(n) { if (n >= 1e12) return cz(n / 1e12, 2) + ' bil.'; if (n >= 1e9) return cz(n / 1e9, 2) + ' mld.'; if (n >= 1e6) return cz(n / 1e6, 2) + ' mil.'; return cz(n, 0); }
+  function bind(ids, fn) { ids.forEach(function (i) { $(i).addEventListener('input', fn); }); fn(); }
+  bind(['fF', 'fW', 'fH'], function () {
+    var f = num('fF'); if (f <= 0) { $('fOut').textContent = ''; return; }
+    $('fOut').innerHTML = 'čas na snímek <b>' + cz(1000 / f, 2) + ' ms</b> · pixelů ve snímku <b>' + big(num('fW') * num('fH')) + '</b> · pixelů za sekundu <b>' + big(num('fW') * num('fH') * f) + '</b>';
+  });
+  bind(['mN'], function () {
+    var n = num('mN');
+    $('mOut').innerHTML = 'prvků výsledku <b>' + big(n * n) + '</b> · násobení <b>' + big(n * n * n) + '</b>';
+  });
+  bind(['dW', 'dH', 'dB', 'dF'], function () {
+    var g = num('dW') * num('dH') * num('dB') * num('dF') / 1e9;
+    $('dOut').innerHTML = 'datový tok <b>' + cz(g, 2) + ' Gb/s</b> · HDMI 2.1 (48 Gb/s): <b>' + (g <= 48 ? 'vejde se' : 'nevejde se') + '</b> · DisplayPort 2.1 (80 Gb/s): <b>' + (g <= 80 ? 'vejde se' : 'nevejde se') + '</b>';
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Grafická karta</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Hardware a operační systémy · 6. materiál</div>
+      <h1>Grafická karta</h1>
+      <p class="lede">Proč má grafický čip tisíce jednoduchých jader, k čemu potřebuje vlastní paměť, jak vzniká snímek hry a proč se na grafických kartách dnes trénuje umělá inteligence. Na konci monitor a kabely.</p>
+      <p class="hint">Navazuje na materiály Procesor a paměti a Základní deska a sběrnice. Zdroje jsou na posledním snímku.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">CPU a GPU</div>
+      <h2 class="slide-title">Pár silných, nebo tisíce slabých?</h2>
+      <p class="lede">Procesor je navržený, aby co nejrychleji provedl <b>jednu posloupnost</b> instrukcí: víc tranzistorů věnuje cache a řízení. Grafický čip je navržený pro <b>tisíce vláken naráz</b>: víc tranzistorů věnuje výpočetním jednotkám. Zkus obarvit obraz 32 × 18 pixelů.</p>
+      <div class="paint-wrap">
+        <div class="paint-box"><h3>CPU: 8 rychlých jader</h3><div class="paint" id="pCpu"></div><p class="paint-t" id="tCpu">takt 0</p></div>
+        <div class="paint-box"><h3>GPU: 288 jednoduchých jader</h3><div class="paint gpu" id="pGpu"></div><p class="paint-t" id="tGpu">takt 0</p></div>
+      </div>
+      <div class="toolbar"><button class="calc-btn" id="paintGo">▶ Malovat</button><span class="note">Zjednodušený model: jádro CPU obarví pixel za 1 takt, jádro GPU za 4 takty.</span></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Co je na kartě</div>
+      <h2 class="slide-title">Samostatný počítač v počítači</h2>
+      <div class="cards4" id="gpuCards"></div>
+      <div class="panel" id="gpuPanel"></div>
+      <p class="tiny">Příklad Nvidia GeForce RTX 5090 (2025): 21 760 jader CUDA, 92,2 miliardy tranzistorů, 32 GB GDDR7 na 512bitové sběrnici s propustností 1 792 GB/s, příkon 575 W, PCIe 5.0.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Vykreslování</div>
+      <h2 class="slide-title">Jak vznikne jeden snímek hry</h2>
+      <div class="cards4" id="pipeCards"></div>
+      <div class="panel" id="pipePanel"></div>
+      <p class="tiny">Každý vrchol a každý pixel se počítá nezávisle na ostatních. Proto se práce dá rozdělit mezi tisíce jader.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Snímky za sekundu</div>
+      <h2 class="slide-title">Kolik času má karta na jeden snímek</h2>
+      <div class="sliders">
+        <div class="sl"><label for="fFps">Snímků za sekundu</label><input type="range" id="fFps" min="30" max="360" step="10" value="144"><output id="oFps"></output></div>
+      </div>
+      <div class="toolbar"><div class="seg" id="fRes"></div></div>
+      <div class="bignum">
+        <div><span>Čas na jeden snímek</span><b id="fMs"></b><small>1000 ms ÷ fps</small></div>
+        <div><span>Pixelů ve snímku</span><b id="fPx"></b><small>šířka × výška</small></div>
+        <div><span>Pixelů za sekundu</span><b id="fPs"></b><small>každý je třeba spočítat</small></div>
+      </div>
+      <p class="note">Monitor s obnovovací frekvencí 144 Hz zobrazí nejvýš 144 snímků za sekundu. Když karta nestíhá, hra se zadrhává. Když stíhá víc, než zvládne monitor, navíc spočítané snímky nevidíš.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">VRAM</div>
+      <h2 class="slide-title">Proč má karta vlastní paměť</h2>
+      <p class="lede">Textury, modely a rozpracované snímky musí GPU číst neustále a všemi jádry najednou. Proto má vlastní <b>grafickou paměť</b> (VRAM) s obrovskou propustností, přímo vedle čipu.</p>
+      <div class="ladder" id="vramLad"></div>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">GDDR (herní karty)</div><div class="compare-body">Samostatné čipy rozmístěné kolem GPU na desce karty. Kompromis mezi propustností, cenou a kapacitou.</div></div>
+        <div class="compare-col"><div class="compare-head">HBM (akcelerátory AI)</div><div class="compare-body">Paměťové čipy naskládané na sebe a propojené svisle skrz křemík, umístěné v jednom pouzdře s čipem. Mnohem vyšší propustnost, ale dražší.</div></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Typy grafiky</div>
+      <h2 class="slide-title">Integrovaná, samostatná, sdílená paměť</h2>
+      <div class="cards4" id="typeCards"></div>
+      <div class="panel" id="typePanel"></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Umělá inteligence</div>
+      <h2 class="slide-title">Proč se AI počítá na grafických kartách</h2>
+      <p class="lede">Neuronová síť je hlavně <b>násobení matic</b>. Každý prvek výsledku se počítá nezávisle na ostatních, takže výpočet se dá rozdělit mezi tisíce jader stejně jako pixely.</p>
+      <div class="sliders">
+        <div class="sl"><label for="mN">Velikost matice n × n</label><input type="range" id="mN" min="2" max="14" step="1" value="12"><output id="oN"></output></div>
+      </div>
+      <div class="bignum">
+        <div><span>Prvků výsledku</span><b id="mEl"></b><small>n², každý lze počítat zvlášť</small></div>
+        <div><span>Násobení celkem</span><b id="mMul"></b><small>n³</small></div>
+      </div>
+      <div class="cards4" id="aiCards"></div>
+      <div class="panel" id="aiPanel"></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Monitor</div>
+      <h2 class="slide-title">Vejde se obraz do kabelu?</h2>
+      <p class="lede">Nekomprimovaný obraz: šířka × výška × 24 bitů × obnovovací frekvence. Porovnej s kapacitou rozhraní.</p>
+      <div class="toolbar"><div class="seg" id="mRes"></div><div class="seg" id="mHz"></div></div>
+      <div class="bignum">
+        <div><span>Potřebný datový tok</span><b id="mRate"></b><small>bez režie, 24 bitů na pixel</small></div>
+        <div><span>HDMI 2.1</span><b id="mHdmi"></b><small>48 Gb/s</small></div>
+        <div><span>DisplayPort 2.1</span><b id="mDp"></b><small>až 80 Gb/s (UHBR20)</small></div>
+      </div>
+      <p class="tiny">Skutečný tok je o něco vyšší (synchronizační režie). Když se obraz nevejde, přenáší se komprimovaně (DSC). Výpočet navazuje na téma Pixel po pixelu.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Monitor</div>
+      <h2 class="slide-title">Parametry, které rozhodují</h2>
+      <div class="cards4" id="monCards"></div>
+      <div class="panel" id="monPanel"></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Historie</div>
+      <h2 class="slide-title">Od grafického akcelerátoru k AI</h2>
+      <div class="cards4" id="histCards"></div>
+      <div class="panel" id="histPanel"></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Pravda, nebo ne?</h2>
+      <p class="score" id="qScore"></p>
+      <div class="clue" id="qText"></div>
+      <div class="seg"><button class="calc-btn" data-a="1">Pravda</button><button class="calc-btn" data-a="0">Není pravda</button><button class="calc-btn" id="qNext" hidden>Další →</button></div>
+      <div class="feedback" id="qFb"></div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>CPU: <b>málo silných jader</b> pro rychlý sled instrukcí. GPU: <b>tisíce jednoduchých jader</b> pro stejný výpočet na obrovském množství dat.</li>
+        <li>Snímek vzniká z vrcholů, rasterizace a stínování pixelů. Každý pixel se počítá zvlášť, proto to jde paralelně.</li>
+        <li><b>VRAM</b> má mnohonásobně vyšší propustnost než RAM. Integrovaná grafika sdílí RAM s procesorem.</li>
+        <li>Neuronové sítě = násobení matic, také dobře paralelní. Proto se AI trénuje na GPU.</li>
+        <li>Monitor: rozlišení, obnovovací frekvence, panel. Datový tok = šířka × výška × bity × Hz.</li>
+      </ul>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud čísla jsou</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Grafický čip</h3><ul class="src-list">
+          <li><a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/introduction.html" target="_blank" rel="noopener">NVIDIA: CUDA Programming Guide, Introduction</a></li>
+          <li><a href="https://www.notebookcheck.net/NVIDIA-GeForce-RTX-5090-Benchmarks-and-Specs.935680.0.html" target="_blank" rel="noopener">Notebookcheck: GeForce RTX 5090</a></li>
+          <li><a href="https://cg.informatik.uni-freiburg.de/course_notes/graphics_05_rasterization.pdf" target="_blank" rel="noopener">Univerzita Freiburg: Rasterization</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/GeForce_256" target="_blank" rel="noopener">Wikipedia: GeForce 256</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Turing_(microarchitecture)" target="_blank" rel="noopener">Wikipedia: Turing (microarchitecture)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/AlexNet" target="_blank" rel="noopener">Wikipedia: AlexNet</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Paměť a monitor</h3><ul class="src-list">
+          <li><a href="https://www.cadence.com/en_US/home/explore/high-bandwidth-memory-hbm.html" target="_blank" rel="noopener">Cadence: High Bandwidth Memory</a></li>
+          <li><a href="https://techterms.com/definition/unified_memory_architecture" target="_blank" rel="noopener">TechTerms: Unified Memory Architecture</a></li>
+          <li><a href="https://www.cepro.com/news/new_hdmi_2_1_specification_supports_8k60hz_with_hdr_4k120hz/" target="_blank" rel="noopener">CE Pro: HDMI 2.1, 48 Gb/s</a></li>
+          <li><a href="https://kb.plugable.com/docking-stations-and-video/understanding-displayport-21" target="_blank" rel="noopener">Plugable: Understanding DisplayPort 2.1</a></li>
+          <li><a href="https://chipsandcheese.com/p/amds-ryzen-9950x-zen-5-on-desktop" target="_blank" rel="noopener">Chips and Cheese: Ryzen 9950X (propustnost RAM)</a></li>
+        </ul></div>
+      </div>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var NS="http://www.w3.org/2000/svg";
+  function sv(tag,a,t){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e;}
+  function fmt(n,d){return n.toLocaleString("cs-CZ",{maximumFractionDigits:d==null?1:d});}
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- navigace ---------- */
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function picker(host,items,mk,panel,show){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;show(it,i);
+      });host.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");show(items[0],0);
+    if(panel)fits.push({slide:host.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){show(it,i,true);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";show(items[act],act,true);
+    }});
+  }
+  function modeSwitch(host,onChange){
+    Array.prototype.forEach.call(host.children,function(b){
+      b.addEventListener("click",function(){
+        Array.prototype.forEach.call(host.children,function(x){x.classList.toggle("is-active",x===b);});
+        onChange(b.dataset.m);
+      });
+    });
+  }
+  function segButtons(host,items,label,onPick,start){
+    var btns=[];
+    items.forEach(function(it,i){
+      var b=el("button","calc-btn"+(i===(start||0)?" is-active":""),label(it));
+      b.addEventListener("click",function(){btns.forEach(function(x){x.classList.toggle("is-active",x===b);});onPick(it,i);});
+      host.appendChild(b);btns.push(b);
+    });
+    return btns;
+  }
+
+  function cards(host,panel,items){picker($(host),items,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$(panel),function(c){$(panel).innerHTML="<h3>"+c.n+"</h3><p>"+c.d+"</p>";});}
+
+  /* ---------- 1: malování CPU vs GPU ---------- */
+  var W=32,H=18,N=W*H,cpuC=[],gpuC=[],timer=null;
+  for(var i=0;i<N;i++){cpuC.push($("pCpu").appendChild(el("i")));gpuC.push($("pGpu").appendChild(el("i")));}
+  function paintReset(){cpuC.concat(gpuC).forEach(function(c){c.classList.remove("on");});$("tCpu").textContent="takt 0";$("tGpu").textContent="takt 0";}
+  $("paintGo").addEventListener("click",function(){
+    if(timer)clearInterval(timer);paintReset();var t=0,cpuDone=0,gpuDone=0;
+    function step(){
+      t++;
+      if(cpuDone<N){for(var k=0;k<8&&cpuDone<N;k++)cpuC[cpuDone++].classList.add("on");$("tCpu").innerHTML="takt <b>"+t+"</b>"+(cpuDone>=N?" · hotovo":"");}
+      if(gpuDone<N&&t%4===0){for(var k=0;k<288&&gpuDone<N;k++)gpuC[gpuDone++].classList.add("on");$("tGpu").innerHTML="takt <b>"+t+"</b>"+(gpuDone>=N?" · hotovo":"");}
+      else if(gpuDone<N)$("tGpu").innerHTML="takt <b>"+t+"</b>";
+      if(cpuDone>=N&&gpuDone>=N){clearInterval(timer);timer=null;}
+    }
+    if(reduce){while(cpuDone<N||gpuDone<N)step();}else timer=setInterval(step,60);
+  });
+
+  /* ---------- 2: co je na kartě ---------- */
+  cards("gpuCards","gpuPanel",[
+    {n:"Grafický čip (GPU)",s:"tisíce jader",d:"Tisíce jednoduchých výpočetních jader seskupených do bloků, které provádějí stejnou instrukci na mnoha datech najednou. Plus specializované obvody, například pro dekódování videa, sledování paprsků nebo výpočty AI."},
+    {n:"Grafická paměť",s:"VRAM, GDDR7",d:"Vlastní rychlá paměť přímo kolem čipu. Drží textury, modely a rozpracované snímky. Široká sběrnice (u RTX 5090 512 bitů) dává propustnost kolem 1,8 TB/s."},
+    {n:"Napájení",s:"VRM + konektor",d:"Výkonná karta odebírá stovky wattů, víc než celý zbytek počítače. Kromě slotu PCIe (do 75 W) dostává proud kabely přímo ze zdroje."},
+    {n:"Chladič",s:"teplo pryč",d:"Velký chladič s ventilátory zabírá většinu objemu karty. Všech 575 W, které RTX 5090 odebere, se změní v teplo."},
+    {n:"Slot PCIe ×16",s:"spojení s procesorem",d:"Karta je připojená šestnácti linkami PCI Express přímo k procesoru. Přes ně dostává data a příkazy, co má vykreslit nebo spočítat."},
+    {n:"Výstupy",s:"HDMI, DisplayPort",d:"Konektory pro monitory. Hotový snímek z paměti karty se odtud posílá do monitoru."}
+  ]);
+
+  /* ---------- 3: vykreslování ---------- */
+  cards("pipeCards","pipePanel",[
+    {n:"1. Vrcholy",s:"vertex shader",d:"Hra pošle trojúhelníky, ze kterých jsou postavené objekty. Každý vrchol se přepočítá z prostoru světa do pohledu kamery. Tisíce vrcholů se počítají najednou."},
+    {n:"2. Rasterizace",s:"trojúhelník → pixely",d:"Každý trojúhelník se převede na fragmenty, tedy kandidáty na pixely obrazovky. Hodnoty z vrcholů (barva, souřadnice textury, hloubka) se dopočítají pro každý pixel uvnitř."},
+    {n:"3. Stínování",s:"pixel shader",d:"Pro každý pixel se spočítá výsledná barva: textura, osvětlení, stíny, mlha. Na monitoru 4K je to přes 8 milionů pixelů v každém snímku."},
+    {n:"4. Hloubka",s:"z-buffer",d:"Pro každý pixel se pamatuje vzdálenost od kamery. Bližší fragment přepíše vzdálenější, takže předměty správně zakrývají ty za sebou."},
+    {n:"Sledování paprsků",s:"ray tracing",d:"Místo rasterizace se sledují paprsky světla od kamery do scény a jejich odrazy. Dává realistické stíny a odrazy, ale je výpočetně náročné. Od roku 2018 mají herní karty pro sledování paprsků vlastní jádra."}
+  ]);
+
+  /* ---------- 4: fps ---------- */
+  var RES=[["Full HD",1920,1080],["QHD",2560,1440],["4K",3840,2160]],rI=1;
+  segButtons($("fRes"),RES,function(r){return r[0]+" "+r[1]+"×"+r[2];},function(r,i){rI=i;fpsCalc();},1);
+  function big(n){if(n>=1e9)return fmt(n/1e9,2)+" mld.";if(n>=1e6)return fmt(n/1e6,1)+" mil.";return fmt(n,0);}
+  function fpsCalc(){var f=+$("fFps").value,r=RES[rI],px=r[1]*r[2];$("oFps").textContent=f;$("fMs").textContent=fmt(1000/f,1)+" ms";$("fPx").textContent=big(px);$("fPs").textContent=big(px*f);}
+  $("fFps").addEventListener("input",fpsCalc);fpsCalc();
+
+  /* ---------- 5: VRAM ---------- */
+  var VR=[{n:"RAM DDR5, 2 kanály",v:96,k:"k-ram"},{n:"PCIe 5.0 ×16",v:63,k:"k-sto"},{n:"VRAM RTX 5090",v:1792,k:""}],vrRows=[];
+  VR.forEach(function(x){var b=el("div","lad-row",'<span class="lad-name">'+x.n+'</span><span class="lad-track"><span class="lad-bar '+x.k+'"></span><span class="lad-val">'+fmt(x.v,0)+' GB/s</span></span>');$("vramLad").appendChild(b);b.querySelector(".lad-bar").style.width="calc("+(x.v/1792*100).toFixed(1)+"% - 5.5rem)";});
+
+  /* ---------- 6: typy grafiky ---------- */
+  cards("typeCards","typePanel",[
+    {n:"Integrovaná",s:"v procesoru",d:"Grafická jádra jsou přímo v procesoru a jako paměť používají část běžné RAM. Levná a úsporná, stačí na kancelář, video a lehčí hry. Notebooky a většina stolních procesorů ji mají."},
+    {n:"Samostatná",s:"karta v PCIe",d:"Vlastní čip, vlastní VRAM, vlastní chlazení a napájení. Mnohonásobně výkonnější, ale drahá a s velkou spotřebou. Pro hry, střih videa, 3D a AI."},
+    {n:"Sdílená paměť",s:"unified memory",d:"Procesor i grafika sdílejí jednu společnou paměť ve stejném pouzdře. Apple tento přístup zpopularizoval čipy M1 (2020). Data se nemusí kopírovat mezi RAM a VRAM a grafika může využít velkou část paměti, což se hodí i pro AI modely."}
+  ]);
+
+  /* ---------- 7: AI ---------- */
+  function mCalc(){var n=Math.pow(2,+$("mN").value);$("oN").textContent=fmt(n,0);$("mEl").textContent=big(n*n);$("mMul").textContent=big(n*n*n);}
+  $("mN").addEventListener("input",mCalc);mCalc();
+  cards("aiCards","aiPanel",[
+    {n:"2006 · CUDA",s:"GPU pro výpočty",d:"Nvidia vydala platformu CUDA. Programátoři mohli poprvé snadno používat grafickou kartu na libovolné výpočty, ne jen na grafiku."},
+    {n:"2012 · AlexNet",s:"zlom v AI",d:"Neuronová síť AlexNet (Krizhevsky, Sutskever, Hinton) vyhrála soutěž v rozpoznávání obrázků ImageNet s velkým náskokem. Trénovala se pět až šest dní na dvou herních kartách GTX 580. Od té doby se hluboké sítě trénují na GPU."},
+    {n:"2018 · Tensor jádra",s:"obvody pro AI",d:"Herní karty dostaly specializovaná jádra pro násobení matic. Využívá je i hra: technologie DLSS dopočítá obraz ve vyšším rozlišení pomocí neuronové sítě."}
+  ]);
+
+  /* ---------- 8: datový tok monitoru ---------- */
+  var MR=[["Full HD",1920,1080],["QHD",2560,1440],["4K",3840,2160],["8K",7680,4320]],MHZ=[60,144,240],mrI=2,mhI=1;
+  segButtons($("mRes"),MR,function(r){return r[0];},function(r,i){mrI=i;mon();},2);
+  segButtons($("mHz"),MHZ,function(h){return h+" Hz";},function(h,i){mhI=i;mon();},1);
+  function mon(){var r=MR[mrI],g=r[1]*r[2]*24*MHZ[mhI]/1e9;$("mRate").textContent=fmt(g,1)+" Gb/s";
+    $("mHdmi").textContent=g<=48?"vejde se":"nevejde se";$("mDp").textContent=g<=80?"vejde se":"nevejde se";}
+  mon();
+
+  /* ---------- 9: monitor ---------- */
+  cards("monCards","monPanel",[
+    {n:"Rozlišení",s:"počet pixelů",d:"Full HD 1920 × 1080, QHD 2560 × 1440, 4K 3840 × 2160. Vyšší rozlišení = ostřejší obraz, ale grafika musí spočítat víc pixelů. Ostrost závisí i na úhlopříčce: stejné rozlišení na větším monitoru znamená větší pixely."},
+    {n:"Obnovovací frekvence",s:"Hz",d:"Kolikrát za sekundu monitor překreslí obraz. 60 Hz stačí na práci, hráči volí 144 Hz a víc kvůli plynulosti a rychlejší reakci. Při 144 Hz trvá jeden snímek asi 6,9 ms."},
+    {n:"Typ panelu",s:"IPS, VA, OLED",d:"IPS: věrné barvy a dobré pozorovací úhly. VA: vyšší kontrast, hlubší černá. OLED: každý pixel svítí sám, takže černá je opravdu černá a odezva je velmi rychlá; statický obraz ale může panel časem opotřebovat."},
+    {n:"Odezva",s:"ms",d:"Jak rychle pixel změní barvu. Pomalá odezva způsobuje rozmazání pohybu. Udávané hodnoty výrobců se ale měří různě a těžko se porovnávají."},
+    {n:"Synchronizace",s:"adaptivní frekvence",d:"Monitor přizpůsobí obnovovací frekvenci tomu, jak rychle karta snímky posílá. Obraz se netrhá ani když karta nestíhá přesně frekvenci monitoru."}
+  ]);
+
+  /* ---------- 10: historie ---------- */
+  cards("histCards","histPanel",[
+    {n:"1999",s:"GeForce 256",d:"Nvidia ji představila jako první GPU: na jeden čip přesunula transformace a osvětlení 3D scény, které do té doby počítal procesor. Tím procesor ulehčila."},
+    {n:"2006",s:"CUDA",d:"Grafická karta se otevřela obecným výpočtům. Začíná éra GPGPU: fyzikální simulace, kryptografie, později AI."},
+    {n:"2012",s:"AlexNet",d:"Dvě herní karty GTX 580 natrénovaly neuronovou síť, která výrazně překonala ostatní v rozpoznávání obrázků. Začátek moderní AI na GPU."},
+    {n:"2018",s:"RT a Tensor jádra",d:"Řada GeForce RTX 20 (architektura Turing) přinesla první herní karty se sledováním paprsků v reálném čase a jádra pro AI."},
+    {n:"2025",s:"RTX 5090",d:"92,2 miliardy tranzistorů, 21 760 jader CUDA, 32 GB GDDR7, příkon 575 W. Grafická karta je dnes nejsložitější a nejžravější součást herního počítače."}
+  ]);
+
+  /* ---------- 11: kvíz ---------- */
+  var Q=[
+    {t:"GPU má víc jader než CPU, protože jeho jádra jsou jednodušší.",a:1,f:"GPU věnuje tranzistory výpočetním jednotkám, CPU spíš cache a řízení. Jedno jádro GPU je pomalejší, ale je jich tisíce."},
+    {t:"GPU je vždy rychlejší než CPU.",a:0,f:"Jen u úloh, které jdou rozdělit na tisíce nezávislých částí. Sled závislých kroků zvládne rychleji CPU."},
+    {t:"Integrovaná grafika používá část běžné RAM.",a:1,f:"Nemá vlastní VRAM. Sdílí operační paměť s procesorem, a proto má nižší propustnost než samostatná karta."},
+    {t:"VRAM má vyšší propustnost než běžná RAM.",a:1,f:"RTX 5090 má asi 1 792 GB/s, dvoukanálová DDR5-6000 asi 96 GB/s."},
+    {t:"Při 120 snímcích za sekundu má karta na jeden snímek asi 8,3 ms.",a:1,f:"1000 ms ÷ 120 ≈ 8,3 ms."},
+    {t:"Monitor 60 Hz ukáže všech 200 snímků, které karta spočítá.",a:0,f:"Monitor překreslí obraz jen 60krát za sekundu. Ostatní snímky nevidíš."},
+    {t:"Neuronové sítě se trénují na GPU, protože násobení matic jde dobře paralelizovat.",a:1,f:"Každý prvek výsledku se počítá nezávisle, takže práci lze rozdělit mezi tisíce jader."},
+    {t:"Nekomprimovaný 4K obraz při 144 Hz potřebuje asi 29 Gb/s.",a:1,f:"3840 × 2160 × 24 × 144 ≈ 28,7 Gb/s. Vejde se do HDMI 2.1 (48 Gb/s)."},
+    {t:"Rasterizace převádí trojúhelníky na pixely.",a:1,f:"Z trojúhelníků vzniknou fragmenty, kandidáti na pixely, a pak se spočítá jejich barva."},
+    {t:"OLED panel potřebuje podsvícení.",a:0,f:"U OLED svítí každý pixel sám. Proto má dokonale černou."}
+  ];
+  var qI=0,qOk=0,qAns=false,ansBtns=Array.prototype.slice.call(document.querySelectorAll("[data-a]"));
+  function qRender(){
+    qAns=false;var q=Q[qI];
+    $("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qText").textContent=q.t;$("qFb").innerHTML="";$("qNext").hidden=true;
+    ansBtns.forEach(function(b){b.hidden=false;b.disabled=false;b.classList.remove("is-right","is-wrong");});
+  }
+  ansBtns.forEach(function(b){b.addEventListener("click",function(){
+    if(qAns)return;qAns=true;var q=Q[qI],ok=+b.dataset.a===q.a;if(ok)qOk++;
+    ansBtns.forEach(function(x){if(+x.dataset.a===q.a)x.classList.add("is-right");x.disabled=true;});
+    if(!ok)b.classList.add("is-wrong");
+    $("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qFb").innerHTML="<b>"+(ok?"Správně.":"Tentokrát ne.")+"</b> "+q.f;
+    $("qNext").hidden=false;$("qNext").textContent=qI===Q.length-1?"Výsledek":"Další →";
+  });});
+  $("qNext").addEventListener("click",function(){
+    if(qI===Q.length-1){$("qText").innerHTML="<b>Výsledek: "+qOk+" z "+Q.length+".</b>";$("qFb").innerHTML=qOk>=8?"Výborně.":"Vrať se k porovnání CPU a GPU a k výpočtu datového toku.";ansBtns.forEach(function(b){b.hidden=true;});$("qNext").textContent="Znovu";qI=-1;qOk=0;return;}
+    qI++;qRender();
+  });
+  qRender();
+
+  goTo(0);
+})();
+</script>
+</body>
+</html>

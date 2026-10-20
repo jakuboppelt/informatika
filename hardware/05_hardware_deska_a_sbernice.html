@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Základní deska a sběrnice</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Hardware a operační systémy · 5. materiál</div>
+      <h1>Základní deska a sběrnice</h1>
+      <p class="lede">Jak se součástky propojí, napájí a uchladí. Patice a čipset, PCI Express a USB, UEFI a spuštění počítače, zdroj a chlazení. Na konci si sestavíš vlastní počítač.</p>
+      <p class="hint">Navazuje na materiál Procesor a paměti. Zdroje jsou na posledním snímku.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Mapa</div>
+      <h2 class="slide-title">Základní deska propojuje všechno</h2>
+      <div class="toolbar">
+        <div class="modeswitch" id="mbMode"><button class="is-active" data-m="real">Součástky</button><button data-m="roles">Role podle von Neumanna</button></div>
+        <div class="roles-legend" id="mbLegend" hidden><span><i class="r-cpu"></i>procesor (řadič + ALU)</span><span><i class="r-ram"></i>operační paměť</span><span><i class="r-sto"></i>vnější paměť</span><span><i class="r-io"></i>vstup a výstup</span><span><i class="r-bus"></i>sběrnice</span><span><i class="r-x"></i>napájení a firmware</span></div>
+      </div>
+      <div class="split wideL">
+        <svg class="mb" id="mb" viewBox="0 0 760 500" role="img" aria-label="Schéma základní desky"></svg>
+        <div class="panel p-tall" id="mbPanel"></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Formáty desek</div>
+      <h2 class="slide-title">ATX, microATX, Mini-ITX</h2>
+      <p class="lede">Formát určuje rozměry desky a rozmístění otvorů pro šrouby, takže deska pasuje do skříně stejného nebo většího formátu. Standard ATX zavedl Intel v roce 1995.</p>
+      <div class="split r-small">
+        <svg class="mb ff-svg" id="ff" viewBox="0 0 300 232" role="img" aria-label="Porovnání velikosti formátů desek ve stejném měřítku"></svg>
+        <div class="stack">
+          <div class="seg" id="ffSeg"></div>
+          <div class="panel" id="ffPanel"></div>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Patice a čipset</div>
+      <h2 class="slide-title">Procesor musí pasovat do patice</h2>
+      <p class="lede"><b>Patice</b> (socket) je mechanické a elektrické rozhraní pro procesor. Určuje, které procesory a paměti deska podporuje. <b>Čipset</b> je obvod na desce, přes který jsou připojená pomalejší zařízení.</p>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th></th><th>AMD AM5</th><th>Intel LGA1851</th></tr></thead>
+          <tbody>
+            <tr><td>Uvedena</td><td>září 2022</td><td>říjen 2024</td></tr>
+            <tr><td>Kontakty</td><td>1 718 (LGA)</td><td>1 851 (LGA)</td></tr>
+            <tr><td>Paměti</td><td>jen DDR5</td><td>jen DDR5</td></tr>
+            <tr><td>Linky PCIe z procesoru</td><td>podle procesoru a čipsetu, až PCIe 5.0</td><td>PCIe 5.0 ×16 + ×4, PCIe 4.0 ×4</td></tr>
+            <tr><td>Spojení s čipsetem</td><td>PCIe 4.0 ×4 (asi 8 GB/s)</td><td>DMI 4.0 ×8 u Z890 (asi 16 GB/s), ×4 u levnějších</td></tr>
+            <tr><td>Čipsety</td><td>A620, B650, B850, X670, X870 a varianty E</td><td>H810, B860, Z890 a další</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tiny">LGA = land grid array: kontaktní kolíky jsou v patici na desce, procesor má jen plošky. Procesor AMD do desky Intel nepasuje a naopak. Ani starší procesor Intel do novější patice Intel nepasuje.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Topologie</div>
+      <h2 class="slide-title">Kdo je připojený přímo k procesoru</h2>
+      <div class="split wideL">
+        <svg class="mb" id="topo" viewBox="0 0 640 420" role="img" aria-label="Schéma propojení procesoru, pamětí, grafiky a čipsetu"></svg>
+        <div class="panel p-tall" id="topoPanel"></div>
+      </div>
+      <p class="note">Nejrychlejší zařízení mají vlastní linky do procesoru. Všechno za čipsetem se dělí o jedno společné spojení. Klikni na blok.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Sběrnice</div>
+      <h2 class="slide-title">Proč vyhrála sériová linka nad paralelní sběrnicí</h2>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">Dříve: paralelní sdílená sběrnice (PCI)</div><div class="compare-body">Mnoho vodičů vedle sebe, každý nese jeden bit. Všechna zařízení sdílejí tytéž vodiče, takže v jednu chvíli smí vysílat jen jedno. Signály po různě dlouhých vodičích dorazí v trochu jiný čas (<b>skew</b>), a to omezuje, jak rychlý může být takt.</div></div>
+        <div class="compare-col"><div class="compare-head">Dnes: sériové linky bod–bod (PCIe)</div><div class="compare-body">Každé zařízení má vlastní spojení s procesorem nebo čipsetem. Jedna <b>linka</b> (lane) má jeden pár vodičů pro každý směr a takt nese přímo v datech. Problém se skew odpadá, takže linka může běžet na desítkách gigatransferů za sekundu. Víc rychlosti = víc linek vedle sebe.</div></div>
+      </div>
+      <p class="lede">Von Neumannova „sběrnice“ se tak z jednoho sdíleného vedení změnila na síť samostatných linek. Stejným vývojem prošly i disky (paralelní ATA → SATA) a periferie (paralelní port pro tiskárny → USB).</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">PCI Express</div>
+      <h2 class="slide-title">Generace × počet linek</h2>
+      <p class="lede">Každá generace PCIe zhruba zdvojnásobí rychlost jedné linky. Zápis ×4 nebo ×16 říká, kolik linek zařízení používá. Vyber kombinaci.</p>
+      <div class="toolbar"><div class="seg" id="pcGen"></div><div class="seg" id="pcLanes"></div></div>
+      <div class="bignum">
+        <div><span>Jedna linka</span><b id="pcOne"></b><small>v každém směru</small></div>
+        <div><span>Celkem</span><b id="pcTot"></b><small>v každém směru</small></div>
+        <div><span>Kopie 50 GB</span><b id="pcTime"></b><small>kdyby rozhraní bylo jediné omezení</small></div>
+      </div>
+      <p class="note" id="pcNote"></p>
+      <p class="tiny">Hodnoty po odečtení kódování podle PCI-SIG. PCIe 4.0 ×16 = 31,5 GB/s, PCIe 5.0 ×4 ≈ PCIe 4.0 ×8. Karta ×4 funguje i ve slotu ×16, linky se dohodnou na tom, co zvládnou obě strany.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">USB</div>
+      <h2 class="slide-title">Zmatek v názvech USB</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Název ve specifikaci</th><th>Dřívější název</th><th>Rychlost</th><th>Rok</th></tr></thead>
+          <tbody>
+            <tr><td>USB 2.0 Hi-Speed</td><td></td><td>480 Mb/s</td><td>2000</td></tr>
+            <tr><td>USB 3.2 Gen 1</td><td>USB 3.0</td><td>5 Gb/s</td><td>2008</td></tr>
+            <tr><td>USB 3.2 Gen 2</td><td>USB 3.1</td><td>10 Gb/s</td><td>2013</td></tr>
+            <tr><td>USB 3.2 Gen 2×2</td><td></td><td>20 Gb/s</td><td>2017</td></tr>
+            <tr><td>USB4</td><td></td><td>40 Gb/s</td><td>2019</td></tr>
+            <tr><td>USB4 verze 2.0</td><td></td><td>80 Gb/s</td><td>2022</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">USB-C je tvar konektoru</div><div class="compare-body">Konektor USB-C může vést USB 2.0 s 480 Mb/s stejně jako USB4 s 80 Gb/s. Rychlost určuje port, kabel i zařízení. Platí ta nejpomalejší.</div></div>
+        <div class="compare-col"><div class="compare-head">Gb/s není GB/s</div><div class="compare-body">Rozhraní se udávají v <b>gigabitech</b>, soubory v <b>gigabajtech</b>. 1 bajt = 8 bitů, takže 10 Gb/s je nejvýš 1,25 GB/s, ve skutečnosti méně kvůli režii.</div></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Porovnání</div>
+      <h2 class="slide-title">Jak dlouho se kopíruje</h2>
+      <div class="toolbar"><div class="seg" id="cpSize"></div><span class="note">Délka pruhu je logaritmická: dílek = 10×.</span></div>
+      <div class="ladder" id="cpLad"></div>
+      <p class="tiny">Počítáno z nominální rychlosti rozhraní (Gb/s ÷ 8). Ve skutečnosti je přenos pomalejší: část kapacity spotřebuje režie protokolu a často nestíhá samotný disk.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Firmware</div>
+      <h2 class="slide-title">BIOS a UEFI</h2>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">BIOS (od 80. let)</div><div class="compare-body">Textové nastavení ovládané klávesnicí. Spouštěl systém podle tabulky oddílů MBR: nejvýš 4 primární oddíly a disky do 2,2 TB.</div></div>
+        <div class="compare-col"><div class="compare-head">UEFI (standard od roku 2005)</div><div class="compare-body">Malý „předoperační systém“ s grafickým nastavením a myší. Disky s tabulkou GPT nad 2,2 TB, výběr z více systémů, rychlejší start, síť před startem systému. Pro staré systémy umí režim kompatibility CSM.</div></div>
+      </div>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">Secure Boot</div><div class="compare-body">Před spuštěním ověří digitální podpis zavaděče a jádra. Nepodepsaný nebo pozměněný kód se nespustí, takže malware nemůže naběhnout dřív než ochrana systému.</div></div>
+        <div class="compare-col"><div class="compare-head">Windows 11 vyžaduje</div><div class="compare-body">UEFI s podporou Secure Boot a čip <b>TPM 2.0</b>. Nastavení UEFI (pořadí disků, čas) drží paměť napájená malou baterií na desce.</div></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Spuštění</div>
+      <h2 class="slide-title">Co se děje po stisku tlačítka</h2>
+      <div class="cards4" id="bootCards"></div>
+      <div class="panel" id="bootPanel"></div>
+      <p class="tiny">Od kroku 4 přebírá řízení operační systém. Podrobněji v materiálu Operační systémy.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroj</div>
+      <h2 class="slide-title">Kolik wattů potřebuju?</h2>
+      <p class="lede">Zdroj (PSU) mění 230 V střídavých ze zásuvky na stejnosměrná napětí <b>12 V</b> (procesor přes VRM, grafika), <b>5 V</b> a <b>3,3 V</b>. Napětí 5 V v pohotovostním režimu drží počítač připravený na zapnutí. Část energie se ve zdroji změní v teplo.</p>
+      <div class="sliders">
+        <div class="sl"><label for="wCpu">Procesor</label><input type="range" id="wCpu" min="35" max="300" step="5" value="150"><output id="oCpu"></output></div>
+        <div class="sl"><label for="wGpu">Grafická karta</label><input type="range" id="wGpu" min="0" max="600" step="10" value="250"><output id="oGpu"></output></div>
+        <div class="sl"><label for="wRest">Deska, disky, ventilátory</label><input type="range" id="wRest" min="30" max="150" step="5" value="60"><output id="oRest"></output></div>
+      </div>
+      <div class="toolbar"><div class="seg" id="effSeg"></div></div>
+      <div class="bignum">
+        <div><span>Komponenty odeberou</span><b id="pDc"></b><small>stejnosměrně, při plné zátěži</small></div>
+        <div><span>Ze zásuvky</span><b id="pAc"></b><small id="pEff"></small></div>
+        <div><span>Teplo ve zdroji</span><b id="pLoss"></b><small>rozdíl, musí ho odvést ventilátor</small></div>
+        <div><span>Doporučený zdroj</span><b id="pRec"></b><small>orientačně s rezervou asi 30 %</small></div>
+      </div>
+      <p class="tiny">Účinnost podle certifikace 80 PLUS pro 230 V při 50 % zátěže. Zdroj odebírá jen tolik, kolik počítač právě potřebuje, ne svůj jmenovitý výkon.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Chlazení</div>
+      <h2 class="slide-title">Všechna energie skončí jako teplo</h2>
+      <p class="lede">Počítač, který odebírá 400 W, topí jako malé topení se 400 W. Úkolem chlazení je dostat teplo z čipu do vzduchu dřív, než se čip přehřeje a sám sníží takt.</p>
+      <div class="cards4" id="coolCards"></div>
+      <div class="panel" id="coolPanel"></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Prakticky</div>
+      <h2 class="slide-title">Postav si počítač</h2>
+      <div class="split">
+        <div class="build" id="build"></div>
+        <div class="stack">
+          <ul class="bchk" id="bchk"></ul>
+          <p class="note" id="bSum"></p>
+        </div>
+      </div>
+      <p class="tiny">Příkony jsou orientační příklady pro výpočet, ne parametry konkrétních modelů.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Pravda, nebo ne?</h2>
+      <p class="score" id="qScore"></p>
+      <div class="clue" id="qText"></div>
+      <div class="seg"><button class="calc-btn" data-a="1">Pravda</button><button class="calc-btn" data-a="0">Není pravda</button><button class="calc-btn" id="qNext" hidden>Další →</button></div>
+      <div class="feedback" id="qFb"></div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Deska určuje <b>patici</b> (který procesor), <b>typ paměti</b>, sloty a <b>formát</b> (do jaké skříně).</li>
+        <li>RAM, grafika a nejrychlejší SSD mají <b>vlastní linky do procesoru</b>. Ostatní se dělí o spojení s <b>čipsetem</b>.</li>
+        <li>Paralelní sdílené sběrnice nahradily <b>sériové linky</b>. PCIe: každá generace 2× rychlejší linka, ×4 a ×16 = počet linek.</li>
+        <li><b>USB-C</b> je konektor, ne rychlost. Gb/s ÷ 8 = GB/s.</li>
+        <li><b>UEFI</b> otestuje hardware, ověří zavaděč (Secure Boot) a předá řízení operačnímu systému.</li>
+        <li>Zdroj se volí podle příkonu s rezervou. Všechna spotřebovaná energie se změní v <b>teplo</b>, které musí chlazení odvést.</li>
+      </ul>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud čísla jsou</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Deska, patice, firmware</h3><ul class="src-list">
+          <li><a href="https://en.wikipedia.org/wiki/Motherboard_form_factor" target="_blank" rel="noopener">Wikipedia: Motherboard form factor</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Socket_AM5" target="_blank" rel="noopener">Wikipedia: Socket AM5</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/LGA_1851" target="_blank" rel="noopener">Wikipedia: LGA 1851</a></li>
+          <li><a href="https://www.pugetsystems.com/labs/articles/z890-vs-b860-vs-h810/" target="_blank" rel="noopener">Puget Systems: Z890 vs B860 vs H810</a></li>
+          <li><a href="https://www.ionos.co.uk/digitalguide/server/know-how/uefi-unified-extensible-firmware-interface/" target="_blank" rel="noopener">IONOS: UEFI</a></li>
+          <li><a href="https://microsoft.com/windows/windows-11-specifications" target="_blank" rel="noopener">Microsoft: požadavky Windows 11</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Sběrnice, napájení, chlazení</h3><ul class="src-list">
+          <li><a href="https://en.wikipedia.org/wiki/PCI_Express" target="_blank" rel="noopener">Wikipedia: PCI Express</a></li>
+          <li><a href="https://hardware.slashdot.org/story/25/06/12/2037225/pci-express-70-specs-released" target="_blank" rel="noopener">Slashdot: PCI Express 7.0 Specs Released</a></li>
+          <li><a href="https://www.corsair.com/fr/en/explorer/gamer/gaming-pcs/usb-speeds-explained-a-clear-guide-to-usb-20-usb-3-and-usb4/" target="_blank" rel="noopener">Corsair: USB speeds explained</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/80_Plus" target="_blank" rel="noopener">Wikipedia: 80 Plus</a></li>
+          <li><a href="https://hardwaresecrets.com/everything-you-need-to-know-about-power-supplies/6" target="_blank" rel="noopener">Hardware Secrets: napětí zdroje ATX</a></li>
+          <li><a href="https://www.coolermaster.com/what-is-atx-3-1" target="_blank" rel="noopener">Cooler Master: ATX 3.1 a 12V-2x6</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Thermal_design_power" target="_blank" rel="noopener">Wikipedia: Thermal design power</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Intel_Turbo_Boost" target="_blank" rel="noopener">Wikipedia: Intel Turbo Boost</a></li>
+        </ul></div>
+      </div>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var NS="http://www.w3.org/2000/svg";
+  function sv(tag,a,t){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e;}
+  function fmt(n,d){return n.toLocaleString("cs-CZ",{maximumFractionDigits:d==null?1:d});}
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- navigace ---------- */
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function picker(host,items,mk,panel,show){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;show(it,i);
+      });host.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");show(items[0],0);
+    if(panel)fits.push({slide:host.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){show(it,i,true);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";show(items[act],act,true);
+    }});
+  }
+  function modeSwitch(host,onChange){
+    Array.prototype.forEach.call(host.children,function(b){
+      b.addEventListener("click",function(){
+        Array.prototype.forEach.call(host.children,function(x){x.classList.toggle("is-active",x===b);});
+        onChange(b.dataset.m);
+      });
+    });
+  }
+  function segButtons(host,items,label,onPick,start){
+    var btns=[];
+    items.forEach(function(it,i){
+      var b=el("button","calc-btn"+(i===(start||0)?" is-active":""),label(it));
+      b.addEventListener("click",function(){btns.forEach(function(x){x.classList.toggle("is-active",x===b);});onPick(it,i);});
+      host.appendChild(b);btns.push(b);
+    });
+    return btns;
+  }
+
+  /* ---------- 1: základní deska ---------- */
+  var MB=[
+    {id:"io",r:"io",x:24,y:36,w:70,h:230,t:"Panel",s:"",
+     d:"Konektory, kterými počítač komunikuje se světem: USB, síťová karta, zvuk, výstup integrované grafiky. Ve von Neumannově schématu <b>vstup a výstup</b>."},
+    {id:"vrm",r:"x",x:120,y:56,w:80,h:160,t:"VRM",s:"napájení",
+     d:"Měniče napětí, které z 12 V ze zdroje vyrobí přesné nízké napětí pro procesor. Procesor může odebírat přes 200 W, proto mají měniče chladiče. Ve von Neumannově schématu nejsou."},
+    {id:"cpu",r:"cpu",x:220,y:56,w:160,h:160,t:"Procesor",s:"AM5 / LGA1851",
+     d:"Řadič, ALU, registry a cache v jednom pouzdře. Obsahuje i <b>řadič paměti</b>, takže RAM je připojená přímo k němu. Patice určuje, které procesory deska podporuje: AMD používá AM5 (1 718 kontaktů), Intel LGA1851."},
+    {id:"ram",r:"ram",x:400,y:36,w:96,h:180,t:"RAM",s:"DDR5",
+     d:"Operační paměť, přesně ta z von Neumannova schématu. Do ní operační systém nahraje program i data. Dva moduly patří do párových slotů, aby běžely ve <b>dvou kanálech</b> a propustnost se zdvojnásobila."},
+    {id:"atx",r:"x",x:690,y:120,w:46,h:150,t:"ATX",s:"24 pin",
+     d:"Hlavní napájecí konektor ze zdroje (PSU). Zdroj mění 230 V střídavých na stejnosměrných 12 V, 5 V a 3,3 V."},
+    {id:"m2",r:"sto",x:220,y:236,w:260,h:34,t:"M.2 NVMe SSD",s:"PCIe 5.0 ×4",
+     d:"Slot pro SSD ve tvaru destičky. Je připojený přímo k procesoru přes PCI Express. Disk je <b>vnější paměť</b>: procesor ho nečte instrukcí LOAD jako RAM, data se přesouvají jako přes vstupní zařízení."},
+    {id:"pcie",r:"io",x:120,y:300,w:420,h:26,t:"PCIe ×16",s:"grafická karta",
+     d:"Nejrychlejší slot na desce. Grafická karta je <b>výstupní zařízení</b> (obraz na monitor) a zároveň samostatný počítač s tisíci jednoduchých jader a vlastní pamětí."},
+    {id:"m2b",r:"sto",x:220,y:350,w:260,h:34,t:"M.2 SSD",s:"přes čipset",
+     d:"Další slot pro SSD. Bývá připojený přes čipset, takže sdílí jeho linku k procesoru s USB, sítí a SATA."},
+    {id:"chip",r:"bus",x:560,y:320,w:100,h:100,t:"Čipset",s:"X870E / Z890",
+     d:"Rozbočovač: připojuje k procesoru pomalejší zařízení (další USB, SATA, síť, Wi-Fi). Je to část dnešní „sběrnice“. AMD pro AM5 dělá čipsety A620 až X870E, Intel pro LGA1851 Z890 a další."},
+    {id:"sata",r:"sto",x:690,y:320,w:46,h:130,t:"SATA",s:"HDD",
+     d:"Starší rozhraní pro pevné disky a 2,5palcové SSD. Rychlost 6 Gb/s, v praxi do asi 560 MB/s."},
+    {id:"bios",r:"x",x:120,y:400,w:90,h:70,t:"UEFI",s:"firmware",
+     d:"Čip s firmwarem UEFI (dřív BIOS). Po zapnutí otestuje hardware (POST), najde disk se systémem a spustí zavaděč operačního systému. Tady začíná každé spuštění počítače."},
+    {id:"bus",r:"bus",x:0,y:0,w:0,h:0,t:"Spoje na desce",s:"",
+     d:"Měděné cesty v deskách plošného spoje. Dnes to nejsou jedna sdílená sběrnice, ale mnoho samostatných linek: paměťové kanály, linky PCIe, spojení s čipsetem."}
+  ];
+  var mbSvg=$("mb"),mbParts={},mbSel="cpu";
+  mbSvg.appendChild(sv("rect",{"class":"mb-board",x:10,y:16,width:740,height:470,rx:14}));
+  var traceG=sv("g",{"class":"mb-hit","data-id":"bus"});
+  ["M380 136 H400","M300 216 V236","M300 270 V300","M380 300 C420 290 440 250 440 220","M480 367 H560","M540 313 H560","M610 320 V180 H496","M660 370 H690","M94 150 H120"].forEach(function(d){traceG.appendChild(sv("path",{"class":"mb-trace",d:d}));});
+  mbSvg.appendChild(traceG);
+  MB.forEach(function(p){
+    if(p.id==="bus"){mbParts.bus=traceG;traceG.addEventListener("click",function(){mbShow("bus");});return;}
+    var g=sv("g",{"class":"mb-hit","data-id":p.id});
+    var r=sv("rect",{"class":"mb-part r-"+p.r,x:p.x,y:p.y,width:p.w,height:p.h,rx:8});g.appendChild(r);
+    if(p.id==="ram")for(var k=0;k<4;k++)g.appendChild(sv("rect",{"class":"mb-trace",x:p.x+14+k*20,y:p.y+40,width:6,height:p.h-56,rx:2}));
+    var tall=p.h>p.w;
+    g.appendChild(sv("text",{"class":"mb-lab",x:p.x+10,y:p.y+(p.h<40?22:24)},p.t));
+    if(p.s&&!(p.h<40))g.appendChild(sv("text",{"class":"mb-sub",x:p.x+10,y:p.y+40},p.s));
+    else if(p.s)g.appendChild(sv("text",{"class":"mb-sub",x:p.x+p.w-10,y:p.y+22,"text-anchor":"end"},p.s));
+    g.addEventListener("click",function(){mbShow(p.id);});
+    mbSvg.appendChild(g);mbParts[p.id]=r;
+  });
+  var ROLE={cpu:"procesor (řadič + ALU)",ram:"operační paměť",sto:"vnější paměť (přes vstup/výstup)",io:"vstup a výstup",bus:"sběrnice",x:"mimo schéma: napájení a firmware"};
+  function mbPanel(id){var p=MB.filter(function(x){return x.id===id;})[0];$("mbPanel").innerHTML='<span class="meta">role: '+ROLE[p.r]+'</span><h3>'+p.t+'</h3><p>'+p.d+'</p>';}
+  function mbShow(id){mbSel=id;Object.keys(mbParts).forEach(function(k){if(mbParts[k].classList)mbParts[k].classList.toggle("is-sel",k===id);});mbPanel(id);}
+  mbShow("cpu");
+  modeSwitch($("mbMode"),function(m){mbSvg.classList.toggle("mb-roles",m==="roles");$("mbLegend").hidden=m!=="roles";});
+  fits.push({slide:mbSvg.closest(".slide"),fn:function(){var p=$("mbPanel");p.style.minHeight="0px";var m=0;MB.forEach(function(x){mbPanel(x.id);m=Math.max(m,p.offsetHeight);});p.style.minHeight=m+"px";mbPanel(mbSel);}});
+
+  /* ---------- 2: formáty desek ---------- */
+  var FF=[
+    {n:"ATX",w:305,h:244,y:1995,d:"Plná velikost pro stolní počítače. Nejvíc slotů pro karty a M.2, obvykle 4 sloty na RAM. Vejde se do skříní typu midi tower a větších."},
+    {n:"microATX",w:244,h:244,y:1996,d:"Kratší než ATX, méně slotů PCIe. Levnější a menší skříně. Deska microATX se vejde i do skříně ATX, opačně to nejde."},
+    {n:"Mini-ITX",w:170,h:170,y:2001,d:"Malá čtvercová deska s jediným slotem PCIe, obvykle jen 2 sloty na RAM. Pro malé počítače do obýváku nebo na stůl. Málo místa znamená i horší chlazení."}
+  ];
+  var ffSvg=$("ff"),ffR=[],S=0.85;
+  FF.forEach(function(f,i){
+    var r=sv("rect",{"class":"ff-board",x:20,y:222-f.h*S,width:f.w*S,height:f.h*S,rx:6});ffSvg.appendChild(r);ffR.push(r);
+  });
+  FF.forEach(function(f){ffSvg.appendChild(sv("text",{"class":"ff-lab",x:20+f.w*S-8,y:222-f.h*S+20,"text-anchor":"end"},f.n));});
+  var ffBtns=segButtons($("ffSeg"),FF,function(f){return f.n;},function(f,i){ffShow(i);});
+  function ffShow(i){
+    var f=FF[i];ffR.forEach(function(r,k){r.classList.toggle("dim",k!==i);});
+    $("ffPanel").innerHTML='<span class="meta">'+f.w+' × '+f.h+' mm · od roku '+f.y+'</span><h3>'+f.n+'</h3><p>'+f.d+'</p>';
+  }
+  ffShow(0);
+
+  /* ---------- 4: topologie ---------- */
+  var TB=[
+    {id:"cpu",x:240,y:150,w:160,h:80,t:"Procesor",s:"řadič paměti + PCIe",d:"Procesor má v sobě řadič paměti a vlastní linky PCI Express. Nejrychlejší zařízení jsou proto připojená přímo k němu, bez prostředníka."},
+    {id:"ram",x:20,y:150,w:130,h:80,t:"RAM",s:"2 kanály DDR5",d:"Paměť má vlastní paměťové kanály přímo do procesoru. DDR5-6000 ve dvou kanálech dává asi 96 GB/s. Je to nejrychlejší spojení v celém počítači."},
+    {id:"gpu",x:240,y:20,w:160,h:60,t:"Grafická karta",s:"PCIe 5.0 ×16",d:"Slot ×16 přímo z procesoru, u PCIe 5.0 asi 63 GB/s v každém směru. Grafika potřebuje hodně dat rychle, proto má nejširší linku."},
+    {id:"m2",x:470,y:150,w:150,h:80,t:"M.2 SSD",s:"PCIe 5.0 ×4",d:"Hlavní SSD bývá připojené čtyřmi linkami přímo k procesoru: u PCIe 5.0 asi 15,8 GB/s, u PCIe 4.0 asi 7,9 GB/s."},
+    {id:"chip",x:240,y:300,w:160,h:70,t:"Čipset",s:"rozbočovač",d:"Čipset rozvětví jedno spojení s procesorem na mnoho pomalejších zařízení. U AM5 je to PCIe 4.0 ×4 (asi 8 GB/s), u Intel Z890 DMI 4.0 ×8 (asi 16 GB/s). <b>Všechna zařízení za čipsetem se o tuto kapacitu dělí.</b>"},
+    {id:"usb",x:20,y:290,w:130,h:40,t:"USB",s:"",d:"Porty USB na zadním panelu i na přední straně skříně. Část bývá připojená k čipsetu, část přímo k procesoru."},
+    {id:"sata",x:20,y:345,w:130,h:40,t:"SATA",s:"",d:"Pevné disky a starší 2,5palcová SSD. Rozhraní SATA III má 6 Gb/s."},
+    {id:"net",x:470,y:290,w:150,h:40,t:"Síť, Wi-Fi",s:"",d:"Síťová karta pro kabel (Ethernet) a Wi-Fi s Bluetooth. Obvykle připojené přes čipset."},
+    {id:"m2b",x:470,y:345,w:150,h:40,t:"Další M.2",s:"",d:"Druhé a další SSD bývají za čipsetem. Když se zároveň kopíruje z disku a stahuje přes síť, dělí se o stejné spojení s procesorem."}
+  ];
+  var topo=$("topo"),tR={},tSel="chip";
+  [["M150 190 H240","fast","96 GB/s"],["M320 80 V150","fast","63 GB/s"],["M400 190 H470","mid","16 GB/s"],["M320 230 V300","mid",""],["M240 320 H150 V310","",""],["M240 350 H150 V365","",""],["M400 320 H470 V310","",""],["M400 350 H470 V365","",""]].forEach(function(l){
+    topo.appendChild(sv("path",{"class":"topo-line "+l[1],d:l[0]}));
+  });
+  topo.appendChild(sv("text",{"class":"topo-tag",x:195,y:182,"text-anchor":"middle"},"96 GB/s"));
+  topo.appendChild(sv("text",{"class":"topo-tag",x:330,y:120},"63 GB/s"));
+  topo.appendChild(sv("text",{"class":"topo-tag",x:435,y:182,"text-anchor":"middle"},"16 GB/s"));
+  topo.appendChild(sv("text",{"class":"topo-tag",x:330,y:270},"8–16 GB/s, sdílené"));
+  TB.forEach(function(b){
+    var g=sv("g",{"class":"mb-hit"});
+    var r=sv("rect",{"class":"mb-part",x:b.x,y:b.y,width:b.w,height:b.h,rx:8});g.appendChild(r);
+    g.appendChild(sv("text",{"class":"mb-lab",x:b.x+10,y:b.y+(b.h<50?26:28)},b.t));
+    if(b.s)g.appendChild(sv("text",{"class":"mb-sub",x:b.x+10,y:b.y+48},b.s));
+    g.addEventListener("click",function(){tShow(b.id);});
+    topo.appendChild(g);tR[b.id]=r;
+  });
+  function tPanel(id){var b=TB.filter(function(x){return x.id===id;})[0];$("topoPanel").innerHTML='<span class="meta">'+(b.s||"přes čipset")+'</span><h3>'+b.t+'</h3><p>'+b.d+'</p>';}
+  function tShow(id){tSel=id;Object.keys(tR).forEach(function(k){tR[k].classList.toggle("is-sel",k===id);});tPanel(id);}
+  tShow("chip");
+  fits.push({slide:topo.closest(".slide"),fn:function(){var p=$("topoPanel");p.style.minHeight="0px";var m=0;TB.forEach(function(b){tPanel(b.id);m=Math.max(m,p.offsetHeight);});p.style.minHeight=m+"px";tPanel(tSel);}});
+
+  /* ---------- 6: PCIe ---------- */
+  var GEN=[["1.0",2003,0.25],["2.0",2007,0.5],["3.0",2010,0.985],["4.0",2017,1.969],["5.0",2019,3.938],["6.0",2022,7.563],["7.0",2025,15.125]];
+  var LAN=[1,4,8,16],gI=4,lI=3;
+  segButtons($("pcGen"),GEN,function(g){return "PCIe "+g[0];},function(g,i){gI=i;pcCalc();},4);
+  segButtons($("pcLanes"),LAN,function(l){return "×"+l;},function(l,i){lI=i;pcCalc();},3);
+  function dur(sec){if(sec<1)return fmt(sec*1000,0)+" ms";if(sec<60)return fmt(sec,1)+" s";if(sec<3600)return fmt(sec/60,1)+" min";return fmt(sec/3600,1)+" h";}
+  function pcCalc(){
+    var g=GEN[gI],l=LAN[lI],t=g[2]*l;
+    $("pcOne").textContent=fmt(g[2],2)+" GB/s";$("pcTot").textContent=fmt(t,1)+" GB/s";$("pcTime").textContent=dur(50/t);
+    var use={1:"síťová nebo zvuková karta",4:"NVMe SSD v M.2",8:"druhá grafika nebo síťová karta pro servery",16:"grafická karta"}[l];
+    $("pcNote").textContent="PCIe "+g[0]+" vyšlo v roce "+g[1]+". Typické použití ×"+l+": "+use+".";
+  }
+  pcCalc();
+
+  /* ---------- 8: kopírování ---------- */
+  var IF=[
+    {n:"USB 2.0",g:0.48,k:"k-hdd"},{n:"Gigabit Ethernet",g:1,k:"k-hdd"},{n:"USB 3.2 Gen 1",g:5,k:""},{n:"SATA III",g:6,k:"k-sto"},
+    {n:"USB 3.2 Gen 2",g:10,k:""},{n:"USB4",g:40,k:""},{n:"USB4 v2",g:80,k:""},{n:"PCIe 4.0 ×4",g:63,k:"k-sto"},{n:"PCIe 5.0 ×4",g:126,k:"k-sto"}
+  ];
+  var SZ=[["Fotka 5 MB",0.005],["Film 4 GB",4],["Hra 100 GB",100],["Záloha 1 TB",1000]],szI=2,cpRows=[];
+  IF.forEach(function(f){var b=el("div","lad-row",'<span class="lad-name">'+f.n+'</span><span class="lad-track"><span class="lad-bar '+f.k+'"></span><span class="lad-val"></span></span>');$("cpLad").appendChild(b);cpRows.push(b);});
+  segButtons($("cpSize"),SZ,function(s){return s[0];},function(s,i){szI=i;cpRender();},2);
+  function cpRender(){
+    var gb=SZ[szI][1],ts=IF.map(function(f){return gb/(f.g/8);});
+    var hi=Math.log10(Math.max.apply(null,ts))+0.3,lo=Math.log10(Math.min.apply(null,ts))-1;
+    IF.forEach(function(f,i){var w=(Math.log10(ts[i])-lo)/(hi-lo)*100;cpRows[i].querySelector(".lad-bar").style.width="calc("+w.toFixed(1)+"% - 5rem)";cpRows[i].querySelector(".lad-val").textContent=dur(ts[i]);});
+  }
+  cpRender();
+
+  /* ---------- 10: spuštění ---------- */
+  var BOOT=[
+    {n:"1. Napájení",s:"zdroj naběhne",d:"Tlačítko dá zdroji pokyn k zapnutí. Zdroj stabilizuje napětí a dá desce signál, že je napájení v pořádku. Teprve pak procesor začne vykonávat první instrukce."},
+    {n:"2. UEFI a POST",s:"test hardwaru",d:"Procesor spustí firmware UEFI z čipu na desce. Ten provede POST (power-on self-test): zkontroluje procesor, paměť a grafiku a vyhledá připojená zařízení. Když něco chybí, počítač pípá nebo rozsvítí diagnostickou diodu."},
+    {n:"3. Výběr disku",s:"pořadí zavádění",d:"UEFI podle nastaveného pořadí najde disk se zavaděčem. S funkcí Secure Boot nejdřív ověří jeho digitální podpis."},
+    {n:"4. Zavaděč",s:"Windows Boot Manager, GRUB",d:"Zavaděč nahraje jádro operačního systému do RAM a předá mu řízení. Na počítači s více systémy nabídne výběr."},
+    {n:"5. Jádro a služby",s:"operační systém",d:"Jádro inicializuje ovladače, připojí disky a spustí systémové služby. Na konci se objeví přihlašovací obrazovka."}
+  ];
+  picker($("bootCards"),BOOT,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("bootPanel"),function(c){$("bootPanel").innerHTML="<h3>"+c.n+"</h3><p>"+c.d+"</p>";});
+
+  /* ---------- 11: zdroj ---------- */
+  var EFF=[["80 PLUS",85],["Bronze",88],["Silver",90],["Gold",92],["Platinum",94],["Titanium",95]],eI=3;
+  segButtons($("effSeg"),EFF,function(e){return e[0];},function(e,i){eI=i;psu();},3);
+  function psu(){
+    var c=+$("wCpu").value,g=+$("wGpu").value,r=+$("wRest").value,dc=c+g+r,eff=EFF[eI][1]/100,ac=dc/eff;
+    $("oCpu").textContent=c+" W";$("oGpu").textContent=g+" W";$("oRest").textContent=r+" W";
+    $("pDc").textContent=fmt(dc,0)+" W";$("pAc").textContent=fmt(ac,0)+" W";$("pEff").textContent="účinnost "+EFF[eI][1]+" % ("+EFF[eI][0]+")";
+    $("pLoss").textContent=fmt(ac-dc,0)+" W";$("pRec").textContent=fmt(Math.ceil(dc*1.3/50)*50,0)+" W";
+  }
+  ["wCpu","wGpu","wRest"].forEach(function(id){$(id).addEventListener("input",psu);});psu();
+
+  /* ---------- 12: chlazení ---------- */
+  var COOL=[
+    {n:"Vzduchový chladič",s:"žebra + ventilátor",d:"Kovová základna na procesoru, tepelné trubice a hliníková žebra, přes která ventilátor fouká vzduch. Spolehlivý a levný. Velké chladiče zvládnou i procesory s příkonem přes 200 W."},
+    {n:"Vodní chlazení (AIO)",s:"čerpadlo + radiátor",d:"Kapalina odvádí teplo z procesoru do radiátoru s ventilátory, který může být dál od čipu. Hodí se pro procesory s vysokým příkonem a do skříní, kde nad procesorem není místo."},
+    {n:"Pasivní chlazení",s:"bez ventilátoru",d:"Jen žebra nebo kovové tělo zařízení, žádný hluk. Stačí pro čipy s malým příkonem: mobily, tablety, některé notebooky a mini počítače. Při dlouhé zátěži snižují takt."},
+    {n:"Proudění ve skříni",s:"airflow",d:"Teplo z chladičů musí ze skříně ven. Ventilátory vpředu nasávají studený vzduch, vzadu a nahoře vyfukují teplý. Grafická karta s příkonem stovek wattů vyžaduje dobře větranou skříň."},
+    {n:"Teplovodivá pasta",s:"mezi čipem a chladičem",d:"Vyplní mikroskopické nerovnosti mezi procesorem a chladičem, kde by jinak byl vzduch. Vzduch vede teplo velmi špatně."},
+    {n:"TDP",s:"návrhový tepelný výkon",d:"Kolik tepla musí chlazení dlouhodobě odvést. Není to maximální příkon: v turbu může procesor krátce odebírat i víc. Intel proto od 12. generace uvádí základní a maximální příkon zvlášť."}
+  ];
+  picker($("coolCards"),COOL,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("coolPanel"),function(c){$("coolPanel").innerHTML="<h3>"+c.n+"</h3><p>"+c.d+"</p>";});
+
+  /* ---------- 13: postav si počítač ---------- */
+  var B={
+    cpu:{l:"Procesor",o:[{n:"AMD Ryzen · AM5",s:"AM5",w:150},{n:"Intel Core Ultra · LGA1851",s:"LGA1851",w:250},{n:"Intel Core 14. gen. · LGA1700",s:"LGA1700",w:250}]},
+    mb:{l:"Deska",o:[{n:"AM5 · ATX · DDR5",s:"AM5",m:"DDR5",f:"ATX"},{n:"LGA1851 · ATX · DDR5",s:"LGA1851",m:"DDR5",f:"ATX"},{n:"LGA1851 · Mini-ITX · DDR5",s:"LGA1851",m:"DDR5",f:"ITX"},{n:"LGA1700 · microATX · DDR4",s:"LGA1700",m:"DDR4",f:"mATX"}]},
+    ram:{l:"Paměť",o:[{n:"DDR5 2× 16 GB",m:"DDR5"},{n:"DDR4 2× 16 GB",m:"DDR4"}]},
+    gpu:{l:"Grafika",o:[{n:"jen integrovaná",w:0},{n:"střední, 250 W",w:250},{n:"nejvyšší třída, 575 W",w:575}]},
+    psu:{l:"Zdroj",o:[{n:"450 W",w:450},{n:"650 W",w:650},{n:"850 W",w:850},{n:"1000 W",w:1000}]},
+    cs:{l:"Skříň",o:[{n:"midi tower (ATX)",f:"ATX"},{n:"malá (Mini-ITX)",f:"ITX"}]}
+  };
+  var bSel={cpu:0,mb:0,ram:0,gpu:1,psu:1,cs:0};
+  Object.keys(B).forEach(function(k){
+    var row=el("div","build-row","<span>"+B[k].l+"</span>"),sg=el("div","seg");row.appendChild(sg);$("build").appendChild(row);
+    segButtons(sg,B[k].o,function(o){return o.n;},function(o,i){bSel[k]=i;bCheck();},bSel[k]);
+  });
+  function bCheck(){
+    var c=B.cpu.o[bSel.cpu],m=B.mb.o[bSel.mb],r=B.ram.o[bSel.ram],g=B.gpu.o[bSel.gpu],p=B.psu.o[bSel.psu],cs=B.cs.o[bSel.cs],L=[],bad=0;
+    function add(cls,t){L.push('<li class="'+cls+'">'+t+'</li>');if(cls==="ko")bad++;}
+    add(c.s===m.s?"ok":"ko",c.s===m.s?"Procesor pasuje do patice "+m.s+".":"Procesor pro "+c.s+" nepasuje do desky s paticí "+m.s+".");
+    add(r.m===m.m?"ok":"ko",r.m===m.m?"Deska podporuje paměti "+r.m+".":"Deska má sloty pro "+m.m+", moduly "+r.m+" do nich nejdou zasunout.");
+    var fit=cs.f==="ATX"||m.f==="ITX";
+    add(fit?"ok":"ko",fit?"Deska formátu "+(m.f==="mATX"?"microATX":m.f==="ITX"?"Mini-ITX":"ATX")+" se do skříně vejde.":"Deska je větší než skříň. Do skříně Mini-ITX se vejde jen deska Mini-ITX.");
+    var need=c.w+g.w+70,rec=need*1.3;
+    if(p.w>=rec)add("ok","Zdroj "+p.w+" W stačí s rezervou (odhad spotřeby "+need+" W).");
+    else if(p.w>=need)add("wa","Zdroj "+p.w+" W stačí jen těsně (odhad "+need+" W). Při špičkách zátěže hrozí vypnutí, doporučeno aspoň "+Math.ceil(rec/50)*50+" W.");
+    else add("ko","Zdroj "+p.w+" W nestačí, počítač odebere až "+need+" W.");
+    if(g.w>=500&&cs.f==="ITX")add("wa","Karta s příkonem "+g.w+" W v malé skříni: vejde se? Uchladí se?");
+    if(g.w===0)add("ok","Obraz zajistí grafika integrovaná v procesoru, monitor se připojí do desky.");
+    $("bchk").innerHTML=L.join("");
+    $("bSum").innerHTML=bad?"<b>Sestava nefunguje.</b> Oprav červené položky.":"<b>Sestava je v pořádku.</b> Odhad spotřeby při plné zátěži: "+need+" W.";
+  }
+  bCheck();
+
+  /* ---------- 14: kvíz ---------- */
+  var Q=[
+    {t:"Port USB-C zaručuje rychlost alespoň 40 Gb/s.",a:0,f:"USB-C je jen tvar konektoru. Může vést i USB 2.0 s 480 Mb/s. Rychlost určuje port, kabel a zařízení."},
+    {t:"Procesor pro patici AM5 nejde vložit do desky s paticí LGA1851.",a:1,f:"Patice jsou mechanicky i elektricky odlišné. Procesor musí odpovídat patici desky."},
+    {t:"PCIe 5.0 ×4 má zhruba stejnou propustnost jako PCIe 4.0 ×8.",a:1,f:"Každá generace zdvojnásobí rychlost linky, takže polovina linek nové generace stačí: obojí asi 15,8 GB/s."},
+    {t:"Do desky s paticí AM5 lze dát paměti DDR4.",a:0,f:"AM5 podporuje jen DDR5. Moduly DDR4 mají jinak umístěný zářez a do slotu nejdou zasunout."},
+    {t:"Karta PCIe ×4 bude fungovat i ve slotu ×16.",a:1,f:"Užší karta se vejde do širšího slotu a linka se dohodne na počtu linek, který zvládnou obě strany."},
+    {t:"Zdroj 850 W odebírá ze zásuvky stále 850 W.",a:0,f:"Zdroj dodá jen tolik, kolik počítač právě potřebuje, plus ztráty. 850 W je maximum, které umí dodat."},
+    {t:"Rozhraní 80 Gb/s přenese nejvýš 10 GB/s.",a:1,f:"80 Gb/s ÷ 8 = 10 GB/s. Ve skutečnosti méně kvůli režii protokolu."},
+    {t:"Paralelní sběrnice jsou dnes rychlejší než sériové, protože posílají víc bitů najednou.",a:0,f:"U paralelní sběrnice dorazí signály po různých vodičích v trochu jiný čas, a to omezuje takt. Sériové linky PCIe běží mnohem rychleji."},
+    {t:"Secure Boot ověřuje digitální podpis zavaděče před jeho spuštěním.",a:1,f:"Nepodepsaný nebo pozměněný zavaděč se nespustí. Chrání to před malwarem, který by naběhl dřív než operační systém."},
+    {t:"Zařízení připojená přes čipset se dělí o jedno spojení s procesorem.",a:1,f:"U AM5 je to PCIe 4.0 ×4, u Z890 DMI 4.0 ×8. Proto jsou grafika a hlavní SSD připojené přímo k procesoru."},
+    {t:"TDP udává maximální příkon, který procesor nikdy nepřekročí.",a:0,f:"TDP je teplo, které má chlazení dlouhodobě odvádět. Krátkodobě, třeba v turbu, může procesor odebírat víc."}
+  ];
+  var qI=0,qOk=0,qAns=false,ansBtns=Array.prototype.slice.call(document.querySelectorAll("[data-a]"));
+  function qRender(){
+    qAns=false;var q=Q[qI];
+    $("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qText").textContent=q.t;$("qFb").innerHTML="";$("qNext").hidden=true;
+    ansBtns.forEach(function(b){b.hidden=false;b.disabled=false;b.classList.remove("is-right","is-wrong");});
+  }
+  ansBtns.forEach(function(b){b.addEventListener("click",function(){
+    if(qAns)return;qAns=true;var q=Q[qI],ok=+b.dataset.a===q.a;if(ok)qOk++;
+    ansBtns.forEach(function(x){if(+x.dataset.a===q.a)x.classList.add("is-right");x.disabled=true;});
+    if(!ok)b.classList.add("is-wrong");
+    $("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qFb").innerHTML="<b>"+(ok?"Správně.":"Tentokrát ne.")+"</b> "+q.f;
+    $("qNext").hidden=false;$("qNext").textContent=qI===Q.length-1?"Výsledek":"Další →";
+  });});
+  $("qNext").addEventListener("click",function(){
+    if(qI===Q.length-1){$("qText").innerHTML="<b>Výsledek: "+qOk+" z "+Q.length+".</b>";$("qFb").innerHTML=qOk>=9?"Výborně.":"Vrať se ke schématu propojení a k PCIe.";ansBtns.forEach(function(b){b.hidden=true;});$("qNext").textContent="Znovu";qI=-1;qOk=0;return;}
+    qI++;qRender();
+  });
+  qRender();
+
+  goTo(0);
+})();
+</script>
+</body>
+</html>

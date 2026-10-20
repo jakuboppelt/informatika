@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Best practices</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Seminář z informatiky</div>
+        <h1>Best practices</h1>
+        <p class="lede">Jak pracují profesionálové v IT a proč stejné zásady najdeš v kokpitu letadla, na operačním sále i v továrně Toyoty. A co si z nich vzít do maturitní práce.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="1"><div class="slide-inner">
+      <div class="eyebrow">Úvod</div>
+      <h2 class="slide-title">Co je best practice</h2>
+      <p class="lede">Česky „osvědčený postup“. Klikni na karty.</p>
+      <div class="cards4" id="whatCards"></div>
+      <div class="panel" id="whatPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="2"><div class="slide-inner">
+      <div class="eyebrow">Mimo IT: letectví a medicína</div>
+      <h2 class="slide-title">Nejjednodušší nástroj na světě: checklist</h2>
+      <p class="lede">Klikni na jednotlivé kroky příběhu.</p>
+      <div class="chain" id="chkChain"></div>
+      <div class="panel" id="chkChainPanel"></div>
+      <p class="note">V IT: kontrolní seznam před nasazením, šablona pro code review, kontrola před odevzdáním. Nejde o to, že bys nevěděl, co dělat. Jde o to, že na to v zápalu práce zapomeneš.</p>
+    </div></section>
+
+    <section class="slide" data-index="3"><div class="slide-inner">
+      <div class="eyebrow">Čitelný kód</div>
+      <h2 class="slide-title">Kód se píše jednou, čte se stokrát</h2>
+      <p class="lede">Obě funkce dělají přesně totéž. Kterou pochopíš za pět sekund?</p>
+      <div class="compare-grid">
+        <div class="compare-col is-bad">
+          <div class="compare-head">Funguje, ale…</div>
+<pre class="snip">def f(a, b):
+    x = 0
+    for i in a:
+        if i[1] &gt; b:
+            x = x + i[1]
+    return x</pre>
+        </div>
+        <div class="compare-col is-good">
+          <div class="compare-head">Funguje a je jasné proč</div>
+<pre class="snip">def soucet_nad_limit(objednavky, limit):
+    <span class="cm">"""Sečte částky objednávek nad limitem."""</span>
+    soucet = 0
+    for nazev, castka in objednavky:
+        if castka &gt; limit:
+            soucet += castka
+    return soucet</pre>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Pravidla</h3>
+        <p><b>Jména říkají, co věc znamená</b>, ne jaký má typ. <b>Funkce dělá jednu věc.</b> <b>Komentář vysvětluje proč</b>, ne co (to má říct kód). Za půl roku budeš svůj kód číst jako cizí člověk. Mimo IT platí totéž: rukopis, který přečteš jen ty, je k ničemu v týmu.</p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="4"><div class="slide-inner">
+      <div class="eyebrow">Principy</div>
+      <h2 class="slide-title">Pět zkratek, které uslyšíš v každém týmu</h2>
+      <div class="cards4" id="prinCards"></div>
+      <div class="panel" id="prinPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="5"><div class="slide-inner">
+      <div class="eyebrow">Verzování</div>
+      <h2 class="slide-title">Git je laboratorní deník tvého projektu</h2>
+      <div class="compare-grid">
+        <div class="compare-col">
+          <div class="compare-head">V IT</div>
+          <div class="compare-body"><b>Malé commity</b>, každý dělá jednu věc.<br><b>Zpráva říká co a proč</b>: „Oprava pádu při prázdném seznamu“, ne „oprava“.<br><b>Větev</b> pro každou větší změnu.<br><b>Žádná hesla v repozitáři</b>. Git si pamatuje i smazané.</div>
+        </div>
+        <div class="compare-col">
+          <div class="compare-head">Mimo IT</div>
+          <div class="compare-body">Vědec zapisuje každý pokus do <b>laboratorního deníku</b> s datem, i ty nepovedené.<br>Hráč <b>uloží hru před soubojem s bossem</b>.<br>Právník pracuje s <b>verzemi smlouvy</b> a změny vyznačuje.<br>Ve všech případech jde o totéž: vrátit se zpět a zjistit, co se kdy změnilo.</div>
+        </div>
+      </div>
+      <p class="note">Nejhorší název souboru na světě: <span class="mono">prace_final_FINAL_opravdu_v3.docx</span></p>
+    </div></section>
+
+    <section class="slide" data-index="6"><div class="slide-inner">
+      <div class="eyebrow">Zálohy</div>
+      <h2 class="slide-title">Pravidlo 3-2-1: vyzkoušej si katastrofu</h2>
+      <p class="note"><b>3</b> kopie dat, na <b>2</b> různých typech úložiště, <b>1</b> mimo domov. Originál máš na notebooku. Klikni, jaké další kopie máš.</p>
+      <div class="checks" id="bkChecks"></div>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Co se stane</th><th>Přežijí data?</th></tr></thead>
+          <tbody id="bkBody"></tbody>
+        </table>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="7"><div class="slide-inner">
+      <div class="eyebrow">Vrstvy ochrany</div>
+      <h2 class="slide-title">Model švýcarského sýra</h2>
+      <p class="note">Každá ochrana má díry. Problém projde, jen když se díry ve všech vrstvách seřadí za sebou. Model popsal psycholog James Reason a používá ho letectví i zdravotnictví. Zapni vrstvy, které tým má (čísla jsou ilustrační).</p>
+      <div class="checks" id="swChecks"></div>
+      <div class="big-row"><span class="big-num" id="swNum">1000</span><span class="note grow" id="swMsg">chyb z 1000 dojde až k uživatelům.</span></div>
+      <div class="chk-track"><div class="chk-bar is-bad" id="swBar"></div></div>
+    </div></section>
+
+    <section class="slide" data-index="8"><div class="slide-inner">
+      <div class="eyebrow">Poučení z chyb</div>
+      <h2 class="slide-title">Slavné chyby a co nás naučily</h2>
+      <div class="seg" id="failSeg"></div>
+      <div class="panel p-tall" id="failPanel"></div>
+    </div></section>
+
+    <section class="slide pause-slide" data-index="9"><div class="slide-inner">
+      <div class="qmark">?</div>
+      <h2>Kdy jsi naposledy přišel o rozdělanou práci?</h2>
+      <p class="lede">Co se stalo? Která vrstva ochrany chyběla: záloha, verze, kontrola, nebo jen pět minut klidu navíc?</p>
+    </div></section>
+
+    <section class="slide" data-index="10"><div class="slide-inner">
+      <div class="eyebrow">Mimo IT: Toyota</div>
+      <h2 class="slide-title">Pět otázek „proč?“</h2>
+      <p class="note">Metoda pochází z továren Toyota. Neptáme se „kdo to pokazil“, ale „co v postupu chybělo“. Problém: <b>Maturitní projekt nešel při obhajobě spustit.</b></p>
+      <ol class="steps" id="whySteps"></ol>
+      <div class="feed-foot"><button class="calc-btn" id="whyBtn">Proč?</button><button class="calc-btn" id="whyReset">Začít znovu</button><span class="note grow" id="whyMsg"></span></div>
+    </div></section>
+
+    <section class="slide" data-index="11"><div class="slide-inner">
+      <div class="eyebrow">Kultura</div>
+      <h2 class="slide-title">Rozbor bez obviňování</h2>
+      <div class="compare-grid">
+        <div class="compare-col is-bad">
+          <div class="compare-head">Kultura viny</div>
+          <div class="compare-body">„Kdo to udělal?“<br>Chyby se zamlčují, protože za ně hrozí trest.<br>Stejná chyba se za měsíc stane jinému.</div>
+        </div>
+        <div class="compare-col is-good">
+          <div class="compare-head">Blameless postmortem</div>
+          <div class="compare-body">„Jak se to mohlo stát a co změníme?“<br>Lidé chyby hlásí, protože je to bezpečné.<br>Oprava je v postupu, ne v člověku.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Odkud to známe</h3>
+        <p>V <b>letectví</b> piloti hlásí vlastní chyby do anonymních systémů a sdílí se poučení napříč aerolinkami. V <b>Toyotě</b> může každý dělník zatáhnout za šňůru (andon) a zastavit linku, když vidí problém. V IT firmy jako Google nebo GitLab zveřejňují rozbory svých výpadků.</p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="12"><div class="slide-inner">
+      <div class="eyebrow">Zákony, které nejsou v Ústavě</div>
+      <h2 class="slide-title">Pravidla, která platí všude</h2>
+      <div class="cards4" id="lawCards"></div>
+      <div class="panel" id="lawPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="13"><div class="slide-inner">
+      <div class="eyebrow">Komunikace</div>
+      <h2 class="slide-title">Jak se zeptat, aby ti někdo pomohl</h2>
+      <div class="compare-grid">
+        <div class="compare-col is-bad">
+          <div class="compare-head">Na to nikdo neodpoví</div>
+          <div class="compare-body">„Nefunguje mi to. Nevíte proč?“</div>
+        </div>
+        <div class="compare-col is-good">
+          <div class="compare-head">Na to odpoví každý</div>
+          <div class="compare-body">„Funkce na průměr známek spadne na <span class="mono">ZeroDivisionError</span> (řádek 4), když je seznam prázdný. Čekal jsem, že vrátí 0. Zkusil jsem podmínku, ale pak vrací <span class="mono">None</span>. Posílám 8 řádků, které chybu ukážou.“</div>
+        </div>
+      </div>
+      <div class="cards4" id="askCards"></div>
+      <div class="panel" id="askPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="14"><div class="slide-inner">
+      <div class="eyebrow">Mimo IT: kokpit</div>
+      <h2 class="slide-title">Sterilní kokpit a hluboká práce</h2>
+      <p class="lede">Od roku 1981 platí v USA pravidlo sterilního kokpitu: při startu, přistání a pod výškou 10 000 stop se v kokpitu mluví jen o letu. Nejvíc chyb vzniká, když pozornost odbíhá v kritické chvíli.</p>
+      <div class="compare-grid">
+        <div class="compare-col">
+          <div class="compare-head">Programátor dělá totéž</div>
+          <div class="compare-body">Vypnuté notifikace, telefon jinde.<br>Jeden úkol, blok 25–50 minut.<br>Pak přestávka, ne scrollování.</div>
+        </div>
+        <div class="compare-col">
+          <div class="compare-head">Proč</div>
+          <div class="compare-body">Každé přepnutí pozornosti něco stojí. Po přerušení trvá dlouho, než se do složitého problému znovu ponoříš. „Rychle mrknout na zprávu“ není nikdy rychlé.</div>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="15"><div class="slide-inner">
+      <div class="eyebrow">Umělá inteligence</div>
+      <h2 class="slide-title">AI jako kolega, ne jako náhrada mozku</h2>
+      <div class="compare-grid">
+        <div class="compare-col is-good">
+          <div class="compare-head">Dělej</div>
+          <div class="compare-body">Nech si kód a chyby <b>vysvětlit</b>.<br>Fakta <b>ověř v původním zdroji</b>.<br>Vygenerovaný kód <b>otestuj</b>.<br>V práci <b>uveď</b>, kde a jak jsi AI použil.</div>
+        </div>
+        <div class="compare-col is-bad">
+          <div class="compare-head">Nedělej</div>
+          <div class="compare-body">Nevkládej <b>hesla, osobní údaje</b> ani cizí data.<br>Neodevzdávej kód, který <b>nedokážeš vysvětlit</b> u obhajoby.<br>Nevěř <b>citacím a odkazům</b> bez kontroly, AI si je umí vymyslet.</div>
+        </div>
+      </div>
+      <p class="note">Stejné pravidlo platí pro kalkulačku, Wikipedii i radu od kamaráda: výsledek podepisuješ ty.</p>
+    </div></section>
+
+    <section class="slide" data-index="16"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Dobrá praxe, nebo past?</h2>
+      <p class="score" id="qScore">Situace 1 z 8 · správně 0</p>
+      <div class="msg"><div class="who" id="qWho"></div><div class="text" id="qText"></div></div>
+      <div class="seg"><button class="calc-btn" id="qOk">Dobrá praxe</button><button class="calc-btn" id="qBad">Past</button><button class="calc-btn" id="qNext" hidden>Další →</button></div>
+      <div class="feedback" id="qFb"></div>
+    </div></section>
+
+    <section class="slide" data-index="17"><div class="slide-inner">
+      <div class="eyebrow">Udělej hned</div>
+      <h2 class="slide-title">Checklist pro maturitní práci</h2>
+      <p class="note">Odškrtni, co už máš. <span id="mpCount">Hotovo 0 z 8</span></p>
+      <div class="chk-track"><div class="chk-bar" id="mpBar"></div></div>
+      <div class="checks" id="mpChecks"></div>
+    </div></section>
+
+    <section class="slide pause-slide" data-index="18"><div class="slide-inner">
+      <div class="eyebrow">Před každým odevzdáním</div>
+      <div class="rule3">
+        <div><b>Spustí se?</b><span>Na cizím počítači, podle tvého README, bez tvé pomoci.</span></div>
+        <div><b>Pochopí to?</b><span>Člověk, který kód vidí poprvé. Včetně tebe za půl roku.</span></div>
+        <div><b>Přežije to?</b><span>Krádež notebooku, požár, smazání omylem.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="19"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Osvědčené postupy vznikly z <b>konkrétních chyb</b>. Než pravidlo porušíš, zjisti, proč existuje.</li>
+        <li><b>Checklist</b> zachraňuje životy v letadle i na sále. Funguje i na tvůj projekt.</li>
+        <li>Kód píšeš pro <b>lidi</b>: srozumitelná jména, malé funkce, komentář říká proč.</li>
+        <li><b>Git</b> a <b>zálohy 3-2-1</b>. Záloha, kterou jsi nezkusil obnovit, není záloha.</li>
+        <li>Ochrana má <b>víc vrstev</b>. Po chybě hledej díru v postupu, ne viníka.</li>
+        <li>Ptej se konkrétně, chraň si soustředění a za výsledek s AI <b>ručíš ty</b>.</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 20</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=document.getElementById("dots"),counterEl=document.getElementById("counter");
+  var prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=document.createElement("button");d.className="dot"+(i===0?" is-active":"");
+    d.setAttribute("aria-label","Snímek "+(i+1));d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  /* výběr jedné z N možností: tlačítka + panel se stálou výškou */
+  function picker(btnHost,items,mk,panel,showFn){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;showFn(it,i);
+      });btnHost.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");showFn(items[0],0);
+    fits.push({slide:btnHost.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){showFn(it,i);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";showFn(items[act],act);
+    }});
+  }
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function panelHtml(p,title,text,extra){p.innerHTML="<h3>"+title+"</h3><p>"+text+"</p>"+(extra||"");}
+  function card(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");}
+
+  /* ---- 1: co je best practice ---- */
+  var what=[
+    {n:"Ověřený postup",s:"z praxe",d:"Postup, který se osvědčil mnoha lidem v mnoha projektech. Nevznikl u stolu jako teorie, ale tím, že ho lidé zkoušeli, porovnávali a předávali dál."},
+    {n:"Psaný z chyb",s:"z nehod",d:"V letectví se říká, že předpisy jsou psané krví. Za většinou pravidel stojí konkrétní nehoda, výpadek nebo ztracená data. Kdo pravidla zná, nemusí stejnou chybu udělat znovu."},
+    {n:"Závisí na kontextu",s:"ne vždy „best“",d:"„Nejlepší“ znamená nejlepší pro typickou situaci. Co je nutnost pro tým pěti set programátorů v bance, může být pro tvůj školní projekt zbytečná byrokracie."},
+    {n:"Nejdřív pochop",s:"pak porušuj",d:"<b>Chestertonův plot:</b> když uprostřed cesty najdeš plot, neodstraňuj ho, dokud nezjistíš, proč tam je. Pravidlo smíš porušit, ale vědomě a s důvodem."}
+  ];
+  picker($("whatCards"),what,card,$("whatPanel"),function(c){panelHtml($("whatPanel"),c.n,c.d);});
+
+  /* ---- 2: checklist ---- */
+  var chk=[
+    {n:"1935",s:"nehoda",t:"Boeing Model 299 se zřítil",d:"Nový bombardér se při předváděcím letu hned po startu zřítil. Zkušený pilot zapomněl uvolnit zámek kormidel. Novináři psali, že letadlo je „příliš složité, aby ho jeden člověk uřídil“."},
+    {n:"Řešení",s:"papír",t:"Ne delší výcvik, ale seznam",d:"Piloti sepsali krátké kontrolní seznamy pro pojíždění, start, let a přistání. Nic nového se nenaučili, jen přestali spoléhat na paměť."},
+    {n:"Výsledek",s:"standard",t:"Checklist se stal normou",d:"Letoun se pod označením B-17 vyráběl ve více než 12 tisících kusech. Kontrolní seznamy jsou od té doby v letectví samozřejmost, i u pilotů s tisíci nalétanými hodinami."},
+    {n:"2008",s:"chirurgie",t:"WHO přenesla checklist na sál",d:"Světová zdravotnická organizace zavedla 19bodový chirurgický checklist. Studie v osmi nemocnicích po celém světě: úmrtí po operaci klesla z 1,5 % na 0,8 %, komplikace z 11 % na 7 %."}
+  ];
+  picker($("chkChain"),chk,function(c){return el("button","",esc(c.n)+"<span>"+c.s+"</span>");},$("chkChainPanel"),function(c){panelHtml($("chkChainPanel"),c.t,c.d);});
+
+  /* ---- 4: principy ---- */
+  var prin=[
+    {n:"KISS",s:"Keep it simple",it:"Nejjednodušší řešení, které funguje. Každý řádek navíc je místo, kde se může schovat chyba.",out:"„Dokonalosti není dosaženo, když už není co přidat, ale když už není co odebrat.“ (Saint-Exupéry)"},
+    {n:"DRY",s:"Don't repeat yourself",it:"Stejná logika jen na jednom místě. Když najdeš chybu, opravíš ji jednou a platí všude. Pozor na opačný extrém: nespojuj věci, které si jsou podobné jen náhodou.",out:"Jeden sdílený rodinný kalendář místo tří papírových, které si odporují."},
+    {n:"YAGNI",s:"You aren't gonna need it",it:"Neprogramuj funkce „pro jistotu“. Nejspíš je nikdy nikdo nepoužije, ale ty je budeš udržovat a testovat.",out:"Nekupuj vybavení za tisíce na koníček, který jsi ještě ani nezkusil."},
+    {n:"Skaut",s:"pravidlo tábořiště",it:"Nech kód o kousek čistší, než jsi ho našel. Přejmenuj nejasnou proměnnou, smaž zakomentovaný kód. Malé zlepšení při každé návštěvě.",out:"Skauti opouštějí tábořiště čistší, než ho našli. Kuchař uklízí průběžně, ne až po službě."},
+    {n:"Work · Right · Fast",s:"pořadí kroků",it:"Nejdřív ať to funguje, pak ať je to dobře napsané, nakonec ať je to rychlé. Optimalizovat kód, který ještě nefunguje, je ztráta času.",out:"Nejdřív napiš esej celou, pak ji uhlaď. Hledání dokonalé první věty je nejčastější důvod, proč esej nevznikne."}
+  ];
+  picker($("prinCards"),prin,card,$("prinPanel"),function(c){
+    $("prinPanel").innerHTML="<h3>"+c.n+" · "+c.s+"</h3><p><b>V IT:</b> "+c.it+"</p><p><b>Mimo IT:</b> "+c.out+"</p>";
+  });
+
+  /* ---- 6: zálohy 3-2-1 ---- */
+  var copies=[
+    {k:"usb",n:"Externí disk, trvale připojený",d:"Leží vedle notebooku nebo s ním v batohu."},
+    {k:"off",n:"Externí disk, odpojený",d:"Připojíš jen při záloze, jinak v šuplíku."},
+    {k:"sync",n:"Cloud se synchronizací",d:"OneDrive, Google Disk: kopíruje změny hned."},
+    {k:"hist",n:"Úložiště s historií verzí",d:"GitHub, cloud s verzemi: vrátíš se do minulosti."},
+    {k:"away",n:"Kopie mimo domov",d:"Disk u prarodičů, ve škole, v práci."}
+  ];
+  var disasters=[
+    {n:"Odejde disk v notebooku",ok:["usb","off","sync","hist","away"]},
+    {n:"Ukradnou ti batoh s notebookem",ok:["off","sync","hist","away"]},
+    {n:"Požár bytu",ok:["sync","hist","away"]},
+    {n:"Ransomware zašifruje soubory",ok:["off","hist","away"],why:"Zašifruje i připojený disk a synchronizace zkopíruje zašifrované soubory do cloudu."}
+  ];
+  var have={};
+  copies.forEach(function(c){
+    var b=el("button","chk","<b>"+c.n+"</b><span>"+c.d+"</span>");
+    b.addEventListener("click",function(){if(have[c.k])delete have[c.k];else have[c.k]=1;b.classList.toggle("is-done",!!have[c.k]);bkRender();});
+    $("bkChecks").appendChild(b);
+  });
+  function bkRender(){
+    var names={usb:"připojený disk",off:"odpojený disk",sync:"synchronizovaný cloud",hist:"historie verzí",away:"kopie mimo domov"};
+    var h="";
+    disasters.forEach(function(d){
+      var saved=d.ok.filter(function(k){return have[k];});
+      var cell=saved.length?'<td class="ok">ano: '+saved.map(function(k){return names[k];}).join(", ")+"</td>":'<td class="ko">přijdeš o všechno'+(d.why?". "+d.why:"")+"</td>";
+      h+="<tr><td>"+d.n+"</td>"+cell+"</tr>";
+    });
+    $("bkBody").innerHTML=h;
+  }
+  bkRender();
+
+  /* ---- 7: švýcarský sýr ---- */
+  var layers=[
+    {n:"Code review",d:"Kód před sloučením přečte kolega. Zachytí 60 %."},
+    {n:"Automatické testy",d:"Spustí se při každé změně. Zachytí 70 %."},
+    {n:"Postupné nasazení",d:"Nejdřív 1 % uživatelů, pak víc. Zachytí 80 %."},
+    {n:"Monitoring",d:"Hlídá chyby v provozu, rychlý návrat zpět. Zachytí 50 %."}
+  ];
+  var catchRate=[.6,.7,.8,.5],on={};
+  layers.forEach(function(l,i){
+    var b=el("button","chk","<b>"+l.n+"</b><span>"+l.d+"</span>");
+    b.addEventListener("click",function(){if(on[i])delete on[i];else on[i]=1;b.classList.toggle("is-done",!!on[i]);swRender();});
+    $("swChecks").appendChild(b);
+  });
+  function swRender(){
+    var left=1000,n=0;
+    catchRate.forEach(function(r,i){if(on[i]){left*=1-r;n++;}});
+    left=Math.round(left);
+    $("swNum").textContent=left;
+    $("swMsg").textContent="chyb z 1000 dojde až k uživatelům."+(n===0?" Žádná vrstva ochrany.":n===4?" Žádná vrstva není dokonalá, ale dohromady fungují.":"");
+    $("swBar").style.width=(left/10)+"%";
+  }
+  swRender();
+
+  /* ---- 8: slavné chyby ---- */
+  var fails=[
+    {n:"Ariane 5",y:"1996",w:"Raketa se 37 sekund po startu rozpadla. Řídicí software byl převzatý z menší Ariane 4. Převod rychlosti z 64bitového desetinného čísla na 16bitové celé číslo u rychlejší rakety přetekl a navigace se zhroutila.",l:"Převzatý kód otestuj v nových podmínkách.",o:"Postup, který fungoval jinde, nemusí fungovat tady. Recept pro čtyři osoby nestačí jen vynásobit deseti."},
+    {n:"Mars Climate Orbiter",y:"1999",w:"Sonda NASA se k Marsu přiblížila příliš a zanikla v atmosféře. Software jednoho týmu počítal v librách síly, druhý tým čekal newtony.",l:"Jasně dohodnuté rozhraní a jednotky mezi týmy.",o:"Zadání, které každá strana chápe jinak. „Do pátku“ znamená ráno, nebo o půlnoci?"},
+    {n:"Knight Capital",y:"2012",w:"Obchodní firma ručně nasazovala novou verzi na 8 serverů a jeden vynechala. Na něm se probudil starý, dávno nepoužívaný kód a začal automaticky obchodovat. Za 45 minut firma prodělala asi 440 milionů dolarů.",l:"Automatizované a ověřené nasazení. Mrtvý kód mazat, ne nechávat ležet.",o:"Ruční postup, který se dělá jednou za rok, je nejrizikovější. Proto existuje checklist."},
+    {n:"GitLab",y:"2017",w:"Unavený administrátor pozdě večer omylem smazal produkční databázi, zaměnil dva servery. Z pěti způsobů zálohování žádný spolehlivě nefungoval a ztratila se data za asi 6 hodin. Firma obnovu živě vysílala a zveřejnila otevřený rozbor.",l:"Záloha, kterou jsi nezkusil obnovit, není záloha.",o:"Hasicí přístroj, který nikdo nekontroluje, je jen dekorace. Otevřenost po chybě buduje důvěru."},
+    {n:"CrowdStrike",y:"2024",w:"Chybná aktualizace bezpečnostního softwaru shodila zhruba 8,5 milionu počítačů s Windows: zastavila letiště, nemocnice i banky. Aktualizace šla všem počítačům najednou.",l:"Postupné nasazení: nejdřív malé procento, sledovat, pak dál.",o:"Nový recept nezkoušíš poprvé na svatbě pro sto hostů."}
+  ];
+  picker($("failSeg"),fails,function(c){return el("button","calc-btn",esc(c.n));},$("failPanel"),function(c){
+    $("failPanel").innerHTML='<span class="meta">'+c.y+"</span><h3>"+c.n+"</h3><p>"+c.w+"</p><p><b>Poučení:</b> "+c.l+"</p><p><b>Mimo IT:</b> "+c.o+"</p>";
+  });
+
+  /* ---- 10: pět proč ---- */
+  var whys=[
+    "Proč? Na školním počítači chyběla knihovna, kterou projekt potřebuje.",
+    "Proč? Nainstaloval jsem ji jen u sebe a nikam to nezapsal.",
+    "Proč? Projekt nemá seznam závislostí (requirements.txt).",
+    "Proč? Nikdy jsem ho nespouštěl jinde než na svém notebooku.",
+    "Proč? V plánu nebyla zkouška na cizím počítači."
+  ];
+  var wi=0;
+  function whyRender(){
+    var h="";for(var i=0;i<wi;i++)h+="<li>"+whys[i]+"</li>";
+    $("whySteps").innerHTML=h;
+    $("whyBtn").hidden=wi>=whys.length;
+    $("whyMsg").innerHTML=wi>=whys.length?"<b>Náprava:</b> seznam závislostí, README s postupem spuštění a týden před obhajobou zkouška na jiném počítači. Oprava je v postupu, ne v člověku.":"";
+  }
+  $("whyBtn").addEventListener("click",function(){wi++;whyRender();});
+  $("whyReset").addEventListener("click",function(){wi=0;whyRender();});
+  whyRender();
+
+  /* ---- 12: zákony ---- */
+  var laws=[
+    {n:"Murphyho",s:"co se může pokazit…",q:"Co se může pokazit, to se pokazí.",it:"Ošetři prázdný vstup, výpadek sítě i plný disk. Uživatel udělá to, co tě nenapadlo.",o:"Inženýři navrhují mosty s velkou rezervou. Na výlet bereš pláštěnku, i když hlásí slunce."},
+    {n:"Hofstadterův",s:"odhady",q:"Vždycky to trvá déle, než čekáš, i když počítáš s Hofstadterovým zákonem.",it:"Odhad programování se běžně násobí. Poslední 10 % práce zabere nejvíc času.",o:"Rekonstrukce koupelny, psaní seminárky, stěhování. Plánuj s rezervou."},
+    {n:"Brooksův",s:"více lidí",q:"Přidání lidí do zpožděného softwarového projektu ho ještě víc zpozdí.",it:"Nováčky musí někdo zaučit a s každým dalším člověkem roste počet domluv.",o:"Devět žen neporodí dítě za měsíc. Ve skupinové práci víc lidí neznamená rychleji."},
+    {n:"Pareto",s:"80/20",q:"Zhruba 80 % výsledků pochází z 20 % příčin.",it:"Většinu pádů způsobí pár chyb. Většinu času program stráví v malé části kódu.",o:"Většinu bodů v testu přinese malá část učiva. Začni tím podstatným."},
+    {n:"Goodhartův",s:"měření",q:"Když se z ukazatele stane cíl, přestane být dobrým ukazatelem.",it:"Měřit programátory počtem řádků vede k nafouknutému kódu. Honba za 100% pokrytím testy vede k zbytečným testům.",o:"Učení na známku místo učení se. Známka měla měřit znalost, ne ji nahradit."}
+  ];
+  picker($("lawCards"),laws,card,$("lawPanel"),function(c){
+    $("lawPanel").innerHTML="<h3>"+c.n+" zákon</h3><div class=\"quote\">"+c.q+"</div><p><b>V IT:</b> "+c.it+"</p><p><b>Mimo IT:</b> "+c.o+"</p>";
+  });
+
+  /* ---- 13: jak se ptát ---- */
+  var ask=[
+    {n:"Pravidlo 15 minut",s:"sám, pak ptát",d:"Zkus problém řešit 15 minut sám. Když se neposuneš, zeptej se. Kdo se ptá hned, nenaučí se nic. Kdo se nezeptá ani po dni, zbytečně ztrácí čas."},
+    {n:"Gumová kachnička",s:"vysvětli to",d:"Vysvětli problém řádek po řádku komukoli, třeba gumové kachně na stole. Často chybu najdeš uprostřed vlastního vysvětlování. Technika pochází z knihy The Pragmatic Programmer."},
+    {n:"Minimální příklad",s:"co nejkratší",d:"Zmenšuj kód, dokud chyba nezmizí. Posledních pár řádků, kde chyba ještě je, pošli. Při zmenšování chybu často najdeš sám. Stejně funguje dobrá reklamace: co, kdy, jak zopakovat."}
+  ];
+  picker($("askCards"),ask,card,$("askPanel"),function(c){panelHtml($("askPanel"),c.n,c.d);});
+
+  /* ---- 16: kvíz ---- */
+  var qs=[
+    {w:"Databáze",t:"Heslo k databázi napíšu přímo do kódu. Repozitář je stejně soukromý.",bad:true,fb:"Repozitáře se zveřejňují, sdílejí a kopírují. Git si heslo pamatuje i po smazání. Tajné údaje patří do proměnných prostředí nebo do souboru uvedeného v .gitignore."},
+    {w:"Git",t:"Commit se zprávou „oprava“.",bad:true,fb:"Za měsíc nebudeš vědět, co se opravovalo. Lepší: „Oprava pádu při prázdném seznamu známek“."},
+    {w:"Git",t:"Před velkou změnou si vytvořím novou větev.",bad:false,fb:"Hlavní verze zůstane funkční a když pokus nevyjde, větev prostě zahodíš."},
+    {w:"Zálohy",t:"Zálohuju na externí disk, který mám trvale připojený k notebooku.",bad:true,fb:"Krádež, požár i ransomware vezmou notebook i disk najednou. Aspoň jedna kopie má být odpojená nebo mimo domov."},
+    {w:"Nová funkce",t:"Přidám export do PDF, kdyby ho náhodou někdo někdy chtěl.",bad:true,fb:"YAGNI. Funkci, kterou nikdo nechtěl, budeš muset testovat a udržovat. Přidej ji, až ji někdo opravdu bude potřebovat."},
+    {w:"Po výpadku",t:"Sepíšu krátký rozbor: co se stalo, proč a co v postupu změním.",bad:false,fb:"Přesně tak vypadá blameless postmortem. Z chyby se poučí celý tým."},
+    {w:"Nasazení",t:"Novou verzi pustím nejdřív na malou část uživatelů a sleduju chyby.",bad:false,fb:"Postupné nasazení. Kdyby to tak udělal CrowdStrike, místo milionů počítačů by spadlo pár tisíc."},
+    {w:"Pojmenování",t:"Proměnnou nazvu x2, ať je kód kratší.",bad:true,fb:"Kratší kód není cíl. Cíl je kód, kterému za půl roku porozumíš. Jméno má říct, co v proměnné je."}
+  ];
+  var qI=0,qOk=0,qAns=false;
+  function qRender(){
+    var q=qs[qI];qAns=false;
+    $("qWho").textContent=q.w;$("qText").textContent=q.t;
+    $("qScore").textContent="Situace "+(qI+1)+" z "+qs.length+" · správně "+qOk;
+    $("qFb").innerHTML="";$("qNext").hidden=true;$("qBad").hidden=false;$("qOk").hidden=false;
+  }
+  function qAnswer(isBad){
+    if(qAns)return;qAns=true;
+    var q=qs[qI],ok=isBad===q.bad;if(ok)qOk++;
+    $("qScore").textContent="Situace "+(qI+1)+" z "+qs.length+" · správně "+qOk;
+    $("qFb").innerHTML='<span class="badge '+(q.bad?"bad":"good")+'">'+(q.bad?"past":"dobrá praxe")+"</span> <b>"+(ok?"Správně.":"Tentokrát ne.")+"</b> "+q.fb;
+    $("qBad").hidden=true;$("qOk").hidden=true;$("qNext").hidden=false;
+    $("qNext").textContent=qI===qs.length-1?"Výsledek":"Další →";
+  }
+  $("qBad").addEventListener("click",function(){qAnswer(true);});
+  $("qOk").addEventListener("click",function(){qAnswer(false);});
+  $("qNext").addEventListener("click",function(){
+    if(qI===qs.length-1){
+      $("qFb").innerHTML="<b>Výsledek: "+qOk+" z "+qs.length+".</b> "+(qOk>=7?"Výborně. Teď to ještě dodržovat ve vlastním projektu.":"Vrať se ke slajdům o gitu, zálohách a principech.");
+      $("qNext").textContent="Znovu";qI=-1;qOk=0;
+      return;
+    }
+    qI++;qRender();
+  });
+  qRender();
+
+  /* ---- 17: checklist maturitní práce ---- */
+  var mp=[
+    ["Repozitář na GitHubu","Commituji průběžně, ne jednou před odevzdáním."],
+    ["README","Co projekt dělá a jak ho spustit krok za krokem."],
+    ["Seznam závislostí","requirements.txt, package.json nebo jiný."],
+    ["Žádná hesla v repozitáři","Tajné údaje mimo kód, soubor v .gitignore."],
+    ["Záloha mimo můj počítač","A aspoň jednou jsem z ní zkusil obnovit."],
+    ["Zkouška na cizím počítači","Projekt se spustí jen podle README."],
+    ["Harmonogram s rezervou","Hofstadterův zákon platí i pro mě."],
+    ["Zápis o použití AI","Kde, k čemu a jak jsem výsledek ověřil."]
+  ];
+  var done={};
+  mp.forEach(function(c,i){
+    var b=el("button","chk","<b>"+c[0]+"</b><span>"+c[1]+"</span>");
+    b.addEventListener("click",function(){
+      if(done[i])delete done[i];else done[i]=1;
+      b.classList.toggle("is-done",!!done[i]);
+      var n=Object.keys(done).length;
+      $("mpCount").textContent="Hotovo "+n+" z "+mp.length+(n===mp.length?". Tvůj projekt je připravený líp než většina.":"");
+      $("mpBar").style.width=(n/mp.length*100)+"%";
+    });
+    $("mpChecks").appendChild(b);
+  });
+
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Procesor a paměti</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Hardware a operační systémy · 4. materiál</div>
+      <h1>Procesor a paměti</h1>
+      <p class="lede">Procesor, cache, RAM a disky. Ukážeme, kde se v dnešním PC skrývá von Neumannovo schéma a proč procesor potřebuje tolik různých pamětí.</p>
+      <p class="hint">Údaje o součástkách platí k říjnu 2026. Zdroje jsou na posledním snímku.</p>
+    </div></section>
+
+    <!-- 1: deska -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Mapa</div>
+      <h2 class="slide-title">Základní deska jako von Neumannovo schéma</h2>
+      <div class="toolbar">
+        <div class="modeswitch" id="mbMode"><button class="is-active" data-m="real">Součástky</button><button data-m="roles">Role podle von Neumanna</button></div>
+        <div class="roles-legend" id="mbLegend" hidden><span><i class="r-cpu"></i>procesor (řadič + ALU)</span><span><i class="r-ram"></i>operační paměť</span><span><i class="r-sto"></i>vnější paměť</span><span><i class="r-io"></i>vstup a výstup</span><span><i class="r-bus"></i>sběrnice</span><span><i class="r-x"></i>napájení a firmware</span></div>
+      </div>
+      <div class="split wideL">
+        <svg class="mb" id="mb" viewBox="0 0 760 500" role="img" aria-label="Schéma základní desky"></svg>
+        <div class="panel p-tall" id="mbPanel"></div>
+      </div>
+    </div></section>
+
+    <!-- 2: rychlost procesoru -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Procesor</div>
+      <h2 class="slide-title">Jak rychlý je procesor?</h2>
+      <p class="lede">Výkon procesoru je součin tří čísel: kolik taktů za sekundu, kolik instrukcí za takt (IPC) a kolik jader pracuje současně.</p>
+      <div class="sliders">
+        <div class="sl"><label for="sF">Takt</label><input type="range" id="sF" min="1" max="6.2" step="0.1" value="5.7"><output id="oF"></output></div>
+        <div class="sl"><label for="sI">Instrukcí za takt</label><input type="range" id="sI" min="1" max="8" step="1" value="4"><output id="oI"></output></div>
+        <div class="sl"><label for="sC">Jádra</label><input type="range" id="sC" min="1" max="24" step="1" value="16"><output id="oC"></output></div>
+      </div>
+      <div class="bignum">
+        <div><span>Délka jednoho taktu</span><b id="rT"></b><small>za tu dobu se nestihne skoro nic</small></div>
+        <div><span>Světlo za jeden takt urazí</span><b id="rL"></b><small>signál po desce je ještě pomalejší</small></div>
+        <div><span>Teoretický výkon</span><b id="rP"></b><small>instrukcí za sekundu</small></div>
+      </div>
+      <p class="note">Teoretický výkon procesor dosáhne, jen když má pořád co dělat. Ve skutečnosti velkou část času čeká na data z paměti.</p>
+    </div></section>
+
+    <!-- 3: proč takt neroste -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Stěna výkonu</div>
+      <h2 class="slide-title">Proč nemáme procesor s taktem 20 GHz</h2>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">Listopad 2004</div><div class="compare-body center"><div class="formula f-md">3,8 GHz</div>Pentium 4 570J. Intel zrušil plánovaný model se 4 GHz.</div></div>
+        <div class="compare-col"><div class="compare-head">Březen 2024</div><div class="compare-body center"><div class="formula f-md">6,2 GHz</div>Core i9-14900KS, podle Intelu rekordní tovární takt desktopového procesoru.</div></div>
+      </div>
+      <p class="lede">Za 20 let takt vzrostl jen asi o 60 %, zatímco počet tranzistorů na čipu vzrostl řádově tisíckrát. Kolem let 2005 až 2007 přestalo platit <b>Dennardovo škálování</b>: menší tranzistory už neznamenaly nižší spotřebu. Vyšší takt by čip přehřál.</p>
+      <p class="lede">Výrobci proto místo zvyšování taktu přidávají <b>jádra</b>, chytřejší jádra s vyšším IPC a hlavně <b>větší cache</b>.</p>
+    </div></section>
+
+    <!-- 4: procesor čeká -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Problém</div>
+      <h2 class="slide-title">Procesor je rychlý. Paměť ne.</h2>
+      <p class="lede">Přístupová doba (latence): jak dlouho trvá jedno čtení malého kusu dat, od požadavku po první data. Nejde o rychlost přenosu velkého souboru.</p>
+      <div class="toolbar">
+        <div class="seg" id="ladMode"></div>
+        <span class="note">Délka pruhu je logaritmická: dílek = 10×.</span>
+      </div>
+      <div class="ladder" id="ladder"></div>
+      <div class="panel" id="ladPanel"></div>
+    </div></section>
+
+    <!-- 5: pyramida -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Hierarchie pamětí</div>
+      <h2 class="slide-title">Čím blíž procesoru, tím rychlejší, menší a dražší</h2>
+      <div class="split">
+        <svg class="pyr" id="pyr" viewBox="0 0 570 400" role="img" aria-label="Pyramida pamětí"></svg>
+        <div class="panel p-tall" id="pyrPanel"></div>
+      </div>
+    </div></section>
+
+    <!-- 6: simulace cache -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Jak cache pomáhá</div>
+      <h2 class="slide-title">Simulace: procesor čte data z paměti</h2>
+      <div class="toolbar">
+        <div class="seg" id="csProg"></div>
+        <div class="seg"><button class="calc-btn" id="csStep">Krok →</button><button class="calc-btn" id="csRun">▶ Celé</button></div>
+      </div>
+      <div class="cs">
+        <div class="cs-box"><h3>Operační paměť (RAM) <span>přístup 70 ns</span></h3><div class="cs-ram" id="csRam"></div><p class="tiny">32 buněk. Z RAM se vždy načte celý řádek po 4 buňkách, jako skutečná cache načítá 64 bajtů najednou.</p></div>
+        <div class="cs-box"><h3>Cache <span>zásah 1 ns</span></h3><div class="cs-lines" id="csLines"></div><div class="hitbar"><i id="csHitbar"></i></div><p class="cs-log" id="csLog"></p></div>
+      </div>
+      <div class="bignum">
+        <div><span>Zásahy / výpadky</span><b id="csHM">0 / 0</b></div>
+        <div><span>Čas s cache</span><b id="csT1">0 ns</b></div>
+        <div><span>Čas bez cache</span><b id="csT0">0 ns</b></div>
+      </div>
+    </div></section>
+
+    <!-- 7: současné procesory -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Srovnání</div>
+      <h2 class="slide-title">Současné procesory (říjen 2026)</h2>
+      <div class="toolbar"><div class="seg" id="cpuFilt"></div><div class="modeswitch" id="cpuView"><button class="is-active" data-m="tbl">Tabulka</button><button data-m="bars">Graf</button></div></div>
+      <div class="seg" id="cpuMetric" hidden></div>
+      <div class="table-wrap" id="cpuTbl">
+        <table class="datatable cpu-tbl">
+          <thead><tr><th>Procesor</th><th>Vydán</th><th>Jádra / vlákna</th><th>Max. takt</th><th>L3</th><th>Příkon</th><th>Paměť</th></tr></thead>
+          <tbody id="cpuBody"></tbody>
+        </table>
+      </div>
+      <div class="mbars" id="cpuBars" hidden></div>
+      <p class="tiny">AMD udává TDP, Intel maximální turbo příkon, čísla proto nejsou přímo srovnatelná. Apple příkon nezveřejňuje. Nové generace (AMD Zen 6, Intel Nova Lake) jsou podle zpráv odložené na rok 2027.</p>
+    </div></section>
+
+    <!-- 8: co dnes rozhoduje -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Pojmy</div>
+      <h2 class="slide-title">Co dnes rozhoduje o výkonu</h2>
+      <div class="cards4" id="conCards"></div>
+      <div class="panel" id="conPanel"></div>
+    </div></section>
+
+    <!-- 9: RAM jak funguje -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Operační paměť</div>
+      <h2 class="slide-title">RAM: velká, levná, ale zapomnětlivá</h2>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">SRAM (cache)</div><div class="compare-body">Jeden bit drží <b>6 tranzistorů</b>. Nepotřebuje obnovování, je velmi rychlá, ale zabírá hodně místa na čipu. Proto má cache jen megabajty.</div></div>
+        <div class="compare-col"><div class="compare-head">DRAM (operační paměť)</div><div class="compare-body">Jeden bit je náboj v <b>kondenzátoru</b> s jedním tranzistorem. Náboj uniká, každá buňka se musí zhruba každých <b>64 ms</b> obnovit. Je hustá a levná, proto jí máme gigabajty.</div></div>
+      </div>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th></th><th>DDR4</th><th>DDR5</th></tr></thead>
+          <tbody>
+            <tr><td>Rychlost (JEDEC)</td><td>1 600 až 3 200 MT/s</td><td>4 800 až 8 800 MT/s</td></tr>
+            <tr><td>Napětí</td><td>1,2 V</td><td>1,1 V</td></tr>
+            <tr><td>Šířka modulu</td><td>jeden 64bitový kanál</td><td>dva nezávislé 32bitové subkanály</td></tr>
+            <tr><td>Napájení</td><td>řídí základní deska</td><td>vlastní čip PMIC na modulu</td></tr>
+            <tr><td>Oprava chyb</td><td>jen u ECC modulů</td><td>on-die ECC uvnitř čipů (nenahrazuje plné ECC)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tiny">RAM je <b>volatilní</b>: po vypnutí proudu se smaže. Proto program i data musí ležet ještě na disku. V roce 2026 ceny pamětí prudce vzrostly, výrobci dávají přednost čipům pro AI a datacentra.</p>
+    </div></section>
+
+    <!-- 10: kalkulačka RAM -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Parametry RAM</div>
+      <h2 class="slide-title">Co znamená DDR5-6000 CL30?</h2>
+      <p class="lede"><b>6000</b> = milionů přenosů za sekundu (MT/s). <b>CL30</b> = kolik taktů paměti trvá, než po příkazu ke čtení začnou chodit data. Vyber modul.</p>
+      <div class="seg" id="ramPre"></div>
+      <div class="sliders">
+        <div class="sl"><label for="rMT">Rychlost (MT/s)</label><input type="range" id="rMT" min="3200" max="9600" step="200" value="6000"><output id="oMT"></output></div>
+        <div class="sl"><label for="rCL">CAS latence (CL)</label><input type="range" id="rCL" min="14" max="50" step="1" value="30"><output id="oCL"></output></div>
+      </div>
+      <div class="bignum">
+        <div><span>CAS latence v čase</span><b id="rLat"></b><small>CL × 2000 / MT/s</small></div>
+        <div><span>Propustnost 1 kanálu</span><b id="rBw1"></b><small>MT/s × 8 bajtů</small></div>
+        <div><span>Dva kanály (běžné PC)</span><b id="rBw2"></b><small>dva moduly v párových slotech</small></div>
+      </div>
+      <p class="note">Vyšší frekvence s vyšším CL může mít stejnou latenci v nanosekundách jako pomalejší paměť s nižším CL. Celé čtení z RAM, včetně cesty přes řadič paměti, trvá podle měření zhruba 70 až 100 ns.</p>
+    </div></section>
+
+    <!-- 11: závod -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Přístupová doba</div>
+      <h2 class="slide-title">Závod: načti 4 KB z náhodného místa</h2>
+      <div class="toolbar"><div class="seg" id="raceMode"></div><button class="calc-btn" id="raceGo">▶ Start</button></div>
+      <div class="race" id="race"></div>
+      <p class="ratio" id="raceNote"></p>
+    </div></section>
+
+    <!-- 12: SSD -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">SSD</div>
+      <h2 class="slide-title">SSD: flash paměť bez pohyblivých částí</h2>
+      <div class="split">
+        <div class="stack">
+          <p class="lede">Data jsou uložena jako náboj v buňkách paměti <b>NAND flash</b>. Řadič SSD rozkládá zápisy rovnoměrně po celém čipu (wear leveling), protože buňka vydrží jen omezený počet přepisů.</p>
+          <div class="seg" id="nandSeg"></div>
+          <div class="panel" id="nandPanel"></div>
+        </div>
+        <div class="stack">
+          <h3>Sekvenční čtení podle rozhraní</h3>
+          <div class="mbars" id="ifBars"></div>
+          <p class="tiny">Výrobcem udávané maximum: Seagate IronWolf Pro 24 TB, Samsung 870 EVO, 990 PRO, 9100 PRO.</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 13: HDD -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">HDD</div>
+      <h2 class="slide-title">Pevný disk: proč čekáme milisekundy</h2>
+      <div class="split">
+        <svg class="hdd" id="hdd" viewBox="0 0 320 320" role="img" aria-label="Animace pevného disku"></svg>
+        <div class="stack">
+          <p class="lede">Plotny se točí rychlostí <b>7 200 otáček za minutu</b>. Hlavička musí nejdřív najet na správnou stopu (vystavení) a pak počkat, až se pod ní sektor otočí. Animace je zpomalená 240×.</p>
+          <div class="seg"><button class="calc-btn" id="hddGo">Načti náhodný sektor</button></div>
+          <div class="tbar" id="hddBar"><span class="t-seek"></span><span class="t-rot"></span></div>
+          <div class="bignum">
+            <div><span>Vystavení hlavičky</span><b id="hSeek">–</b></div>
+            <div><span>Čekání na otočení</span><b id="hRot">–</b></div>
+            <div><span>Průměr z čtení</span><b id="hAvg">–</b></div>
+          </div>
+          <p class="tiny">Jedna otáčka trvá 60 / 7200 s = 8,33 ms, v průměru tedy čekáme půl otáčky, 4,17 ms. Výrobce udává průměrnou latenci 4,16 ms. SSD stejný úkol zvládne za desítky mikrosekund.</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 14: kdy co -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Použití</div>
+      <h2 class="slide-title">SSD, nebo HDD?</h2>
+      <div class="cards4" id="useCards"></div>
+      <div class="panel" id="usePanel"></div>
+    </div></section>
+
+    <!-- 15: další součástky -->
+
+    <!-- 16: sběrnice -->
+
+    <!-- 17: kvíz -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Pravda, nebo ne?</h2>
+      <p class="score" id="qScore"></p>
+      <div class="clue" id="qText"></div>
+      <div class="seg"><button class="calc-btn" data-a="1">Pravda</button><button class="calc-btn" data-a="0">Není pravda</button><button class="calc-btn" id="qNext" hidden>Další →</button></div>
+      <div class="feedback" id="qFb"></div>
+    </div></section>
+
+    <!-- 18: shrnutí -->
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Procesor = <b>řadič + ALU + registry + cache</b>. RAM je von Neumannova <b>operační paměť</b>, SSD a HDD jsou vnější paměť připojená jako vstup a výstup.</li>
+        <li>Takt se od roku 2005 skoro nezvyšuje. Výkon roste díky <b>jádrům</b>, vyššímu <b>IPC</b> a <b>cache</b>.</li>
+        <li>Čtení z RAM trvá stovky taktů. <b>Cache L1, L2 a L3</b> skryjí čekání díky lokalitě dat.</li>
+        <li>Přístup: cache ~ns, RAM ~70 ns, NVMe SSD ~desítky µs, HDD ~ms. Mezi RAM a HDD je asi 100 000× rozdíl.</li>
+        <li><b>SSD</b> na systém a programy, <b>HDD</b> na levné velké archivy a zálohy.</li>
+      </ul>
+    </div></section>
+
+    <!-- 19: zdroje -->
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud čísla jsou</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Procesory a cache</h3><ul class="src-list">
+          <li><a href="https://hc2024.hotchips.org/assets/program/conference/day2/24_HC2024.AMD.Cohen.Subramony.final.pdf" target="_blank" rel="noopener">AMD: Zen 5 na Hot Chips 2024 (L1 4 takty)</a></li>
+          <li><a href="https://www.hwcooling.net/en/zen-5-tested-mobile-core-differs-considerably-from-desktop-one/" target="_blank" rel="noopener">HWCooling: měření cache Zen 5</a></li>
+          <li><a href="https://chipsandcheese.com/p/amds-ryzen-9950x-zen-5-on-desktop" target="_blank" rel="noopener">Chips and Cheese: Ryzen 9950X (latence RAM)</a></li>
+          <li><a href="https://chipsandcheese.com/p/analyzing-lion-coves-memory-subsystem" target="_blank" rel="noopener">Chips and Cheese: paměťový subsystém Lion Cove</a></li>
+          <li><a href="https://www.club386.com/best-cpus/" target="_blank" rel="noopener">Club386: nejlepší procesory 2026</a></li>
+          <li><a href="https://techspot.com/review/3107-intel-core-ultra-7-270k-plus/" target="_blank" rel="noopener">TechSpot: Core Ultra 7 270K Plus</a></li>
+          <li><a href="https://pchardware.org/processors/intel-core-ultra-9-285k/" target="_blank" rel="noopener">Core Ultra 9 285K, parametry</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/AMD_Ryzen_9_9950X3D" target="_blank" rel="noopener">Wikipedia: Ryzen 9 9950X3D</a></li>
+          <li><a href="https://techpowerup.com/cpu-specs/ryzen-5-9600x.c3652" target="_blank" rel="noopener">TechPowerUp: Ryzen 5 9600X</a></li>
+          <li><a href="https://www.theregister.com/2026/01/05/intel_unleashes_panther_lake_cpus/" target="_blank" rel="noopener">The Register: Panther Lake</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Apple_M5" target="_blank" rel="noopener">Wikipedia: Apple M5</a></li>
+          <li><a href="https://www.corsair.com/eu/cs/explorer/gamer/gaming-pcs/what-is-amd-3d-v-cache-and-why-is-it-so-special/" target="_blank" rel="noopener">Corsair: 3D V-Cache</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Dennard_scaling" target="_blank" rel="noopener">Wikipedia: Dennard scaling</a></li>
+          <li><a href="https://www.computerworld.com/article/1711338/intel-reaches-pentium-4-speed-limit-at-3-8-ghz.html" target="_blank" rel="noopener">Computerworld: Pentium 4 na 3,8 GHz (2004)</a></li>
+          <li><a href="https://newsroom.intel.com/client-computing/intel-core-14th-gen-i9-14900ks-powers-desktop-pcs-to-record-breaking-speeds" target="_blank" rel="noopener">Intel: i9-14900KS 6,2 GHz</a></li>
+          <li><a href="https://wccftech.com/intel-nova-lake-core-ultra-400-q1-2027-launch-lga-1954-razor-lake-hammer-lake-desktop-cpus/" target="_blank" rel="noopener">Wccftech: Nova Lake v roce 2027</a></li>
+          <li><a href="https://www.tweaktown.com/news/110232/amds-next-gen-zen-6-powered-ryzen-desktop-cpus-delayed-to-2027/index.html" target="_blank" rel="noopener">TweakTown: Zen 6 desktop v roce 2027</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Paměti, disky, sběrnice</h3><ul class="src-list">
+          <li><a href="https://kingston.com/en/blog/gaming/cas-latency-cl-ram-timing-explained" target="_blank" rel="noopener">Kingston: CAS latence</a></li>
+          <li><a href="https://kingston.com/tw/blog/pc-performance/ddr5-overview" target="_blank" rel="noopener">Kingston: přehled DDR5</a></li>
+          <li><a href="https://hothardware.com/news/jedec-ddr5-memory-huge-speed-boost-spec-update" target="_blank" rel="noopener">HotHardware: JEDEC DDR5 až 8 800 MT/s</a></li>
+          <li><a href="https://elosupport.elotouch.com/hc/en-us/articles/31652789972503-DDR4-vs-DDR5-Specifications" target="_blank" rel="noopener">DDR4 vs DDR5</a></li>
+          <li><a href="https://www.halbleiter.org/en/digital-technology/dram-cell/" target="_blank" rel="noopener">Halbleiter.org: buňka DRAM a SRAM</a></li>
+          <li><a href="https://www.versalogic.com/blog/supply-chain-brief-memory-market-conditions-in-2026/" target="_blank" rel="noopener">VersaLogic: trh pamětí 2026</a></li>
+          <li><a href="https://download.semiconductor.samsung.com/resources/data-sheet/Samsung_NVMe_SSD_990_PRO_Datasheet_Rev.1.0_10129514072296.pdf" target="_blank" rel="noopener">Samsung 990 PRO, datasheet</a></li>
+          <li><a href="https://www.samsung.com/uk/business/memory-storage/nvme-ssd/9100-pro-8tb-nvme-pcie-gen-5-mz-vap8t0bw/" target="_blank" rel="noopener">Samsung 9100 PRO</a></li>
+          <li><a href="https://news.samsung.com/global/samsung-introduces-latest-in-its-worlds-best-selling-consumer-sata-ssd-series-the-870-evo" target="_blank" rel="noopener">Samsung 870 EVO</a></li>
+          <li><a href="https://techpowerup.com/review/samsung-990-pro-2-tb" target="_blank" rel="noopener">TechPowerUp: 990 PRO (TBW)</a></li>
+          <li><a href="https://www.enterprisestorageforum.com/hardware/understanding-multilayer-ssds" target="_blank" rel="noopener">SLC, MLC, TLC, QLC</a></li>
+          <li><a href="https://clickhouse.com/blog/a-journey-to-io_uring-aio-and-modern-storage-devices" target="_blank" rel="noopener">ClickHouse: měření latence HDD a SSD</a></li>
+          <li><a href="https://www.storagereview.com/news/seagate-launches-ironwolf-pro-24tb-nas-hdd" target="_blank" rel="noopener">StorageReview: IronWolf Pro 24 TB</a></li>
+          <li><a href="https://www.storagereview.com/es/review/seagate-exos-x24-24tb-hdd-review" target="_blank" rel="noopener">StorageReview: Exos X24 (latence 4,16 ms)</a></li>
+          <li><a href="https://www.cs.rpi.edu/academics/courses/fall24/csci4380/fall2024/fall2024_lecture_notes/lecture16_1_inclass.txt" target="_blank" rel="noopener">RPI: model doby vystavení HDD</a></li>
+          <li><a href="https://www.techradar.com/best/large-hard-drives-and-ssds" target="_blank" rel="noopener">TechRadar: největší disky 2026</a></li>
+          <li><a href="https://computingforgeeks.com/cmr-vs-smr-drives-for-nas/" target="_blank" rel="noopener">CMR a SMR disky</a></li>
+          <li><a href="https://www.techradar.com/computing/computing-components/pcie-lanes-explained" target="_blank" rel="noopener">TechRadar: PCIe linky</a></li>
+          <li><a href="https://www.phoronix.com/news/USB4-v2.0-Specification" target="_blank" rel="noopener">Phoronix: USB4 v2.0</a></li>
+          <li><a href="https://www.scan.co.uk/tekspek/cpus/intel-nehalem-family" target="_blank" rel="noopener">Scan: řadič paměti v procesoru</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Socket_AM5" target="_blank" rel="noopener">Wikipedia: Socket AM5</a></li>
+          <li><a href="https://www.notebookcheck.net/NVIDIA-GeForce-RTX-5090-Benchmarks-and-Specs.935680.0.html" target="_blank" rel="noopener">Notebookcheck: RTX 5090</a></li>
+          <li><a href="https://norvig.com/21-days.html" target="_blank" rel="noopener">Peter Norvig: časy operací</a></li>
+          <li><a href="https://club386.com/z890-motherboard-msi-rundown" target="_blank" rel="noopener">Club386: čipset Z890</a></li>
+          <li><a href="https://www.guru3d.com/story/confirmed-again-intel-arrow-lake-desktop-processors-to-launch-without-hyperthreading-technology/" target="_blank" rel="noopener">Guru3D: Arrow Lake bez Hyper-Threadingu</a></li>
+          <li><a href="https://www.thessdreview.com/latest-buzz/garbage-collection-and-trim-in-ssds-explained-an-ssd-primer/" target="_blank" rel="noopener">The SSD Review: garbage collection a TRIM</a></li>
+        </ul></div>
+      </div>
+      <p class="note">Ověřeno v říjnu 2026. Ceny a nabídka součástek se rychle mění.</p>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var NS="http://www.w3.org/2000/svg";
+  function sv(tag,a,t){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e;}
+  function fmt(n,d){return n.toLocaleString("cs-CZ",{maximumFractionDigits:d==null?1:d});}
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- navigace ---------- */
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function picker(host,items,mk,panel,show){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;show(it,i);
+      });host.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");show(items[0],0);
+    if(panel)fits.push({slide:host.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){show(it,i,true);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";show(items[act],act,true);
+    }});
+  }
+  function modeSwitch(host,onChange){
+    Array.prototype.forEach.call(host.children,function(b){
+      b.addEventListener("click",function(){
+        Array.prototype.forEach.call(host.children,function(x){x.classList.toggle("is-active",x===b);});
+        onChange(b.dataset.m);
+      });
+    });
+  }
+  function segButtons(host,items,label,onPick,start){
+    var btns=[];
+    items.forEach(function(it,i){
+      var b=el("button","calc-btn"+(i===(start||0)?" is-active":""),label(it));
+      b.addEventListener("click",function(){btns.forEach(function(x){x.classList.toggle("is-active",x===b);});onPick(it,i);});
+      host.appendChild(b);btns.push(b);
+    });
+    return btns;
+  }
+
+  /* ---------- 1: základní deska ---------- */
+  var MB=[
+    {id:"io",r:"io",x:24,y:36,w:70,h:230,t:"Panel",s:"",
+     d:"Konektory, kterými počítač komunikuje se světem: USB, síťová karta, zvuk, výstup integrované grafiky. Ve von Neumannově schématu <b>vstup a výstup</b>."},
+    {id:"vrm",r:"x",x:120,y:56,w:80,h:160,t:"VRM",s:"napájení",
+     d:"Měniče napětí, které z 12 V ze zdroje vyrobí přesné nízké napětí pro procesor. Procesor může odebírat přes 200 W, proto mají měniče chladiče. Ve von Neumannově schématu nejsou."},
+    {id:"cpu",r:"cpu",x:220,y:56,w:160,h:160,t:"Procesor",s:"AM5 / LGA1851",
+     d:"Řadič, ALU, registry a cache v jednom pouzdře. Obsahuje i <b>řadič paměti</b>, takže RAM je připojená přímo k němu. Patice určuje, které procesory deska podporuje: AMD používá AM5 (1 718 kontaktů), Intel LGA1851."},
+    {id:"ram",r:"ram",x:400,y:36,w:96,h:180,t:"RAM",s:"DDR5",
+     d:"Operační paměť, přesně ta z von Neumannova schématu. Do ní operační systém nahraje program i data. Dva moduly patří do párových slotů, aby běžely ve <b>dvou kanálech</b> a propustnost se zdvojnásobila."},
+    {id:"atx",r:"x",x:690,y:120,w:46,h:150,t:"ATX",s:"24 pin",
+     d:"Hlavní napájecí konektor ze zdroje (PSU). Zdroj mění 230 V střídavých na stejnosměrných 12 V, 5 V a 3,3 V."},
+    {id:"m2",r:"sto",x:220,y:236,w:260,h:34,t:"M.2 NVMe SSD",s:"PCIe 5.0 ×4",
+     d:"Slot pro SSD ve tvaru destičky. Je připojený přímo k procesoru přes PCI Express. Disk je <b>vnější paměť</b>: procesor ho nečte instrukcí LOAD jako RAM, data se přesouvají jako přes vstupní zařízení."},
+    {id:"pcie",r:"io",x:120,y:300,w:420,h:26,t:"PCIe ×16",s:"grafická karta",
+     d:"Nejrychlejší slot na desce. Grafická karta je <b>výstupní zařízení</b> (obraz na monitor) a zároveň samostatný počítač s tisíci jednoduchých jader a vlastní pamětí."},
+    {id:"m2b",r:"sto",x:220,y:350,w:260,h:34,t:"M.2 SSD",s:"přes čipset",
+     d:"Další slot pro SSD. Bývá připojený přes čipset, takže sdílí jeho linku k procesoru s USB, sítí a SATA."},
+    {id:"chip",r:"bus",x:560,y:320,w:100,h:100,t:"Čipset",s:"X870E / Z890",
+     d:"Rozbočovač: připojuje k procesoru pomalejší zařízení (další USB, SATA, síť, Wi-Fi). Je to část dnešní „sběrnice“. AMD pro AM5 dělá čipsety A620 až X870E, Intel pro LGA1851 Z890 a další."},
+    {id:"sata",r:"sto",x:690,y:320,w:46,h:130,t:"SATA",s:"HDD",
+     d:"Starší rozhraní pro pevné disky a 2,5palcové SSD. Rychlost 6 Gb/s, v praxi do asi 560 MB/s."},
+    {id:"bios",r:"x",x:120,y:400,w:90,h:70,t:"UEFI",s:"firmware",
+     d:"Čip s firmwarem UEFI (dřív BIOS). Po zapnutí otestuje hardware (POST), najde disk se systémem a spustí zavaděč operačního systému. Tady začíná každé spuštění počítače."},
+    {id:"bus",r:"bus",x:0,y:0,w:0,h:0,t:"Spoje na desce",s:"",
+     d:"Měděné cesty v deskách plošného spoje. Dnes to nejsou jedna sdílená sběrnice, ale mnoho samostatných linek: paměťové kanály, linky PCIe, spojení s čipsetem."}
+  ];
+  var mbSvg=$("mb"),mbParts={},mbSel="cpu";
+  mbSvg.appendChild(sv("rect",{"class":"mb-board",x:10,y:16,width:740,height:470,rx:14}));
+  var traceG=sv("g",{"class":"mb-hit","data-id":"bus"});
+  ["M380 136 H400","M300 216 V236","M300 270 V300","M380 300 C420 290 440 250 440 220","M480 367 H560","M540 313 H560","M610 320 V180 H496","M660 370 H690","M94 150 H120"].forEach(function(d){traceG.appendChild(sv("path",{"class":"mb-trace",d:d}));});
+  mbSvg.appendChild(traceG);
+  MB.forEach(function(p){
+    if(p.id==="bus"){mbParts.bus=traceG;traceG.addEventListener("click",function(){mbShow("bus");});return;}
+    var g=sv("g",{"class":"mb-hit","data-id":p.id});
+    var r=sv("rect",{"class":"mb-part r-"+p.r,x:p.x,y:p.y,width:p.w,height:p.h,rx:8});g.appendChild(r);
+    if(p.id==="ram")for(var k=0;k<4;k++)g.appendChild(sv("rect",{"class":"mb-trace",x:p.x+14+k*20,y:p.y+40,width:6,height:p.h-56,rx:2}));
+    var tall=p.h>p.w;
+    g.appendChild(sv("text",{"class":"mb-lab",x:p.x+10,y:p.y+(p.h<40?22:24)},p.t));
+    if(p.s&&!(p.h<40))g.appendChild(sv("text",{"class":"mb-sub",x:p.x+10,y:p.y+40},p.s));
+    else if(p.s)g.appendChild(sv("text",{"class":"mb-sub",x:p.x+p.w-10,y:p.y+22,"text-anchor":"end"},p.s));
+    g.addEventListener("click",function(){mbShow(p.id);});
+    mbSvg.appendChild(g);mbParts[p.id]=r;
+  });
+  var ROLE={cpu:"procesor (řadič + ALU)",ram:"operační paměť",sto:"vnější paměť (přes vstup/výstup)",io:"vstup a výstup",bus:"sběrnice",x:"mimo schéma: napájení a firmware"};
+  function mbPanel(id){var p=MB.filter(function(x){return x.id===id;})[0];$("mbPanel").innerHTML='<span class="meta">role: '+ROLE[p.r]+'</span><h3>'+p.t+'</h3><p>'+p.d+'</p>';}
+  function mbShow(id){mbSel=id;Object.keys(mbParts).forEach(function(k){if(mbParts[k].classList)mbParts[k].classList.toggle("is-sel",k===id);});mbPanel(id);}
+  mbShow("cpu");
+  modeSwitch($("mbMode"),function(m){mbSvg.classList.toggle("mb-roles",m==="roles");$("mbLegend").hidden=m!=="roles";});
+  fits.push({slide:mbSvg.closest(".slide"),fn:function(){var p=$("mbPanel");p.style.minHeight="0px";var m=0;MB.forEach(function(x){mbPanel(x.id);m=Math.max(m,p.offsetHeight);});p.style.minHeight=m+"px";mbPanel(mbSel);}});
+
+  /* ---------- 2: rychlost procesoru ---------- */
+  function cpuCalc(){
+    var f=+$("sF").value,ipc=+$("sI").value,c=+$("sC").value;
+    $("oF").textContent=fmt(f)+" GHz";$("oI").textContent=ipc;$("oC").textContent=c;
+    $("rT").textContent=fmt(1/f,3)+" ns";
+    $("rL").textContent=fmt(30/f,1)+" cm";
+    var p=f*ipc*c;$("rP").textContent=fmt(p,0)+" mld.";
+  }
+  ["sF","sI","sC"].forEach(function(id){$(id).addEventListener("input",cpuCalc);});cpuCalc();
+
+  /* ---------- 4: žebřík latencí ---------- */
+  var LAD=[
+    {n:"Registr",ns:0.2,k:"",d:"Uvnitř jádra, data jsou k dispozici v jednom taktu. Registrů je jen pár desítek.",src:"jeden takt při 5 GHz"},
+    {n:"Cache L1",ns:0.8,k:"",d:"4 takty u jádra Zen 5 (udává AMD). 48 KB pro data a 32 KB pro instrukce na každé jádro.",src:"AMD, Hot Chips 2024"},
+    {n:"Cache L2",ns:2.8,k:"",d:"Kolem 14 taktů. 1 MB na jádro u Zen 5, 3 MB na výkonné jádro u Intel Lion Cove.",src:"HWCooling, měření Zen 5"},
+    {n:"Cache L3",ns:10,k:"",d:"Kolem 46 až 50 taktů. Sdílená všemi jádry: 32 MB na osm jader Zen 5, s 3D V-Cache 96 MB.",src:"HWCooling, měření Zen 5"},
+    {n:"RAM",ns:70,k:"k-ram",d:"Ryzen 9 9950X s DDR5-6000 naměřil něco přes 70 ns, Intel Arrow Lake přes 100 ns. Při 5,7 GHz to je asi 400 taktů čekání.",src:"Chips and Cheese"},
+    {n:"NVMe SSD",ns:45000,k:"k-sto",d:"Samsung 990 PRO zvládne při jednom požadavku najednou 22 000 náhodných čtení za sekundu, tedy asi 45 µs na jedno čtení.",src:"Samsung, datasheet 990 PRO"},
+    {n:"SATA SSD",ns:140000,k:"k-sto",d:"Naměřený průměr pro čtení 4 KB byl asi 140 µs.",src:"ClickHouse, měření"},
+    {n:"HDD",ns:10000000,k:"k-hdd",d:"Hlavička musí najet na stopu a počkat na otočení plotny. Průměrná latence otáčení je 4,16 ms, s vystavením se dostaneme k 10 ms. Měření ukázalo průměr 12 ms.",src:"Seagate Exos X24, ClickHouse"}
+  ];
+  var ladModes=[["ns","Přístupová doba"],["cyc","Takty při 5 GHz"],["human","Kdyby takt trval 1 s"]],ladM="ns",ladAct=4,ladRows=[];
+  function human(sec){
+    if(sec<60)return fmt(sec,0)+" s";
+    if(sec<3600)return fmt(sec/60,0)+" min";
+    if(sec<86400)return fmt(sec/3600,1)+" h";
+    if(sec<86400*365)return fmt(sec/86400,0)+" dní";
+    return fmt(sec/86400/365,1)+" roku";
+  }
+  function tval(ns){
+    if(ladM==="cyc")return fmt(ns*5,0)+" taktů";
+    if(ladM==="human")return human(ns*5);
+    if(ns<1000)return fmt(ns,1)+" ns";
+    if(ns<1e6)return fmt(ns/1000,0)+" µs";
+    return fmt(ns/1e6,0)+" ms";
+  }
+  LAD.forEach(function(l,i){
+    var b=el("button","lad-row",'<span class="lad-name">'+l.n+'</span><span class="lad-track"><span class="lad-bar '+l.k+'"></span><span class="lad-val"></span></span>');
+    b.addEventListener("click",function(){ladAct=i;ladRender();});
+    $("ladder").appendChild(b);ladRows.push(b);
+  });
+  function ladRender(){
+    var lo=Math.log10(0.1),hi=Math.log10(1e7);
+    LAD.forEach(function(l,i){
+      var w=(Math.log10(l.ns)-lo)/(hi-lo)*100;
+      ladRows[i].querySelector(".lad-bar").style.width="calc("+w.toFixed(1)+"% - 6rem)";
+      ladRows[i].querySelector(".lad-val").textContent=tval(l.ns);
+      ladRows[i].classList.toggle("is-active",i===ladAct);
+    });
+    ladPanel(ladAct);
+  }
+  function ladPanel(i){var l=LAD[i];$("ladPanel").innerHTML='<span class="meta">'+l.src+'</span><h3>'+l.n+': '+tval(l.ns)+'</h3><p>'+l.d+'</p>';}
+  segButtons($("ladMode"),ladModes,function(m){return m[1];},function(m){ladM=m[0];ladRender();});
+  ladRender();
+  fits.push({slide:$("ladder").closest(".slide"),fn:function(){var p=$("ladPanel");p.style.minHeight="0px";var m=0;LAD.forEach(function(_,i){ladPanel(i);m=Math.max(m,p.offsetHeight);});p.style.minHeight=m+"px";ladPanel(ladAct);}});
+
+  /* ---------- 5: pyramida ---------- */
+  var PYR=[
+    {n:"Registry",t:"klopné obvody v jádře",sz:"desítky hodnot",lat:"1 takt",d:"Pracovní místo ALU. Sem se načte číslo, se kterým se počítá. Je jich málo, proto kompilátor pečlivě volí, co v nich bude."},
+    {n:"L1",t:"SRAM v jádře",sz:"32 KB instrukce + 48 KB data",lat:"4 takty",d:"Rozdělená na instrukční a datovou část. To je <b>modifikovaná Harvardova architektura</b> z minulé hodiny: jádro může v jednom taktu číst instrukci i data."},
+    {n:"L2",t:"SRAM u jádra",sz:"1 až 3 MB na jádro",lat:"asi 14 taktů",d:"Společná pro instrukce i data jednoho jádra. Když se něco nevejde do L1, často to najde tady."},
+    {n:"L3",t:"SRAM sdílená",sz:"30 až 128 MB",lat:"asi 50 taktů",d:"Sdílí ji všechna jádra (u AMD všechna jádra jednoho čipletu). AMD 3D V-Cache na ni přilepí další vrstvu 64 MB."},
+    {n:"RAM",t:"DRAM",sz:"jednotky až desítky GB",lat:"70 až 100 ns",d:"Operační paměť z von Neumannova schématu. Po vypnutí se smaže, proto je pod ní ještě úložiště."},
+    {n:"SSD",t:"NAND flash",sz:"až jednotky TB",lat:"desítky µs",d:"Data vydrží i bez proudu. Je to vnější paměť, připojená přes PCI Express nebo SATA."},
+    {n:"HDD",t:"magnetické plotny",sz:"až 30 TB v prodeji",lat:"jednotky ms",d:"Nejlevnější gigabajt, ale mechanika je pomalá. Hodí se na velké archivy a zálohy."}
+  ];
+  var pyrAct=3,pyrG=[];
+  (function(){
+    var svg=$("pyr"),top=20,h=48,cx=230,wTop=60,wBot=420;
+    PYR.forEach(function(p,i){
+      var y0=top+i*h,y1=y0+h,w0=wTop+(wBot-wTop)*i/PYR.length,w1=wTop+(wBot-wTop)*(i+1)/PYR.length;
+      var g=sv("g",{"class":"pyr-lv",tabindex:0,role:"button","aria-label":p.n});
+      g.appendChild(sv("polygon",{"class":"p-c"+i,points:(cx-w0/2)+","+y0+" "+(cx+w0/2)+","+y0+" "+(cx+w1/2)+","+y1+" "+(cx-w1/2)+","+y1}));
+      g.appendChild(sv("text",{x:cx,y:y0+h/2+5,"text-anchor":"middle"},p.n));
+      g.addEventListener("click",function(){pyrSel(i);});
+      g.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();pyrSel(i);}});
+      svg.appendChild(g);pyrG.push(g);
+    });
+    svg.appendChild(sv("path",{"class":"pyr-arrow",d:"M470 30 V350 M464 340 L470 352 L476 340"}));
+    svg.appendChild(sv("text",{"class":"pyr-ax",x:478,y:40},"rychlejší"));
+    svg.appendChild(sv("text",{"class":"pyr-ax",x:478,y:345},"větší"));
+    svg.appendChild(sv("text",{"class":"pyr-ax",x:478,y:360},"levnější"));
+  })();
+  function pyrPanel(i){var p=PYR[i];$("pyrPanel").innerHTML='<span class="meta">'+p.t+'</span><h3>'+p.n+'</h3><dl class="facts"><dt>Velikost</dt><dd>'+p.sz+'</dd><dt>Přístup</dt><dd>'+p.lat+'</dd></dl><p>'+p.d+'</p>';}
+  function pyrSel(i){pyrAct=i;pyrG.forEach(function(g,k){g.classList.toggle("is-active",k===i);});pyrPanel(i);}
+  pyrSel(3);
+  fits.push({slide:$("pyr").closest(".slide"),fn:function(){var p=$("pyrPanel");p.style.minHeight="0px";var m=0;PYR.forEach(function(_,i){pyrPanel(i);m=Math.max(m,p.offsetHeight);});p.style.minHeight=m+"px";pyrPanel(pyrAct);}});
+
+  /* ---------- 6: simulace cache ---------- */
+  var CS_PROGS=[
+    {n:"Součet pole",d:"Čte buňky 0 až 15 postupně.",gen:function(){var a=[];for(var i=0;i<16;i++)a.push(i);return a;}},
+    {n:"Dvakrát totéž",d:"Projde buňky 0 až 7 dvakrát za sebou.",gen:function(){var a=[];for(var r=0;r<2;r++)for(var i=0;i<8;i++)a.push(i);return a;}},
+    {n:"Náhodně",d:"Skáče po náhodných buňkách 0 až 31.",gen:function(){var a=[];for(var i=0;i<16;i++)a.push(Math.floor(Math.random()*32));return a;}}
+  ];
+  var csP=0,csSeq=[],csI=0,csLines,csHit=0,csMiss=0,csTimer=null,ramCells=[],lineCells=[];
+  for(var a=0;a<32;a++){var c=el("span","cs-cell",String(a));$("csRam").appendChild(c);ramCells.push(c);}
+  for(var L=0;L<4;L++){var row=el("div","cs-line",'<span>řádek '+L+'</span>');var cells=[];for(var w=0;w<4;w++){var cc=el("span","cs-cell","–");row.appendChild(cc);cells.push(cc);}$("csLines").appendChild(row);lineCells.push(cells);}
+  function csReset(){
+    clearInterval(csTimer);csTimer=null;csSeq=CS_PROGS[csP].gen();csI=0;csLines=[null,null,null,null];csHit=0;csMiss=0;
+    $("csLog").innerHTML=CS_PROGS[csP].d+" Cache má 4 řádky po 4 buňkách. Blok paměti <b>b</b> smí jen do řádku <b>b mod 4</b>.";
+    csView(-1,null);
+  }
+  function csView(addr,hit){
+    ramCells.forEach(function(c,i){c.classList.toggle("is-cur",i===addr);var blk=Math.floor(i/4);c.classList.toggle("is-in",csLines[blk%4]===blk);});
+    lineCells.forEach(function(cells,L){
+      cells.forEach(function(c,w){
+        var blk=csLines[L];c.textContent=blk==null?"–":String(blk*4+w);
+        c.className="cs-cell"+(addr!=null&&addr>=0&&blk!=null&&blk*4+w===addr?(hit?" is-hit":" is-miss"):"");
+      });
+    });
+    $("csHM").textContent=csHit+" / "+csMiss;
+    $("csT1").textContent=fmt(csHit*1+csMiss*71,0)+" ns";
+    $("csT0").textContent=fmt((csHit+csMiss)*70,0)+" ns";
+    var n=csHit+csMiss;$("csHitbar").style.width=(n?csHit/n*100:0)+"%";
+    $("csStep").disabled=csI>=csSeq.length;
+  }
+  function csStep(){
+    if(csI>=csSeq.length){clearInterval(csTimer);csTimer=null;return;}
+    var addr=csSeq[csI++],blk=Math.floor(addr/4),L=blk%4,hit=csLines[L]===blk;
+    if(hit){csHit++;$("csLog").innerHTML="Čtu buňku <b>"+addr+"</b>: <b>zásah</b>, je v cache. 1 ns.";}
+    else{csMiss++;var old=csLines[L];csLines[L]=blk;$("csLog").innerHTML="Čtu buňku <b>"+addr+"</b>: <b>výpadek</b>. Načtu z RAM buňky "+blk*4+"–"+(blk*4+3)+" do řádku "+L+(old!=null?" (vyhodím blok "+old*4+"–"+(old*4+3)+")":"")+". 70 ns.";}
+    csView(addr,hit);
+    if(csI>=csSeq.length){
+      var n=csHit+csMiss;
+      $("csLog").innerHTML+=" <br>Hotovo: úspěšnost <b>"+fmt(csHit/n*100,0)+" %</b>, "+(csMiss*71+csHit<n*70?"s cache "+fmt(n*70/(csMiss*71+csHit),1)+"× rychlejší.":"cache tu nepomohla.");
+    }
+  }
+  segButtons($("csProg"),CS_PROGS,function(p){return p.n;},function(p,i){csP=i;csReset();});
+  $("csStep").addEventListener("click",function(){if(csI>=csSeq.length)csReset();csStep();});
+  $("csRun").addEventListener("click",function(){csReset();csTimer=setInterval(csStep,reduce?1:330);});
+  csReset();
+
+  /* ---------- 7: procesory ---------- */
+  var CPUS=[
+    {n:"AMD Ryzen 9 9950X3D",seg:"d",y:"březen 2025",c:16,t:32,ct:"16 / 32",f:5.7,l3:128,p:170,pt:"170 W TDP",m:"DDR5-5600"},
+    {n:"AMD Ryzen 7 9850X3D",seg:"d",y:"leden 2026",c:8,t:16,ct:"8 / 16",f:5.6,l3:96,p:120,pt:"120 W TDP",m:"DDR5-5600"},
+    {n:"AMD Ryzen 5 9600X",seg:"d",y:"srpen 2024",c:6,t:12,ct:"6 / 12",f:5.4,l3:32,p:65,pt:"65 W TDP",m:"DDR5-5600"},
+    {n:"Intel Core Ultra 9 285K",seg:"d",y:"říjen 2024",c:24,t:24,ct:"24 (8P + 16E) / 24",f:5.7,l3:36,p:250,pt:"125 W, max. 250 W",m:"DDR5-6400"},
+    {n:"Intel Core Ultra 7 270K Plus",seg:"d",y:"březen 2026",c:24,t:24,ct:"24 (8P + 16E) / 24",f:5.5,l3:36,p:250,pt:"max. 250 W",m:"DDR5-7200"},
+    {n:"Intel Core Ultra 5 250K Plus",seg:"d",y:"2026",c:18,t:18,ct:"18 (6P + 12E) / 18",f:5.3,l3:30,p:159,pt:"max. 159 W",m:"DDR5"},
+    {n:"Intel Core Ultra X9 388H",seg:"n",y:"leden 2026",c:16,t:16,ct:"16 (4P + 8E + 4LPE)",f:5.1,l3:null,p:65,pt:"25 W, turbo 55 až 65 W",m:"LPDDR5X-9600"},
+    {n:"Apple M5",seg:"n",y:"říjen 2025",c:10,t:10,ct:"10 (4 + 6)",f:null,l3:null,p:null,pt:"neuvádí",m:"LPDDR5X-9600, 153,6 GB/s"}
+  ];
+  var cpuF="all",cpuM="c";
+  var METRICS=[["c","Jádra",function(x){return x.c;},function(v){return v+" jader";}],["f","Max. takt",function(x){return x.f;},function(v){return fmt(v)+" GHz";}],["l3","Cache L3",function(x){return x.l3;},function(v){return v+" MB";}],["p","Příkon",function(x){return x.p;},function(v){return v+" W";}]];
+  function cpuRender(){
+    var list=CPUS.filter(function(x){return cpuF==="all"||x.seg===cpuF;});
+    var h="";
+    list.forEach(function(x){h+="<tr><td>"+x.n+"</td><td>"+x.y+"</td><td>"+x.ct+"</td><td>"+(x.f?fmt(x.f)+" GHz":"neuvádí")+"</td><td>"+(x.l3?x.l3+" MB":"–")+"</td><td>"+x.pt+"</td><td>"+x.m+"</td></tr>";});
+    $("cpuBody").innerHTML=h;
+    var M=METRICS.filter(function(m){return m[0]===cpuM;})[0];
+    var vals=list.filter(function(x){return M[2](x)!=null;}),max=Math.max.apply(null,vals.map(M[2]));
+    var b="";vals.forEach(function(x){var v=M[2](x);b+='<div class="mbar"><span class="mbar-lab">'+x.n.replace(/^(AMD|Intel) /,"")+'</span><div class="mbar-track"><span class="mbar-fill b" data-w="'+(v/max*100)+'"></span><span class="mbar-val">'+M[3](v)+'</span></div></div>';});
+    $("cpuBars").innerHTML=b;
+    Array.prototype.forEach.call($("cpuBars").querySelectorAll(".mbar-fill"),function(f){f.style.width="calc("+(+f.dataset.w).toFixed(1)+"% - 6rem)";});
+  }
+  segButtons($("cpuFilt"),[["all","Vše"],["d","Stolní"],["n","Notebooky"]],function(x){return x[1];},function(x){cpuF=x[0];cpuRender();});
+  segButtons($("cpuMetric"),METRICS,function(m){return m[1];},function(m){cpuM=m[0];cpuRender();});
+  modeSwitch($("cpuView"),function(m){$("cpuTbl").hidden=m!=="tbl";$("cpuBars").hidden=m==="tbl";$("cpuMetric").hidden=m==="tbl";});
+  cpuRender();
+
+  /* ---------- 8: pojmy ---------- */
+  var CON=[
+    {n:"P a E jádra",s:"hybridní procesor",d:"Výkonná jádra (P) pro náročné úlohy a úsporná jádra (E) pro práci na pozadí. Core Ultra 9 285K má 8 P a 16 E jader, Apple M5 4 výkonná a 6 úsporných. O tom, kde co poběží, rozhoduje operační systém."},
+    {n:"SMT",s:"dvě vlákna na jádro",d:"Simultaneous multithreading (u Intelu Hyper-Threading): jedno jádro střídá dvě vlákna, aby jeho ALU nečekaly. AMD Zen 5 má 2 vlákna na jádro (16 jader = 32 vláken). Intel u Arrow Lake SMT vypustil: 24 jader = 24 vláken."},
+    {n:"3D V-Cache",s:"cache do výšky",d:"AMD přilepí na čiplet s jádry další vrstvu cache L3 o velikosti 64 MB. Ryzen 7 9850X3D má tak 96 MB L3. Hry, které pracují s velkými daty, z toho mají velký užitek. U druhé generace je cache pod jádry, takže se jádra lépe chladí."},
+    {n:"Řadič paměti",s:"RAM přímo u CPU",d:"Dřív vedla cesta do RAM přes samostatný čip (northbridge) po sběrnici FSB. AMD přesunulo řadič paměti do procesoru v roce 2003 (Athlon 64), Intel v roce 2008 (Nehalem). Kratší cesta = nižší latence."},
+    {n:"NPU",s:"jednotka pro AI",d:"Specializovaný obvod pro neuronové sítě, který je úspornější než CPU i GPU. Notebookové procesory Intel Panther Lake mají NPU až 50 TOPS (bilionů operací za sekundu)."}
+  ];
+  picker($("conCards"),CON,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("conPanel"),function(c){$("conPanel").innerHTML="<h3>"+c.n+"</h3><p>"+c.d+"</p>";});
+
+  /* ---------- 10: kalkulačka RAM ---------- */
+  var PRE=[["DDR4-3200 CL16",3200,16],["DDR5-4800 CL40",4800,40],["DDR5-6000 CL30",6000,30],["DDR5-7200 CL34",7200,34],["DDR5-8000 CL38",8000,38]];
+  function ramCalc(){
+    var mt=+$("rMT").value,cl=+$("rCL").value;
+    $("oMT").textContent=fmt(mt,0);$("oCL").textContent="CL"+cl;
+    $("rLat").textContent=fmt(cl*2000/mt,2)+" ns";
+    $("rBw1").textContent=fmt(mt*8/1000,1)+" GB/s";
+    $("rBw2").textContent=fmt(mt*16/1000,1)+" GB/s";
+  }
+  var preBtns=segButtons($("ramPre"),PRE,function(p){return p[0];},function(p){$("rMT").value=p[1];$("rCL").value=p[2];ramCalc();},2);
+  ["rMT","rCL"].forEach(function(id){$(id).addEventListener("input",function(){preBtns.forEach(function(b){b.classList.remove("is-active");});ramCalc();});});
+  ramCalc();
+
+  /* ---------- 11: závod ---------- */
+  var RACE=[
+    {n:"RAM",ms:0.00007,k:"k-ram"},{n:"NVMe SSD",ms:0.045,k:"k-sto"},{n:"SATA SSD",ms:0.14,k:"k-sto"},{n:"HDD",ms:10,k:"k-hdd"}
+  ];
+  var RMODES=[{n:"HDD = 10 sekund",f:1000},{n:"NVMe SSD = 5 sekund",f:5/0.045*1000}];
+  var rm=0,raceRaf=null,rRows=[];
+  RACE.forEach(function(r){
+    var row=el("div","race-row",'<span class="race-lab">'+r.n+'</span><div class="race-track"><div class="race-fill '+r.k+'"></div></div><span class="race-t"></span>');
+    $("race").appendChild(row);rRows.push(row);
+  });
+  function realT(ms){return ms<0.001?fmt(ms*1e6,0)+" ns":ms<1?fmt(ms*1000,0)+" µs":fmt(ms,0)+" ms";}
+  function raceReset(){
+    cancelAnimationFrame(raceRaf);
+    rRows.forEach(function(row,i){row.querySelector(".race-fill").style.width="0";row.querySelector(".race-t").textContent=realT(RACE[i].ms);});
+    $("raceNote").innerHTML="Zpomaleno "+fmt(RMODES[rm].f,0)+"×. Než HDD odpoví jednou, RAM stihne asi <b>140 000</b> přístupů a NVMe SSD asi <b>220</b>.";
+  }
+  segButtons($("raceMode"),RMODES,function(m){return "Zpomalit tak, aby "+m.n;},function(m,i){rm=i;raceReset();});
+  $("raceGo").addEventListener("click",function(){
+    raceReset();var t0=null,f=RMODES[rm].f;
+    function frame(ts){
+      if(t0===null)t0=ts;var el2=(ts-t0)/f,all=true;
+      RACE.forEach(function(r,i){var k=reduce?1:Math.min(1,el2/r.ms);if(k<1)all=false;rRows[i].querySelector(".race-fill").style.width=(k*100)+"%";
+        if(k<1)rRows[i].querySelector(".race-t").textContent=fmt(k*100,k<0.01?2:0)+" %";else rRows[i].querySelector(".race-t").textContent=realT(r.ms)+" ✓";});
+      if(!all&&!slides[11].hidden)raceRaf=requestAnimationFrame(frame);
+    }
+    raceRaf=requestAnimationFrame(frame);
+  });
+  raceReset();
+
+  /* ---------- 12: SSD ---------- */
+  var NAND=[
+    {n:"SLC",b:1,pe:"50 000 až 100 000",d:"1 bit na buňku: buňka rozlišuje jen 2 úrovně náboje. Nejrychlejší a nejodolnější, ale nejdražší. Dnes hlavně jako rychlá vyrovnávací část jiných SSD."},
+    {n:"MLC",b:2,pe:"asi 10 000",d:"2 bity na buňku, 4 úrovně náboje."},
+    {n:"TLC",b:3,pe:"asi 3 000",d:"3 bity na buňku, 8 úrovní. Nejběžnější typ v dnešních SSD, například Samsung 990 PRO a 9100 PRO."},
+    {n:"QLC",b:4,pe:"asi 1 000 až 2 000",d:"4 bity na buňku, 16 úrovní náboje. Nejlevnější gigabajt, ale pomalejší zápis a nižší výdrž."}
+  ];
+  picker($("nandSeg"),NAND,function(c){return el("button","calc-btn",c.n);},$("nandPanel"),function(c){
+    $("nandPanel").innerHTML='<span class="meta">'+c.b+' bit'+(c.b>1?(c.b<5?"y":"ů"):"")+' na buňku · '+c.pe+' přepisů</span><h3>'+c.n+'</h3><p>'+c.d+'</p><p class="tiny">Výrobce uvádí výdrž v TBW, kolik terabajtů lze na disk zapsat: Samsung 990 PRO 1 TB má 600 TBW, to je přes 300 GB zápisu denně po dobu 5 let záruky.</p>';
+  });
+  var IF=[["HDD (SATA)",285],["SATA SSD",560],["NVMe PCIe 4.0",7450],["NVMe PCIe 5.0",14800]];
+  (function(){var h="";IF.forEach(function(x){h+='<div class="mbar"><span class="mbar-lab">'+x[0]+'</span><div class="mbar-track"><span class="mbar-fill b" data-w="'+(x[1]/14800*100)+'"></span><span class="mbar-val">'+fmt(x[1],0)+' MB/s</span></div></div>';});$("ifBars").innerHTML=h;
+    Array.prototype.forEach.call($("ifBars").querySelectorAll(".mbar-fill"),function(f){f.style.width="calc("+(+f.dataset.w).toFixed(1)+"% - 6rem)";});})();
+
+  /* ---------- 13: HDD ---------- */
+  var hdd=$("hdd"),C=[150,150],PIV=[282,262],ARM=150,TR=[48,62,76,90,104,118],SLOW=240,RPMS=8.333;
+  hdd.appendChild(sv("rect",{"class":"hdd-case",x:6,y:6,width:308,height:308,rx:18}));
+  var rotG=sv("g",{});hdd.appendChild(rotG);
+  rotG.appendChild(sv("circle",{"class":"hdd-platter",cx:C[0],cy:C[1],r:128}));
+  var trEls=TR.map(function(r){var c=sv("circle",{"class":"hdd-track",cx:C[0],cy:C[1],r:r});rotG.appendChild(c);return c;});
+  var sector=sv("path",{"class":"hdd-sector",d:""});rotG.appendChild(sector);
+  hdd.appendChild(sv("circle",{"class":"hdd-spindle",cx:C[0],cy:C[1],r:16}));
+  var armG=sv("g",{});hdd.appendChild(armG);
+  var armLine=sv("line",{"class":"hdd-armline",x1:PIV[0],y1:PIV[1],x2:0,y2:0});armG.appendChild(armLine);
+  var head=sv("circle",{"class":"hdd-head",r:7});armG.appendChild(head);
+  hdd.appendChild(sv("circle",{"class":"hdd-pivot",cx:PIV[0],cy:PIV[1],r:14}));
+  function headPos(r){
+    var dx=PIV[0]-C[0],dy=PIV[1]-C[1],d=Math.sqrt(dx*dx+dy*dy);
+    var a=(r*r-ARM*ARM+d*d)/(2*d),h=Math.sqrt(Math.max(0,r*r-a*a));
+    var px=C[0]+a*dx/d,py=C[1]+a*dy/d;
+    return [px+h*dy/d,py-h*dx/d];
+  }
+  var rot=0,lastTs=null,headR=TR[0],seekAnim=null,sectorTrack=-1,sectorAng=0,reads=[],busyH=false;
+  function setHead(r){var p=headPos(r);armLine.setAttribute("x2",p[0]);armLine.setAttribute("y2",p[1]);head.setAttribute("cx",p[0]);head.setAttribute("cy",p[1]);}
+  function headAngle(r){var p=headPos(r);return Math.atan2(p[1]-C[1],p[0]-C[0])*180/Math.PI;}
+  function sectorPath(r,ang){var a1=(ang-8)*Math.PI/180,a2=(ang+8)*Math.PI/180,r1=r-6,r2=r+6;
+    function P(rr,aa){return (C[0]+rr*Math.cos(aa)).toFixed(1)+" "+(C[1]+rr*Math.sin(aa)).toFixed(1);}
+    return "M"+P(r1,a1)+" L"+P(r2,a1)+" A"+r2+" "+r2+" 0 0 1 "+P(r2,a2)+" L"+P(r1,a2)+" A"+r1+" "+r1+" 0 0 0 "+P(r1,a1)+" Z";}
+  setHead(headR);
+  function spin(ts){
+    if(lastTs!==null&&!reduce){rot=(rot+(ts-lastTs)/(RPMS*SLOW)*360)%360;rotG.setAttribute("transform","rotate("+rot.toFixed(2)+" "+C[0]+" "+C[1]+")");}
+    lastTs=ts;requestAnimationFrame(spin);
+  }
+  requestAnimationFrame(spin);
+  $("hddGo").addEventListener("click",function(){
+    if(busyH)return;busyH=true;
+    var ti=Math.floor(Math.random()*TR.length),ang=Math.random()*360,r=TR[ti];
+    trEls.forEach(function(e,i){e.setAttribute("class","hdd-track"+(i===ti?" is-target":""));});
+    sector.setAttribute("d",sectorPath(r,ang));
+    var dist=Math.abs(r-headR)/(TR[TR.length-1]-TR[0]);
+    var seekMs=dist===0?0:1+16*dist;
+    var r0=headR,t0=performance.now(),dur=reduce?1:seekMs*SLOW;
+    $("hddBar").children[0].style.width="0";$("hddBar").children[1].style.width="0";
+    $("hSeek").textContent="…";$("hRot").textContent="…";
+    function seekStep(now){
+      var k=Math.min(1,(now-t0)/Math.max(1,dur));headR=r0+(r-r0)*k;setHead(headR);
+      if(k<1){requestAnimationFrame(seekStep);return;}
+      $("hSeek").textContent=fmt(seekMs,1)+" ms";
+      var cur=(ang+rot)%360,target=(headAngle(r)+360)%360,diff=(target-cur+360)%360;
+      var rotMs=diff/360*RPMS;
+      setTimeout(function(){
+        $("hRot").textContent=fmt(rotMs,1)+" ms";
+        reads.push(seekMs+rotMs);
+        var avg=reads.reduce(function(s,x){return s+x;},0)/reads.length;
+        $("hAvg").textContent=fmt(avg,1)+" ms ("+reads.length+"×)";
+        var tot=seekMs+rotMs||1;
+        $("hddBar").children[0].style.width=(seekMs/tot*100)+"%";$("hddBar").children[0].textContent=seekMs>2?"vystavení":"";
+        $("hddBar").children[1].style.width=(rotMs/tot*100)+"%";$("hddBar").children[1].textContent=rotMs>2?"otáčení":"";
+        busyH=false;
+      },reduce?1:rotMs*SLOW);
+    }
+    requestAnimationFrame(seekStep);
+  });
+
+  /* ---------- 14: použití ---------- */
+  var USE=[
+    {n:"Systém a programy",s:"NVMe SSD",d:"Operační systém i programy čtou tisíce malých souborů z náhodných míst. Právě tam má SSD přístupovou dobu zhruba 70× až 200× kratší než HDD. Počítač se spustí za pár sekund."},
+    {n:"Hry",s:"NVMe SSD",d:"Načítání map a textur je náhodné čtení velkého množství dat. Rychlé SSD zkrátí nahrávání."},
+    {n:"Notebook",s:"SSD",d:"Bez pohyblivých částí je SSD odolnější proti otřesům a pádu, tiché a úspornější. Proto notebooky používají SSD."},
+    {n:"Archiv fotek a videí",s:"HDD",d:"Velké soubory se čtou postupně a jen občas. Rozhoduje cena za terabajt a kapacita: v prodeji jsou HDD až 30 TB. Do domácího NAS s více disky patří disky s technologií CMR, ne SMR."},
+    {n:"Záloha",s:"HDD i SSD",d:"Externí HDD je levný na velkou kapacitu. Hlavní je mít zálohu na jiném zařízení než originál, nejlépe i mimo domov."},
+    {n:"Střih videa",s:"SSD + HDD",d:"Rozpracovaný projekt na rychlém NVMe SSD, hotová videa a surový materiál na HDD."},
+    {n:"Datacentrum",s:"obojí",d:"Často používaná data na SSD, archivy na HDD. Největší SSD v prodeji má 122,88 TB, nejde tedy o kapacitu, ale o cenu za terabajt."},
+    {n:"Starý počítač",s:"SATA SSD",d:"Výměna HDD za SSD bývá nejlevnější a nejvýraznější zrychlení starého počítače. I staré SATA rozhraní stačí."}
+  ];
+  picker($("useCards"),USE,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("usePanel"),function(c){$("usePanel").innerHTML='<span class="meta">doporučení: '+c.s+'</span><h3>'+c.n+'</h3><p>'+c.d+'</p>';});
+
+  /* ---------- 17: kvíz ---------- */
+  var Q=[
+    {t:"Cache L1 je rychlejší než RAM, ale menší.",a:1,f:"L1 má desítky kilobajtů a odpoví za pár taktů. RAM má gigabajty a odpovídá stovky taktů."},
+    {t:"Procesor s taktem 6 GHz je vždy rychlejší než procesor s taktem 5 GHz.",a:0,f:"Výkon = takt × IPC × počet jader. Záleží i na velikosti cache. Takt je jen jedno z čísel."},
+    {t:"DDR5-6000 CL30 a DDR4-3200 CL16 mají stejnou CAS latenci v nanosekundách.",a:1,f:"30 × 2000 / 6000 = 10 ns, 16 × 2000 / 3200 = 10 ns. DDR5 má ale skoro dvojnásobnou propustnost."},
+    {t:"Po vypnutí počítače zůstanou data v RAM.",a:0,f:"DRAM je volatilní. Náboj v kondenzátorech uniká, proto se musí neustále obnovovat, a bez napájení se data ztratí."},
+    {t:"Náhodné čtení z HDD trvá řádově milisekundy.",a:1,f:"Vystavení hlavičky a čekání na otočení plotny dávají dohromady asi 10 ms."},
+    {t:"SSD typu QLC ukládá 4 bity do jedné buňky.",a:1,f:"Q = quad. Buňka musí rozlišit 16 úrovní náboje, proto je QLC levnější, ale méně odolné."},
+    {t:"Cache funguje, protože programy často čtou data, která leží blízko sebe nebo která nedávno četly.",a:1,f:"Tomu se říká prostorová a časová lokalita."},
+    {t:"SSD je ve von Neumannově schématu operační paměť.",a:0,f:"Operační paměť je RAM. SSD je vnější paměť, procesor k ní přistupuje jako k vstupnímu a výstupnímu zařízení."},
+    {t:"Rozdělení L1 cache na instrukční a datovou je prvek Harvardovy architektury.",a:1,f:"Jádro může najednou číst instrukci i data. Proto se dnešním procesorům říká modifikovaná Harvardova architektura."},
+    {t:"Takt procesorů od roku 2005 roste stejně rychle jako počet tranzistorů.",a:0,f:"Takt se zvýšil jen asi z 3,8 na 6,2 GHz, počet tranzistorů řádově tisíckrát."}
+  ];
+  var qI=0,qOk=0,qAns=false,ansBtns=Array.prototype.slice.call(document.querySelectorAll("[data-a]"));
+  function qRender(){
+    qAns=false;var q=Q[qI];
+    $("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qText").textContent=q.t;$("qFb").innerHTML="";$("qNext").hidden=true;
+    ansBtns.forEach(function(b){b.hidden=false;b.disabled=false;b.classList.remove("is-right","is-wrong");});
+  }
+  ansBtns.forEach(function(b){b.addEventListener("click",function(){
+    if(qAns)return;qAns=true;var q=Q[qI],ok=+b.dataset.a===q.a;if(ok)qOk++;
+    ansBtns.forEach(function(x){if(+x.dataset.a===q.a)x.classList.add("is-right");x.disabled=true;});
+    if(!ok)b.classList.add("is-wrong");
+    $("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qFb").innerHTML="<b>"+(ok?"Správně.":"Tentokrát ne.")+"</b> "+q.f;
+    $("qNext").hidden=false;$("qNext").textContent=qI===Q.length-1?"Výsledek":"Další →";
+  });});
+  $("qNext").addEventListener("click",function(){
+    if(qI===Q.length-1){$("qText").innerHTML="<b>Výsledek: "+qOk+" z "+Q.length+".</b>";$("qFb").innerHTML=qOk>=8?"Výborně.":"Vrať se k žebříku latencí a k simulaci cache.";ansBtns.forEach(function(b){b.hidden=true;});$("qNext").textContent="Znovu";qI=-1;qOk=0;return;}
+    qI++;qRender();
+  });
+  qRender();
+
+  goTo(0);
+})();
+</script>
+</body>
+</html>
