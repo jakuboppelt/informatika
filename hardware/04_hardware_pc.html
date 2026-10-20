@@ -65,6 +65,7 @@
     <section class="slide"><div class="slide-inner wide">
       <div class="eyebrow">Problém</div>
       <h2 class="slide-title">Procesor je rychlý. Paměť ne.</h2>
+      <p class="lede">Přístupová doba (latence): jak dlouho trvá jedno čtení malého kusu dat, od požadavku po první data. Nejde o rychlost přenosu velkého souboru.</p>
       <div class="toolbar">
         <div class="seg" id="ladMode"></div>
         <span class="note">Délka pruhu je logaritmická: dílek = 10×.</span>
@@ -483,7 +484,7 @@
     {n:"SATA SSD",ns:140000,k:"k-sto",d:"Naměřený průměr pro čtení 4 KB byl asi 140 µs.",src:"ClickHouse, měření"},
     {n:"HDD",ns:10000000,k:"k-hdd",d:"Hlavička musí najet na stopu a počkat na otočení plotny. Průměrná latence otáčení je 4,16 ms, s vystavením se dostaneme k 10 ms. Měření ukázalo průměr 12 ms.",src:"Seagate Exos X24, ClickHouse"}
   ];
-  var ladModes=[["ns","Čas"],["cyc","Takty při 5 GHz"],["human","Kdyby takt trval 1 s"]],ladM="ns",ladAct=4,ladRows=[];
+  var ladModes=[["ns","Přístupová doba"],["cyc","Takty při 5 GHz"],["human","Kdyby takt trval 1 s"]],ladM="ns",ladAct=4,ladRows=[];
   function human(sec){
     if(sec<60)return fmt(sec,0)+" s";
     if(sec<3600)return fmt(sec/60,0)+" min";

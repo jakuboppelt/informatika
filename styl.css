@@ -1896,3 +1896,21 @@ body.doc { background: var(--bg); color: var(--fg); font-family: var(--f-body); 
 .doc .expect-h { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
 .doc .token.builtin { color: var(--tok-prop); }
 .doc .token.boolean { color: var(--warn); }
+
+
+/* =====================================================================
+   BEST PRACTICES  —  doplňky pro <body class="deck"> (seminar/best_practices.html)
+   Ukázky kódu ve srovnání, zálohy 3-2-1, model švýcarského sýra.
+   ===================================================================== */
+.deck pre.snip { margin: 0; font-family: var(--font-mono); font-size: .78rem; line-height: 1.55; background: var(--c-code); border-top: 1px solid var(--border); padding: .75rem .9rem; overflow-x: auto; color: var(--ink); white-space: pre; }
+.deck pre.snip .cm { color: var(--c-faint); }
+.deck .compare-col.is-bad .compare-head { color: var(--bad); }
+.deck .compare-col.is-good .compare-head { color: var(--good); }
+.deck table.datatable td.ok { color: var(--good); font-weight: 600; }
+.deck table.datatable td.ko { color: var(--bad); font-weight: 600; }
+.deck .big-row { display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap; }
+.deck .big-num { font-family: var(--font-head); font-size: clamp(2rem, 7vw, 3.2rem); font-weight: 700; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; min-width: 4.5rem; }
+.deck .chk-bar.is-bad { background: var(--bad); }
+.deck .compare-col { min-width: 0; }
+.deck .cards4.cards5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .55rem; }
+@media (max-width: 720px) { .deck .cards4.cards5 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
