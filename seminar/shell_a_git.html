@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Příkazová řádka a git – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Příkazová řádka</li>
+    <li><a href="#co-je">Terminál a shell</a></li>
+    <li><a href="#otevrit">Jak ho otevřít</a></li>
+    <li><a href="#prikaz">Jak vypadá příkaz</a></li>
+    <li><a href="#cesty">Cesty ke složkám</a></li>
+    <li><a href="#orientace">Orientace</a></li>
+    <li><a href="#soubory">Soubory a složky</a></li>
+    <li><a href="#cteni">Čtení, zápis a hledání</a></li>
+    <li><a href="#triky">Triky a nápověda</a></li>
+    <li><a href="#pozor">Na co si dát pozor</a></li>
+    <li class="grp">Cvičení: terminál</li>
+    <li><a href="#cv1">1 Orientace</a></li>
+    <li><a href="#cv2">2 Pracovní složka</a></li>
+    <li><a href="#cv3">3 Hledání</a></li>
+    <li><a href="#cv4">4 Úklid</a></li>
+    <li class="grp">Git</li>
+    <li><a href="#git-co">Co je git</a></li>
+    <li><a href="#git-pojmy">Základní pojmy</a></li>
+    <li><a href="#git-instalace">Instalace a nastavení</a></li>
+    <li><a href="#git-init">Založení repozitáře</a></li>
+    <li><a href="#git-cyklus">Základní cyklus</a></li>
+    <li><a href="#git-historie">Historie a změny</a></li>
+    <li><a href="#gitignore">Soubor .gitignore</a></li>
+    <li class="grp">Cvičení: git</li>
+    <li><a href="#cv5">5 Nastavení gitu</a></li>
+    <li><a href="#cv6">6 První repozitář</a></li>
+    <li><a href="#cv7">7 Druhá verze</a></li>
+    <li><a href="#cv8">8 Záchrana</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#tahak">Tahák</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Seminář · Studijní text</p>
+  <h1>Příkazová řádka a <span class="t">git</span></h1>
+  <p class="lead">Jak ovládat počítač příkazy místo myši a jak si v projektu uchovávat verze pomocí gitu. Obojí si vyzkoušíš na svém počítači v osmi cvičeních.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit rozdíl mezi terminálem a shellem</li>
+      <li>otevřít příkazovou řádku ve svém systému</li>
+      <li>rozlišit absolutní a relativní cestu</li>
+      <li>pohybovat se po složkách a vytvářet, kopírovat, přesouvat a mazat soubory</li>
+      <li>vysvětlit, co je git a čím se liší od GitHubu</li>
+      <li>založit repozitář a uložit první verzi projektu</li>
+      <li>používat git status, add, commit, log a diff</li>
+      <li>vyřadit soubor z gitu pomocí .gitignore</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Příkazová řádka</p>
+
+<section id="co-je">
+<h2>Terminál a shell</h2>
+<p><dfn>Příkazová řádka</dfn> (anglicky command line interface, CLI) je způsob ovládání počítače textem: napíšeš příkaz, stiskneš <kbd>Enter</kbd> a počítač vypíše výsledek. Je to opak grafického rozhraní (GUI), kde klikáš myší.</p>
+<p>Často se zaměňují dva pojmy:</p>
+<ul>
+  <li><dfn>Terminál</dfn> je okno, do kterého píšeš a ve kterém se zobrazuje text. Například Windows Terminal nebo Terminál v macOS.</li>
+  <li><dfn>Shell</dfn> je program, který tvoje příkazy čte a provádí. Ve Windows je to <strong>PowerShell</strong> (a starší <strong>cmd</strong>), v macOS <strong>zsh</strong>, v Linuxu nejčastěji <strong>bash</strong>.</li>
+</ul>
+<p>Proč se to učit, když existuje myš?</p>
+<ul>
+  <li><strong>Rychlost.</strong> Přejmenovat 300 souborů myší trvá půl hodiny, příkazem sekundu.</li>
+  <li><strong>Opakovatelnost.</strong> Příkaz si uložíš, pošleš spolužákovi nebo spustíš znovu. Postup klikání se předává špatně.</li>
+  <li><strong>Nástroje programátora.</strong> Git, Python, správci balíčků a překladače se ovládají hlavně z příkazové řádky.</li>
+  <li><strong>Servery.</strong> Na většině serverů žádná grafika není. Připojíš se přes síť a máš jen terminál.</li>
+</ul>
+</section>
+
+<section id="otevrit">
+<h2>Jak příkazovou řádku otevřít</h2>
+<div class="tbl"><table>
+<thead><tr><th>Systém</th><th>Jak otevřít</th><th>Shell</th></tr></thead>
+<tbody>
+<tr><td><strong>Windows</strong></td><td><kbd>Win</kbd>+<kbd>X</kbd> → Terminál. Nebo stiskni <kbd>Win</kbd>, napiš „terminal“ nebo „powershell“ a <kbd>Enter</kbd>.</td><td>PowerShell</td></tr>
+<tr><td><strong>macOS</strong></td><td><kbd>Cmd</kbd>+<kbd>Mezerník</kbd>, napiš „Terminal“ a <kbd>Enter</kbd>.</td><td>zsh</td></tr>
+<tr><td><strong>Linux</strong></td><td>Většinou <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd>.</td><td>bash</td></tr>
+</tbody></table></div>
+<p>Ve složce v Průzkumníku Windows můžeš také kliknout pravým tlačítkem na prázdné místo a zvolit <em>Otevřít v Terminálu</em>. Terminál se pak otevře rovnou v této složce.</p>
+<div class="note tip"><b class="lbl">Bash i ve Windows</b><p>S instalací gitu pro Windows dostaneš i <strong>Git Bash</strong>, tedy bash, jaký je na Linuxu a macOS. Příkazy z tohoto textu v něm fungují beze změny. Většina z nich ale funguje i v PowerShellu, rozdíly jsou v tabulkách.</p></div>
+</section>
+
+<section id="prikaz">
+<h2>Jak vypadá příkaz</h2>
+<p>Před kurzorem je <dfn>prompt</dfn> (výzva). Ukazuje, kdo jsi a ve které složce se nacházíš. Za ním píšeš příkaz:</p>
+<div class="anat" aria-label="Části příkazu">
+  <span><small>prompt</small><b class="a-pr">student@pc:~$</b></span>
+  <span><small>příkaz</small><b class="a-cmd">ls</b></span>
+  <span><small>přepínač</small><b class="a-opt">-l</b></span>
+  <span><small>argument</small><b>dokumenty</b></span>
+</div>
+<ul>
+  <li><strong>Příkaz</strong> je název programu, který se spustí: <code>ls</code> vypíše obsah složky.</li>
+  <li><strong>Přepínač</strong> (option, flag) mění chování. Začíná pomlčkou: <code>-l</code> znamená podrobný výpis. Dlouhé přepínače mají dvě pomlčky: <code>--help</code>.</li>
+  <li><strong>Argument</strong> říká, s čím má příkaz pracovat: se složkou <code>dokumenty</code>.</li>
+</ul>
+<p>Části se oddělují mezerou. Proto když název obsahuje mezeru, musíš ho dát do uvozovek: <code>cd "Moje dokumenty"</code>. Jinak shell pochopí <code>Moje</code> a <code>dokumenty</code> jako dva argumenty. Velikost písmen v Linuxu a macOS záleží: <code>Skola.txt</code> a <code>skola.txt</code> jsou dva různé soubory.</p>
+<div class="note mat"><b class="lbl">Proč názvy bez mezer a diakritiky</b><p>Soubor <code>ukol_1.txt</code> napíšeš v terminálu rychle a bez chyby. <code>Úkol č. 1.txt</code> potřebuje uvozovky a české znaky, které se v některých nástrojích rozbijí. Pojmenovávej soubory malými písmeny, bez mezer a bez diakritiky.</p></div>
+</section>
+
+<section id="cesty">
+<h2>Cesty ke složkám</h2>
+<p>Soubory jsou uložené ve stromu složek. <dfn>Cesta</dfn> popisuje, jak se k souboru dostat.</p>
+<ul>
+  <li><dfn>Absolutní cesta</dfn> začíná od kořene. V Linuxu a macOS od <code>/</code>, například <code>/home/student/dokumenty/skola.txt</code>. Ve Windows od písmene disku: <code>C:\Users\student\Documents\skola.txt</code>. Platí odkudkoli.</li>
+  <li><dfn>Relativní cesta</dfn> začíná ve složce, kde právě jsi. Když jsi v <code>/home/student</code>, stačí napsat <code>dokumenty/skola.txt</code>.</li>
+</ul>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>~</code></td><td>tvoje domovská složka (<code>/home/student</code>, <code>C:\Users\student</code>)</td></tr>
+<tr><td><code>.</code></td><td>aktuální složka</td></tr>
+<tr><td><code>..</code></td><td>nadřazená složka, o úroveň výš</td></tr>
+<tr><td><code>/</code></td><td>kořen souborového systému (Linux, macOS)</td></tr>
+</tbody></table></div>
+<p>Linux a macOS oddělují složky lomítkem <code>/</code>, Windows zpětným lomítkem <code>\</code>. PowerShell ale rozumí oběma.</p>
+</section>
+
+<section id="orientace">
+<h2>Orientace: kde jsem a co tu je</h2>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>pwd              # vypíše, ve které složce jsi
+ls               # vypíše obsah složky
+ls -l            # podrobný výpis: velikost, datum, práva
+ls -a            # i skryté soubory (začínají tečkou)
+cd dokumenty     # přejde do složky dokumenty
+cd ..            # o úroveň výš
+cd ~             # domů (stačí i samotné cd)
+cd -             # zpět do předchozí složky</code></pre>
+<p>Text za znakem <code>#</code> je <dfn>komentář</dfn>. Shell ho ignoruje, slouží jen pro čtenáře.</p>
+<div class="tbl"><table>
+<thead><tr><th>Co</th><th>Linux, macOS</th><th>PowerShell</th></tr></thead>
+<tbody>
+<tr><td>Kde jsem</td><td><code>pwd</code></td><td><code>pwd</code></td></tr>
+<tr><td>Obsah složky</td><td><code>ls</code></td><td><code>ls</code> nebo <code>dir</code></td></tr>
+<tr><td>Skryté soubory</td><td><code>ls -a</code></td><td><code>ls -Force</code></td></tr>
+<tr><td>Přejít do složky</td><td><code>cd</code></td><td><code>cd</code></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="soubory">
+<h2>Práce se soubory a složkami</h2>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>mkdir projekt                   # nová složka
+touch poznamky.md               # nový prázdný soubor
+cp plan.txt projekt/            # zkopíruje soubor do složky
+cp -r projekt projekt_zaloha    # zkopíruje celou složku
+mv plan.txt projekt/            # přesune soubor
+mv foto_001.jpg dovolena.jpg    # přejmenuje soubor
+rm stary.txt                    # smaže soubor
+rm -r stara_slozka              # smaže složku i s obsahem</code></pre>
+<p>Přejmenování a přesun je jeden a tentýž příkaz <code>mv</code> (move). Když je cíl existující složka, soubor se do ní přesune. Jinak se přejmenuje.</p>
+<div class="tbl"><table>
+<thead><tr><th>Co</th><th>Linux, macOS</th><th>PowerShell</th></tr></thead>
+<tbody>
+<tr><td>Nová složka</td><td><code>mkdir</code></td><td><code>mkdir</code></td></tr>
+<tr><td>Nový prázdný soubor</td><td><code>touch</code></td><td><code>ni</code> (New-Item)</td></tr>
+<tr><td>Kopírovat</td><td><code>cp</code>, složku <code>cp -r</code></td><td><code>cp</code>, složku <code>cp -r</code></td></tr>
+<tr><td>Přesunout, přejmenovat</td><td><code>mv</code></td><td><code>mv</code></td></tr>
+<tr><td>Smazat</td><td><code>rm</code>, složku <code>rm -r</code></td><td><code>rm</code>, složku <code>rm -r</code></td></tr>
+</tbody></table></div>
+<p>V PowerShellu jsou <code>ls</code>, <code>cp</code>, <code>mv</code> nebo <code>rm</code> takzvané <dfn>aliasy</dfn>, zkratky pro jeho vlastní příkazy (<code>Get-ChildItem</code>, <code>Copy-Item</code>…). Proto fungují podobně jako v bashi, ale ne všechny přepínače jsou stejné.</p>
+</section>
+
+<section id="cteni">
+<h2>Čtení, zápis a hledání</h2>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>cat skola.txt                  # vypíše obsah souboru
+echo "Ahoj"                    # vypíše text
+echo "Můj projekt" > README.md   # zapíše text do souboru (přepíše ho)
+echo "Druhý řádek" >> README.md  # připíše text na konec souboru
+grep TODO skola.txt            # řádky souboru, které obsahují TODO
+grep -r TODO .                 # hledá ve všech souborech ve složce
+grep -ri todo .                # totéž bez ohledu na velká a malá písmena</code></pre>
+<p>Znak <code>&gt;</code> je <dfn>přesměrování</dfn>: výstup příkazu se místo na obrazovku zapíše do souboru. Pozor, <code>&gt;</code> soubor přepíše, <code>&gt;&gt;</code> připisuje na konec.</p>
+<p>V PowerShellu se místo <code>grep</code> používá <code>sls</code> (Select-String): <code>sls TODO skola.txt</code>, ve všech souborech <code>ls -r | sls TODO</code>.</p>
+</section>
+
+<section id="triky">
+<h2>Triky a nápověda</h2>
+<div class="tbl"><table>
+<thead><tr><th>Klávesa</th><th>Co udělá</th></tr></thead>
+<tbody>
+<tr><td><kbd>Tab</kbd></td><td>doplní název souboru nebo složky. Napiš <code>cd dok</code> a stiskni <kbd>Tab</kbd>. Ušetří psaní i překlepy.</td></tr>
+<tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>listuje předchozími příkazy</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd></td><td>přeruší běžící příkaz. V terminálu to <strong>není</strong> kopírování.</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>L</kbd></td><td>vyčistí obrazovku (také příkaz <code>clear</code>, ve Windows <code>cls</code>)</td></tr>
+</tbody></table></div>
+<p>Kopírovat a vkládat v terminálu: ve Windows Terminálu <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd> a <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> (nebo pravé tlačítko), v macOS normálně <kbd>Cmd</kbd>+<kbd>C</kbd> a <kbd>Cmd</kbd>+<kbd>V</kbd>.</p>
+<p>Když nevíš, jak příkaz použít:</p>
+<ul>
+  <li><code>man ls</code> otevře manuál (Linux, macOS). Ven se dostaneš klávesou <kbd>Q</kbd>.</li>
+  <li><code>ls --help</code> vypíše krátkou nápovědu.</li>
+  <li><code>Get-Help ls</code> je nápověda v PowerShellu.</li>
+  <li>Web <a href="https://tldr.sh">tldr.sh</a> ukazuje u každého příkazu nejčastější příklady použití.</li>
+</ul>
+</section>
+
+<section id="pozor">
+<h2>Na co si dát pozor</h2>
+<div class="note warn"><b class="lbl">rm nemá koš</b><p>Soubor smazaný příkazem <code>rm</code> nejde do koše a terminál se nezeptá „Opravdu?“. Před <code>rm -r</code> si vždy zkontroluj, kde jsi (<code>pwd</code>) a co mažeš (<code>ls</code>).</p></div>
+<ul>
+  <li><strong>Nespouštěj příkazy, kterým nerozumíš.</strong> Hlavně ne ty, které ti někdo pošle se slovy „tohle ti to opraví“. Příkaz z internetu může smazat data nebo stáhnout škodlivý program.</li>
+  <li><strong>Pozor na <code>sudo</code></strong> (Linux, macOS) a na terminál spuštěný jako správce (Windows). Příkaz pak smí měnit celý systém, ne jen tvoje soubory.</li>
+  <li><strong>Chybová hláška je nápověda.</strong> <code>No such file or directory</code> znamená, že soubor na té cestě není. Zkontroluj překlep a složku, ve které jsi.</li>
+</ul>
+</section>
+
+<p class="part">Cvičení: příkazová řádka</p>
+
+<section id="cv1" class="task">
+<div class="task-head"><span class="num">Cvičení 1</span><h2>Orientace</h2><span class="time">5 min</span></div>
+<p>Otevři terminál na svém počítači a projdi kroky. Po každém příkazu si přečti, co terminál vypsal.</p>
+<ol class="plan">
+  <li><b><code>pwd</code></b>: ve které složce terminál začíná?</li>
+  <li><b><code>ls</code></b>: co v ní je?</li>
+  <li><b><code>cd Documents</code></b>: přejdi do dokumentů. Zkus napsat jen <code>cd Doc</code> a stisknout <kbd>Tab</kbd>.</li>
+  <li><b><code>pwd</code></b> a <b><code>ls</code></b>: kde jsi teď a co tu máš?</li>
+  <li><b><code>cd ..</code></b> a <b><code>pwd</code></b>: jsi zpátky v domovské složce?</li>
+</ol>
+<div class="codehead"><span>Co bys měl vidět po prvním pwd</span></div>
+<pre><code>C:\Users\jmeno        # Windows (PowerShell ho vypíše pod nadpisem Path)
+/Users/jmeno          # macOS
+/home/jmeno           # Linux</code></pre>
+<details class="hint"><summary>Otázka k zamyšlení</summary><div><p>Proč v terminálu vidíš <code>Documents</code> a <code>Downloads</code>, když Průzkumník ukazuje Dokumenty a Stažené soubory?</p></div></details>
+<details class="sol"><summary>Odpověď</summary><div><p>Skutečné názvy složek jsou anglické. Průzkumník (i Finder v macOS) jen zobrazuje přeložený název. Terminál ukazuje, jak se složka doopravdy jmenuje.</p></div></details>
+</section>
+
+<section id="cv2" class="task">
+<div class="task-head"><span class="num">Cvičení 2</span><h2>Vlastní pracovní složka</h2><span class="time">10 min</span></div>
+<p>Založ si složku <code>cviceni</code>, ve které budeš zkoušet všechno ostatní. Nic mimo ni neměň.</p>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>cd ~
+mkdir cviceni
+cd cviceni
+mkdir projekt
+mkdir fotky
+echo "Pondělí: seminář" > plan.txt
+echo "Úterý: trénink" >> plan.txt
+cat plan.txt</code></pre>
+<p>Pak vytvoř prázdný soubor <code>poznamky.txt</code>: v bashi <code>touch poznamky.txt</code>, v PowerShellu <code>ni poznamky.txt</code>. A pokračuj:</p>
+<ol class="plan">
+  <li>Zkopíruj <code>plan.txt</code> do složky <code>projekt</code>.</li>
+  <li>Přesuň <code>poznamky.txt</code> do složky <code>projekt</code>.</li>
+  <li>Přejmenuj <code>plan.txt</code> na <code>plan_tydne.txt</code>.</li>
+  <li>Vypiš obsah složky <code>cviceni</code> i složky <code>projekt</code>.</li>
+  <li>Otevři složku v grafickém prohlížeči: <code>explorer .</code> (Windows) nebo <code>open .</code> (macOS). Tečka znamená aktuální složku.</li>
+</ol>
+<details class="hint"><summary>Nápověda</summary><div><p>Kopírování je <code>cp</code>, přesun i přejmenování <code>mv</code>. První argument je odkud, druhý kam.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div>
+<pre><code>cp plan.txt projekt/
+mv poznamky.txt projekt/
+mv plan.txt plan_tydne.txt
+ls
+ls projekt</code></pre>
+<p>Ve složce <code>cviceni</code> mají zůstat <code>fotky</code>, <code>plan_tydne.txt</code> a <code>projekt</code>. Ve složce <code>projekt</code> jsou <code>plan.txt</code> a <code>poznamky.txt</code>.</p>
+</div></details>
+</section>
+
+<section id="cv3" class="task">
+<div class="task-head"><span class="num">Cvičení 3</span><h2>Hledání v souborech</h2><span class="time">5 min</span></div>
+<p>Ve složce <code>cviceni</code> vytvoř tři soubory a pak najdi ty, ve kterých je slovo TODO.</p>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>echo "TODO: dopsat úvod" > referat.txt
+echo "Hotovo" > ukol.txt
+echo "TODO: najít zdroje" > projekt/zdroje.txt</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>V bashi <code>grep</code> s přepínačem <code>-r</code>, v PowerShellu <code>ls -r</code> a výsledek poslat do <code>sls</code>.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div>
+<pre><code>grep -r TODO .           # bash, macOS
+ls -r | sls TODO         # PowerShell</code></pre>
+<p>Výsledkem jsou dva soubory, <code>referat.txt</code> a <code>projekt/zdroje.txt</code>. Soubor <code>ukol.txt</code> ve výpisu není.</p>
+</div></details>
+</section>
+
+<section id="cv4" class="task">
+<div class="task-head"><span class="num">Cvičení 4</span><h2>Úklid</h2><span class="time">5 min</span></div>
+<p>Smaž soubor <code>ukol.txt</code> a složku <code>fotky</code>. Před mazáním si příkazem <code>pwd</code> ověř, že jsi ve složce <code>cviceni</code>.</p>
+<details class="sol"><summary>Řešení</summary><div>
+<pre><code>pwd
+rm ukol.txt
+rm -r fotky
+ls</code></pre>
+<p>Podívej se do koše. Smazané soubory v něm nejsou.</p>
+</div></details>
+</section>
+
+<p class="part">Git</p>
+
+<section id="git-co">
+<h2>Co je git</h2>
+<p><dfn>Git</dfn> je <dfn>systém pro správu verzí</dfn> (version control system, VCS). Hlídá složku s projektem a na tvůj pokyn uloží její stav jako novou verzi. Ke každé verzi se dá kdykoli vrátit a porovnat ji s jinou.</p>
+<p>Bez gitu vypadá správa verzí takhle: <code>projekt</code>, <code>projekt_kopie</code>, <code>projekt_final</code>, <code>projekt_final2_opraveny</code>. Nikdo neví, co se v které kopii změnilo a která je poslední. S gitem máš jednu složku a v ní celou historii: kdo, kdy, co a proč změnil.</p>
+<p>Git vytvořil v roce 2005 Linus Torvalds, autor Linuxu, pro vývoj linuxového jádra. Dnes ho používá prakticky každý softwarový projekt.</p>
+<div class="note mat"><b class="lbl">Git není GitHub</b><p><strong>Git</strong> je program na tvém počítači a funguje i bez internetu. <strong>GitHub</strong> je webová služba, kam můžeš repozitář nahrát: slouží jako záloha, ke sdílení a ke spolupráci. Podobných služeb je víc, například GitLab nebo Bitbucket.</p></div>
+</section>
+
+<section id="git-pojmy">
+<h2>Základní pojmy</h2>
+<ul>
+  <li><dfn>Repozitář</dfn> (repo) je složka projektu, kterou git sleduje. Historii si ukládá do skryté podsložky <code>.git</code>.</li>
+  <li><dfn>Commit</dfn> je uložená verze: snímek projektu se zprávou, autorem a časem. Každý má jednoznačný identifikátor (hash), například <code>a3f9c21</code>.</li>
+  <li><dfn>Pracovní složka</dfn> jsou běžné soubory, které upravuješ v editoru.</li>
+  <li><dfn>Staging</dfn> (index, přípravná oblast) je seznam změn, které půjdou do příštího commitu. Díky němu si vybereš, co uložit, a ne vždy všechno najednou.</li>
+  <li><dfn>Větev</dfn> (branch) je samostatná linie historie. Hlavní větev se jmenuje <code>main</code> (ve starších nastaveních <code>master</code>). Pro začátek ti jedna větev stačí.</li>
+</ul>
+<p>Změna souboru prochází třemi místy na tvém počítači. Volitelně pak čtvrtým na serveru:</p>
+<div class="flow">
+  <div><b>Pracovní složka</b><span>soubory upravuješ v editoru</span></div>
+  <div><b>Staging</b><span>vybrané změny připravené k uložení</span></div>
+  <div><b>Repozitář</b><span>uložené verze ve složce .git</span></div>
+  <div><b>GitHub</b><span>kopie na serveru, záloha a sdílení</span></div>
+</div>
+<div class="flow-cmds" aria-hidden="true"><span>git add →</span><span>git commit →</span><span>git push →</span></div>
+</section>
+
+<section id="git-instalace">
+<h2>Instalace a první nastavení</h2>
+<p>Ve Windows stáhni git z <a href="https://git-scm.com">git-scm.com</a>, nebo ho nainstaluj příkazem <code>winget install Git.Git</code>. V macOS se nabídne instalace sama, když poprvé napíšeš <code>git</code>. V Linuxu například <code>sudo apt install git</code>. Pak terminál zavři a otevři znovu.</p>
+<p>Ověř instalaci a nastav jméno a e-mail. Git je zapisuje do každého commitu jako autora. Nastavuje se to jednou na každém počítači:</p>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>git --version
+git config --global user.name "Jan Novák"
+git config --global user.email "jan.novak@example.com"
+git config --global init.defaultBranch main</code></pre>
+<p>Poslední řádek zajistí, že se hlavní větev v nových repozitářích bude jmenovat <code>main</code>. Pokud budeš používat GitHub, zadej stejný e-mail jako u účtu na GitHubu.</p>
+</section>
+
+<section id="git-init">
+<h2>Založení repozitáře</h2>
+<p>Přejdi do složky projektu a napiš <code>git init</code>:</p>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>cd ~/projekty/web
+git init</code></pre>
+<p>Git odpoví <code>Initialized empty Git repository in …/web/.git/</code>. Vznikla skrytá složka <code>.git</code>, ve které bude celá historie. Tvoje soubory se nezměnily a zatím není uložená žádná verze.</p>
+<p>Druhá možnost je stáhnout existující repozitář, třeba z GitHubu. Příkaz <code>git clone</code> vytvoří složku i s celou historií:</p>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>git clone https://github.com/jakuboppelt/informatika.git</code></pre>
+<div class="note warn"><b class="lbl">Složku .git nemaž</b><p>Když smažeš <code>.git</code>, smažeš celou historii. Soubory projektu zůstanou, ale všechny uložené verze zmizí. Repozitář také nezakládej v domovské složce nebo na celém disku, ale vždy ve složce jednoho projektu.</p></div>
+</section>
+
+<section id="git-cyklus">
+<h2>Základní cyklus: status, add, commit</h2>
+<p>Práce s gitem je pořád dokola stejná:</p>
+<ol class="plan">
+  <li><b>Uprav soubory</b> v editoru jako obvykle.</li>
+  <li><b><code>git status</code></b>: podívej se, co se změnilo.</li>
+  <li><b><code>git add</code></b>: připrav změny do stagingu.</li>
+  <li><b><code>git commit -m "zpráva"</code></b>: ulož je jako novou verzi.</li>
+</ol>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>git status                 # co se změnilo a co je připravené
+git add index.html         # připraví jeden soubor
+git add .                  # připraví všechny změny ve složce
+git commit -m "Přidán formulář pro přihlášení"</code></pre>
+<p><code>git status</code> spouštěj často, nic nezmění a vždy ti řekne, v jakém stavu jsi. Soubory ve výpisu dělí na tři skupiny:</p>
+<div class="tbl"><table>
+<thead><tr><th>Ve výpisu</th><th>Znamená</th><th>Co s tím</th></tr></thead>
+<tbody>
+<tr><td><code>Untracked files</code></td><td>nový soubor, git ho zatím nesleduje</td><td><code>git add</code>, nebo zapsat do <code>.gitignore</code></td></tr>
+<tr><td><code>Changes not staged for commit</code></td><td>sledovaný soubor se změnil, ale změna není připravená</td><td><code>git add</code></td></tr>
+<tr><td><code>Changes to be committed</code></td><td>připraveno ve stagingu</td><td><code>git commit</code></td></tr>
+</tbody></table></div>
+<h3>Jak psát zprávu commitu</h3>
+<p>Zpráva má říct, <strong>co</strong> commit dělá a případně proč. Dobrá pomůcka: doplň větu „Tento commit…“. Píše se krátce, do první řádky asi 50 znaků.</p>
+<div class="cols2">
+  <div class="card"><h3>Špatně</h3><p><code>oprava</code>, <code>asdf</code>, <code>změny</code>, <code>final</code></p></div>
+  <div class="card"><h3>Dobře</h3><p><code>Oprava pádu při prázdném seznamu</code><br><code>Přidána stránka s kontaktem</code></p></div>
+</div>
+<p>Commituj <strong>často a po malých krocích</strong>: jeden commit, jedna logická změna. Ne jeden obří commit večer před odevzdáním.</p>
+</section>
+
+<section id="git-historie">
+<h2>Historie a změny</h2>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>git log                # historie commitů s autorem a datem
+git log --oneline      # zkrácená historie, jeden commit na řádek
+git diff               # co přesně se změnilo a ještě není připravené
+git diff --staged      # co je připravené k commitu
+git restore index.html # zahodí neuložené změny souboru</code></pre>
+<p>Výstup <code>git diff</code> označuje přidané řádky znaménkem <code>+</code> a odebrané znaménkem <code>-</code>. Pokud je výpis delší než okno, listuješ mezerníkem a ukončíš ho klávesou <kbd>Q</kbd>.</p>
+<div class="note warn"><b class="lbl">git restore je nevratný</b><p><code>git restore soubor</code> vrátí soubor do stavu posledního commitu (přesněji do stavu ve stagingu). Úpravy, které jsi neuložil commitem, jsou pryč.</p></div>
+</section>
+
+<section id="gitignore">
+<h2>Soubor .gitignore</h2>
+<p>Některé soubory do repozitáře nepatří: hesla a klíče, soubory s nastavením tvého počítače, stažené knihovny nebo soubory, které vznikají při spuštění programu. Jejich názvy napiš do souboru <code>.gitignore</code> v hlavní složce projektu, každý na jeden řádek:</p>
+<div class="codehead"><span>.gitignore</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code># tajné údaje
+heslo.txt
+.env
+
+# stažené knihovny a dočasné soubory
+node_modules/
+__pycache__/
+*.log</code></pre>
+<p>Lomítko na konci znamená celou složku, hvězdička libovolný text: <code>*.log</code> jsou všechny soubory s příponou .log. Soubor <code>.gitignore</code> samotný do gitu commitni, ať platí pro všechny, kdo s projektem pracují.</p>
+<p>Když už jsi soubor omylem přidal přes <code>git add</code>, ale ještě necommitnul, vyřadíš ho ze stagingu příkazem <code>git rm --cached heslo.txt</code>. Soubor na disku zůstane.</p>
+<div class="note warn"><b class="lbl">.gitignore vytvoř hned na začátku</b><p>Ignoruje jen soubory, které git ještě nesleduje. Když heslo jednou commitneš, zůstane v historii, i když ho pak smažeš. Takové heslo je potřeba změnit.</p></div>
+<div class="note tip"><b class="lbl">Tip pro Windows</b><p>Soubor <code>.gitignore</code> vytvářej v editoru (třeba VS Code), ne příkazem <code>echo … &gt; .gitignore</code> ve Windows PowerShellu. Starší PowerShell zapisuje přesměrovaný text v kódování UTF-16, kterému git v .gitignore nerozumí.</p></div>
+</section>
+
+<p class="part">Cvičení: git</p>
+
+<section id="cv5" class="task">
+<div class="task-head"><span class="num">Cvičení 5</span><h2>Nastavení gitu</h2><span class="time">5 min</span></div>
+<p>Ověř, že máš git nainstalovaný, a nastav jméno a e-mail. Použij svoje skutečné jméno.</p>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>git --version
+git config --global user.name "Jan Novák"
+git config --global user.email "jan.novak@example.com"
+git config --global init.defaultBranch main
+git config --global --list</code></pre>
+<p>Poslední příkaz vypíše nastavení. Mezi řádky musíš najít <code>user.name=…</code> a <code>user.email=…</code> se svými údaji.</p>
+<details class="hint"><summary>Terminál hlásí, že příkaz git nezná</summary><div><p>Git není nainstalovaný, nebo terminál běžel už před instalací. Nainstaluj git (<code>winget install Git.Git</code>), terminál zavři a otevři znovu.</p></div></details>
+</section>
+
+<section id="cv6" class="task">
+<div class="task-head"><span class="num">Cvičení 6</span><h2>První repozitář</h2><span class="time">15 min</span></div>
+<p>Založ repozitář pro malý web a ulož jeho první verzi. Soubor s heslem do gitu nepustíš.</p>
+<div class="codehead"><span>Terminál</span><button class="copy" type="button">Kopírovat</button></div>
+<pre><code>cd ~/cviceni
+mkdir web
+cd web
+git init</code></pre>
+<ol class="plan">
+  <li><b>Vytvoř <code>index.html</code></b> v editoru: <code>code index.html</code> (VS Code) nebo <code>notepad index.html</code>. Napiš do něj <code>&lt;h1&gt;Můj web&lt;/h1&gt;</code> a ulož.</li>
+  <li><b>Vytvoř <code>heslo.txt</code></b> se slovem <code>admin123</code>, třeba <code>echo admin123 &gt; heslo.txt</code>.</li>
+  <li><b><code>git status</code></b>: oba soubory jsou v sekci <code>Untracked files</code>.</li>
+  <li><b>Vytvoř <code>.gitignore</code></b> v editoru (<code>code .gitignore</code> nebo <code>notepad .gitignore</code>) s jediným řádkem <code>heslo.txt</code> a ulož.</li>
+  <li><b><code>git status</code></b>: <code>heslo.txt</code> zmizel, místo něj je tu <code>.gitignore</code>.</li>
+  <li><b><code>git add .</code></b> a znovu <b><code>git status</code></b>: soubory jsou v <code>Changes to be committed</code>.</li>
+  <li><b><code>git commit -m "První verze webu"</code></b></li>
+  <li><b><code>git log</code></b>: vidíš svůj commit se jménem a datem.</li>
+</ol>
+<div class="codehead"><span>Co bys měl vidět po commitu</span></div>
+<pre><code>[main (root-commit) 3f2a9c1] První verze webu
+ 2 files changed, 2 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 index.html</code></pre>
+<p>Kód <code>3f2a9c1</code> budeš mít jiný, každý commit má vlastní.</p>
+<div class="note tip"><b class="lbl">Proč soubory v editoru, a ne přes echo</b><p>Starší Windows PowerShell ukládá text zapsaný přes <code>&gt;</code> v kódování UTF-16. Git takový soubor považuje za binární a neukáže v něm změny. U <code>heslo.txt</code> to nevadí, ten do gitu nejde.</p></div>
+<details class="hint"><summary>Git píše „LF will be replaced by CRLF“</summary><div><p>To je jen upozornění, ne chyba. Windows a Linux ukončují řádky jinými znaky a git je při ukládání sjednocuje.</p></div></details>
+<details class="hint"><summary>V git status je pořád heslo.txt</summary><div><p>Zkontroluj, že se soubor jmenuje přesně <code>.gitignore</code> (s tečkou na začátku, bez přípony .txt) a leží ve složce <code>web</code>. Vypiš ho: <code>cat .gitignore</code>. Pokud jsi heslo už přidal přes <code>git add</code>, vyřaď ho příkazem <code>git rm --cached heslo.txt</code>.</p></div></details>
+</section>
+
+<section id="cv7" class="task">
+<div class="task-head"><span class="num">Cvičení 7</span><h2>Druhá verze</h2><span class="time">10 min</span></div>
+<ol class="plan">
+  <li>Do <code>index.html</code> připiš řádek <code>&lt;p&gt;Ahoj, tohle je můj web.&lt;/p&gt;</code> a ulož.</li>
+  <li><b><code>git status</code></b>: soubor je <code>modified</code>.</li>
+  <li><b><code>git diff</code></b>: nový řádek je označený <code>+</code>. Z výpisu odejdeš klávesou <kbd>Q</kbd>.</li>
+  <li>Ulož změnu jako nový commit s výstižnou zprávou.</li>
+  <li><b><code>git log --oneline</code></b>: v historii jsou dva commity.</li>
+</ol>
+<details class="sol"><summary>Řešení</summary><div>
+<pre><code>git add index.html
+git commit -m "Přidán úvodní odstavec"
+git log --oneline</code></pre>
+</div></details>
+</section>
+
+<section id="cv8" class="task">
+<div class="task-head"><span class="num">Cvičení 8</span><h2>Záchrana</h2><span class="time">5 min</span></div>
+<p>Teď uvidíš, k čemu je git dobrý.</p>
+<ol class="plan">
+  <li>V editoru z <code>index.html</code> smaž úplně všechno a ulož.</li>
+  <li><b><code>git status</code></b> a <b><code>git diff</code></b>: git ví, že řádky zmizely.</li>
+  <li><b><code>git restore index.html</code></b></li>
+  <li>Podívej se do editoru. Soubor je zpátky ve stavu posledního commitu.</li>
+</ol>
+<details class="hint"><summary>Otázka k zamyšlení</summary><div><p>Co kdybys smazaný soubor nejdřív commitnul? Je tvoje práce ztracená?</p></div></details>
+<details class="sol"><summary>Odpověď</summary><div><p>Není. Starší verze zůstala v historii. Příkaz <code>git restore --source=HEAD~1 index.html</code> vrátí soubor ve stavu o jeden commit zpět. Proto se vyplatí commitovat často.</p></div></details>
+<div class="note tip"><b class="lbl">Kam dál</b><p>Jak repozitář nahrát na GitHub (<code>git remote</code>, <code>git push</code>, <code>git pull</code>) a jak pracovat s větvemi, probereme samostatně. Na práci na vlastním projektu ti zatím stačí to, co je v tomto textu.</p></div>
+</section>
+
+<p class="part">Opakování</p>
+
+<section id="tahak">
+<h2>Tahák</h2>
+<div class="cols2">
+  <div class="card"><h3>Příkazová řádka</h3><p><code>pwd</code> kde jsem · <code>ls</code> obsah · <code>cd</code> přejít · <code>cd ..</code> výš<br><code>mkdir</code> složka · <code>touch</code> soubor<br><code>cp</code> kopírovat · <code>mv</code> přesunout · <code>rm</code> smazat<br><code>cat</code> vypsat · <code>grep</code> hledat · <code>&gt;</code> do souboru<br><kbd>Tab</kbd> doplnit · <kbd>↑</kbd> historie · <kbd>Ctrl</kbd>+<kbd>C</kbd> přerušit</p></div>
+  <div class="card"><h3>Git</h3><p><code>git config --global user.name "…"</code><br><code>git init</code> založit · <code>git clone</code> stáhnout<br><code>git status</code> stav<br><code>git add .</code> připravit · <code>git commit -m "…"</code> uložit<br><code>git log --oneline</code> historie · <code>git diff</code> změny</p></div>
+</div>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<details class="q"><summary>Jaký je rozdíl mezi terminálem a shellem?</summary><div class="a"><p>Terminál je okno, které zobrazuje text a přijímá vstup z klávesnice. Shell je program, který příkazy zpracovává a spouští (bash, zsh, PowerShell).</p></div></details>
+<details class="q"><summary>Z jakých částí se skládá příkaz ls -l dokumenty?</summary><div class="a"><p>Z příkazu <code>ls</code>, přepínače <code>-l</code> (podrobný výpis) a argumentu <code>dokumenty</code> (se kterou složkou pracovat).</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi absolutní a relativní cestou?</summary><div class="a"><p>Absolutní cesta začíná od kořene (<code>/</code> nebo <code>C:\</code>) a platí odkudkoli. Relativní začíná v aktuální složce, takže záleží na tom, kde právě jsi.</p></div></details>
+<details class="q"><summary>Co znamenají ~, . a ..?</summary><div class="a"><p>Domovskou složku, aktuální složku a nadřazenou složku.</p></div></details>
+<details class="q"><summary>Jak přejmenuješ soubor?</summary><div class="a"><p>Příkazem <code>mv stary_nazev nový_nazev</code>. Přejmenování je přesun na jiný název.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi &gt; a &gt;&gt;?</summary><div class="a"><p><code>&gt;</code> zapíše výstup do souboru a jeho původní obsah přepíše. <code>&gt;&gt;</code> výstup připíše na konec souboru.</p></div></details>
+<details class="q"><summary>Proč je rm nebezpečnější než mazání v Průzkumníku?</summary><div class="a"><p>Nepoužívá koš a neptá se na potvrzení. Smazaný soubor se běžně nedá obnovit.</p></div></details>
+<details class="q"><summary>Co je git a čím se liší od GitHubu?</summary><div class="a"><p>Git je program pro správu verzí, který běží na tvém počítači i bez internetu. GitHub je webová služba, kam se repozitáře nahrávají kvůli záloze, sdílení a spolupráci.</p></div></details>
+<details class="q"><summary>Co se stane po git init?</summary><div class="a"><p>V aktuální složce vznikne skrytá složka <code>.git</code>, do které git ukládá historii. Soubory projektu se nezmění a zatím není uložená žádná verze.</p></div></details>
+<details class="q"><summary>K čemu je staging a proč se nedělá commit rovnou?</summary><div class="a"><p>Staging je přípravná oblast. Pomocí <code>git add</code> vybereš, které změny patří do příštího commitu. Můžeš tak rozdělit práci na několik logických commitů.</p></div></details>
+<details class="q"><summary>Proč git po prvním commitu hlásí „Author identity unknown“?</summary><div class="a"><p>Není nastavené jméno a e-mail autora. Nastaví se příkazy <code>git config --global user.name</code> a <code>git config --global user.email</code>.</p></div></details>
+<details class="q"><summary>Co patří do .gitignore a proč ho vytvořit hned na začátku?</summary><div class="a"><p>Hesla, klíče, stažené knihovny, dočasné a vygenerované soubory. Soubor, který už byl jednou commitnutý, zůstane v historii, i když ho později přidáš do .gitignore.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>CLI</dt><dd>příkazová řádka, ovládání počítače textovými příkazy</dd>
+  <dt>Terminál</dt><dd>okno pro textový vstup a výstup</dd>
+  <dt>Shell</dt><dd>program, který zpracovává příkazy (bash, zsh, PowerShell)</dd>
+  <dt>Prompt</dt><dd>výzva před kurzorem, ukazuje uživatele a aktuální složku</dd>
+  <dt>Přepínač</dt><dd>část příkazu začínající pomlčkou, mění jeho chování</dd>
+  <dt>Argument</dt><dd>údaj, se kterým příkaz pracuje, třeba název souboru</dd>
+  <dt>Absolutní cesta</dt><dd>cesta od kořene souborového systému</dd>
+  <dt>Relativní cesta</dt><dd>cesta od aktuální složky</dd>
+  <dt>Přesměrování</dt><dd>zápis výstupu příkazu do souboru pomocí &gt; nebo &gt;&gt;</dd>
+  <dt>Alias</dt><dd>zkratka pro jiný příkaz</dd>
+  <dt>Správa verzí (VCS)</dt><dd>systém, který ukládá historii změn souborů</dd>
+  <dt>Repozitář</dt><dd>složka projektu, kterou git sleduje, včetně historie v .git</dd>
+  <dt>Commit</dt><dd>uložená verze projektu se zprávou, autorem a časem</dd>
+  <dt>Hash</dt><dd>jednoznačný identifikátor commitu</dd>
+  <dt>Staging (index)</dt><dd>přípravná oblast se změnami pro příští commit</dd>
+  <dt>Větev</dt><dd>samostatná linie historie, hlavní je main</dd>
+  <dt>.gitignore</dt><dd>soubor se seznamem souborů, které git nemá sledovat</dd>
+  <dt>GitHub</dt><dd>webová služba pro ukládání a sdílení repozitářů</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v říjnu 2026.</p>
+<ol class="srcs">
+  <li><a href="https://git-scm.com/book/cs/v2">Pro Git (česky): kniha o gitu, kapitoly 1 a 2</a></li>
+  <li><a href="https://git-scm.com/docs">Git: dokumentace příkazů</a></li>
+  <li><a href="https://git-scm.com/docs/gitignore">Git: gitignore</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Git">Wikipedia: Git</a></li>
+  <li><a href="https://www.gnu.org/software/coreutils/manual/coreutils.html">GNU Coreutils: manuál (ls, cp, mv, rm, …)</a></li>
+  <li><a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_redirection">Microsoft: about_Redirection (PowerShell)</a></li>
+  <li><a href="https://learn.microsoft.com/en-us/windows/terminal/">Microsoft: Windows Terminal</a></li>
+  <li><a href="https://tldr.sh">tldr pages: příklady použití příkazů</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text do semináře z Informatiky: základy příkazové řádky a gitu.</p>
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* tlačítka Kopírovat u ukázek kódu */
+  Array.prototype.forEach.call(document.querySelectorAll("button.copy"),function(b){
+    b.addEventListener("click",function(){
+      var pre=b.parentNode.nextElementSibling,text=pre?pre.innerText:"";
+      function done(){var t=b.textContent;b.textContent="Zkopírováno";setTimeout(function(){b.textContent=t;},1500);}
+      if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,function(){});
+      else{var ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done();}catch(e){}document.body.removeChild(ta);}
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
