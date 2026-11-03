@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Stavový prostor</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <!-- 0 titul -->
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Algoritmy · 1. materiál</div>
+      <h1>Stavový prostor</h1>
+      <p class="lede">Jak převést hádanku na něco, co umí vyřešit počítač. Stavy, přechody, graf a dva základní způsoby, jak v něm hledat cestu k cíli.</p>
+      <p class="hint">Začneme scénou z filmu Smrtonosná past 3 a hádankou, kterou zapsal Alkuin z Yorku kolem roku 800.</p>
+    </div></section>
+
+    <!-- 1 video -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Smrtonosná past 3 · 1995</div>
+      <h2 class="slide-title">Čtyři galony, nebo bomba vybuchne</h2>
+      <div class="split">
+        <div class="vid" data-yt="2vdF6NASMiE" data-title="Smrtonosná past 3: kanystry a bomba" data-sub="scéna z filmu"></div>
+        <div class="stack">
+          <p class="lede">Padouch Simon nechá u fontány v parku bombu, dva kanystry na <b>3</b> a <b>5 galonů</b> a vzkaz: na váhu položte <b>přesně 4 galony</b> vody. Jinak bomba vybuchne.</p>
+          <p class="lede">Kanystry nemají stupnici. John McClane a Zeus Carver musí přijít na to, jak 4 galony odměřit.</p>
+          <p class="hint">Zastav video, než hrdinové hádanku vyřeší, a zkus to nejdřív sám.</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 2 džbány: hra -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Vyzkoušej</div>
+      <h2 class="slide-title">Odměř přesně 4 litry</h2>
+      <div class="split">
+        <div class="stack">
+          <p class="lede">Máš džbán na 3 litry, džbán na 5 litrů, kohoutek a umyvadlo. Ve filmu jsou to galony, my počítáme v litrech. Čísla jsou stejná. Smíš:</p>
+          <ul class="summary-list">
+            <li><b>naplnit</b> džbán z kohoutku až po okraj,</li>
+            <li><b>vylít</b> celý džbán do umyvadla,</li>
+            <li><b>přelít</b> vodu z jednoho džbánu do druhého, a to <b>dokud první není prázdný, nebo druhý plný</b>.</li>
+          </ul>
+          <p class="note">Džbány nemají stupnici. Přesně víš jen, kdy je džbán prázdný a kdy plný, proto nesmíš přestat přelévat v půlce.</p>
+        </div>
+        <div class="stack">
+          <div class="sp-jugs">
+            <div class="sp-jugwrap"><div class="sp-jug j3"><div class="sp-jug-fill" id="jFillA"></div></div><span class="sp-jug-lab" id="jLabA"></span></div>
+            <div class="sp-jugwrap"><div class="sp-jug j5"><div class="sp-jug-fill" id="jFillB"></div></div><span class="sp-jug-lab" id="jLabB"></span></div>
+          </div>
+          <div class="seg" id="jOps"></div>
+          <div class="in-row"><button class="calc-btn" id="jUndo">Vrátit tah</button><button class="calc-btn" id="jReset">Od začátku</button><span class="sp-state" id="jState"></span></div>
+          <p class="feedback sp-fb" id="jFb"></p>
+        </div>
+      </div>
+      <div class="sp-log" id="jLog"></div>
+    </div></section>
+
+    <!-- 3 převozník: zadání -->
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Druhá úloha</div>
+      <div class="qmark">?</div>
+      <h2>Převozník, vlk, koza a zelí</h2>
+      <p class="lede">Tahle hádanka je o 1 200 let starší než film, zapsal ji Alkuin z Yorku kolem roku 800. Převozník má dostat přes řeku vlka, kozu a zelí. Do loďky se vejde jen on a jedna další věc. Když odejde, vlk sežere kozu a koza sežere zelí. Vlk zelí nežere.</p>
+      <p class="lede"><b>Vyřeš to nejdřív na papíře.</b> Kolik nejméně plaveb potřebuješ? A je řešení jen jedno?</p>
+    </div></section>
+
+    <!-- 2 hra -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Vyzkoušej</div>
+      <h2 class="slide-title">Převez všechny na pravý břeh</h2>
+      <p class="lede">Klikni na zvíře nebo zelí na břehu, kde je převozník, a naložíš ho. Dalším klikem ho vyložíš. Pak pluj.</p>
+      <div class="sp-ferry">
+        <div class="sp-bank" id="bankL"><span class="sp-bank-lab">levý břeh</span><div class="sp-ents" id="entsL"></div></div>
+        <div class="sp-river"><div class="sp-boat" id="boat"></div></div>
+        <div class="sp-bank" id="bankR"><span class="sp-bank-lab">pravý břeh</span><div class="sp-ents" id="entsR"></div></div>
+      </div>
+      <div class="in-row"><button class="calc-btn" id="gGo">Přeplout →</button><button class="calc-btn" id="gUndo">Vrátit tah</button><button class="calc-btn" id="gReset">Od začátku</button><span class="sp-state" id="gState"></span></div>
+      <div class="sp-log" id="gLog"></div>
+      <p class="feedback sp-fb" id="gFb"></p>
+    </div></section>
+
+    <!-- 3 otázka -->
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Přemýšlej</div>
+      <div class="qmark">?</div>
+      <h2>Jak to vysvětlit počítači?</h2>
+      <p class="lede">Obě hádanky jste řešili zkoušením. Počítač ale neví, co je džbán, řeka ani koza. Co všechno mu musíme říct, aby úlohu vyřešil sám, a to i takovou, jejíž řešení my neznáme?</p>
+      <p class="lede">Nápověda: čtyři věci. Kde začínáme, kdy jsme hotovi, jak vypadá situace a co se smí udělat.</p>
+    </div></section>
+
+    <!-- 4 stav -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Stav</div>
+      <h2 class="slide-title">Situaci popíšou čtyři bity</h2>
+      <p class="lede">Na cestě nezáleží, důležité je jen, kdo stojí na kterém břehu. Každý ze čtyř je buď vlevo (0), nebo vpravo (1), takže stavů je 2<sup>4</sup> = 16. Zápis <span class="mono">PVK|Z</span> znamená: převozník, vlk a koza vlevo, zelí vpravo.</p>
+      <div class="split">
+        <div class="stack">
+          <div class="sp-toggles" id="tgRows"></div>
+          <div class="panel">
+            <span class="meta" id="tgBits"></span>
+            <div class="sp-code" id="tgCode"></div>
+            <p id="tgVerdict"></p>
+          </div>
+        </div>
+        <div class="stack">
+          <p class="note">Všech 16 stavů. Červené jsou <b>zakázané</b>: někdo by někoho sežral. Klikni na libovolný.</p>
+          <div class="sp-grid16" id="tgGrid"></div>
+          <p class="tiny">Pořadí bitů: převozník, vlk, koza, zelí. Povolených stavů je 10, zakázaných 6.</p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 5 definice -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Definice</div>
+      <h2 class="slide-title">Stavový prostor jsou čtyři věci</h2>
+      <div class="formula f-md">(S, s<sub>0</sub>, C, O)</div>
+      <div class="cards4" id="defCards"></div>
+      <div class="panel p-tall" id="defPanel"></div>
+    </div></section>
+
+    <!-- 6 graf -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Graf stavů</div>
+      <h2 class="slide-title">Stavy jsou vrcholy, přechody hrany</h2>
+      <p class="lede">Každý povolený stav nakreslíme jako vrchol a spojíme ho hranou s každým stavem, do kterého se dá dostat jednou plavbou. Písmeno na hraně říká, co převozník veze, pomlčka znamená, že pluje sám. Úloha se tím změní na hledání <b>cesty v grafu</b>.</p>
+      <svg class="sp-graph" id="graph1" viewBox="0 0 1000 250" role="img" aria-label="Graf deseti povolených stavů úlohy o převozníkovi"></svg>
+      <div class="in-row"><div class="seg" id="g1Seg"><button class="calc-btn" data-p="">Bez cesty</button><button class="calc-btn" data-p="A">Řešení A</button><button class="calc-btn" data-p="B">Řešení B</button></div><button class="calc-btn" id="g1Bad">Zakázané stavy</button></div>
+      <div class="sp-badrow" id="g1BadRow" hidden></div>
+      <div class="panel" id="g1Panel"></div>
+    </div></section>
+
+    <!-- 7 BFS -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Prohledávání do šířky</div>
+      <h2 class="slide-title">Počítač prochází graf po vrstvách</h2>
+      <p class="lede">Prohledávání do šířky (<b>BFS</b>, breadth-first search) drží <b>frontu</b> stavů čekajících na prozkoumání. Vezme první, jeho dosud neviděné sousedy přidá na konec a u každého si zapamatuje, odkud do něj přišel.</p>
+      <svg class="sp-graph" id="graph2" viewBox="0 0 1000 250" role="img" aria-label="Postup prohledávání do šířky v grafu stavů"></svg>
+      <div class="split">
+        <div class="stack">
+          <div class="in-row"><button class="calc-btn" id="bStep">Další krok</button><button class="calc-btn" id="bAll">Dokončit</button><button class="calc-btn" id="bReset">Znovu</button></div>
+          <div class="sp-front"><span class="sp-front-lab">fronta</span><div id="bQueue"></div></div>
+          <p class="feedback sp-fb" id="bNote"></p>
+        </div>
+<pre class="raw">fronta ← [start];  předchůdce[start] ← nic
+dokud fronta není prázdná:
+    s ← vyber první z fronty
+    pokud s je cíl: zrekonstruuj cestu, konec
+    pro každého souseda t stavu s:
+        pokud t ještě nemá předchůdce:
+            předchůdce[t] ← s
+            přidej t na konec fronty</pre>
+      </div>
+      <p class="tiny">Barvy: <span class="sp-k front">ve frontě</span> <span class="sp-k cur">právě zkoumaný</span> <span class="sp-k done">hotový</span> <span class="sp-k path">nalezená cesta</span></p>
+    </div></section>
+
+    <!-- džbány jako stavový prostor -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zpátky k džbánům</div>
+      <h2 class="slide-title">Džbány jako stavový prostor</h2>
+      <p class="lede">Stav je dvojice čísel <b>(litry v malém, litry ve velkém)</b>. Malý džbán může mít 0 až 3 litry, velký 0 až 5, dvojic je tedy 4 · 6 = 24. Operátorů je šest: naplň, vylij a přelij, pro každý džbán zvlášť.</p>
+      <div class="split">
+        <div class="stack">
+          <div class="sp-jgrid" id="jGrid"></div>
+          <div class="seg"><button class="calc-btn" id="jReach">Dosažitelné stavy</button><button class="calc-btn" id="jDist">Vzdálenost od startu</button></div>
+          <p class="tiny" id="jReachNote">Sloupce: malý džbán 0 až 3 l. Řádky: velký džbán 5 až 0 l. Čárkované jsou cílové stavy. Klikni na stav.</p>
+        </div>
+        <div class="stack">
+          <div class="panel p-tall" id="jPanel"></div>
+          <p class="note">s<sub>0</sub> = (0, 0), cíl C = všechny stavy se 4 litry ve velkém džbánu: (0,&nbsp;4), (1,&nbsp;4), (2,&nbsp;4), (3,&nbsp;4).</p>
+          <a class="nav-btn text-link sp-alink" href="01_stavovy_prostor_python.html">Jak to vyřeší program v Pythonu →</a>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 9 BFS × DFS -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Šířka, nebo hloubka?</div>
+      <h2 class="slide-title">Fronta, nebo zásobník</h2>
+      <p class="lede">Prohledávání do hloubky (<b>DFS</b>, depth-first search) vypadá stejně jako do šířky. Jediný rozdíl: místo fronty má <b>zásobník</b>, takže jako další bere stav, který přidal naposledy. Sleduj, jak roste strom prohledávání v úloze s džbány.</p>
+      <div class="in-row"><div class="modeswitch" id="tMode"><button class="is-active" data-m="bfs">Do šířky</button><button data-m="dfs">Do hloubky</button></div><button class="calc-btn" id="tStep">Další krok</button><button class="calc-btn" id="tAll">Dokončit</button><button class="calc-btn" id="tReset">Znovu</button></div>
+      <div class="sp-front"><span class="sp-front-lab" id="tFrontLab">fronta</span><div id="tFront"></div></div>
+      <p class="sp-fb sp-note" id="tNote"></p>
+      <div class="sp-tree" id="tTree"></div>
+    </div></section>
+
+    <!-- 10 hlavolam 8 -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Větší stavový prostor</div>
+      <h2 class="slide-title">Posunovací hlavolam: 181 440 stavů</h2>
+      <div class="split">
+        <div class="stack">
+          <div class="sp-p8" id="p8"></div>
+          <div class="seg"><button class="calc-btn" id="p8Mix">Zamíchat</button><button class="calc-btn" id="p8Solve">Vyřešit (BFS)</button><button class="calc-btn" id="p8Play" disabled>Přehrát řešení</button></div>
+          <div class="seg"><button class="calc-btn" id="p8Swap">Prohodit 1 a 2</button><button class="calc-btn" id="p8Reset">Složit</button></div>
+        </div>
+        <div class="stack">
+          <p class="lede">Kliknutím posuneš kostičku sousedící s prázdným polem. Stav je rozmístění 8 kostiček a mezery: 9! = 362 880 možností. Tlačítko <b>Vyřešit</b> spustí v prohlížeči prohledávání do šířky.</p>
+          <div class="panel p-tall" id="p8Panel"></div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 11 velikost -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Kombinatorická exploze</div>
+      <h2 class="slide-title">Jak rychle stavový prostor roste</h2>
+      <p class="lede">Délka pruhu odpovídá počtu číslic, ne samotnému počtu. Každý dílek navíc znamená desetkrát víc stavů. Klikni na řádek.</p>
+      <div class="sp-size" id="szRows"></div>
+      <div class="panel" id="szPanel"></div>
+    </div></section>
+
+    <!-- 12 misionáři -->
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Modeluj sám</div>
+      <div class="qmark">?</div>
+      <h2>Misionáři a kanibalové</h2>
+      <p class="lede">Tři misionáři a tři kanibalové mají přejet řeku loďkou pro dva. Loďka sama nepopluje. Kdekoli jsou misionáři v menšině, kanibalové je sní. Navrhni, jak zapsat stav, a spočítej, kolik stavů existuje a kolik je povolených.</p>
+      <button class="reveal-btn" id="mcBtn">Ukázat řešení</button>
+      <div class="panel sp-left" id="mcAns" hidden>
+        <h3>Stav = (m, k, l)</h3>
+        <p>Stačí znát počet misionářů <b>m</b> a kanibalů <b>k</b> na levém břehu (pravý břeh se dopočítá) a stranu, kde je loďka <b>l</b>. To je 4 · 4 · 2 = <b>32</b> stavů. Povolené jsou ty, kde na žádném břehu nejsou misionáři v menšině: <b>20</b>. Z počátečního stavu (3, 3, levý) jich jde dosáhnout <b>16</b> a nejkratší řešení má <b>11 plaveb</b>.</p>
+      </div>
+    </div></section>
+
+    <!-- 13 kvíz -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Pravda, nebo ne?</h2>
+      <p class="score" id="qScore"></p>
+      <div class="clue" id="qText"></div>
+      <div class="seg"><button class="calc-btn" data-a="1">Pravda</button><button class="calc-btn" data-a="0">Není pravda</button><button class="calc-btn" id="qNext" hidden>Další →</button></div>
+      <div class="feedback" id="qFb"></div>
+    </div></section>
+
+    <!-- 14 shrnutí -->
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li><b>Stav</b> popisuje celou situaci v jednom okamžiku. Dobře zvolený stav obsahuje jen to, na čem záleží.</li>
+        <li><b>Stavový prostor</b> tvoří množina stavů S, počáteční stav s<sub>0</sub>, cílové stavy C a operátory O, které mění jeden stav v jiný.</li>
+        <li>Stavový prostor je <b>graf</b>. Řešení úlohy je cesta z počátečního stavu do cílového.</li>
+        <li><b>Prohledávání do šířky</b> používá frontu a najde řešení s nejmenším počtem kroků. <b>Do hloubky</b> používá zásobník a nejkratší řešení nezaručí.</li>
+        <li>Navštívené stavy si je nutné pamatovat, jinak se hledání zacyklí.</li>
+        <li>Počet stavů roste exponenciálně. Hlavolam 8 projde počítač za zlomek sekundy, šachy ani Go nikdy.</li>
+      </ul>
+    </div></section>
+
+    <!-- 15 zdroje -->
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud informace jsou</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Úlohy a jejich historie</h3><ul class="src-list">
+          <li><a href="https://en.wikipedia.org/wiki/Wolf,_goat_and_cabbage_problem" target="_blank" rel="noopener">Wikipedia: Wolf, goat and cabbage problem</a></li>
+          <li><a href="https://www.proofwiki.org/wiki/Propositiones_ad_Acuendos_Juvenes/Problems/18_-_De_Lupo_et_Capra_et_Fasciculo_Cauli" target="_blank" rel="noopener">ProofWiki: Alkuin, úloha 18</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Missionaries_and_cannibals_problem" target="_blank" rel="noopener">Wikipedia: Missionaries and cannibals</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Water_pouring_puzzle" target="_blank" rel="noopener">Wikipedia: Water pouring puzzle</a></li>
+          <li><a href="https://www.youtube.com/watch?v=2vdF6NASMiE" target="_blank" rel="noopener">YouTube: scéna ze Smrtonosné pasti 3</a> · <a href="https://en.wikipedia.org/wiki/Die_Hard_with_a_Vengeance" target="_blank" rel="noopener">Wikipedia: Die Hard with a Vengeance</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/15_puzzle" target="_blank" rel="noopener">Wikipedia: 15 puzzle</a> · <a href="https://oeis.org/A087725" target="_blank" rel="noopener">OEIS A087725: nejdelší řešení</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Tower_of_Hanoi" target="_blank" rel="noopener">Wikipedia: Hanojské věže</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Velikosti stavových prostorů</h3><ul class="src-list">
+          <li><a href="https://cube20.org/" target="_blank" rel="noopener">cube20.org: God's Number is 20</a></li>
+          <li><a href="https://github.com/tromp/ChessPositionRanking" target="_blank" rel="noopener">John Tromp: počet legálních šachových pozic</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Go_and_mathematics" target="_blank" rel="noopener">Wikipedia: Go and mathematics</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Breadth-first_search" target="_blank" rel="noopener">Wikipedia: Breadth-first search</a> · <a href="https://en.wikipedia.org/wiki/Depth-first_search" target="_blank" rel="noopener">Depth-first search</a></li>
+          <li>S. Russell, P. Norvig: <i>Artificial Intelligence: A Modern Approach</i>, kap. 3 (Solving Problems by Searching)</li>
+        </ul></div>
+      </div>
+      <p class="note">Ověřeno v listopadu 2026. Všechny počty stavů převozníka, džbánů a misionářů jsou spočítané programem.</p>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+    <a class="nav-btn text-link" href="01_stavovy_prostor_studijni_text.html" title="Studijní text k této lekci"><span class="tl-long">Studijní </span>text</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var NS="http://www.w3.org/2000/svg";
+  function sv(tag,a,t){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);if(t!=null)e.textContent=t;return e;}
+  function fmt(n,d){return n.toLocaleString("cs-CZ",{maximumFractionDigits:d==null?1:d});}
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  /* ---------- video: náhled, po kliknutí přehrávač ---------- */
+  function mountVideo(box){
+    var id=box.dataset.yt;
+    box.innerHTML='<button class="vid-btn" aria-label="Přehrát video: '+esc(box.dataset.title)+'"><img class="vid-thumb" alt="" loading="lazy" src="https://i.ytimg.com/vi/'+id+'/hqdefault.jpg"><span class="vid-play">▶</span></button>'+
+      '<div class="vid-meta"><span><span class="vid-title">'+esc(box.dataset.title)+'</span><br><span class="vid-sub">'+esc(box.dataset.sub)+'</span></span>'+
+      '<a class="vid-link" href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener">otevřít na YouTube ↗</a></div>';
+    box.querySelector(".vid-btn").addEventListener("click",function(){
+      var f=document.createElement("iframe");f.className="vid-frame";f.title=box.dataset.title;
+      f.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&rel=0";
+      f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";f.allowFullscreen=true;f.referrerPolicy="strict-origin-when-cross-origin";
+      this.replaceWith(f);
+    });
+  }
+  function mountAll(root){Array.prototype.forEach.call(root.querySelectorAll(".vid[data-yt]"),mountVideo);}
+
+  /* ---------- navigace ---------- */
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    if(slides[current].querySelector("iframe"))mountAll(slides[current]);
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function picker(host,items,mk,panel,show){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;show(it,i);
+      });host.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");show(items[0],0);
+    if(panel)fits.push({slide:host.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){show(it,i,true);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";show(items[act],act,true);
+    }});
+    return btns;
+  }
+  function modeSwitch(host,onChange){
+    Array.prototype.forEach.call(host.children,function(b){
+      b.addEventListener("click",function(){
+        Array.prototype.forEach.call(host.children,function(x){x.classList.toggle("is-active",x===b);});
+        onChange(b.dataset.m);
+      });
+    });
+  }
+
+  /* ---------- model úlohy o převozníkovi ----------
+     stav = [P, V, K, Z], 0 = levý břeh, 1 = pravý břeh */
+  var L="PVKZ";
+  var ENT=[{e:"🧑‍🌾",n:"převozník"},{e:"🐺",n:"vlk"},{e:"🐐",n:"koza"},{e:"🥬",n:"zelí"}];
+  function nm(s){var a="",b="";for(var i=0;i<4;i++){if(s[i])b+=L[i];else a+=L[i];}return (a||"·")+"|"+(b||"·");}
+  function danger(s){
+    if(s[1]===s[2]&&s[0]!==s[2])return "vlk sežere kozu";
+    if(s[2]===s[3]&&s[0]!==s[2])return "koza sežere zelí";
+    return "";
+  }
+  function moves(s){ // povolené přechody: {t: nový stav, c: koho veze (0 = nikoho)}
+    var out=[];
+    [0,1,2,3].forEach(function(c){
+      if(c&&s[c]!==s[0])return;
+      var t=s.slice();t[0]=1-t[0];if(c)t[c]=1-t[c];
+      if(!danger(t))out.push({t:t,c:c});
+    });
+    return out;
+  }
+  function parse(n){var s=[0,0,0,0],r=n.split("|")[1];for(var i=0;i<4;i++)if(r.indexOf(L[i])>=0)s[i]=1;return s;}
+  var ALL=[];for(var m=0;m<16;m++)ALL.push([(m>>3)&1,(m>>2)&1,(m>>1)&1,m&1]);
+  var LEGAL=ALL.filter(function(s){return !danger(s);});
+  var START="PVKZ|·",GOAL="·|PVKZ";
+  function sideTxt(s,side){var a=[];for(var i=0;i<4;i++)if(s[i]===side)a.push(ENT[i].n);return a.length?a.join(", "):"nikdo";}
+  function cargoTxt(c){return c?"s "+["","vlkem","kozou","zelím"][c]:"sám";}
+
+  /* ---------- 2: hra ---------- */
+  var gS,gCargo,gHist,gOver;
+  function gReset(){gS=[0,0,0,0];gCargo=0;gHist=[];gOver=false;gRender();$("gFb").innerHTML="Převozník čeká na levém břehu.";}
+  function entBtn(i){
+    var b=el("button","sp-ent",'<span class="sp-em">'+ENT[i].e+"</span><small>"+ENT[i].n+"</small>");
+    b.setAttribute("aria-label",ENT[i].n);
+    b.disabled=gOver||gS[i]!==gS[0];
+    b.addEventListener("click",function(){gCargo=gCargo===i?0:i;gRender();});
+    return b;
+  }
+  function gRender(){
+    var eL=$("entsL"),eR=$("entsR"),boat=$("boat");eL.innerHTML="";eR.innerHTML="";boat.innerHTML="";
+    for(var i=1;i<4;i++){if(i===gCargo)continue;(gS[i]?eR:eL).appendChild(entBtn(i));}
+    boat.appendChild(el("span","sp-ent is-pilot",'<span class="sp-em">'+ENT[0].e+"</span><small>převozník</small>"));
+    if(gCargo)boat.appendChild(entBtn(gCargo));else boat.appendChild(el("span","sp-seat","volné místo"));
+    boat.classList.toggle("is-right",gS[0]===1);
+    $("gGo").textContent=gS[0]?"← Přeplout":"Přeplout →";
+    $("gGo").disabled=gOver;$("gUndo").disabled=!gHist.length||gOver&&nm(gS)===GOAL;
+    $("gState").textContent="stav "+nm(gS);
+    $("gLog").innerHTML=gHist.length?gHist.map(function(h,k){return "<span><b>"+(k+1)+".</b> "+(h.dir?"←":"→")+" "+(h.c?L[h.c]:"–")+"</span>";}).join(""):"";
+  }
+  $("gGo").addEventListener("click",function(){
+    if(gOver)return;
+    var c=gCargo,t=gS.slice();t[0]=1-t[0];if(c)t[c]=1-t[c];
+    gHist.push({s:gS,c:c,dir:gS[0]});gS=t;gCargo=0;
+    var d=danger(gS);
+    if(d){gOver=true;gRender();$("gUndo").disabled=false;$("gFb").innerHTML="<b>Konec: "+d+".</b> Stav "+nm(gS)+" je zakázaný. Vrať tah, nebo začni znovu.";return;}
+    if(nm(gS)===GOAL){gOver=true;gRender();$("gFb").innerHTML="<b>Hotovo za "+gHist.length+" plaveb.</b> "+(gHist.length===7?"To je nejkratší možné řešení.":"Nejkratší řešení má 7 plaveb, zvládneš to rychleji?");return;}
+    gRender();$("gFb").innerHTML="Plavba "+gHist.length+": převozník plul "+cargoTxt(c)+".";
+  });
+  $("gUndo").addEventListener("click",function(){if(!gHist.length)return;var h=gHist.pop();gS=h.s;gCargo=0;gOver=false;gRender();$("gFb").innerHTML="Tah vrácen.";});
+  $("gReset").addEventListener("click",gReset);
+  gReset();
+
+  /* ---------- 4: stav ---------- */
+  var stS=[0,0,0,0];
+  ENT.forEach(function(en,i){
+    var row=el("div","sp-trow",'<span class="sp-tlab"><span class="sp-em">'+en.e+"</span>"+en.n+"</span>");
+    var seg=el("div","seg");
+    ["vlevo · 0","vpravo · 1"].forEach(function(t,v){
+      var b=el("button","calc-btn",t);b.dataset.v=v;
+      b.addEventListener("click",function(){stS[i]=v;stRender();});seg.appendChild(b);
+    });
+    row.appendChild(seg);$("tgRows").appendChild(row);
+  });
+  var stChips=ALL.map(function(s){
+    var b=el("button","sp-chip"+(danger(s)?" is-bad":""),nm(s));
+    b.addEventListener("click",function(){stS=s.slice();stRender();});$("tgGrid").appendChild(b);return b;
+  });
+  function stRender(){
+    Array.prototype.forEach.call($("tgRows").children,function(r,i){
+      Array.prototype.forEach.call(r.querySelectorAll("button"),function(b){b.classList.toggle("is-active",+b.dataset.v===stS[i]);});
+    });
+    var d=danger(stS),n=nm(stS);
+    $("tgBits").textContent="bity "+stS.join("")+" · číslo "+(stS[0]*8+stS[1]*4+stS[2]*2+stS[3]);
+    $("tgCode").textContent=n;
+    $("tgVerdict").innerHTML=d?'<b class="sp-bad">Zakázaný stav:</b> '+d+", převozník je na druhém břehu.":
+      (n===START?"<b>Počáteční stav.</b> Všichni na levém břehu.":n===GOAL?"<b>Cílový stav.</b> Všichni na pravém břehu.":'<b class="sp-ok">Povolený stav.</b> Vlevo: '+sideTxt(stS,0)+". Vpravo: "+sideTxt(stS,1)+".");
+    stChips.forEach(function(c){c.classList.toggle("is-active",c.textContent===n);});
+  }
+  stRender();
+
+  /* ---------- 5: definice ---------- */
+  var DEF=[
+    {n:"S",s:"množina stavů",t:"Množina stavů S",d:"Všechny situace, které mohou nastat. Stav musí obsahovat vše, na čem závisí další průběh, a nic navíc. Barva loďky nebo čas na hodinkách do stavu nepatří.",u:"16 čtveřic bitů, z toho 10 povolených."},
+    {n:"s₀",s:"počáteční stav",t:"Počáteční stav s₀",d:"Stav, ve kterém úloha začíná. Je vždy jeden.",u:"PVKZ|·, tedy 0000: všichni na levém břehu."},
+    {n:"C",s:"cílové stavy",t:"Množina cílových stavů C",d:"Stavy, ve kterých je úloha vyřešená. Může jich být víc: u džbánů je cílem každý stav, kde je ve větším džbánu 4 litry, ať je v menším cokoli. Někdy je cíl zadaný podmínkou místo výčtu.",u:"Jediný cílový stav ·|PVKZ, tedy 1111."},
+    {n:"O",s:"operátory",t:"Operátory O (přechody)",d:"Akce, které mění jeden stav v jiný. Operátor má podmínku použitelnosti (kdy ho smím použít) a výsledek (jaký stav vznikne).",u:"Čtyři operátory: plout sám, s vlkem, s kozou, se zelím. Použitelné, jen když náklad stojí na stejném břehu jako převozník a výsledný stav je povolený."},
+    {n:"cesta",s:"řešení",t:"Řešení a optimální řešení",d:"Řešení je posloupnost operátorů, která vede z s₀ do některého cílového stavu. Optimální řešení je nejkratší, případně nejlevnější, má-li každý přechod svou cenu.",u:"Dvě optimální řešení po 7 plavbách. Delších řešení je nekonečně mnoho, stačí převážet kozu tam a zpět."},
+    {n:"G",s:"graf",t:"Stavový prostor jako graf",d:"Stavy jsou vrcholy, operátory hrany. Hledání řešení je hledání cesty v grafu. Hrany mohou být orientované: přelité víno zpět do láhve nedostaneš.",u:"10 vrcholů a 10 hran. Všechny hrany jdou projet oběma směry."}
+  ];
+  picker($("defCards"),DEF,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("defPanel"),function(c){
+    $("defPanel").innerHTML='<span class="meta">'+c.s+"</span><h3>"+c.t+"</h3><p>"+c.d+'</p><p><b>U převozníka:</b> '+c.u+"</p>";
+  });
+
+  /* ---------- graf stavů (6, 7) ---------- */
+  var POS={"PVKZ|·":[50,125],"VZ|PK":[178,125],"PVZ|K":[306,125],"Z|PVK":[434,45],"V|PKZ":[434,205],"PKZ|V":[562,45],"PVK|Z":[562,205],"K|PVZ":[690,125],"PK|VZ":[818,125],"·|PVKZ":[946,125]};
+  var EDGES=[];
+  LEGAL.forEach(function(s){moves(s).forEach(function(m){var a=nm(s),b=nm(m.t);if(a<b)EDGES.push({a:a,b:b,c:m.c});});});
+  function drawGraph(svg){
+    var g={nodes:{},edges:{}};
+    EDGES.forEach(function(e){
+      var p=POS[e.a],q=POS[e.b];
+      var ln=sv("line",{"class":"sp-edge",x1:p[0],y1:p[1],x2:q[0],y2:q[1]});svg.appendChild(ln);
+      g.edges[e.a+"~"+e.b]=ln;g.edges[e.b+"~"+e.a]=ln;
+    });
+    EDGES.forEach(function(e){
+      var p=POS[e.a],q=POS[e.b],mx=(p[0]+q[0])/2,my=(p[1]+q[1])/2;
+      svg.appendChild(sv("text",{"class":"sp-elab",x:mx,y:my+(p[1]===q[1]?-8:(my<125?-4:14)),dx:(p[1]===q[1]?0:(mx<498?-13:13)),"text-anchor":"middle"},e.c?L[e.c]:"–"));
+    });
+    Object.keys(POS).forEach(function(n){
+      var p=POS[n],gr=sv("g",{"class":"sp-node"+(n===START?" is-start":"")+(n===GOAL?" is-goal":""),tabindex:"0",role:"button","aria-label":"stav "+n});
+      gr.appendChild(sv("rect",{x:p[0]-44,y:p[1]-19,width:88,height:38,rx:12}));
+      gr.appendChild(sv("text",{x:p[0],y:p[1]+5,"text-anchor":"middle"},n));
+      svg.appendChild(gr);g.nodes[n]=gr;
+    });
+    svg.appendChild(sv("text",{"class":"sp-gcap",x:50,y:166,"text-anchor":"middle"},"start"));
+    svg.appendChild(sv("text",{"class":"sp-gcap",x:946,y:166,"text-anchor":"middle"},"cíl"));
+    return g;
+  }
+  function bfsDist(){var d={},q=[START];d[START]=0;while(q.length){var u=q.shift();moves(parse(u)).forEach(function(m){var v=nm(m.t);if(!(v in d)){d[v]=d[u]+1;q.push(v);}});}return d;}
+  var DIST=bfsDist();
+  var PATHS={A:["PVKZ|·","VZ|PK","PVZ|K","Z|PVK","PKZ|V","K|PVZ","PK|VZ","·|PVKZ"],B:["PVKZ|·","VZ|PK","PVZ|K","V|PKZ","PVK|Z","K|PVZ","PK|VZ","·|PVKZ"]};
+
+  var G1=drawGraph($("graph1")),g1Sel=START,g1Path="";
+  function g1Render(){
+    Object.keys(G1.nodes).forEach(function(n){G1.nodes[n].classList.toggle("is-sel",n===g1Sel);G1.nodes[n].classList.toggle("is-path",!!g1Path&&PATHS[g1Path].indexOf(n)>=0);});
+    Object.keys(G1.edges).forEach(function(k){G1.edges[k].classList.remove("is-path");});
+    if(g1Path){var p=PATHS[g1Path];for(var i=0;i<p.length-1;i++)G1.edges[p[i]+"~"+p[i+1]].classList.add("is-path");}
+    var s=parse(g1Sel),mv=moves(s);
+    var html='<span class="meta">vzdálenost od startu: '+DIST[g1Sel]+(DIST[g1Sel]===1?" plavba":DIST[g1Sel]>=2&&DIST[g1Sel]<=4?" plavby":" plaveb")+"</span><h3>"+g1Sel+"</h3><p>Vlevo: "+sideTxt(s,0)+". Vpravo: "+sideTxt(s,1)+".</p>";
+    html+="<p><b>Přechody:</b> "+mv.map(function(m){return "převozník pluje "+cargoTxt(m.c)+" → "+nm(m.t);}).join("; ")+".</p>";
+    if(g1Path)html+='<p><b>Řešení '+g1Path+":</b> "+(g1Path==="A"?"po koze převeze vlka, kozu vezme zpět a pak převeze zelí.":"po koze převeze zelí, kozu vezme zpět a pak převeze vlka.")+" Obě řešení mají 7 plaveb.</p>";
+    $("g1Panel").innerHTML=html;
+  }
+  Object.keys(G1.nodes).forEach(function(n){
+    function pick(){g1Sel=n;g1Render();}
+    G1.nodes[n].addEventListener("click",pick);
+    G1.nodes[n].addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();pick();}});
+  });
+  picker($("g1Seg"),Array.prototype.slice.call($("g1Seg").children),function(b){return b;},null,function(b){g1Path=b.dataset.p;g1Render();});
+  ALL.filter(danger).forEach(function(s){$("g1BadRow").appendChild(el("span","sp-chip is-bad",nm(s)+"<small>"+danger(s)+"</small>"));});
+  $("g1Bad").addEventListener("click",function(){var r=$("g1BadRow");r.hidden=!r.hidden;this.classList.toggle("is-active",!r.hidden);});
+  fits.push({slide:$("g1Panel").closest(".slide"),fn:function(){
+    var p=$("g1Panel"),keep=g1Sel,m=0;p.style.minHeight="0px";
+    Object.keys(POS).forEach(function(n){g1Sel=n;g1Render();m=Math.max(m,p.offsetHeight);});
+    p.style.minHeight=m+"px";g1Sel=keep;g1Render();
+  }});
+
+  /* ---------- 7: BFS v grafu ---------- */
+  var G2=drawGraph($("graph2")),bQ,bPrev,bDone,bCur,bEnd,bPath,bCount;
+  function bReset(){bQ=[START];bPrev={};bPrev[START]=null;bDone={};bCur=null;bEnd=false;bPath=[];bCount=0;bRender("Na začátku je ve frontě jen počáteční stav.");}
+  function bStep(){
+    if(bEnd)return;
+    if(bCur){bDone[bCur]=true;bCur=null;}
+    if(!bQ.length){bEnd=true;bRender("Fronta je prázdná, cíl nedosažitelný.");return;}
+    var s=bQ.shift();bCur=s;bCount++;
+    if(s===GOAL){
+      bEnd=true;var x=s;while(x){bPath.unshift(x);x=bPrev[x];}
+      bRender("<b>Cíl nalezen</b> po prozkoumání "+bCount+" stavů. Cestu zrekonstruujeme pozpátku po předchůdcích: "+bPath.join(" → ")+". Má "+(bPath.length-1)+" plaveb.");return;
+    }
+    var nw=[];
+    moves(parse(s)).forEach(function(m){var t=nm(m.t);if(!(t in bPrev)){bPrev[t]=s;bQ.push(t);nw.push(t);}});
+    bRender("Z fronty jsem vzal <b>"+s+"</b>. "+(nw.length?"Noví sousedé na konec fronty: <b>"+nw.join(", ")+"</b>.":"Všechny jeho sousedy už znám, nic nepřidávám.")+(s==="PVZ|K"?" Soused VZ|PK už předchůdce má, proto se k němu nevracím. Bez této kontroly by hledání chodilo dokola.":""));
+  }
+  function bRender(msg){
+    Object.keys(G2.nodes).forEach(function(n){
+      var c=G2.nodes[n].classList;
+      c.toggle("s-front",bQ.indexOf(n)>=0);c.toggle("s-cur",n===bCur&&!bPath.length);c.toggle("s-done",!!bDone[n]);c.toggle("is-path",bPath.indexOf(n)>=0);
+    });
+    Object.keys(G2.edges).forEach(function(k){G2.edges[k].classList.remove("is-tree","is-path");});
+    Object.keys(bPrev).forEach(function(n){if(bPrev[n])G2.edges[n+"~"+bPrev[n]].classList.add("is-tree");});
+    for(var i=0;i<bPath.length-1;i++)G2.edges[bPath[i]+"~"+bPath[i+1]].classList.add("is-path");
+    $("bQueue").innerHTML=bQ.length?bQ.map(function(n,i){return '<span class="sp-nd s-front'+(i===0?" is-next":"")+'">'+n+"</span>";}).join(""):'<span class="sp-empty">prázdná</span>';
+    $("bNote").innerHTML=msg;
+    $("bStep").disabled=$("bAll").disabled=bEnd;
+  }
+  $("bStep").addEventListener("click",bStep);
+  $("bAll").addEventListener("click",function(){var k=0;while(!bEnd&&k++<50)bStep();});
+  $("bReset").addEventListener("click",bReset);
+  bReset();
+
+  /* ---------- džbány: hra a stavový prostor ---------- */
+  var JA=3,JB=5;
+  var JOPS=[
+    {n:"Naplň 3 l",f:function(a,b){return [JA,b];}},
+    {n:"Naplň 5 l",f:function(a,b){return [a,JB];}},
+    {n:"Vylij 3 l",f:function(a,b){return [0,b];}},
+    {n:"Vylij 5 l",f:function(a,b){return [a,0];}},
+    {n:"Přelij 3 l → 5 l",f:function(a,b){var t=Math.min(a,JB-b);return [a-t,b+t];}},
+    {n:"Přelij 5 l → 3 l",f:function(a,b){var t=Math.min(b,JA-a);return [a+t,b-t];}}
+  ];
+  var JDIST=(function(){var d={"0,0":0},q=[[0,0]];while(q.length){var u=q.shift();JOPS.forEach(function(o){var v=o.f(u[0],u[1]),k=v.join(",");if(!(k in d)){d[k]=d[u.join(",")]+1;q.push(v);}});}return d;})();
+  function jTxt(s){return "("+s[0]+", "+s[1]+")";}
+
+  /* hra */
+  var jS,jHist;
+  JOPS.forEach(function(o){var b=el("button","calc-btn",o.n);b.addEventListener("click",function(){
+    var t=o.f(jS[0],jS[1]);
+    if(t[0]===jS[0]&&t[1]===jS[1]){$("jFb").innerHTML="Tahle akce nic nezmění, zkus jinou.";return;}
+    jHist.push({s:jS,n:o.n});jS=t;jRender();
+  });$("jOps").appendChild(b);});
+  function jReset(){jS=[0,0];jHist=[];jRender();$("jFb").innerHTML="Oba džbány jsou prázdné.";}
+  function jRender(){
+    $("jFillA").style.height=(jS[0]/JA*100)+"%";$("jFillB").style.height=(jS[1]/JB*100)+"%";
+    $("jLabA").textContent=jS[0]+" z 3 l";$("jLabB").textContent=jS[1]+" z 5 l";
+    $("jState").textContent="kroků "+jHist.length;
+    $("jUndo").disabled=!jHist.length;
+    $("jLog").innerHTML=jHist.map(function(h,i){var nx=i+1<jHist.length?jHist[i+1].s:jS;return "<span><b>"+(i+1)+".</b> "+h.n+" → "+jTxt(nx)+"</span>";}).join("");
+    if(jS[1]===4)$("jFb").innerHTML="<b>Máš 4 litry za "+jHist.length+" kroků.</b> "+(jHist.length===6?"Kratší to nejde.":"Nejkratší řešení má 6 kroků.");
+    else if(jHist.length)$("jFb").innerHTML="Ve velkém džbánu je "+jS[1]+" l, v malém "+jS[0]+" l.";
+  }
+  $("jReset").addEventListener("click",jReset);
+  $("jUndo").addEventListener("click",function(){if(!jHist.length)return;jS=jHist.pop().s;jRender();$("jFb").innerHTML="Tah vrácen.";});
+  jReset();
+
+  /* stavový prostor */
+  var jCells={},jSel="0,0",jShowReach=false,jShowDist=false;
+  for(var jb=JB;jb>=0;jb--)for(var ja=0;ja<=JA;ja++)(function(a,b){
+    var k=a+","+b,c=el("button","sp-cell"+(b===4?" is-goal":""),"("+a+", "+b+")<small></small>");
+    c.addEventListener("click",function(){jSel=k;jGridRender();});
+    jCells[k]=c;$("jGrid").appendChild(c);
+  })(ja,jb);
+  function jGridRender(){
+    Object.keys(jCells).forEach(function(k){var c=jCells[k];
+      c.classList.toggle("is-cur",k===jSel);c.classList.toggle("is-unreach",jShowReach&&!(k in JDIST));
+      c.querySelector("small").textContent=jShowDist&&(k in JDIST)?JDIST[k]+(JDIST[k]===1?" krok":JDIST[k]>=2&&JDIST[k]<=4?" kroky":" kroků"):"";});
+    var s=jSel.split(",").map(Number),rows=[];
+    JOPS.forEach(function(o){var t=o.f(s[0],s[1]);if(t[0]!==s[0]||t[1]!==s[1])rows.push(o.n+" → <b>"+jTxt(t)+"</b>");});
+    var dist=jSel in JDIST?"z (0, 0) nejméně "+JDIST[jSel]+(JDIST[jSel]===1?" krok":JDIST[jSel]>=2&&JDIST[jSel]<=4?" kroky":" kroků"):"z (0, 0) nedosažitelný";
+    $("jPanel").innerHTML='<span class="meta">'+dist+"</span><h3>Stav "+jTxt(s)+(s[1]===4?" · cíl":"")+"</h3><p>Malý džbán "+s[0]+" l, velký "+s[1]+" l. Tahy, které stav změní:</p><p>"+rows.join("<br>")+"</p>";
+  }
+  $("jReach").addEventListener("click",function(){jShowReach=!jShowReach;this.classList.toggle("is-active",jShowReach);
+    $("jReachNote").textContent=jShowReach?"Přeškrtnuté stavy nejdou z (0, 0) vůbec získat: po každém tahu je aspoň jeden džbán prázdný, nebo plný. Dosažitelných je jen 16 z 24.":"Sloupce: malý džbán 0 až 3 l. Řádky: velký džbán 5 až 0 l. Čárkované jsou cílové stavy. Klikni na stav.";jGridRender();});
+  $("jDist").addEventListener("click",function(){jShowDist=!jShowDist;this.classList.toggle("is-active",jShowDist);jGridRender();});
+  jGridRender();
+
+  /* ---------- 9: strom prohledávání ---------- */
+  var tMode="bfs",tF,tPar,tDepth,tOp,tCur,tDone,tEnd,tPath,tNodes,tExp;
+  function tReset(){
+    tF=["0,0"];tPar={"0,0":null};tDepth={"0,0":0};tOp={"0,0":""};tCur=null;tDone={};tEnd=false;tPath=[];tNodes={};tExp=0;
+    $("tTree").innerHTML="";tAdd("0,0");
+    $("tFrontLab").textContent=tMode==="bfs"?"fronta":"zásobník";
+    tRender(tMode==="bfs"?"Fronta: nové stavy se řadí <b>na konec</b>, bere se ze začátku.":"Zásobník: nové stavy se kladou <b>navrch</b>, bere se shora. Zobrazený první je ten nahoře.");
+  }
+  function tAdd(k){
+    var d=tDepth[k],row=$("tTree").children[d];
+    if(!row){row=el("div","sp-lvl",'<span class="sp-lvl-lab">'+d+"</span>");$("tTree").appendChild(row);}
+    var p=k.split(","),n=el("span","sp-nd","("+p[0]+", "+p[1]+")"+(tOp[k]?"<small>"+tOp[k]+"</small>":""));
+    row.appendChild(n);tNodes[k]=n;
+  }
+  function tStep(){
+    if(tEnd)return;
+    if(tCur){tDone[tCur]=1;tCur=null;}
+    if(!tF.length){tEnd=true;tRender("Prázdné, cíl nedosažitelný.");return;}
+    var k=tF.shift();tCur=k;tExp++;
+    var s=k.split(",").map(Number);
+    if(s[1]===4){
+      tEnd=true;var x=k;while(x){tPath.unshift(x);x=tPar[x];}
+      tRender("<b>Cíl ("+s[0]+", 4) nalezen v hloubce "+tDepth[k]+"</b> po prozkoumání "+tExp+" stavů. "+(tMode==="bfs"?"Do šířky prochází hloubky postupně, proto je nalezené řešení nejkratší.":"Do hloubky se pustilo první cestou, která se nabídla. Řešení našlo, ale o 2 kroky delší než prohledávání do šířky."));return;
+    }
+    var nw=[];
+    JOPS.forEach(function(o){var t=o.f(s[0],s[1]),tk=t.join(",");if(!(tk in tPar)){tPar[tk]=k;tDepth[tk]=tDepth[k]+1;tOp[tk]=o.n;nw.push(tk);tAdd(tk);}});
+    if(tMode==="bfs")tF=tF.concat(nw);else tF=nw.concat(tF);
+    tRender("Rozbaluji <b>("+s.join(", ")+")</b>: "+(nw.length?"nových stavů "+nw.length+".":"nic nového."));
+  }
+  function tRender(msg){
+    Object.keys(tNodes).forEach(function(k){var c=tNodes[k].classList;
+      c.toggle("s-front",tF.indexOf(k)>=0);c.toggle("s-cur",k===tCur&&!tPath.length);c.toggle("s-done",!!tDone[k]);c.toggle("is-path",tPath.indexOf(k)>=0);});
+    $("tFront").innerHTML=tF.length?tF.map(function(k,i){return '<span class="sp-nd s-front'+(i===0?" is-next":"")+'">('+k.replace(",",", ")+")</span>";}).join(""):'<span class="sp-empty">prázdný</span>';
+    $("tNote").innerHTML=msg;$("tStep").disabled=$("tAll").disabled=tEnd;
+  }
+  modeSwitch($("tMode"),function(m){tMode=m;tReset();});
+  $("tStep").addEventListener("click",tStep);
+  $("tAll").addEventListener("click",function(){var k=0;while(!tEnd&&k++<40)tStep();});
+  $("tReset").addEventListener("click",tReset);
+  tReset();
+  fits.push({slide:$("tTree").closest(".slide"),fn:function(){
+    var keep=tMode,t=$("tTree"),m=0;t.style.minHeight="0px";
+    ["bfs","dfs"].forEach(function(md){tMode=md;tReset();var k=0;while(!tEnd&&k++<40)tStep();m=Math.max(m,t.offsetHeight);});
+    tMode=keep;tReset();t.style.minHeight=m+"px";
+  }});
+
+  /* ---------- 10: hlavolam 8 ---------- */
+  var P8GOAL="123456780",p8="123456780",p8Sol=null,p8Busy=false;
+  var ADJ=[[1,3],[0,2,4],[1,5],[0,4,6],[1,3,5,7],[2,4,8],[3,7],[4,6,8],[5,7]];
+  function swp(s,i,j){var a=s.split("");var t=a[i];a[i]=a[j];a[j]=t;return a.join("");}
+  function p8Render(){
+    var h=$("p8");h.innerHTML="";
+    p8.split("").forEach(function(ch,i){
+      var b=el("button","sp-tile"+(ch==="0"?" is-blank":""),ch==="0"?"":ch);
+      if(ch==="0"){b.disabled=true;b.setAttribute("aria-label","prázdné pole");}
+      b.addEventListener("click",function(){if(p8Busy)return;var z=p8.indexOf("0");if(ADJ[z].indexOf(i)>=0){p8=swp(p8,z,i);p8Sol=null;$("p8Play").disabled=true;p8Render();if(p8===P8GOAL)$("p8Panel").innerHTML="<h3>Složeno</h3><p>Hlavolam je v cílovém stavu.</p>";}});
+      h.appendChild(b);
+    });
+  }
+  function p8Info(){$("p8Panel").innerHTML='<span class="meta">prohledávání do šířky</span><h3>Zamíchej a nech počítač hledat</h3><p>Prohledávání do šířky projde stavy po vrstvách: nejdřív všechny o 1 tah dál, pak o 2 tahy… Najde proto nejkratší řešení. Nejtěžší pozice hlavolamu 8 potřebují 31 tahů.</p>';}
+  $("p8Mix").addEventListener("click",function(){
+    if(p8Busy)return;var prev=-1;
+    for(var k=0;k<60;k++){var z=p8.indexOf("0"),opts=ADJ[z].filter(function(x){return x!==prev;}),n=opts[Math.floor(Math.random()*opts.length)];prev=z;p8=swp(p8,z,n);}
+    p8Sol=null;$("p8Play").disabled=true;p8Render();p8Info();
+  });
+  $("p8Reset").addEventListener("click",function(){if(p8Busy)return;p8=P8GOAL;p8Sol=null;$("p8Play").disabled=true;p8Render();p8Info();});
+  $("p8Swap").addEventListener("click",function(){
+    if(p8Busy)return;p8=swp(p8,p8.indexOf("1"),p8.indexOf("2"));p8Sol=null;$("p8Play").disabled=true;p8Render();
+    $("p8Panel").innerHTML='<span class="meta">pozor</span><h3>Prohozeno</h3><p>Kostičky 1 a 2 jsi vytáhl a vrátil obráceně. Zkus nechat počítač hledat.</p>';
+  });
+  $("p8Solve").addEventListener("click",function(){
+    if(p8Busy)return;p8Busy=true;
+    $("p8Panel").innerHTML='<span class="meta">prohledávání do šířky</span><h3>Počítám…</h3><p>Prohledávám stavy po vrstvách.</p>';
+    setTimeout(function(){
+      var t0=performance.now(),start=p8,prev=new Map(),q=[start],head=0,found=start===P8GOAL;
+      prev.set(start,"");
+      while(head<q.length&&!found){
+        var s=q[head++],z=s.indexOf("0"),nb=ADJ[z];
+        for(var i=0;i<nb.length;i++){var t=swp(s,z,nb[i]);if(!prev.has(t)){prev.set(t,s);if(t===P8GOAL){found=true;break;}q.push(t);}}
+      }
+      var ms=performance.now()-t0;p8Busy=false;
+      if(!found){
+        $("p8Panel").innerHTML='<span class="meta">výsledek</span><h3>Řešení neexistuje</h3><p>Počítač prošel všech <b>'+fmt(prev.size,0)+"</b> stavů, do kterých se z této pozice dá posouvat, za "+fmt(ms,0)+" ms. Cílový mezi nimi není. Stavy hlavolamu se dělí na dvě stejně velké poloviny a mezi nimi žádný tah nevede. Prohozením dvou kostiček ses dostal do druhé poloviny.</p>";
+        return;
+      }
+      var path=[],x=P8GOAL;while(x){path.unshift(x);x=prev.get(x);}
+      p8Sol=path;$("p8Play").disabled=path.length<2;
+      $("p8Panel").innerHTML='<span class="meta">výsledek</span><h3>Nejkratší řešení: '+(path.length-1)+" tahů</h3><p>Prohledávání do šířky narazilo na cíl po <b>"+fmt(prev.size,0)+"</b> objevených stavech z 181 440 dosažitelných, trvalo to "+fmt(ms,0)+" ms. Člověk by při jednom stavu za 10 sekund potřeboval "+(prev.size*10/86400<1?"skoro den":"asi "+fmt(Math.round(prev.size*10/86400),0)+" dní")+" bez přestávky.</p>";
+    },30);
+  });
+  $("p8Play").addEventListener("click",function(){
+    if(!p8Sol||p8Busy)return;p8Busy=true;$("p8Play").disabled=true;var i=0,path=p8Sol;
+    (function nx(){p8=path[i];p8Render();i++;if(i<path.length)setTimeout(nx,reduce?60:260);else{p8Busy=false;p8Sol=null;}})();
+  });
+  p8Render();p8Info();
+
+  /* ---------- 11: velikost ---------- */
+  var SZ=[
+    {n:"Převozník",v:"16",e:1.2,d:"2<sup>4</sup> = 16 stavů, povolených 10. Projde se okamžitě, i ručně na papíře."},
+    {n:"Džbány 3 l a 5 l",v:"24",e:1.38,d:"4 · 6 = 24 dvojic, dosažitelných 16."},
+    {n:"Hanojské věže, 10 disků",v:"59 049",e:4.77,d:"Každý disk může být na jedné ze tří tyčí: 3<sup>10</sup> = 59 049 stavů. Nejkratší řešení má 2<sup>10</sup> − 1 = 1 023 tahů."},
+    {n:"Hlavolam 8 (3 × 3)",v:"181 440",e:5.26,d:"9! / 2 = 181 440 dosažitelných stavů. Prohledávání do šířky je v prohlížeči projde za desetiny sekundy. Nejtěžší pozice potřebují 31 tahů."},
+    {n:"Hlavolam 15 (4 × 4)",v:"≈ 1,05 · 10¹³",e:13.02,d:"16! / 2 ≈ 10 bilionů stavů. Při miliardě stavů za sekundu asi 3 hodiny. Nejtěžší pozice potřebují 80 tahů, to se zjistilo až v roce 1999 paralelním výpočtem."},
+    {n:"Rubikova kostka",v:"≈ 4,3 · 10¹⁹",e:19.64,d:"43 252 003 274 489 856 000 stavů. Miliarda stavů za sekundu by je procházela asi 1 400 let. Přesto se v roce 2010 podařilo dokázat, že každý stav jde složit nejvýš 20 tahy: díky symetriím a chytřejšímu hledání to Googlu trvalo jen asi 35 let procesorového času."},
+    {n:"Šachy",v:"≈ 4,8 · 10⁴⁴",e:44.68,d:"Tolik legálních pozic odhadl v roce 2022 John Tromp. Ani všechny počítače světa je nikdy neprojdou: při miliardě pozic za sekundu by to trvalo asi 10<sup>28</sup> let, vesmír je starý asi 1,4 · 10<sup>10</sup> let."},
+    {n:"Atomy v pozorovatelném vesmíru",v:"≈ 10⁸⁰",e:80,d:"Pro srovnání. Stavů je tu víc, než kolik je atomů, ve kterých by je šlo uložit."},
+    {n:"Go 19 × 19",v:"≈ 2,1 · 10¹⁷⁰",e:170.32,d:"Přesný počet legálních pozic spočítali v roce 2016 John Tromp a Gunnar Farnebäck. Program AlphaGo proto neprohledával všechno: neuronová síť mu radila, které tahy vůbec zkoumat."}
+  ];
+  var szB=picker($("szRows"),SZ,function(r){
+    return el("button","sp-srow",'<span class="sp-sname">'+r.n+'</span><span class="sp-strack"><span class="sp-sbar"></span></span><span class="sp-sval">'+r.v+"</span>");
+  },$("szPanel"),function(r){$("szPanel").innerHTML='<span class="meta">'+r.v+" stavů</span><h3>"+r.n+"</h3><p>"+r.d+"</p>";});
+  szB.forEach(function(b,i){var w=Math.max(2,SZ[i].e/171*100);b.querySelector(".sp-sbar").style.width=w.toFixed(1)+"%";});
+
+  /* ---------- 12: misionáři ---------- */
+  $("mcBtn").addEventListener("click",function(){var a=$("mcAns");a.hidden=!a.hidden;this.classList.toggle("is-on",!a.hidden);this.textContent=a.hidden?"Ukázat řešení":"Skrýt řešení";});
+
+  /* ---------- 13: kvíz ---------- */
+  var Q=[
+    {t:"Stav popisuje celou situaci v jednom okamžiku, nezáleží v něm na tom, jak jsme se do ní dostali.",a:1,f:"Přesně tak. Historie tahů do stavu nepatří, jinak by stavů bylo nekonečně mnoho."},
+    {t:"V úloze o převozníkovi je všech 16 stavů povolených.",a:0,f:"Povolených je jen 10. Šest stavů je zakázaných, protože by vlk sežral kozu nebo koza zelí."},
+    {t:"Úloha o převozníkovi má jediné nejkratší řešení.",a:0,f:"Má dvě, obě se 7 plavbami. Liší se tím, jestli po koze převezeš nejdřív vlka, nebo zelí."},
+    {t:"Prohledávání do šířky najde řešení s nejmenším počtem kroků.",a:1,f:"Ano, prochází stavy po vrstvách podle vzdálenosti od startu. Platí to, když má každý krok stejnou cenu."},
+    {t:"Prohledávání do hloubky si stavy ukládá do fronty.",a:0,f:"Do hloubky používá zásobník: jako další bere stav, který přidalo naposledy. Frontu má prohledávání do šířky."},
+    {t:"Když si nepamatujeme navštívené stavy, hledání se může zacyklit.",a:1,f:"Převozník může vozit kozu tam a zpět donekonečna. Proto si u každého stavu pamatujeme, že už byl objeven."},
+    {t:"Každé zamíchání hlavolamu 8 jde vyřešit posouváním.",a:0,f:"Jen polovina rozmístění. Stavový prostor se rozpadá na dvě části a mezi nimi nevede žádný tah."},
+    {t:"Hanojské věže s n disky mají 3ⁿ stavů.",a:1,f:"Každý z n disků leží na jedné ze tří tyčí a pořadí na tyči je dané velikostí disků."},
+    {t:"Stavový prostor si lze představit jako graf: stavy jsou vrcholy a přechody hrany.",a:1,f:"Proto se na hledání řešení dají použít algoritmy pro hledání cesty v grafu."},
+    {t:"Rubikova kostka má tak velký stavový prostor, že se nikdy nepodaří zjistit, kolik tahů stačí na nejhorší stav.",a:0,f:"V roce 2010 se to podařilo: každý stav jde složit nejvýš 20 tahy. Nepomohla hrubá síla, ale symetrie a chytré hledání."}
+  ];
+  var qI=0,qOk=0,qAns=false,ansBtns=Array.prototype.slice.call(document.querySelectorAll("[data-a]"));
+  function qRender(){qAns=false;var q=Q[qI];$("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;$("qText").textContent=q.t;$("qFb").innerHTML="";$("qNext").hidden=true;ansBtns.forEach(function(b){b.hidden=false;b.disabled=false;b.classList.remove("is-right","is-wrong");});}
+  ansBtns.forEach(function(b){b.addEventListener("click",function(){
+    if(qAns)return;qAns=true;var q=Q[qI],ok=+b.dataset.a===q.a;if(ok)qOk++;
+    ansBtns.forEach(function(x){if(+x.dataset.a===q.a)x.classList.add("is-right");x.disabled=true;});
+    if(!ok)b.classList.add("is-wrong");
+    $("qScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qFb").innerHTML="<b>"+(ok?"Správně.":"Tentokrát ne.")+"</b> "+q.f;
+    $("qNext").hidden=false;$("qNext").textContent=qI===Q.length-1?"Výsledek":"Další →";
+  });});
+  $("qNext").addEventListener("click",function(){
+    if(qI===Q.length-1){$("qText").innerHTML="<b>Výsledek: "+qOk+" z "+Q.length+".</b>";$("qFb").innerHTML=qOk>=8?"Výborně.":"Projdi si ještě snímky o grafu stavů a o prohledávání do šířky a do hloubky.";ansBtns.forEach(function(b){b.hidden=true;});$("qNext").textContent="Znovu";qI=-1;qOk=0;return;}
+    qI++;qRender();
+  });
+  qRender();
+
+  mountAll(document);
+  goTo(0);
+})();
+</script>
+</body>
+</html>

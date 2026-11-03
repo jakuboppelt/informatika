@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hesla a zabezpečení účtů</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Bezpečnost · 4. materiál</div>
+        <h1>Hesla a zabezpečení účtů</h1>
+        <p class="lede">Co dělá heslo silným, proč potřebuješ správce hesel a druhý faktor, jak funguje authenticator, co je přihlášení přes Google, Apple nebo Microsoft a co jsou passkeys. Na konci si zabezpečíš vlastní účet.</p>
+      </div>
+    </section>
+
+    <section class="slide pause-slide" data-index="1"><div class="slide-inner">
+      <div class="qmark">?</div>
+      <h2>Kolik máš účtů a kolik z nich má jiné heslo?</h2>
+      <p class="lede">Zkus to odhadnout, než půjdeme dál. Nikomu to neříkej, stačí, když to víš ty.</p>
+    </div></section>
+
+    <section class="slide" data-index="2"><div class="slide-inner">
+      <div class="eyebrow">Jak dlouho to útočník luští</div>
+      <h2 class="slide-title">Délka rozhoduje víc než ozdoby</h2>
+      <p class="lede">Nastav, z čeho se heslo skládá a kolik má znaků. Počítáme heslo vybrané <b>náhodně</b>, jako ho vygeneruje správce hesel.</p>
+      <div class="seg" id="pwSet"></div>
+      <div class="sliders">
+        <div class="slider-row"><input type="range" id="pwLen" min="4" max="24" value="8" aria-label="Délka hesla"><span class="big-val" id="pwLenVal">8 znaků</span></div>
+      </div>
+      <div class="panel" id="pwOut"></div>
+      <p class="note">Odhad: předpokládáme 10 miliard pokusů za sekundu proti rychlému hashi a 10 tisíc proti pomalému (bcrypt, Argon2). Reálná rychlost záleží na hardwaru. Platí jen pro náhodná hesla. Heslo vymyšlené člověkem padne mnohem dřív.</p>
+    </div></section>
+
+    <section class="slide" data-index="3"><div class="slide-inner">
+      <div class="eyebrow">Délka, slova, náhoda</div>
+      <h2 class="slide-title">Silné a zároveň zapamatovatelné</h2>
+      <p class="lede"><b>Heslo je silné tolik, kolik možností by musel útočník prověřit, ne kolik má znaků.</b></p>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Heslo</th><th>Síla</th><th>Zapamatuješ si ho?</th></tr></thead>
+          <tbody>
+            <tr><td><b>8 náhodných znaků</b> (písmena, číslice, symboly)</td><td>asi 52 bitů</td><td class="ko">těžko</td></tr>
+            <tr><td><b>4 náhodná slova</b> ze seznamu 7 776 slov</td><td>asi 52 bitů</td><td class="ok">snadno</td></tr>
+            <tr><td><b>5 náhodných slov</b></td><td>asi 65 bitů</td><td class="ok">snadno</td></tr>
+            <tr><td><b>16 náhodných znaků</b></td><td>asi 105 bitů</td><td class="ko">jen ve správci hesel</td></tr>
+            <tr><td><b>Heslo123!</b> nebo <b>Pavel2008</b></td><td>vzor, ne náhoda</td><td class="ko">padne podle slovníku</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>Podmínka: slova musí vybrat náhoda</h3>
+        <p>Čtyři slova, která vybereš ty (píseň, přezdívka, citát), bývají slabá: lidé volí předvídatelná slova a útočník zkouší slovníky, názvy písní, jména a jejich kombinace. Číslice doprostřed přidá jen pár bitů a luštící programy takové úpravy zkoušejí také. Slova vyber kostkou nebo generátorem, každé další náhodné slovo přidá asi 13 bitů. Každý bit navíc znamená dvakrát víc pokusů. Pro hlavní heslo ke správci hesel je nejlepší pět a víc náhodných slov. Všude jinde heslo vygeneruje správce.</p>
+        <p><b>Příklad:</b> úryvek známé písničky má třeba 30 znaků, ale pokud je v seznamu milionu nejznámějších vět, je to pro útočníka jen asi 20 bitů. Náhodná čtyři slova mají 52 bitů a jsou kratší. Rozhoduje počet možností, ne počet znaků.</p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="4"><div class="slide-inner">
+      <div class="eyebrow">Co útočník zkouší jako první</div>
+      <h2 class="slide-title">Triky, které nefungují</h2>
+      <p class="lede">Útočník nehádá naslepo. Zkouší seznamy uniklých hesel a typické obměny.</p>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Nápad</th><th>Proč selže</th></tr></thead>
+          <tbody>
+            <tr><td><b>Jméno, přezdívka, datum narození</b></td><td>Najde se na tvém profilu. Útočník zkouší první věci, které o tobě ví.</td></tr>
+            <tr><td><b>Náhrada písmen</b> (a → @, o → 0)</td><td>Každý slovník je zná. Příklad je P@ssw0rd.</td></tr>
+            <tr><td><b>Řada na klávesnici</b> (qwertz, 1234)</td><td>Patří k nejčastějším heslům v uniklých seznamech.</td></tr>
+            <tr><td><b>Stejné heslo s číslem na konci</b></td><td>Když unikne heslo1, útočník zkusí heslo2, heslo3 a podobně.</td></tr>
+            <tr><td><b>Pravidelná změna hesla „pro jistotu“</b></td><td>Lidé měnili jen číslo na konci. Moderní doporučení ji už nepožadují, měnit se má po podezření na únik.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Doporučení americké agentury NIST (SP 800-63B-4): preferovat délku, nenutit k pravidlům typu „jedno velké písmeno a symbol“, nevyžadovat pravidelné změny a odmítat hesla z uniklých seznamů.</p>
+    </div></section>
+
+    <section class="slide" data-index="5"><div class="slide-inner">
+      <div class="eyebrow">Hlavní klíč</div>
+      <h2 class="slide-title">E-mail otevře všechno ostatní</h2>
+      <div class="chain" id="mailChain"></div>
+      <div class="panel" id="mailPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="6"><div class="slide-inner">
+      <div class="eyebrow">Správce hesel</div>
+      <h2 class="slide-title">Pamatuješ si jediné heslo</h2>
+      <div class="seg" id="pmSeg"></div>
+      <div class="panel" id="pmPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="7"><div class="slide-inner">
+      <div class="eyebrow">Druhý faktor</div>
+      <h2 class="slide-title">Heslo samo nestačí</h2>
+      <p class="lede">Dvoufázové ověření (2FA) chce k přihlášení dvě různé věci. Když útočník ukradne jednu, druhou nemá.</p>
+      <div class="cards4 cards3" id="facCards"></div>
+      <div class="panel" id="facPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="8"><div class="slide-inner">
+      <div class="eyebrow">Jaký druhý faktor</div>
+      <h2 class="slide-title">Metody od nejslabší po nejsilnější</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Metoda</th><th>Jak to funguje</th><th>Slabina</th><th>Odolnost proti phishingu</th></tr></thead>
+          <tbody>
+            <tr><td><b>SMS kód</b></td><td>Kód přijde textovkou.</td><td>Převzetí čísla (SIM swapping), přeposlání kódu.</td><td class="ko">nízká</td></tr>
+            <tr><td><b>Authenticator</b> (aplikace)</td><td>Aplikace ukazuje kód, který se mění každých 30 s.</td><td>Kód lze vyzradit na falešné stránce.</td><td>střední</td></tr>
+            <tr><td><b>Schválení v aplikaci</b> (push)</td><td>Na telefonu klikneš „Schválit“.</td><td>Únava ze schvalování, klikneš, jen aby to přestalo.</td><td>střední</td></tr>
+            <tr><td><b>Bezpečnostní klíč, passkey</b></td><td>Zařízení podepíše přihlášení jen pro pravou doménu.</td><td>Pořizovací cena, ztráta klíče.</td><td class="ok">vysoká</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Každý druhý faktor je mnohem lepší než žádný. Pokud máš na výběr, zvol silnější.</p>
+    </div></section>
+
+    <section class="slide" data-index="9"><div class="slide-inner">
+      <div class="eyebrow">Authenticator</div>
+      <h2 class="slide-title">Kód z telefonu bez internetu</h2>
+      <div class="chain" id="totpChain"></div>
+      <div class="panel" id="totpPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="10"><div class="slide-inner">
+      <div class="eyebrow">Zkus doma</div>
+      <h2 class="slide-title">Authenticator na 12 řádků</h2>
+      <p class="lede">Spusť v Pythonu na svém počítači. Kód se spočítá jen z tajného klíče a času. Žádná komunikace se serverem se nekoná.</p>
+      <div class="codebox">
+        <button class="copy" type="button" data-for="totpCode">Kopírovat</button>
+        <pre class="code" id="totpCode"><span class="k">import</span> base64, hashlib, hmac, struct, time
+
+<span class="c"># Ukázkový klíč. Skutečný klíč dostane aplikace z QR kódu.</span>
+TAJNY_KLIC = <span class="s">"JBSWY3DPEHPK3PXP"</span>
+
+<span class="k">def</span> totp(klic, cas=<span class="k">None</span>, krok=<span class="n">30</span>, cifer=<span class="n">6</span>):
+    klic_bajty = base64.b32decode(klic)
+    pocitadlo = <span class="k">int</span>((cas <span class="k">or</span> time.time()) // krok)
+    h = hmac.new(klic_bajty, struct.pack(<span class="s">"&gt;Q"</span>, pocitadlo), hashlib.sha1).digest()
+    posun = h[-<span class="n">1</span>] &amp; <span class="n">0x0F</span>
+    cislo = struct.unpack(<span class="s">"&gt;I"</span>, h[posun:posun + <span class="n">4</span>])[<span class="n">0</span>] &amp; <span class="n">0x7FFFFFFF</span>
+    <span class="k">return</span> <span class="k">str</span>(cislo % <span class="n">10</span> ** cifer).zfill(cifer)
+
+<span class="k">print</span>(totp(TAJNY_KLIC))
+<span class="k">print</span>(<span class="s">"platí ještě"</span>, <span class="n">30</span> - <span class="k">int</span>(time.time()) % <span class="n">30</span>, <span class="s">"s"</span>)</pre>
+      </div>
+      <div class="panel">
+        <h3>Co si všimnout</h3>
+        <p>Spusť program dvakrát během jedné půlminuty: kód je stejný. Za půl minuty je jiný. Přidej tento klíč do libovolné aplikace s authenticatorem (zadáním klíče ručně) a uvidíš stejný kód. Je to standard TOTP (RFC 6238), tentýž u Googlu, Microsoftu i ostatních.</p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="11"><div class="slide-inner">
+      <div class="eyebrow">Když se 2FA obchází</div>
+      <h2 class="slide-title">Druhý faktor není neprůstřelný</h2>
+      <div class="seg" id="bypSeg"></div>
+      <div class="panel" id="bypPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="12"><div class="slide-inner">
+      <div class="eyebrow">Přihlášení přes prostředníka</div>
+      <h2 class="slide-title">„Pokračovat přes Google, Apple, Microsoft“</h2>
+      <div class="seg" id="ssoSeg"></div>
+      <div class="panel" id="ssoPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="13"><div class="slide-inner">
+      <div class="eyebrow">Passkeys</div>
+      <h2 class="slide-title">Přihlášení bez hesla</h2>
+      <div class="seg" id="pkSeg"></div>
+      <div class="panel" id="pkPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="14"><div class="slide-inner">
+      <div class="eyebrow">Když se to stane</div>
+      <h2 class="slide-title">Někdo převzal můj účet. Co dělat?</h2>
+      <div class="panel" id="takePanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="15"><div class="slide-inner">
+      <div class="eyebrow">Plán</div>
+      <h2 class="slide-title">Čtyři úrovně ochrany</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Úroveň</th><th>Co uděláš</th><th>Co tím zastavíš</th></tr></thead>
+          <tbody>
+            <tr><td><b>1 · Základ</b></td><td>Pro každou službu jiné heslo.</td><td>Jeden únik nerozbije ostatní účty.</td></tr>
+            <tr><td><b>2 · Správce hesel</b></td><td>Hesla generuje a ukládá správce, ty znáš jedno hlavní.</td><td>Slabá hesla a opakování, částečně i phishing (správce nevyplní heslo na cizí doméně).</td></tr>
+            <tr><td><b>3 · Druhý faktor</b></td><td>Authenticator na e-mailu, bance a sítích.</td><td>Přihlášení jen se ukradeným heslem.</td></tr>
+            <tr><td><b>4 · Passkey a klíč</b></td><td>Passkeys tam, kde to služba nabízí. Klíč pro nejdůležitější účty.</td><td>I podvržené přihlašovací stránky.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Nezačínej shora. Úrovně 1 až 3 zvládneš za jedno odpoledne. Začni e-mailem.</p>
+    </div></section>
+
+    <section class="slide" data-index="16"><div class="slide-inner">
+      <div class="eyebrow">Udělej hned</div>
+      <h2 class="slide-title">Zabezpeč si účet v hodině</h2>
+      <p class="note">Odškrtávej, co máš hotové. <span id="chkCount">Hotovo 0 z 8</span></p>
+      <div class="chk-track"><div class="chk-bar" id="chkBar"></div></div>
+      <div class="checks" id="checks"></div>
+    </div></section>
+
+    <section class="slide pause-slide" data-index="17"><div class="slide-inner">
+      <div class="eyebrow">Pravidlo na zapamatování</div>
+      <div class="rule3">
+        <div><b>Unikátní</b><span>Každá služba má vlastní heslo. Vygeneruje ho správce.</span></div>
+        <div><b>2FA</b><span>Na e-mailu a hlavních účtech druhý faktor, nejlépe authenticator nebo passkey.</span></div>
+        <div><b>Záloha</b><span>Recovery kódy uložené bokem a aktuální telefon i záložní e-mail.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="18"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Heslo je silné <b>délkou a náhodností</b>. Vymyšlené vzory padnou podle slovníků.</li>
+        <li><b>Správce hesel</b> generuje a pamatuje jedinečná hesla. Ty si pamatuješ jedno hlavní.</li>
+        <li><b>E-mail je hlavní klíč</b>, zabezpeč ho jako první.</li>
+        <li><b>Druhý faktor</b> je lepší než nic: SMS je nejslabší, authenticator lepší, passkey a bezpečnostní klíč nejsilnější.</li>
+        <li><b>Přihlášení přes Google, Apple nebo Microsoft</b> je pohodlné a bezpečné, ale účet u poskytovatele je pak klíč ke všemu. Zabezpeč ho a měj záložní cestu.</li>
+        <li>Nevyžádané schvalování 2FA a nevyžádané kódy <b>nikdy nepotvrzuj</b>.</li>
+      </ul>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="19"><div class="slide-inner">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud jsou fakta a kde číst dál</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Doporučení a standardy</h3><ul class="src-list">
+          <li><a href="https://www.sakimura.org/en/2025/10/7710/" target="_blank" rel="noopener">NIST SP 800-63B-4: přehled požadavků na hesla</a></li>
+          <li><a href="https://datatracker.ietf.org/doc/html/rfc6238" target="_blank" rel="noopener">RFC 6238: TOTP (kódy v authenticatoru)</a></li>
+          <li><a href="https://fidoalliance.org/passkeys/" target="_blank" rel="noopener">FIDO Alliance: passkeys</a></li>
+          <li><a href="https://haveibeenpwned.com" target="_blank" rel="noopener">Have I Been Pwned</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Případy</h3><ul class="src-list">
+          <li><a href="https://securityboulevard.com/2022/11/uber-hack-best-practices-for-multi-factor-authentication-mfa/" target="_blank" rel="noopener">Uber 2022: útok přes únavu ze schvalování 2FA</a></li>
+          <li><a href="https://nukib.gov.cz" target="_blank" rel="noopener">NÚKIB: doporučení k heslům a 2FA</a></li>
+        </ul></div>
+      </div>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 20</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=document.getElementById("dots"),counterEl=document.getElementById("counter");
+  var prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=document.createElement("button");d.className="dot"+(i===0?" is-active":"");
+    d.setAttribute("aria-label","Snímek "+(i+1));d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  function picker(btnHost,items,mk,panel,showFn){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;showFn(it,i);
+      });btnHost.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");showFn(items[0],0);
+    fits.push({slide:btnHost.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){showFn(it,i);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";showFn(items[act],act);
+    }});
+  }
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function panelHtml(p,title,text,extra){p.innerHTML="<h3>"+title+"</h3><p>"+text+"</p>"+(extra||"");}
+  function stepsHtml(title,list){var h="<h3>"+title+"</h3><ol class=\"steps\">";list.forEach(function(x){h+="<li>"+x+"</li>";});return h+"</ol>";}
+  function quote(q){return '<div class="quote">'+esc(q)+"</div>";}
+
+  /* ---- 2: kalkulačka síly hesla ---- */
+  var sets=[
+    {n:"číslice",p:10},{n:"malá písmena",p:26},{n:"malá i velká",p:52},{n:"+ číslice",p:62},{n:"+ symboly",p:94}
+  ];
+  var setIdx=4;
+  function fmtTime(sec){
+    if(sec<1)return "okamžitě";
+    if(sec<60)return Math.round(sec)+" s";
+    if(sec<3600)return Math.round(sec/60)+" min";
+    if(sec<86400)return Math.round(sec/3600)+" h";
+    var d=sec/86400;
+    if(d<365)return Math.round(d)+" dní";
+    var y=d/365;
+    if(y<1000)return Math.round(y)+" let";
+    if(y<1e6)return Math.round(y/1000)+" tisíc let";
+    if(y<1e9)return Math.round(y/1e6)+" milionů let";
+    if(y<1.4e10)return Math.round(y/1e9)+" miliard let";
+    return "víc než stáří vesmíru";
+  }
+  function pwUpdate(){
+    var len=parseInt($("pwLen").value,10),pool=sets[setIdx].p;
+    $("pwLenVal").textContent=len+" znaků";
+    var bits=len*Math.log(pool)/Math.log(2);
+    var guesses=Math.pow(2,bits-1);
+    var fast=guesses/1e10,slow=guesses/1e4;
+    $("pwOut").innerHTML="<h3>Síla: "+Math.round(bits)+" bitů</h3>"+
+      '<p>Rychlý hash (starý nebo bez soli): <b>'+fmtTime(fast)+"</b></p>"+
+      '<p>Pomalý hash se solí (bcrypt, Argon2): <b>'+fmtTime(slow)+"</b></p>";
+  }
+  sets.forEach(function(s,i){
+    var b=el("button","calc-btn"+(i===setIdx?" is-active":""),esc(s.n));
+    b.addEventListener("click",function(){
+      setIdx=i;Array.prototype.forEach.call($("pwSet").children,function(x,j){x.classList.toggle("is-active",j===i);});pwUpdate();
+    });
+    $("pwSet").appendChild(b);
+  });
+  $("pwLen").addEventListener("input",pwUpdate);
+  pwUpdate();
+
+  /* ---- 5: e-mail jako klíč ---- */
+  var mail=[
+    {n:"E-mail",s:"krok 1",t:"Útočník ovládne e-mail",d:"Stačí heslo z úniku, které jsi použil i jinde, nebo phishing. Zatím jen čte tvoje zprávy."},
+    {n:"Reset hesel",s:"krok 2",t:"Funkce „Zapomněl jsem heslo“",d:"U většiny služeb se zapomenuté heslo obnovuje odkazem poslaným na e-mail. Útočník nemusí znát žádné jiné heslo, jen požádá o reset."},
+    {n:"Další účty",s:"krok 3",t:"Sítě, e-shopy, cloud, školní účty",d:"Jedno po druhém převezme všechno, co je svázané s tímto e-mailem. Včetně fotek v cloudu a historie zpráv."},
+    {n:"Obrana",s:"krok 4",t:"Nejsilnější ochrana na e-mailu",d:"Dlouhé unikátní heslo, authenticator nebo passkey a aktuální záložní způsob obnovy. Tvůj e-mail má být nejlépe chráněný účet."}
+  ];
+  picker($("mailChain"),mail,function(c){return el("button","",esc(c.n)+"<span>"+c.s+"</span>");},$("mailPanel"),function(c){panelHtml($("mailPanel"),c.t,c.d);});
+
+  /* ---- 6: správce hesel ---- */
+  var pm=[
+    {n:"Co to je",t:"Trezor na hesla",d:"Program nebo funkce v prohlížeči či telefonu, která hesla generuje, ukládá je zašifrovaná a vyplňuje je za tebe. Ty znáš jen jedno hlavní heslo."},
+    {n:"Proč mu věřit",t:"Bezpečnější než paměť",d:"Každý web dostane jiné dlouhé heslo, takže jeden únik nic dalšího neotevře. Správce navíc vyplní heslo jen na správné doméně, což pomáhá i proti phishingu: na falešné stránce heslo nenabídne."},
+    {n:"Jaký vybrat",t:"Možnosti",d:"Vestavěný správce v telefonu nebo prohlížeči (Apple, Google, Microsoft) je nejjednodušší začátek. Samostatné programy (například Bitwarden, 1Password, KeePass) nabízejí víc funkcí a fungují napříč zařízeními. Důležité je, aby ho člověk používal."},
+    {n:"Hlavní heslo",t:"Jediné heslo, které si pamatuješ",d:"Pro hlavní heslo vyber pět a víc náhodných slov a zapni na správci 2FA. Zapomenuté hlavní heslo u většiny správců nejde obnovit, takže si ho a recovery kód ulož na papír na bezpečné místo."}
+  ];
+  picker($("pmSeg"),pm,function(c){return el("button","calc-btn",esc(c.n));},$("pmPanel"),function(c){panelHtml($("pmPanel"),c.t,c.d);});
+
+  /* ---- 7: faktory ---- */
+  var fac=[
+    {n:"Co víš",s:"heslo, PIN",d:"Něco, co máš v hlavě. Dá se uhodnout, ukrást nebo vyzradit na falešné stránce.",ex:"heslo, PIN, odpověď na otázku"},
+    {n:"Co máš",s:"telefon, klíč",d:"Něco, co držíš v ruce. Útočník by ho musel fyzicky získat nebo převzít.",ex:"telefon s authenticatorem, bezpečnostní klíč, platební karta"},
+    {n:"Kdo jsi",s:"otisk, obličej",d:"Biometrie. Hodí se k odemknutí zařízení, ale otisk nelze změnit, když unikne.",ex:"otisk prstu, obličej"}
+  ];
+  picker($("facCards"),fac,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("facPanel"),function(c){
+    panelHtml($("facPanel"),c.n,c.d,quote(c.ex)+'<p class="note">2FA = kombinace dvou různých kategorií. Dvě hesla za sebou 2FA nejsou.</p>');
+  });
+
+  /* ---- 9: authenticator ---- */
+  var totp=[
+    {n:"Nastavení",s:"jednou",t:"Dohodnete se na tajemství",d:"Při zapnutí 2FA server ukáže QR kód. Obsahuje tajný klíč, který načte aplikace. Od té chvíle ho znáte jen server a tvoje aplikace."},
+    {n:"Každých 30 s",s:"v aplikaci",t:"Kód se počítá z klíče a času",d:"Aplikace z tajného klíče a aktuálního času spočítá šestimístný kód. Za 30 sekund vznikne jiný. Nepotřebuje internet ani SMS."},
+    {n:"Přihlášení",s:"na webu",t:"Server spočítá to samé",d:"Server zná klíč i čas, takže spočítá stejný kód a porovná ho s tím, co zadáš. Útočník s ukradeným heslem kód nezná."},
+    {n:"Ztráta telefonu",s:"záloha",t:"Recovery kódy a přenos",d:"Při zapnutí 2FA ti služba dá záložní recovery kódy. Ulož je bokem, ne do stejného telefonu. Některé aplikace umí klíče zálohovat nebo přenést na nový telefon, jiné ne. Zjisti to dřív, než telefon ztratíš."}
+  ];
+  picker($("totpChain"),totp,function(c){return el("button","",esc(c.n)+"<span>"+c.s+"</span>");},$("totpPanel"),function(c){panelHtml($("totpPanel"),c.t,c.d);});
+
+  /* ---- 11: obcházení 2FA ---- */
+  var byp=[
+    {n:"Podvržená stránka",t:"Útočník kód hned použije",d:"Falešné přihlášení si vyžádá heslo i kód z authenticatoru a útočník je okamžitě zadá na pravé stránce. Kód je platný 30 sekund, takže to stihne. Proto je phishing nebezpečný i s 2FA. Proti tomuhle pomáhá hlavně passkey a správce hesel, který se na cizí doméně nepřihlásí.",q:""},
+    {n:"Únava ze schvalování",t:"Uber 2022",d:"Útočník měl heslo zaměstnance externí firmy a opakovaně se přihlašoval. Každý pokus poslal na telefon žádost o schválení. Pak napsal oběti jako „IT podpora“, že oznámení přestanou, až jedno potvrdí. Zaměstnanec potvrdil a útočník byl uvnitř.",q:"září 2022 · žádosti o schválení 2FA + zpráva od „podpory“"},
+    {n:"SIM swapping",t:"Převzetí telefonního čísla",d:"Útočník přesvědčí operátora, aby číslo převedl na jeho SIM. Pak mu chodí tvoje SMS včetně kódů pro 2FA a pro obnovu hesla. Proto je SMS nejslabší druhý faktor.",q:""},
+    {n:"Obrana",t:"Co z toho plyne",d:"Nikdy neschvaluj žádost o přihlášení, kterou jsi nevyvolal ty. Nikomu nediktuj kódy, ani „podpoře“. Pokud to jde, použij passkey nebo bezpečnostní klíč. Cokoli neočekávaného nahlas (škole, firmě) a změň heslo.",q:""}
+  ];
+  picker($("bypSeg"),byp,function(c){return el("button","calc-btn",esc(c.n));},$("bypPanel"),function(c){panelHtml($("bypPanel"),c.t,c.d,c.q?quote(c.q):"");});
+
+  /* ---- 12: přihlášení přes prostředníka ---- */
+  var sso=[
+    {n:"Jak to funguje",t:"Web nedostane tvoje heslo",d:"Klikneš na „Pokračovat přes Google“. Prohlížeč tě přesměruje na přihlašovací stránku Googlu, tam se přihlásíš a web dostane jen potvrzení, že jsi to ty, a údaje, které povolíš (jméno, e-mail). Heslo web nikdy neuvidí."},
+    {n:"Výhody",t:"Méně hesel k úniku",d:"Nemusíš na každém webu vytvářet nové heslo, které by mohlo uniknout nebo se opakovat. Silné zabezpečení (2FA, passkey) nastavíš jednou u poskytovatele a funguje všude. Apple umí navíc skrýt tvoji skutečnou e-mailovou adresu."},
+    {n:"Rizika",t:"Jeden klíč ke všemu",d:"Kdo převezme tvůj účet u Googlu, Applu nebo Microsoftu, dostane se do všech služeb, které s ním propojuješ. Když ti poskytovatel účet zablokuje, přijdeš o přístup všude najednou. Poskytovatel navíc ví, kam se přihlašuješ. A pozor na obrazovku „Povolit přístup“: škodlivá aplikace může chtít číst e-mail nebo disk."},
+    {n:"Jak správně",t:"Zabezpeč poskytovatele a hlídej oprávnění",d:"Účet u poskytovatele chraň nejlíp (unikátní heslo, 2FA, passkey) a měj aktuální záložní způsob obnovy. V jeho nastavení občas zkontroluj seznam připojených aplikací a smaž ty, které nepoužíváš. U důležitých služeb (banka, škola) můžeš mít i vlastní přihlášení jako záložní cestu."}
+  ];
+  picker($("ssoSeg"),sso,function(c){return el("button","calc-btn",esc(c.n));},$("ssoPanel"),function(c){panelHtml($("ssoPanel"),c.t,c.d);});
+
+  /* ---- 13: passkeys ---- */
+  var pk=[
+    {n:"Co to je",t:"Heslo nahradí pár klíčů",d:"Passkey je přihlašovací údaj, který nemá žádné tajemství k opsání. Přihlašuješ se odemknutím zařízení (otisk, obličej, PIN), takže nic nepíšeš."},
+    {n:"Jak funguje",t:"Soukromý a veřejný klíč",d:"Při registraci zařízení vytvoří pár klíčů. Veřejný klíč dostane server, soukromý zůstane u tebe a nikdy se neposílá. Při přihlášení zařízení podepíše výzvu serveru a server podpis ověří veřejným klíčem."},
+    {n:"Proč je lepší",t:"Phishing nemá co ukrást",d:"Klíč je svázaný s konkrétní doménou. Falešná stránka s jinou adresou o podpis ani nepožádá. A i kdyby unikla databáze serveru, uniknou jen veřejné klíče, které útočníkovi nic nedají."},
+    {n:"Háček",t:"Záložní cesta musí existovat",d:"Passkey často putuje mezi tvými zařízeními přes účet u Applu, Googlu, Microsoftu nebo ve správci hesel, takže ochrana tohoto účtu je zase klíčová. Ne každá služba passkeys umí. Ztratíš-li zařízení, potřebuješ jiný způsob přihlášení."}
+  ];
+  picker($("pkSeg"),pk,function(c){return el("button","calc-btn",esc(c.n));},$("pkPanel"),function(c){panelHtml($("pkPanel"),c.t,c.d);});
+
+  /* ---- 14: převzatý účet ---- */
+  $("takePanel").innerHTML=stepsHtml("První hodina po podezření",[
+    "Pokud ještě můžeš, <b>změň heslo</b> (z jiného zařízení než podezřelého) a odhlas všechna zařízení.",
+    "Zapni <b>2FA</b> a zkontroluj, že ti útočník nepřidal vlastní telefon nebo záložní e-mail.",
+    "V e-mailu zkontroluj <b>pravidla pro přeposílání</b> a připojené aplikace, a zbytečné smaž.",
+    "Změň heslo na <b>všech účtech se stejným heslem</b> a na e-mailu, ke kterému je účet připojen.",
+    "Varuj <b>kontakty</b>, že od tebe mohou chodit podvodné zprávy.",
+    "Nahlas incident (škole, rodičům, platformě). U financí neprodleně banku."
+  ]);
+
+  /* ---- 16: kontrola ---- */
+  var checks=[
+    ["E-mail: 2FA","Zapni authenticator nebo passkey na hlavním e-mailu."],
+    ["Správce hesel","Nainstaluj nebo zapni a přesuň tam první hesla."],
+    ["Kontrola úniku","Zadej svůj e-mail na haveibeenpwned.com."],
+    ["Recovery kódy","Ulož záložní kódy mimo telefon."],
+    ["Připojené aplikace","V Google, Apple nebo Microsoft účtu smaž ty, které nepoužíváš."],
+    ["Passkey","Zapni ho tam, kde ho služba nabízí."],
+    ["Zařízení a relace","Odhlas ta, která už nepoužíváš."],
+    ["Záložní obnova","Aktuální telefon a záložní e-mail u hlavních účtů."]
+  ];
+  var done={};
+  checks.forEach(function(c,i){
+    var b=el("button","chk","<b>"+c[0]+"</b><span>"+c[1]+"</span>");
+    b.addEventListener("click",function(){
+      if(done[i])delete done[i];else done[i]=1;
+      b.classList.toggle("is-done",!!done[i]);
+      var n=Object.keys(done).length;
+      $("chkCount").textContent="Hotovo "+n+" z "+checks.length+(n===checks.length?". Máš líp zabezpečeno než většina lidí.":"");
+      $("chkBar").style.width=(n/checks.length*100)+"%";
+    });
+    $("checks").appendChild(b);
+  });
+
+  /* ---- kopírování kódu ---- */
+  Array.prototype.forEach.call(document.querySelectorAll("button.copy"),function(b){
+    b.addEventListener("click",function(){
+      var src=document.getElementById(b.dataset["for"]);if(!src)return;
+      var text=src.textContent;
+      function ok(){b.textContent="Zkopírováno";setTimeout(function(){b.textContent="Kopírovat";},1600);}
+      function fallback(){
+        var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+        document.body.appendChild(ta);ta.select();
+        try{if(document.execCommand("copy"))ok();}catch(e){}
+        document.body.removeChild(ta);
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fallback);}else{fallback();}
+    });
+  });
+
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Školní databáze v SQLite</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Příprava</li>
+    <li><a href="#nastroj">Co nainstalovat</a></li>
+    <li><a href="#databaze">Vytvoř databázi</a></li>
+    <li><a href="#schema">Prohlédni si ji</a></li>
+    <li class="grp">Dotazy</li>
+    <li><a href="#d1">1. Všechno z tabulky</a></li>
+    <li><a href="#d2">2. Vyber řádky</a></li>
+    <li><a href="#d3">3. Seřaď</a></li>
+    <li><a href="#d4">4. Hledej v textu</a></li>
+    <li><a href="#d5">5. Chybějící hodnoty</a></li>
+    <li><a href="#d6">6. Spočítej</a></li>
+    <li><a href="#d7">7. Spoj dvě tabulky</a></li>
+    <li><a href="#d8">8. Spoj tři tabulky</a></li>
+    <li><a href="#d9">9. Seskup</a></li>
+    <li><a href="#d10">10. Kdo nemá známku</a></li>
+    <li class="grp">Změny</li>
+    <li><a href="#zmeny">Vlož, změň, smaž</a></li>
+    <li><a href="#hlidani">Databáze hlídá data</a></li>
+    <li><a href="#struktura">Změň strukturu</a></li>
+    <li class="grp">Samostatně</li>
+    <li><a href="#ukoly">Úkoly</a></li>
+    <li><a href="#navrh">Navrhni tabulky</a></li>
+    <li class="grp">Další</li>
+    <li><a href="#python">Totéž v Pythonu</a></li>
+    <li><a href="#chyby">Když něco nefunguje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 11 · Praktická ukázka</p>
+  <h1>Školní databáze v SQLite <span class="t">na vlastním počítači</span></h1>
+  <p class="lead">Postavíš si malou databázi školy se třídami, studenty, předměty a známkami a vyzkoušíš na ní všechno z prezentace: SELECT, WHERE, ORDER BY, GROUP BY, JOIN, INSERT, UPDATE, DELETE i to, jak databáze sama hlídá správnost dat. U každého dotazu si můžeš rozbalit, co přesně má vyjít.</p>
+  <div class="must">
+    <h2>Po ukázce bys měl umět</h2>
+    <ul>
+      <li>vytvořit databázi a spustit v ní skript SQL</li>
+      <li>napsat SELECT s WHERE, ORDER BY a LIMIT</li>
+      <li>použít LIKE, IS NULL a agregační funkce</li>
+      <li>spojit tabulky pomocí JOIN a LEFT JOIN</li>
+      <li>seskupit řádky přes GROUP BY a HAVING</li>
+      <li>vložit, změnit a smazat záznam</li>
+      <li>vysvětlit chyby, kterými databáze odmítne špatná data</li>
+      <li>navrhnout vlastní tabulky s klíči</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Příprava</p>
+
+<section id="nastroj">
+<h2>Co nainstalovat</h2>
+<p>Použijeme <strong>SQLite</strong>: celá databáze je jeden soubor na disku a nepotřebuje žádný server. K ní program s oknem, ve kterém se píše SQL a hned je vidět výsledek.</p>
+<ol>
+  <li>Otevři <a href="https://sqlitebrowser.org/dl/" target="_blank" rel="noopener">sqlitebrowser.org/dl</a> a stáhni <strong>DB Browser for SQLite</strong>. Na Windows zvol <em>Standard installer for 64-bit Windows</em>, nebo verzi <em>.zip (no installer)</em>, pokud nemáš práva instalovat programy. Je zdarma a s otevřeným kódem, existuje i pro macOS a Linux.</li>
+  <li>Program spusť. Ovládání je anglicky, názvy tlačítek proto uvádíme anglicky.</li>
+</ol>
+<div class="note tip"><b class="lbl">Nechceš nic instalovat?</b><p>Python má SQLite v sobě. Postup je na konci v části <a href="#python">Totéž v Pythonu</a>.</p></div>
+</section>
+
+<section id="databaze">
+<h2>Vytvoř databázi</h2>
+<ol>
+  <li>Klikni na <strong>New Database</strong> a ulož soubor jako <code>skola.db</code>, třeba do složky Dokumenty.</li>
+  <li>Otevře se okno pro návrh tabulky. Zavři ho tlačítkem <strong>Cancel</strong>, tabulky vytvoří skript.</li>
+  <li>Přepni na záložku <strong>Execute SQL</strong>.</li>
+  <li>Zkopíruj celý skript níže (tlačítko <em>Kopírovat</em>) a vlož ho do okna. Nebo si stáhni soubor <a href="11_skola.sql" download>11_skola.sql</a> a otevři ho tlačítkem <strong>Open SQL file</strong>.</li>
+  <li>Spusť ho klávesou <kbd>F5</kbd> (nebo <kbd>Ctrl</kbd> + <kbd>Enter</kbd>). Dole se má objevit hláška, že se příkazy provedly bez chyby.</li>
+  <li>Ulož změny: <strong>Write Changes</strong> (<kbd>Ctrl</kbd> + <kbd>S</kbd>).</li>
+</ol>
+<div class="note warn"><b class="lbl">Write Changes</b><p>DB Browser drží změny, dokud je nepotvrdíš. Když program zavřeš bez <strong>Write Changes</strong>, zeptá se, jestli je uložit. Na to pamatuj u každého INSERT, UPDATE a DELETE.</p></div>
+<div class="codehead"><span>Skript 11_skola.sql</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">-- Školní databáze pro maturitní otázku 11: Databáze a základy SQL
+-- Spusť celý skript najednou. Smaže staré tabulky a vytvoří je znovu s daty.
+-- Kontrolu cizích klíčů má DB Browser for SQLite zapnutou sám,
+-- v Pythonu ji zapni příkazem PRAGMA foreign_keys = ON.
+
+DROP TABLE IF EXISTS znamky;
+DROP TABLE IF EXISTS studenti;
+DROP TABLE IF EXISTS predmety;
+DROP TABLE IF EXISTS tridy;
+
+CREATE TABLE tridy (
+  id      INTEGER PRIMARY KEY,
+  nazev   VARCHAR(10) NOT NULL UNIQUE,
+  rocnik  INTEGER NOT NULL CHECK (rocnik BETWEEN 1 AND 4)
+);
+
+CREATE TABLE studenti (
+  id        INTEGER PRIMARY KEY,
+  jmeno     VARCHAR(40) NOT NULL,
+  prijmeni  VARCHAR(40) NOT NULL,
+  narozen   DATE,
+  email     VARCHAR(80) UNIQUE,
+  trida_id  INTEGER NOT NULL REFERENCES tridy(id)
+);
+
+CREATE TABLE predmety (
+  id       INTEGER PRIMARY KEY,
+  nazev    VARCHAR(40) NOT NULL,
+  zkratka  VARCHAR(5) NOT NULL UNIQUE
+);
+
+CREATE TABLE znamky (
+  id          INTEGER PRIMARY KEY,
+  student_id  INTEGER NOT NULL REFERENCES studenti(id),
+  predmet_id  INTEGER NOT NULL REFERENCES predmety(id),
+  znamka      INTEGER NOT NULL CHECK (znamka BETWEEN 1 AND 5),
+  vaha        INTEGER NOT NULL DEFAULT 1,
+  datum       DATE NOT NULL
+);
+
+INSERT INTO tridy (id, nazev, rocnik) VALUES
+  (1, '1.A', 1),
+  (2, '2.A', 2),
+  (3, '3.B', 3);
+
+INSERT INTO studenti (id, jmeno, prijmeni, narozen, email, trida_id) VALUES
+  (1,  'Adam',    'Novák',      '2010-03-14', 'adam.novak@skola.example',      1),
+  (2,  'Eliška',  'Svobodová',  '2010-07-02', 'eliska.svobodova@skola.example', 1),
+  (3,  'Tomáš',   'Dvořák',     '2009-11-23', NULL,                            1),
+  (4,  'Klára',   'Černá',      '2010-01-30', 'klara.cerna@skola.example',     1),
+  (5,  'Jakub',   'Procházka',  '2009-05-17', 'jakub.prochazka@skola.example', 2),
+  (6,  'Natálie', 'Kučerová',   '2009-09-08', 'natalie.kucerova@skola.example', 2),
+  (7,  'Matěj',   'Veselý',     '2008-12-01', NULL,                            2),
+  (8,  'Tereza',  'Horáková',   '2009-02-19', 'tereza.horakova@skola.example', 2),
+  (9,  'Ondřej',  'Marek',      '2008-04-11', 'ondrej.marek@skola.example',    3),
+  (10, 'Barbora', 'Pokorná',    '2008-08-25', 'barbora.pokorna@skola.example', 3),
+  (11, 'Vojtěch', 'Král',       '2007-10-05', 'vojtech.kral@skola.example',    3),
+  (12, 'Anna',    'Němcová',    '2008-06-12', NULL,                            3);
+
+INSERT INTO predmety (id, nazev, zkratka) VALUES
+  (1, 'Matematika',  'M'),
+  (2, 'Český jazyk', 'ČJ'),
+  (3, 'Informatika', 'IVT'),
+  (4, 'Fyzika',      'F');
+
+INSERT INTO znamky (student_id, predmet_id, znamka, vaha, datum) VALUES
+  (1, 1, 2, 2, '2026-09-18'), (1, 3, 1, 1, '2026-09-25'), (1, 2, 3, 1, '2026-10-02'),
+  (2, 1, 1, 2, '2026-09-18'), (2, 3, 1, 1, '2026-09-25'), (2, 2, 1, 2, '2026-10-09'),
+  (3, 1, 4, 2, '2026-09-18'), (3, 3, 2, 1, '2026-09-25'), (3, 4, 3, 1, '2026-10-06'),
+  (4, 1, 3, 2, '2026-09-18'), (4, 2, 2, 1, '2026-10-02'),
+  (5, 1, 2, 1, '2026-09-16'), (5, 3, 1, 2, '2026-10-01'), (5, 4, 2, 1, '2026-10-13'),
+  (6, 1, 1, 1, '2026-09-16'), (6, 2, 2, 1, '2026-09-30'), (6, 4, 1, 1, '2026-10-13'),
+  (7, 1, 5, 1, '2026-09-16'), (7, 3, 3, 2, '2026-10-01'), (7, 1, 3, 2, '2026-10-20'),
+  (8, 2, 1, 2, '2026-09-30'), (8, 3, 2, 2, '2026-10-01'),
+  (9, 1, 2, 2, '2026-09-22'), (9, 3, 1, 1, '2026-10-07'), (9, 4, 2, 1, '2026-10-14'),
+  (10, 1, 1, 2, '2026-09-22'), (10, 2, 2, 1, '2026-10-05'), (10, 3, 1, 1, '2026-10-07'),
+  (11, 1, 3, 2, '2026-09-22'), (11, 3, 1, 2, '2026-10-07'), (11, 4, 4, 1, '2026-10-14');
+-- Anna Němcová (id 12) zatím nemá žádnou známku. Hodí se u LEFT JOIN.
+</code></pre>
+<p>Skript je možné spustit kdykoli znovu. Nejdřív smaže staré tabulky (<code>DROP TABLE IF EXISTS</code>), takže databáze bude zase v původním stavu.</p>
+</section>
+
+<section id="schema">
+<h2>Prohlédni si ji</h2>
+<p>Na záložce <strong>Database Structure</strong> uvidíš čtyři tabulky a jejich sloupce s typy. Na záložce <strong>Browse Data</strong> si vyber tabulku a projdi data.</p>
+<pre><code>tridy (1) ───&lt; (N) studenti (1) ───&lt; (N) znamky (N) &gt;─── (1) predmety</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Tabulka</th><th>Co obsahuje</th><th>Klíče</th></tr></thead>
+<tbody>
+<tr><td><code>tridy</code></td><td>3 třídy: 1.A, 2.A, 3.B</td><td>primární <code>id</code></td></tr>
+<tr><td><code>studenti</code></td><td>12 studentů, třem chybí e-mail</td><td>primární <code>id</code>, cizí <code>trida_id</code> → <code>tridy.id</code></td></tr>
+<tr><td><code>predmety</code></td><td>4 předměty: M, ČJ, IVT, F</td><td>primární <code>id</code></td></tr>
+<tr><td><code>znamky</code></td><td>31 známek, každá s váhou a datem</td><td>primární <code>id</code>, cizí <code>student_id</code> a <code>predmet_id</code></td></tr>
+</tbody></table></div>
+<p>Na otázky si odpověz z dat: Jaký vztah je mezi třídami a studenty? Proč známky nejsou přímo v tabulce studentů? Odpověď: 1 : N a M : N. Student má mnoho předmětů a předmět mnoho studentů, proto je tu spojovací tabulka <code>znamky</code>.</p>
+</section>
+
+<p class="part">Dotazy</p>
+<p>Každý dotaz napiš (nebo zkopíruj) do záložky <strong>Execute SQL</strong> a spusť. Když je v okně víc dotazů, <kbd>Shift</kbd> + <kbd>F5</kbd> spustí jen ten, na kterém stojí kurzor. Výsledek se objeví v tabulce pod editorem.</p>
+<section id="d1">
+<h2>1. Všechno z tabulky</h2>
+<p>Hvězdička znamená všechny sloupce.</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT * FROM tridy;</code></pre>
+<details class="q"><summary>Co uvidíš (3 řádky)</summary><div class="a"><div class="tbl"><table><thead><tr><th>id</th><th>nazev</th><th>rocnik</th></tr></thead><tbody><tr><td>1</td><td>1.A</td><td>1</td></tr><tr><td>2</td><td>2.A</td><td>2</td></tr><tr><td>3</td><td>3.B</td><td>3</td></tr></tbody></table></div></div></details>
+</section>
+<section id="d2">
+<h2>2. Vyber řádky: WHERE</h2>
+<p>Jména a data narození studentů třídy s <code>id</code> 2. <code>SELECT</code> vybírá sloupce, <code>WHERE</code> řádky.</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT jmeno, prijmeni, narozen
+FROM studenti
+WHERE trida_id = 2;</code></pre>
+<details class="q"><summary>Co uvidíš (4 řádky)</summary><div class="a"><div class="tbl"><table><thead><tr><th>jmeno</th><th>prijmeni</th><th>narozen</th></tr></thead><tbody><tr><td>Jakub</td><td>Procházka</td><td>2009-05-17</td></tr><tr><td>Natálie</td><td>Kučerová</td><td>2009-09-08</td></tr><tr><td>Matěj</td><td>Veselý</td><td>2008-12-01</td></tr><tr><td>Tereza</td><td>Horáková</td><td>2009-02-19</td></tr></tbody></table></div></div></details>
+<p><strong>Zkus:</strong> změň podmínku na <code>trida_id = 2 AND narozen &lt; '2009-06-01'</code>. Kdo zbude?</p>
+</section>
+<section id="d3">
+<h2>3. Seřaď: ORDER BY a LIMIT</h2>
+<p>Tři nejstarší studenti. Data ve tvaru rok-měsíc-den se řadí správně i jako text.</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT jmeno, prijmeni, narozen
+FROM studenti
+ORDER BY narozen
+LIMIT 3;</code></pre>
+<details class="q"><summary>Co uvidíš (3 řádky)</summary><div class="a"><div class="tbl"><table><thead><tr><th>jmeno</th><th>prijmeni</th><th>narozen</th></tr></thead><tbody><tr><td>Vojtěch</td><td>Král</td><td>2007-10-05</td></tr><tr><td>Ondřej</td><td>Marek</td><td>2008-04-11</td></tr><tr><td>Anna</td><td>Němcová</td><td>2008-06-12</td></tr></tbody></table></div></div></details>
+<p><strong>Zkus:</strong> přidej za <code>narozen</code> slovo <code>DESC</code>. Dostaneš tři nejmladší.</p>
+</section>
+<section id="d4">
+<h2>4. Hledej v textu: LIKE</h2>
+<p><code>%</code> znamená „cokoli“, <code>_</code> právě jeden znak. Hledáme příjmení končící na „ová“.</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT jmeno, prijmeni
+FROM studenti
+WHERE prijmeni LIKE '%ová';</code></pre>
+<details class="q"><summary>Co uvidíš (4 řádky)</summary><div class="a"><div class="tbl"><table><thead><tr><th>jmeno</th><th>prijmeni</th></tr></thead><tbody><tr><td>Eliška</td><td>Svobodová</td></tr><tr><td>Natálie</td><td>Kučerová</td></tr><tr><td>Tereza</td><td>Horáková</td></tr><tr><td>Anna</td><td>Němcová</td></tr></tbody></table></div></div></details>
+<p><strong>Zkus:</strong> studenty, jejichž jméno začíná na T: <code>WHERE jmeno LIKE 'T%'</code>.</p>
+</section>
+<section id="d5">
+<h2>5. Chybějící hodnoty: IS NULL</h2>
+<p>Kdo nemá zadaný e-mail?</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT jmeno, prijmeni
+FROM studenti
+WHERE email IS NULL;</code></pre>
+<details class="q"><summary>Co uvidíš (3 řádky)</summary><div class="a"><div class="tbl"><table><thead><tr><th>jmeno</th><th>prijmeni</th></tr></thead><tbody><tr><td>Tomáš</td><td>Dvořák</td></tr><tr><td>Matěj</td><td>Veselý</td></tr><tr><td>Anna</td><td>Němcová</td></tr></tbody></table></div></div></details>
+<p><strong>Zkus:</strong> přepiš podmínku na <code>WHERE email = NULL</code>. Nevrátí se nic, protože porovnání s NULL nikdy neplatí.</p>
+</section>
+<section id="d6">
+<h2>6. Spočítej: agregační funkce</h2>
+<p>Počet všech známek, průměr, nejlepší a nejhorší. <code>AS</code> pojmenuje sloupec výsledku.</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT COUNT(*) AS pocet_znamek,
+       AVG(znamka) AS prumer,
+       MIN(znamka) AS nejlepsi,
+       MAX(znamka) AS nejhorsi
+FROM znamky;</code></pre>
+<details class="q"><summary>Co uvidíš (1 řádek)</summary><div class="a"><div class="tbl"><table><thead><tr><th>pocet_znamek</th><th>prumer</th><th>nejlepsi</th><th>nejhorsi</th></tr></thead><tbody><tr><td>31</td><td>2.032258064516129</td><td>1</td><td>5</td></tr></tbody></table></div><p>Průměr má spoustu desetinných míst. Zaokrouhlí ho <code>ROUND(AVG(znamka), 2)</code>.</p></div></details>
+</section>
+<section id="d7">
+<h2>7. Spoj dvě tabulky: JOIN</h2>
+<p>V tabulce studentů je jen číslo třídy. Název přidá <code>JOIN</code>: ke každému studentovi připojí řádek třídy, jejíž <code>id</code> se rovná jeho <code>trida_id</code>.</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT studenti.jmeno, studenti.prijmeni, tridy.nazev AS trida
+FROM studenti
+JOIN tridy ON studenti.trida_id = tridy.id
+WHERE tridy.rocnik = 3;</code></pre>
+<details class="q"><summary>Co uvidíš (4 řádky)</summary><div class="a"><div class="tbl"><table><thead><tr><th>jmeno</th><th>prijmeni</th><th>trida</th></tr></thead><tbody><tr><td>Ondřej</td><td>Marek</td><td>3.B</td></tr><tr><td>Barbora</td><td>Pokorná</td><td>3.B</td></tr><tr><td>Vojtěch</td><td>Král</td><td>3.B</td></tr><tr><td>Anna</td><td>Němcová</td><td>3.B</td></tr></tbody></table></div></div></details>
+</section>
+<section id="d8">
+<h2>8. Spoj tři tabulky</h2>
+<p>Všechny známky z matematiky se jménem studenta. Spojovací tabulka <code>znamky</code> drží jen čísla, jména dodají dva JOINy. Přezdívky <code>z</code>, <code>s</code>, <code>p</code> zkracují zápis.</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT s.prijmeni, p.nazev AS predmet, z.znamka, z.datum
+FROM znamky AS z
+JOIN studenti AS s ON z.student_id = s.id
+JOIN predmety AS p ON z.predmet_id = p.id
+WHERE p.zkratka = 'M'
+ORDER BY z.znamka, s.prijmeni;</code></pre>
+<details class="q"><summary>Co uvidíš (11 řádků)</summary><div class="a"><div class="tbl"><table><thead><tr><th>prijmeni</th><th>predmet</th><th>znamka</th><th>datum</th></tr></thead><tbody><tr><td>Kučerová</td><td>Matematika</td><td>1</td><td>2026-09-16</td></tr><tr><td>Pokorná</td><td>Matematika</td><td>1</td><td>2026-09-22</td></tr><tr><td>Svobodová</td><td>Matematika</td><td>1</td><td>2026-09-18</td></tr><tr><td>Marek</td><td>Matematika</td><td>2</td><td>2026-09-22</td></tr><tr><td>Novák</td><td>Matematika</td><td>2</td><td>2026-09-18</td></tr><tr><td>Procházka</td><td>Matematika</td><td>2</td><td>2026-09-16</td></tr><tr><td>Král</td><td>Matematika</td><td>3</td><td>2026-09-22</td></tr><tr><td>Veselý</td><td>Matematika</td><td>3</td><td>2026-10-20</td></tr><tr><td>Černá</td><td>Matematika</td><td>3</td><td>2026-09-18</td></tr><tr><td>Dvořák</td><td>Matematika</td><td>4</td><td>2026-09-18</td></tr><tr><td>Veselý</td><td>Matematika</td><td>5</td><td>2026-09-16</td></tr></tbody></table></div><p>Všimni si, že u trojek je Černá až za Veselým. SQLite řadí text podle kódů znaků v Unicode a Č má vyšší kód než všechna písmena bez diakritiky. Databázové servery umí řadit česky podle nastavené <em>collation</em>.</p></div></details>
+</section>
+<section id="d9">
+<h2>9. Seskup: GROUP BY a HAVING</h2>
+<p>Kolik studentů chodí do každé třídy:</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT t.nazev AS trida, COUNT(*) AS pocet_studentu
+FROM studenti AS s
+JOIN tridy AS t ON s.trida_id = t.id
+GROUP BY t.nazev;</code></pre>
+<details class="q"><summary>Co uvidíš (3 řádky)</summary><div class="a"><div class="tbl"><table><thead><tr><th>trida</th><th>pocet_studentu</th></tr></thead><tbody><tr><td>1.A</td><td>4</td></tr><tr><td>2.A</td><td>4</td></tr><tr><td>3.B</td><td>4</td></tr></tbody></table></div></div></details>
+<p>Studenti s průměrem nejvýš 1,5. <code>HAVING</code> filtruje až hotové skupiny, proto v něm smí být <code>AVG</code>:</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT s.jmeno, s.prijmeni, ROUND(AVG(z.znamka), 2) AS prumer
+FROM studenti AS s
+JOIN znamky AS z ON z.student_id = s.id
+GROUP BY s.id
+HAVING AVG(z.znamka) &lt;= 1.5
+ORDER BY prumer;</code></pre>
+<details class="q"><summary>Co uvidíš (4 řádky)</summary><div class="a"><div class="tbl"><table><thead><tr><th>jmeno</th><th>prijmeni</th><th>prumer</th></tr></thead><tbody><tr><td>Eliška</td><td>Svobodová</td><td>1.0</td></tr><tr><td>Natálie</td><td>Kučerová</td><td>1.33</td></tr><tr><td>Barbora</td><td>Pokorná</td><td>1.33</td></tr><tr><td>Tereza</td><td>Horáková</td><td>1.5</td></tr></tbody></table></div></div></details>
+</section>
+<section id="d10">
+<h2>10. Kdo nemá známku: LEFT JOIN</h2>
+<p>Obyčejný JOIN vrátí jen studenty, kteří nějakou známku mají. <code>LEFT JOIN</code> vezme všechny studenty a tam, kde známka chybí, doplní NULL. <code>COUNT(z.id)</code> počítá jen hodnoty, které nejsou NULL.</p>
+<div class="codehead"><span>Dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT s.jmeno, s.prijmeni, COUNT(z.id) AS pocet_znamek
+FROM studenti AS s
+LEFT JOIN znamky AS z ON z.student_id = s.id
+GROUP BY s.id
+HAVING COUNT(z.id) = 0;</code></pre>
+<details class="q"><summary>Co uvidíš (1 řádek)</summary><div class="a"><div class="tbl"><table><thead><tr><th>jmeno</th><th>prijmeni</th><th>pocet_znamek</th></tr></thead><tbody><tr><td>Anna</td><td>Němcová</td><td>0</td></tr></tbody></table></div></div></details>
+<p><strong>Zkus:</strong> vyměň <code>LEFT JOIN</code> za <code>JOIN</code>. Výsledek bude prázdný.</p>
+</section>
+<p class="part">Změny</p>
+
+<section id="zmeny">
+<h2>Vlož, změň, smaž</h2>
+<p>Do 1.A přistoupil nový student. Sloupec <code>id</code> nevyplňujeme, databáze mu přidělí další volné číslo.</p>
+<div class="codehead"><span>INSERT</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">INSERT INTO studenti (jmeno, prijmeni, narozen, trida_id)
+VALUES ('Petr', 'Beneš', '2010-04-04', 1);</code></pre>
+<div class="codehead"><span>Kontrola</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">SELECT id, jmeno, prijmeni, email
+FROM studenti
+WHERE prijmeni = 'Beneš';</code></pre>
+<details class="q"><summary>Co uvidíš</summary><div class="a"><div class="tbl"><table><thead><tr><th>id</th><th>jmeno</th><th>prijmeni</th><th>email</th></tr></thead><tbody><tr><td>13</td><td>Petr</td><td>Beneš</td><td><i>NULL</i></td></tr></tbody></table></div><p>E-mail jsme nezadali, proto je NULL.</p></div></details>
+<p>Petr dostal e-mail. Podmínka <code>WHERE</code> určí, kterého řádku se změna týká:</p>
+<div class="codehead"><span>UPDATE</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">UPDATE studenti
+SET email = 'petr.benes@skola.example'
+WHERE id = 13;</code></pre>
+<p>Petr se odstěhoval:</p>
+<div class="codehead"><span>DELETE</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">DELETE FROM studenti
+WHERE id = 13;</code></pre>
+<p>Po každém kroku spusť znovu kontrolní <code>SELECT</code>. Po smazání nevrátí nic. Nakonec změny ulož přes <strong>Write Changes</strong>.</p>
+<div class="note warn"><b class="lbl">Bez WHERE to platí pro všechny</b><p><code>UPDATE studenti SET trida_id = 1;</code> přesune celou školu do 1.A. Kdyby se ti to stalo, nic neukládej a klikni na <strong>Revert Changes</strong>, nebo spusť znovu celý skript.</p></div>
+</section>
+
+<section id="hlidani">
+<h2>Databáze hlídá data</h2>
+<p>Teď schválně zkus uložit špatná data. Každý příkaz spusť zvlášť a přečti si chybu. Žádný z nich nic nezmění, databáze je odmítne celé.</p>
+<div class="tbl"><table>
+<thead><tr><th>Příkaz</th><th>Chyba</th><th>Proč</th></tr></thead>
+<tbody>
+<tr><td><code>INSERT INTO znamky (student_id, predmet_id, znamka, datum) VALUES (1, 1, 7, '2026-11-04');</code></td><td><code>CHECK constraint failed</code></td><td>doménová integrita: známka musí být 1 až 5</td></tr>
+<tr><td><code>INSERT INTO znamky (student_id, predmet_id, znamka, datum) VALUES (99, 1, 1, '2026-11-04');</code></td><td><code>FOREIGN KEY constraint failed</code></td><td>referenční integrita: student 99 neexistuje</td></tr>
+<tr><td><code>DELETE FROM studenti WHERE id = 1;</code></td><td><code>FOREIGN KEY constraint failed</code></td><td>Adam má známky, které by ukazovaly do prázdna</td></tr>
+<tr><td><code>INSERT INTO studenti (jmeno, prijmeni, email, trida_id) VALUES ('Jan', 'Kopie', 'adam.novak@skola.example', 1);</code></td><td><code>UNIQUE constraint failed: studenti.email</code></td><td>e-mail už má Adam</td></tr>
+<tr><td><code>INSERT INTO studenti (prijmeni, trida_id) VALUES ('Bezjmenný', 1);</code></td><td><code>NOT NULL constraint failed: studenti.jmeno</code></td><td>jméno je povinné</td></tr>
+</tbody></table></div>
+<div class="note tip"><b class="lbl">Prošla známka studentovi 99?</b><p>SQLite kontroluje cizí klíče, jen když je to zapnuté. DB Browser to dělá sám, nastavení najdeš na záložce <strong>Edit Pragmas</strong> pod <strong>Foreign Keys</strong>. Když je vypnuté, zaškrtni ho, ulož a zkus to znovu.</p></div>
+</section>
+
+<section id="struktura">
+<h2>Změň strukturu</h2>
+<p>Škola chce u studentů evidovat telefon. <code>ALTER TABLE</code> přidá sloupec, stávající řádky v něm budou mít NULL:</p>
+<div class="codehead"><span>ALTER TABLE</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-sql">ALTER TABLE studenti ADD COLUMN telefon VARCHAR(20);</code></pre>
+<p>Podívej se na záložku <strong>Database Structure</strong>, nový sloupec tam bude. Proč je telefon <code>VARCHAR</code> a ne <code>INTEGER</code>? Kvůli předvolbě <code>+420</code>, mezerám a úvodním nulám.</p>
+</section>
+
+<p class="part">Samostatně</p>
+
+<section id="ukoly">
+<h2>Úkoly</h2>
+<p>Napiš dotaz sám. Řešení si rozbal, až když ti dotaz funguje, nebo když opravdu nevíš dál. Tvoje řešení může vypadat jinak a být správně: rozhoduje výsledek.</p>
+<h3>Úkol 1: Průměr z každého předmětu</h3>
+<p>Vypiš názvy předmětů a průměrnou známku zaokrouhlenou na dvě místa, od nejlepšího předmětu.</p>
+<details class="q"><summary>Řešení</summary><div class="a"><pre><code class="language-sql">SELECT p.nazev, ROUND(AVG(z.znamka), 2) AS prumer
+FROM znamky AS z
+JOIN predmety AS p ON z.predmet_id = p.id
+GROUP BY p.id
+ORDER BY prumer;</code></pre><div class="tbl"><table><thead><tr><th>nazev</th><th>prumer</th></tr></thead><tbody><tr><td>Informatika</td><td>1.44</td></tr><tr><td>Český jazyk</td><td>1.83</td></tr><tr><td>Fyzika</td><td>2.4</td></tr><tr><td>Matematika</td><td>2.45</td></tr></tbody></table></div></div></details>
+<h3>Úkol 2: Čtyřky a pětky</h3>
+<p>Kdo dostal čtyřku nebo pětku, z jakého předmětu a kdy?</p>
+<details class="q"><summary>Řešení</summary><div class="a"><pre><code class="language-sql">SELECT s.jmeno, s.prijmeni, p.nazev, z.datum
+FROM znamky AS z
+JOIN studenti AS s ON z.student_id = s.id
+JOIN predmety AS p ON z.predmet_id = p.id
+WHERE z.znamka &gt;= 4;</code></pre><div class="tbl"><table><thead><tr><th>jmeno</th><th>prijmeni</th><th>nazev</th><th>datum</th></tr></thead><tbody><tr><td>Tomáš</td><td>Dvořák</td><td>Matematika</td><td>2026-09-18</td></tr><tr><td>Matěj</td><td>Veselý</td><td>Matematika</td><td>2026-09-16</td></tr><tr><td>Vojtěch</td><td>Král</td><td>Fyzika</td><td>2026-10-14</td></tr></tbody></table></div></div></details>
+<h3>Úkol 3: Narození v roce 2009</h3>
+<p>Studenti narození v roce 2009, seřazení podle data narození.</p>
+<details class="q"><summary>Řešení</summary><div class="a"><p>Jde to i přes <code>LIKE '2009-%'</code>.</p><pre><code class="language-sql">SELECT jmeno, prijmeni, narozen
+FROM studenti
+WHERE narozen BETWEEN '2009-01-01' AND '2009-12-31'
+ORDER BY narozen;</code></pre><div class="tbl"><table><thead><tr><th>jmeno</th><th>prijmeni</th><th>narozen</th></tr></thead><tbody><tr><td>Tereza</td><td>Horáková</td><td>2009-02-19</td></tr><tr><td>Jakub</td><td>Procházka</td><td>2009-05-17</td></tr><tr><td>Natálie</td><td>Kučerová</td><td>2009-09-08</td></tr><tr><td>Tomáš</td><td>Dvořák</td><td>2009-11-23</td></tr></tbody></table></div></div></details>
+<h3>Úkol 4: Nejlepší třída</h3>
+<p>Průměrná známka každé třídy (podle názvu třídy), od nejlepší.</p>
+<details class="q"><summary>Řešení</summary><div class="a"><p>Tady jsou potřeba tři tabulky: známka zná studenta, student zná třídu.</p><pre><code class="language-sql">SELECT t.nazev AS trida, ROUND(AVG(z.znamka), 2) AS prumer
+FROM znamky AS z
+JOIN studenti AS s ON z.student_id = s.id
+JOIN tridy AS t ON s.trida_id = t.id
+GROUP BY t.id
+ORDER BY prumer;</code></pre><div class="tbl"><table><thead><tr><th>trida</th><th>prumer</th></tr></thead><tbody><tr><td>3.B</td><td>1.89</td></tr><tr><td>1.A</td><td>2.09</td></tr><tr><td>2.A</td><td>2.09</td></tr></tbody></table></div></div></details>
+<h3>Úkol 5: Vážený průměr</h3>
+<p>Každá známka má váhu (1 nebo 2). Spočítej vážený průměr každého studenta a vypiš tři nejlepší. Vážený průměr = součet (známka × váha) / součet vah.</p>
+<details class="q"><summary>Řešení</summary><div class="a"><p>Násobení <code>* 1.0</code> je důležité: dělení dvou celých čísel by v SQLite dalo celé číslo a desetinná část by se ztratila.</p><pre><code class="language-sql">SELECT s.jmeno, s.prijmeni,
+       ROUND(SUM(z.znamka * z.vaha) * 1.0 / SUM(z.vaha), 2) AS vazeny_prumer
+FROM studenti AS s
+JOIN znamky AS z ON z.student_id = s.id
+GROUP BY s.id
+ORDER BY vazeny_prumer
+LIMIT 3;</code></pre><div class="tbl"><table><thead><tr><th>jmeno</th><th>prijmeni</th><th>vazeny_prumer</th></tr></thead><tbody><tr><td>Eliška</td><td>Svobodová</td><td>1.0</td></tr><tr><td>Barbora</td><td>Pokorná</td><td>1.25</td></tr><tr><td>Natálie</td><td>Kučerová</td><td>1.33</td></tr></tbody></table></div></div></details>
+</section>
+
+<section id="navrh">
+<h2>Navrhni tabulky: kroužky</h2>
+<p>Škola nabízí kroužky (robotika, fotbal, šachy). Každý kroužek má název, vedoucího a den v týdnu. Student může chodit do víc kroužků a kroužek má víc studentů.</p>
+<ol>
+  <li>Jaký vztah je mezi studenty a kroužky?</li>
+  <li>Navrhni tabulky se sloupci, typy a klíči a napiš je jako <code>CREATE TABLE</code>.</li>
+  <li>Vlož tři kroužky a zapiš do nich pár studentů.</li>
+  <li>Napiš dotaz, který vypíše kroužky a počet studentů v každém.</li>
+</ol>
+<details class="q"><summary>Jedno možné řešení</summary><div class="a"><p>Vztah je M : N, proto potřebuješ spojovací tabulku. Složený primární klíč zajistí, že student nebude v jednom kroužku zapsaný dvakrát.</p>
+<pre><code class="language-sql">CREATE TABLE krouzky (
+  id       INTEGER PRIMARY KEY,
+  nazev    VARCHAR(40) NOT NULL UNIQUE,
+  vedouci  VARCHAR(60) NOT NULL,
+  den      VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE clenstvi (
+  student_id  INTEGER NOT NULL REFERENCES studenti(id),
+  krouzek_id  INTEGER NOT NULL REFERENCES krouzky(id),
+  PRIMARY KEY (student_id, krouzek_id)
+);
+
+INSERT INTO krouzky (nazev, vedouci, den) VALUES
+  ('Robotika', 'Mgr. Kovář', 'pondělí'),
+  ('Fotbal',   'Bc. Rychlý', 'středa'),
+  ('Šachy',    'Ing. Věžová', 'čtvrtek');
+
+INSERT INTO clenstvi (student_id, krouzek_id) VALUES
+  (1, 1), (2, 1), (5, 1), (3, 2), (7, 2), (9, 3);
+
+SELECT k.nazev, COUNT(c.student_id) AS pocet
+FROM krouzky AS k
+LEFT JOIN clenstvi AS c ON c.krouzek_id = k.id
+GROUP BY k.id
+ORDER BY pocet DESC;</code></pre></div></details>
+</section>
+
+<p class="part">Další</p>
+
+<section id="python">
+<h2>Totéž v Pythonu</h2>
+<p>Python obsahuje modul <code>sqlite3</code>, takže nic dalšího instalovat nemusíš. Ulož si do jedné složky soubor <a href="11_skola.sql" download>11_skola.sql</a> a vedle něj tenhle program jako <code>spust.py</code>. Spusť ho v terminálu ve stejné složce příkazem <code>python spust.py</code>.</p>
+<div class="codehead"><span>spust.py</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">import sqlite3
+
+con = sqlite3.connect("skola.db")           # otevře soubor, nebo ho vytvoří
+con.execute("PRAGMA foreign_keys = ON")     # zapne kontrolu cizích klíčů
+
+with open("11_skola.sql", encoding="utf-8") as f:
+    con.executescript(f.read())             # vytvoří tabulky a vloží data
+
+dotaz = """
+SELECT jmeno, prijmeni, narozen
+FROM studenti
+WHERE trida_id = 2
+"""
+for radek in con.execute(dotaz):
+    print(radek)
+
+con.commit()                                # uloží změny do souboru
+con.close()
+</code></pre>
+<details class="q"><summary>Co uvidíš</summary><div class="a"><pre><code>('Jakub', 'Procházka', '2009-05-17')
+('Natálie', 'Kučerová', '2009-09-08')
+('Matěj', 'Veselý', '2008-12-01')
+('Tereza', 'Horáková', '2009-02-19')</code></pre></div></details>
+<p>Program vytvoří vedle sebe soubor <code>skola.db</code>. Ten jde otevřít i v DB Browseru. Další dotazy zkoušej tak, že přepíšeš text v proměnné <code>dotaz</code>. Pokud dotaz obsahuje hodnotu od uživatele, nikdy ji do textu nelep, použij zástupný znak:</p>
+<div class="codehead"><span>Parametrizovaný dotaz</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmeno = input("Příjmení: ")
+for radek in con.execute("SELECT * FROM studenti WHERE prijmeni = ?", (jmeno,)):
+    print(radek)</code></pre>
+<p>Proč na tom záleží, vysvětluje část o SQL injection ve <a href="11_databaze_studijni_text.html#injection">studijním textu</a>.</p>
+</section>
+
+<section id="chyby">
+<h2>Když něco nefunguje</h2>
+<div class="tbl"><table>
+<thead><tr><th>Hláška nebo problém</th><th>Příčina a řešení</th></tr></thead>
+<tbody>
+<tr><td><code>no such table: student</code></td><td>Překlep v názvu tabulky (správně <code>studenti</code>), nebo se skript ještě nespustil.</td></tr>
+<tr><td><code>no such column: …</code></td><td>Překlep v názvu sloupce. Názvy jsou bez diakritiky: <code>prijmeni</code>, ne <code>příjmení</code>.</td></tr>
+<tr><td><code>near "…": syntax error</code></td><td>Chyba v zápisu těsně u uvedeného slova: chybějící čárka mezi sloupci, středník uprostřed dotazu, špatné pořadí částí.</td></tr>
+<tr><td><code>ambiguous column name: id</code></td><td>Sloupec <code>id</code> je ve víc spojených tabulkách. Napiš, ze které: <code>s.id</code>.</td></tr>
+<tr><td>Text v uvozovkách nefunguje</td><td>Texty patří do jednoduchých apostrofů <code>'Novák'</code>. Dvojité uvozovky jsou v SQL pro názvy sloupců.</td></tr>
+<tr><td>Po zavření zmizely změny</td><td>Chybělo <strong>Write Changes</strong>. Spusť skript nebo příkazy znovu a ulož.</td></tr>
+<tr><td><code>database is locked</code></td><td>Databázi má otevřenou jiný program (třeba druhé okno DB Browseru nebo běžící Python). Zavři ho.</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="foot">Praktická ukázka k maturitní otázce 11 „Databáze a základy SQL“. Teorie je ve <a href="11_databaze_studijni_text.html">studijním textu</a>, přehled v <a href="11_databaze.html">prezentaci</a>.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
+    });
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

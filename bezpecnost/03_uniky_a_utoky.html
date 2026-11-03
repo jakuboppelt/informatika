@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Úniky a útoky</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Bezpečnost · 3. materiál</div>
+        <h1>Úniky a útoky</h1>
+        <p class="lede">Jak se hesla a data dostanou do cizích rukou, co je RCE a DDoS a jak se tomu bránit. Pracujeme se skutečnými, veřejně zdokumentovanými případy. Bez návodů k útokům.</p>
+      </div>
+    </section>
+
+    <section class="slide pause-slide" data-index="1"><div class="slide-inner">
+      <div class="qmark">?</div>
+      <h2>Jak se vlastně dostane tvoje heslo k cizím lidem?</h2>
+      <p class="lede">Napadá tě víc než jedna cesta? Zkus si je vyjmenovat, než půjdeš dál.</p>
+    </div></section>
+
+    <section class="slide" data-index="2"><div class="slide-inner">
+      <div class="eyebrow">Mapa</div>
+      <h2 class="slide-title">Pět cest k cizím datům</h2>
+      <p class="lede">Útočník si vybere nejlevnější cestu. Ta často nevede přes složité hackování. Klikni na jednotlivé karty.</p>
+      <div class="cards4 cards5" id="wayCards"></div>
+      <div class="panel" id="wayPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="3"><div class="slide-inner">
+      <div class="eyebrow">Anatomie úniku</div>
+      <h2 class="slide-title">Jedna chyba, řetěz důsledků</h2>
+      <div class="chain" id="chain"></div>
+      <div class="panel" id="chainPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="4"><div class="slide-inner">
+      <div class="eyebrow">Co je to hash</div>
+      <h2 class="slide-title">Z textu vznikne otisk, zpátky už ne</h2>
+      <p class="lede">Hash je krátký řetězec, který funkce spočítá z libovolného textu. Napiš cokoli a sleduj, co se děje s výsledkem.</p>
+      <div class="calc-row"><input class="text-in" id="hashIn" type="text" value="heslo123" maxlength="60" autocomplete="off" spellcheck="false" aria-label="Text k zahashování"></div>
+      <div class="panel p-hash">
+        <h3>SHA-256</h3>
+        <div class="quote" id="hashOut">…</div>
+        <p class="note" id="hashLen"></p>
+      </div>
+      <div class="cards4 cards4x4">
+        <div class="tcard"><b>Stejný vstup</b><span>vždy stejný hash</span></div>
+        <div class="tcard"><b>Změna o písmeno</b><span>úplně jiný hash</span></div>
+        <div class="tcard"><b>Stejná délka</b><span>ať je text krátký i dlouhý</span></div>
+        <div class="tcard"><b>Jen jedním směrem</b><span>z hashe se text nespočítá</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="5"><div class="slide-inner">
+      <div class="eyebrow">Skutečné úniky hesel</div>
+      <h2 class="slide-title">Čtyři slavné případy</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Rok · kdo</th><th>Rozsah</th><th>Co se stalo</th></tr></thead>
+          <tbody>
+            <tr><td><b>2009 · RockYou</b></td><td>32 mil. účtů</td><td>Hesla uložená jako prostý text. Seznam se rozšířil po internetu a dodnes slouží jako slovník pro hádání hesel.</td></tr>
+            <tr><td><b>2012 · LinkedIn</b></td><td>6,5 mil. hned, o 4 roky později dalších asi 100 mil.</td><td>Hesla uložená bez soli, proto se dala snadno luštit. Ruský útočník byl v roce 2016 zadržen v Praze.</td></tr>
+            <tr><td><b>2013 · Adobe</b></td><td>kolem 152 mil. účtů</td><td>Hesla zašifrovaná místo zahashovaná, k tomu čitelné nápovědy k heslům.</td></tr>
+            <tr><td><b>2013 · Yahoo</b></td><td>3 miliardy účtů</td><td>Největší známý únik. Zveřejněn až o několik let později.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Společné všem: lidé neměli šanci to ovlivnit. Mohli jen zajistit, že jedno uniklé heslo neotevře další účty.</p>
+    </div></section>
+
+    <section class="slide" data-index="6"><div class="slide-inner">
+      <div class="eyebrow">Jak se hesla ukládají</div>
+      <h2 class="slide-title">Z uniklé databáze se heslo nesmí dát přečíst</h2>
+      <p class="lede">Server si heslo nemá pamatovat. Má si pamatovat jeho hash, ze kterého nejde heslo přímo přečíst.</p>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Způsob uložení</th><th>Co to znamená při úniku</th><th>Hodnocení</th></tr></thead>
+          <tbody>
+            <tr><td><b>Prostý text</b></td><td>Hesla jsou rovnou čitelná.</td><td class="ko">nikdy</td></tr>
+            <tr><td><b>Hash bez soli</b></td><td>Stejné heslo má u všech stejný hash. Útočník zkouší běžná hesla najednou proti všem účtům.</td><td class="ko">špatně</td></tr>
+            <tr><td><b>Hash se solí</b></td><td>Každý uživatel má jiný hash i při stejném hesle, luští se po jednom.</td><td class="ok">lepší</td></tr>
+            <tr><td><b>Pomalý hash se solí</b> (bcrypt, Argon2, PBKDF2)</td><td>Každý pokus trvá dlouho, hádání miliard hesel se prodraží.</td><td class="ok">správně</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Sůl je náhodný text přidaný k heslu před hashováním. Vyzkoušíš si to hned na dalším slidu.</p>
+    </div></section>
+
+    <section class="slide" data-index="7"><div class="slide-inner">
+      <div class="eyebrow">Osolit heslo</div>
+      <h2 class="slide-title">Dva uživatelé, stejné heslo</h2>
+      <p class="lede">Sůl je náhodný text, který se přidá k heslu před hashováním. Každý účet má svou. Zkus změnit heslo nebo vygenerovat novou sůl.</p>
+      <div class="calc-row"><input class="text-in" id="saltIn" type="text" value="heslo123" maxlength="40" autocomplete="off" spellcheck="false" aria-label="Heslo obou uživatelů"><button class="calc-btn" id="saltBtn" type="button">Nová sůl</button></div>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Uživatel</th><th>Sůl</th><th>Uložený hash</th></tr></thead>
+          <tbody id="saltRows"></tbody>
+        </table>
+      </div>
+      <p class="note">Bez soli mají oba stejný hash, útočník ho vidí a zkouší proti oběma najednou. Se solí je každý hash jiný a luští se zvlášť. Sůl není tajná, ukládá se vedle hashe. Pro ukázku je tu rychlý hash SHA-256, skutečné systémy používají pomalé funkce.</p>
+    </div></section>
+
+    <section class="slide" data-index="8"><div class="slide-inner">
+      <div class="eyebrow">Znovupoužité heslo</div>
+      <h2 class="slide-title">Jeden únik otevře i jiné účty</h2>
+      <div class="panel" id="stuffPanel"></div>
+      <div class="seg" id="stuffSeg"></div>
+      <p class="note">Zkontroluj <b>svůj vlastní</b> e-mail na haveibeenpwned.com. Služba ukáže, v kterých známých únicích se objevil.</p>
+    </div></section>
+
+    <section class="slide" data-index="9"><div class="slide-inner">
+      <div class="eyebrow">Chyba v aplikaci</div>
+      <h2 class="slide-title">Data se nesmí splést s příkazem</h2>
+      <p class="lede">Nejstarší trik s databázemi: aplikace slepí text od uživatele s příkazem pro databázi. Pak může uživatelův text změnit smysl příkazu.</p>
+      <div class="compare-grid">
+        <div class="compare-col is-bad">
+          <div class="compare-head">Špatně: vstup se slepí s příkazem</div>
+          <div class="compare-body"><pre class="code wrap">jmeno = input("Jméno: ")
+dotaz = f"SELECT * FROM uzivatele WHERE jmeno = '{jmeno}'"
+cur.execute(dotaz)</pre></div>
+        </div>
+        <div class="compare-col is-good">
+          <div class="compare-head">Správně: vstup je vždy jen hodnota</div>
+          <div class="compare-body"><pre class="code wrap">jmeno = input("Jméno: ")
+cur.execute("SELECT * FROM uzivatele WHERE jmeno = ?", (jmeno,))</pre></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Přirovnání: číšník s lístkem</h3>
+        <p>Host napíše na lístek jméno. Špatný číšník přečte celý lístek jako příkazy, takže ho host přesvědčí i o dalších věcech. Parametrizovaný dotaz je lístek s kolonkou „jméno“: cokoli tam host napíše, zůstane jménem.</p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="10"><div class="slide-inner">
+      <div class="eyebrow">Vzdálené spuštění kódu (RCE)</div>
+      <h2 class="slide-title">Nejhorší možná chyba: cizí kód běží u tebe</h2>
+      <p class="lede">RCE (Remote Code Execution) znamená, že útočník dokáže vzdáleně spustit vlastní kód na cizím serveru. Společný princip: program splete data s příkazem.</p>
+      <div class="chain" id="rceChain"></div>
+      <div class="panel" id="rcePanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="11"><div class="slide-inner">
+      <div class="eyebrow">RCE ve skutečnosti</div>
+      <h2 class="slide-title">Tři případy, které změnily svět</h2>
+      <div class="seg" id="rceSeg"></div>
+      <div class="panel" id="rceCasePanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="12"><div class="slide-inner">
+      <div class="eyebrow">Čerstvý příklad · PHP, 21. 10. 2026</div>
+      <h2 class="slide-title">Takhle to vypadá, když se to děje právě teď</h2>
+      <div class="panel p-php">
+        <h3>Co je veřejně známo</h3>
+        <p>Tým PHP vydal aktualizace, které opravují <b>dvě kritické chyby</b> (hodnocení 9,2 z 10). Mohly by umožnit převzetí serverů dostupných z internetu. PHP běží zhruba na <b>70 % webů</b>, včetně WordPressu.</p>
+        <p>Doporučení: <b>aktualizovat hned</b>. Dočasná nastavení riziko jen snižují, plnou opravu přinese až aktualizace.</p>
+      </div>
+      <div class="panel p-php">
+        <h3>Co si z toho vzít</h3>
+        <p>Technické podrobnosti záměrně neuvádíme. Pro pochopení lekce nejsou potřeba. Podstatné je, že od zveřejnění opravy běží <b>závod</b> mezi správci, kteří záplatují, a útočníky, kteří hledají neopravené servery. Kdo neaktualizuje, je cíl.</p>
+        <p class="note">Stav podle zpravodajství k 24. 10. 2026. Čísla opravených verzí najdeš na php.net a před hodinou si ověř aktuální informace.</p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="13"><div class="slide-inner">
+      <div class="eyebrow">DDoS</div>
+      <h2 class="slide-title">Když nejde o data, ale o dostupnost</h2>
+      <div class="seg" id="ddSeg"></div>
+      <div class="panel" id="ddPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="14"><div class="slide-inner">
+      <div class="eyebrow">Další typy útoků</div>
+      <h2 class="slide-title">Rychlý přehled</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Útok</th><th>Co to je</th><th>Obrana</th></tr></thead>
+          <tbody>
+            <tr><td><b>Ransomware</b></td><td>Zašifruje data a žádá výkupné. Příklad: WannaCry 2017.</td><td>Offline zálohy, záplaty</td></tr>
+            <tr><td><b>Odposlech spojení</b></td><td>Někdo se dostane mezi tebe a server, hlavně na cizí Wi-Fi.</td><td>HTTPS, VPN na veřejných sítích</td></tr>
+            <tr><td><b>Útok přes dodavatele</b></td><td>Chyba nebo škodlivý kód v knihovně či službě, kterou používáš. Příklad: Log4Shell.</td><td>Aktualizace, vědět, co používáš</td></tr>
+            <tr><td><b>Zero-day</b></td><td>Chyba, o které výrobce ještě neví, záplata neexistuje.</td><td>Vrstvy ochrany, minimální oprávnění</td></tr>
+            <tr><td><b>Chyba nastavení nebo člověka</b></td><td>Otevřená databáze, špatná oprávnění, zapomenuté výchozí heslo.</td><td>Kontrola nastavení, minimální oprávnění</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">I v Česku: březen 2020, kybernetický útok na Fakultní nemocnici Brno na začátku pandemie. Metodiky a hlášení incidentů: NÚKIB (nukib.gov.cz).</p>
+    </div></section>
+
+    <section class="slide" data-index="15"><div class="slide-inner">
+      <div class="eyebrow">Obrana v hloubce</div>
+      <h2 class="slide-title">Co zastaví který útok</h2>
+      <p class="lede">Žádná obrana není stoprocentní. Funguje jich víc najednou: když jedna selže, zadrží útočníka další.</p>
+      <div class="seg" id="defSeg"></div>
+      <div class="panel" id="defPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="16"><div class="slide-inner">
+      <div class="eyebrow">Zkus doma</div>
+      <h2 class="slide-title">Hash hesla na tvém počítači</h2>
+      <p class="lede">Spusť v Pythonu na svém počítači. Všimni si, že první hash je při každém spuštění stejný, druhý pokaždé jiný.</p>
+      <div class="codebox">
+        <button class="copy" type="button" data-for="demoCode">Kopírovat</button>
+        <pre class="code" id="demoCode"><span class="k">import</span> hashlib
+<span class="k">import</span> os
+
+heslo = <span class="s">"heslo123"</span>
+
+<span class="c"># 1) Bez soli: stejné heslo dá vždy stejný hash</span>
+<span class="k">print</span>(hashlib.sha256(heslo.encode()).hexdigest())
+
+<span class="c"># 2) Se solí a pomalou funkcí: pokaždé jiný hash</span>
+sul = os.urandom(<span class="n">16</span>)
+<span class="k">print</span>(hashlib.pbkdf2_hmac(<span class="s">"sha256"</span>, heslo.encode(), sul, <span class="n">600_000</span>).hex())</pre>
+      </div>
+      <div class="panel">
+        <h3>První hash (ten bez soli)</h3>
+        <p class="mono-s">b4240791ce0be7b92ddd5091ae67234e5dff778e786dc0a3cb9846af0cf8b653</p>
+        <p>Zkus změnit jediné písmeno v hesle a sleduj, jak se změní celý hash. Z hashe se heslo přímo přečíst nedá, dá se jen zkoušet.</p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="17"><div class="slide-inner">
+      <div class="eyebrow">Udělej hned</div>
+      <h2 class="slide-title">Osobní kontrola za 10 minut</h2>
+      <p class="note">Odškrtávej, co máš hotové. <span id="chkCount">Hotovo 0 z 8</span></p>
+      <div class="chk-track"><div class="chk-bar" id="chkBar"></div></div>
+      <div class="checks" id="checks"></div>
+    </div></section>
+
+    <section class="slide pause-slide" data-index="18"><div class="slide-inner">
+      <div class="eyebrow">Pravidlo na zapamatování</div>
+      <div class="rule3">
+        <div><b>Záplatuj</b><span>Chyba je veřejně známá dřív, než ji někdo zneužije. Aktualizace zapni všude.</span></div>
+        <div><b>Neopakuj</b><span>Jedno heslo, jedna služba. Na e-mail a banku navíc dvoufázové ověření.</span></div>
+        <div><b>Zálohuj</b><span>Když všechno selže, data máš ještě jinde. Alespoň jedna záloha mimo počítač.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="19"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Data unikají <b>pěti cestami</b>: člověk, slabé heslo, chyba v aplikaci, neopravený software, špatné nastavení.</li>
+        <li>Hesla se mají ukládat jako <b>pomalý hash se solí</b>. Prostý text a hash bez soli jsou chyba.</li>
+        <li>Znovupoužité heslo znamená, že <b>jeden únik otevře víc účtů</b>.</li>
+        <li><b>RCE</b> je nejhorší chyba: cizí kód běží u tebe. Za většinou případů stojí splétání dat s příkazem a <b>neaplikovaná záplata</b>.</li>
+        <li><b>DDoS</b> nekrade data, vyřazuje službu. Obrana: kapacita, filtrování a nenechat vlastní zařízení s výchozím heslem.</li>
+        <li>Obrana je <b>ve vrstvách</b>: záplaty, unikátní hesla, 2FA, minimální oprávnění, zálohy.</li>
+      </ul>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="20"><div class="slide-inner">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud jsou čísla a kde číst dál</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Případy</h3><ul class="src-list">
+          <li><a href="https://en.wikipedia.org/wiki/2017_Equifax_data_breach" target="_blank" rel="noopener">Equifax 2017</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/WannaCry_ransomware_attack" target="_blank" rel="noopener">WannaCry 2017</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Log4Shell" target="_blank" rel="noopener">Log4Shell 2021</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/2012_LinkedIn_hack" target="_blank" rel="noopener">LinkedIn 2012</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/RockYou" target="_blank" rel="noopener">RockYou 2009</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/List_of_data_breaches" target="_blank" rel="noopener">Seznam úniků dat (Adobe, Yahoo)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/2016_Dyn_cyberattack" target="_blank" rel="noopener">Dyn 2016</a></li>
+          <li><a href="https://github.blog/2018-03-01-ddos-incident-report/" target="_blank" rel="noopener">GitHub 2018: DDoS incident report</a></li>
+          <li><a href="https://abc7news.com/story/urgent-security-fix-issued-code-vital-estimated-70-websites/19965216/" target="_blank" rel="noopener">PHP, říjen 2026 (ABC7)</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Obrana a nástroje</h3><ul class="src-list">
+          <li><a href="https://haveibeenpwned.com" target="_blank" rel="noopener">Have I Been Pwned</a></li>
+          <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html" target="_blank" rel="noopener">OWASP: ukládání hesel</a></li>
+          <li><a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html" target="_blank" rel="noopener">OWASP: prevence SQL injection</a></li>
+          <li><a href="https://www.php.net" target="_blank" rel="noopener">php.net (aktuální verze a opravy)</a></li>
+          <li><a href="https://nukib.gov.cz" target="_blank" rel="noopener">NÚKIB: národní úřad pro kybernetickou bezpečnost</a></li>
+        </ul></div>
+      </div>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 21</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=document.getElementById("dots"),counterEl=document.getElementById("counter");
+  var prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=document.createElement("button");d.className="dot"+(i===0?" is-active":"");
+    d.setAttribute("aria-label","Snímek "+(i+1));d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  /* výběr jedné z N možností: tlačítka + panel se stálou výškou */
+  function picker(btnHost,items,mk,panel,showFn){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;showFn(it,i);
+      });btnHost.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");showFn(items[0],0);
+    fits.push({slide:btnHost.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){showFn(it,i);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";showFn(items[act],act);
+    }});
+  }
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function panelHtml(p,title,text,extra){p.innerHTML="<h3>"+title+"</h3><p>"+text+"</p>"+(extra||"");}
+  function stepsHtml(title,list){var h="<h3>"+title+"</h3><ol class=\"steps\">";list.forEach(function(x){h+="<li>"+x+"</li>";});return h+"</ol>";}
+  function quote(q){return '<div class="quote">'+esc(q)+"</div>";}
+
+  /* ---- 2: pět cest ---- */
+  var ways=[
+    {n:"Člověk",s:"phishing, podvod",d:"Útočník nehackuje systém, ale člověka. Vylákané přihlášení na falešné stránce je nejlevnější cesta dovnitř. Víc v materiálu o phishingu.",q:"„Ověřte účet do 24 hodin.“"},
+    {n:"Heslo",s:"slabé nebo opakované",d:"Hesla, která se dají uhodnout, a hesla použitá na víc místech. Stačí jediný únik jinde a útočník zkouší stejné přihlášení všude.",q:"stejné heslo na e-mailu, na hrách i ve škole"},
+    {n:"Chyba v kódu",s:"aplikace věří vstupu",d:"Webová aplikace zachází s tím, co jí uživatel pošle, jako s důvěryhodným. Přitom právě tudy se dá dostat k databázi nebo spustit cizí kód.",q:"data se splete s příkazem"},
+    {n:"Stará verze",s:"záplata existuje",d:"Chyba je veřejně známá a oprava vyšla, jenže ji nikdo nenainstaloval. Většina velkých průniků je právě tohle.",q:"oprava vyšla v březnu, útok přišel v květnu"},
+    {n:"Špatné nastavení",s:"otevřeno do světa",d:"Databáze dostupná z internetu bez hesla, výchozí heslo na kameře nebo routeru, sdílená složka s veřejným odkazem.",q:"admin / admin"}
+  ];
+  picker($("wayCards"),ways,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("wayPanel"),function(c){panelHtml($("wayPanel"),c.n,c.d,quote(c.q));});
+
+  /* ---- 3: anatomie úniku ---- */
+  var chain=[
+    {n:"Průnik",s:"krok 1",t:"Stačí jedna chyba",d:"Ukradené heslo, neopravený server nebo chyba v kódu. Útočník nepotřebuje všechno, stačí jediná cesta dovnitř."},
+    {n:"Rozhlédnutí",s:"krok 2",t:"Hledá, kam dál",d:"Uvnitř se rozhlíží: další účty, servery, hesla zapomenutá v konfiguraci. U Equifaxu trvalo 76 dní, než si průniku někdo všiml."},
+    {n:"Odnesení",s:"krok 3",t:"Data jdou ven",d:"Data se kopírují po částech, aby to nevyvolalo poplach. Někdy se naopak zašifrují a požaduje se výkupné (ransomware)."},
+    {n:"Zneužití",s:"krok 4",t:"Prodej, zkoušení, vydírání",d:"Databáze se prodává a hesla se zkoušejí na dalších službách. Objeví se cílený phishing se skutečnými údaji, krádež identity nebo vydírání. Oběť se to často dozví měsíce po průniku."}
+  ];
+  picker($("chain"),chain,function(c){return el("button","",esc(c.n)+"<span>"+c.s+"</span>");},$("chainPanel"),function(c){panelHtml($("chainPanel"),c.t,c.d);});
+
+  /* ---- 6: credential stuffing ---- */
+  var stuff=[
+    {n:"1 · Únik",t:"Malý web unikne",d:"Menší služba nechá uniknout databázi. Heslo, které jsi tam použil, je teď v cizích rukou. Ty o tom nevíš."},
+    {n:"2 · Zkoušení",t:"Útočník zkouší jinde",d:"Program zkouší kombinaci e-mail a heslo na stovkách jiných služeb: e-mail, sítě, e-shopy. Dělá to automaticky a celé dny."},
+    {n:"3 · Shoda",t:"Jedno heslo odemkne víc",d:"Kde se heslo opakuje, přihlášení projde. Z e-mailu se pak dá resetovat heslo skoro kdekoli."},
+    {n:"4 · Obrana",t:"Unikátní hesla a 2FA",d:"Správce hesel vygeneruje pro každý web jiné. Dvoufázové ověření zastaví přihlášení i se správným heslem."}
+  ];
+  picker($("stuffSeg"),stuff,function(c){return el("button","calc-btn",esc(c.n));},$("stuffPanel"),function(c){panelHtml($("stuffPanel"),c.t,c.d);});
+
+  /* ---- 8: RCE princip ---- */
+  var rce=[
+    {n:"Vstup",s:"krok 1",t:"Aplikace přijme data",d:"Z formuláře, nahraného souboru, požadavku z internetu nebo třeba jen textu, který se má zapsat do logu."},
+    {n:"Chyba",s:"krok 2",t:"Data se zpracují jako příkaz",d:"Někde zmizí hranice mezi daty a kódem. Program vezme text od cizího člověka a místo uložení ho vykoná."},
+    {n:"Spuštění",s:"krok 3",t:"Cizí kód běží na serveru",d:"Kód běží s oprávněními aplikace. Útočník je v tu chvíli „uvnitř“ a nemusel znát žádné heslo."},
+    {n:"Převzetí",s:"krok 4",t:"Server patří útočníkovi",d:"Přístup k datům, hesla uložená v konfiguraci, instalace škodlivého programu a odrazový můstek k dalším serverům v síti."}
+  ];
+  picker($("rceChain"),rce,function(c){return el("button","",esc(c.n)+"<span>"+c.s+"</span>");},$("rcePanel"),function(c){
+    panelHtml($("rcePanel"),c.t,c.d,c.n==="Spuštění"?'<p class="note">Proto platí zásada minimálních oprávnění: aplikace nesmí běžet jako správce.</p>':"");
+  });
+
+  /* ---- 9: RCE případy ---- */
+  var cases=[
+    {n:"Equifax 2017",t:"Web s neopravenou knihovnou",d:"Webová aplikace běžela na frameworku Apache Struts s kritickou chybou. Oprava vyšla 7. 3. 2017, ale aplikace aktualizovaná nebyla. Útočníci vnikli 12. 5., objeveno 29. 7., oznámeno 7. 9. Dopad: přibližně 148 milionů Američanů a dalších 15 milionů Britů, včetně rodných čísel a data narození.",q:"oprava: 7. 3. · průnik: 12. 5. · objeveno: 29. 7. (76 dní)",l:"Ponaučení: oprava existovala dva měsíce před průnikem."},
+    {n:"WannaCry 2017",t:"Červ šířící se sítí",d:"Ransomware využil chybu v protokolu SMB ve Windows a sám se šířil z počítače na počítač. Microsoft opravu vydal 14. 3. 2017, útok začal 12. 5. Za pár hodin zasáhl přes 300 000 počítačů ve 150 zemích. V Británii nemocnice rušily výkony a odkláněly sanitky. Zastavil ho až výzkumník, který v kódu našel „vypínač“.",q:"oprava: 14. 3. · útok: 12. 5. · za pár hodin 300 000 počítačů",l:"Ponaučení: nezáplatované a zastaralé Windows jsou cíl."},
+    {n:"Log4Shell 2021",t:"Chyba v knihovně, kterou má každý",d:"Populární logovací knihovna Log4j zpracovala text, který měla jen zapsat, jako příkaz. Zveřejněno 9. 12. 2021, hodnocení závažnosti 10 z 10. Postiženo potenciálně stovky milionů zařízení. Podle jedné analýzy bylo zasaženo 93 % firemních cloudových prostředí. Oprava (verze 2.15.0) vyšla 6. 12.",q:"CVE-2021-44228 · hodnocení 10 z 10",l:"Ponaučení: nevíš, jaké cizí knihovny v tvé aplikaci běží. Útok přes dodavatele."}
+  ];
+  picker($("rceSeg"),cases,function(c){return el("button","calc-btn",esc(c.n));},$("rceCasePanel"),function(c){
+    panelHtml($("rceCasePanel"),c.t,c.d,quote(c.q)+'<p class="note">'+c.l+"</p>");
+  });
+
+  /* ---- 11: DDoS ---- */
+  var dd=[
+    {n:"Co to je",t:"Davové zahlcení služby",d:"DDoS (Distributed Denial of Service): tisíce až miliony zařízení najednou posílají požadavky, server je nestíhá a běžní uživatelé se nedostanou dovnitř. Jako když se do malé prodejny nahrne dav, který nic nekupuje. Data se nekradou, služba se vyřazuje. Z pomsty, pro vydírání nebo jako kouřová clona.",q:""},
+    {n:"Botnet",t:"Armáda cizích zařízení",d:"Útočník nemá miliony vlastních počítačů, proto si „půjčí“ cizí: kamery, routery a chytré krabičky s výchozím heslem a neopravené počítače. Majitel si ničeho nevšimne. V říjnu 2016 botnet Mirai, složený hlavně z kamer a domácích bran, na hodiny vyřadil DNS provozovatele Dyn. Nedostupných bylo přes 80 služeb včetně Twitteru, Netflixu a Redditu.",q:"21. 10. 2016 · Dyn · 80+ služeb nedostupných"},
+    {n:"Zesilování",t:"Malý dotaz, obrovská odpověď",d:"Některé veřejně dostupné servery odpoví na krátký dotaz dlouhou odpovědí. Když útočník podvrhne adresu odesílatele, odpověď dostane oběť. V únoru 2018 tak na GitHub dorazilo 1,35 Tbps, což byl tehdy rekord. Za příčinu se považují špatně nastavené servery, které neměly být vystavené do internetu.",q:"28. 2. 2018 · GitHub · 1,35 Tbps · asi 9 minut"},
+    {n:"Obrana",t:"Kapacita, filtrování, plán",d:"Služby přesměrují provoz přes velkou síť, která dokáže nápor pojmout a odfiltrovat (CDN, čistící centra), omezí počet požadavků z jedné adresy a mají připravený plán. GitHub v roce 2018 přesunul provoz na Akamai a během pár minut bylo po všem. Ty můžeš pomoct tím, že na svých zařízeních změníš výchozí hesla a budeš aktualizovat.",q:""}
+  ];
+  picker($("ddSeg"),dd,function(c){return el("button","calc-btn",esc(c.n));},$("ddPanel"),function(c){panelHtml($("ddPanel"),c.t,c.d,c.q?quote(c.q):"");});
+
+  /* ---- 13: co zastaví co ---- */
+  var defs=[
+    {n:"Únik databáze",s:["Pomalý hash se solí (bcrypt, Argon2)","Ukládat jen data, která opravdu potřebuješ","Šifrovat citlivé údaje","Sledovat neobvyklý výběr dat"]},
+    {n:"Opakované heslo",s:["Unikátní heslo pro každou službu (správce hesel)","Dvoufázové ověření nebo přístupové klíče","Omezit počet pokusů o přihlášení","Kontrolovat hesla proti známým únikům"]},
+    {n:"Chyba v aplikaci",s:["Parametrizované dotazy místo slepování textu","Kontrola a omezení vstupu","Databázový účet jen s oprávněními, která aplikace potřebuje","Revize kódu a testování"]},
+    {n:"Neopravená chyba (RCE)",s:["Rychlé záplatování, hlavně u systémů dostupných z internetu","Vědět, jaké komponenty a knihovny používáš","Aplikace běží s minimem oprávnění","Rozdělení sítě na části, ať se útočník nedostane všude"]},
+    {n:"DDoS",s:["Služba přes velkou síť, která nápor pojme (CDN)","Omezení počtu požadavků","Připravený plán a kontakty","Vlastní zařízení bez výchozích hesel a s aktualizacemi"]},
+    {n:"Ransomware",s:["Zálohy mimo počítač (pravidlo 3-2-1)","Záplaty, hlavně operačního systému","Opatrnost u příloh a odkazů","Zkoušet, že se záloha opravdu dá obnovit"]}
+  ];
+  picker($("defSeg"),defs,function(c){return el("button","calc-btn",esc(c.n));},$("defPanel"),function(c){$("defPanel").innerHTML=stepsHtml("Co pomáhá",c.s.map(esc));});
+
+  /* ---- 14: kopírování kódu ---- */
+  Array.prototype.forEach.call(document.querySelectorAll("button.copy"),function(b){
+    b.addEventListener("click",function(){
+      var src=document.getElementById(b.dataset["for"]);if(!src)return;
+      var text=src.textContent;
+      function done(){b.textContent="Zkopírováno";setTimeout(function(){b.textContent="Kopírovat";},1600);}
+      function fallback(){
+        var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+        document.body.appendChild(ta);ta.select();
+        try{if(document.execCommand("copy"))done();}catch(e){}
+        document.body.removeChild(ta);
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,fallback);}else{fallback();}
+    });
+  });
+
+  /* ---- 15: kontrola ---- */
+  var checks=[
+    ["Správce hesel","Pro každou službu unikátní heslo."],
+    ["Dvoufázové ověření","Zapnuté na e-mailu a hlavních účtech."],
+    ["Kontrola e-mailu","Zadej svůj e-mail na haveibeenpwned.com."],
+    ["Automatické aktualizace","Telefon, počítač i aplikace."],
+    ["Výchozí hesla","Změň je na routeru, kameře a chytrých zařízeních."],
+    ["Zálohy","Důležité věci i mimo počítač (3-2-1)."],
+    ["Úklid","Smaž aplikace a účty, které nepoužíváš."],
+    ["Běžný účet","Na počítači nepracuj denně jako správce."]
+  ];
+  var done={};
+  checks.forEach(function(c,i){
+    var b=el("button","chk","<b>"+c[0]+"</b><span>"+c[1]+"</span>");
+    b.addEventListener("click",function(){
+      if(done[i])delete done[i];else done[i]=1;
+      b.classList.toggle("is-done",!!done[i]);
+      var n=Object.keys(done).length;
+      $("chkCount").textContent="Hotovo "+n+" z "+checks.length+(n===checks.length?". Lépe zabezpečený než většina lidí.":"");
+      $("chkBar").style.width=(n/checks.length*100)+"%";
+    });
+    $("checks").appendChild(b);
+  });
+
+  /* ---- hash a sůl (živé ukázky) ---- */
+  function toHex(buf){return Array.prototype.map.call(new Uint8Array(buf),function(b){return ("0"+b.toString(16)).slice(-2);}).join("");}
+  function sha256(text){
+    if(!(window.crypto&&crypto.subtle))return Promise.resolve(null);
+    return crypto.subtle.digest("SHA-256",new TextEncoder().encode(text)).then(toHex);
+  }
+  function randSalt(){
+    var a=new Uint8Array(4);
+    if(window.crypto&&crypto.getRandomValues)crypto.getRandomValues(a);else for(var i=0;i<4;i++)a[i]=Math.floor(Math.random()*256);
+    return toHex(a);
+  }
+  function hashUpdate(){
+    var t=$("hashIn").value;
+    sha256(t).then(function(h){
+      if(h===null){$("hashOut").textContent="Tento prohlížeč neumí spočítat hash.";$("hashLen").textContent="";return;}
+      $("hashOut").textContent=h;
+      $("hashLen").textContent="Vstup: "+t.length+" znaků. Hash: "+h.length+" znaků.";
+    });
+  }
+  $("hashIn").addEventListener("input",hashUpdate);hashUpdate();
+  var saltA=randSalt(),saltB=randSalt();
+  function short(h){return h.slice(0,28)+"…";}
+  function saltUpdate(){
+    var pw=$("saltIn").value;
+    Promise.all([sha256(pw),sha256(saltA+pw),sha256(saltB+pw)]).then(function(r){
+      if(r[0]===null){$("saltRows").innerHTML='<tr><td colspan="3">Tento prohlížeč neumí spočítat hash.</td></tr>';return;}
+      $("saltRows").innerHTML=
+        '<tr><td>Anna, bez soli</td><td>–</td><td class="ko mono-s">'+short(r[0])+"</td></tr>"+
+        '<tr><td>Boris, bez soli</td><td>–</td><td class="ko mono-s">'+short(r[0])+"</td></tr>"+
+        '<tr><td>Anna, se solí</td><td class="mono-s">'+saltA+'</td><td class="ok mono-s">'+short(r[1])+"</td></tr>"+
+        '<tr><td>Boris, se solí</td><td class="mono-s">'+saltB+'</td><td class="ok mono-s">'+short(r[2])+"</td></tr>";
+    });
+  }
+  $("saltIn").addEventListener("input",saltUpdate);
+  $("saltBtn").addEventListener("click",function(){saltA=randSalt();saltB=randSalt();saltUpdate();});
+  saltUpdate();
+
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>

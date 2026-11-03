@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stavový prostor – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Úvod</li>
+    <li><a href="#uloha">Převozník, vlk, koza a zelí</a></li>
+    <li class="grp">Modelování</li>
+    <li><a href="#stav">Stav</a></li>
+    <li><a href="#definice">Definice stavového prostoru</a></li>
+    <li><a href="#operatory">Operátory a p ← 1 − p</a></li>
+    <li><a href="#graf">Graf stavů</a></li>
+    <li><a href="#volba">Jak zvolit stav</a></li>
+    <li class="grp">Prohledávání</li>
+    <li><a href="#bfs">Do šířky (BFS)</a></li>
+    <li><a href="#dfs">Do hloubky (DFS)</a></li>
+    <li><a href="#srovnani">Srovnání</a></li>
+    <li><a href="#python">Program v Pythonu</a></li>
+    <li class="grp">Velikost</li>
+    <li><a href="#exploze">Kombinatorická exploze</a></li>
+    <li><a href="#dosazitelnost">Dosažitelné stavy</a></li>
+    <li class="grp">Procvičení</li>
+    <li><a href="#ulohy">Úlohy</a></li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Algoritmy · Studijní text</p>
+  <h1>Stavový prostor <span class="t">stav · graf · BFS · DFS</span></h1>
+  <p class="lead">Jak popsat hádanku nebo hlavolam tak, aby ho uměl vyřešit počítač: stavy, počáteční a cílový stav, operátory a graf stavů. Pak dva základní algoritmy, které v grafu hledají cestu k cíli, a proč některé úlohy nevyřeší ani nejrychlejší počítač. Malá čísla u textu odkazují na zdroje na konci.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>zvolit pro úlohu vhodný stav a zapsat ho</li>
+      <li>definovat stavový prostor jako čtveřici (S, s₀, C, O)</li>
+      <li>spočítat počet stavů a rozlišit povolené a dosažitelné</li>
+      <li>nakreslit graf stavů malé úlohy a najít v něm řešení</li>
+      <li>popsat prohledávání do šířky a do hloubky krok za krokem</li>
+      <li>vysvětlit rozdíl mezi frontou a zásobníkem</li>
+      <li>zdůvodnit, proč si algoritmus pamatuje navštívené stavy</li>
+      <li>vysvětlit, proč šachy nejde vyřešit prohledáním všech pozic</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Úvod</p>
+
+<section id="uloha">
+<h2>Převozník, vlk, koza a zelí</h2>
+<p>Převozník má přes řeku převézt vlka, kozu a hlávku zelí. Do loďky se vejde jen on a jedna další věc. Když převozník není nablízku, vlk sežere kozu a koza sežere zelí. Vlk zelí nežere. Jak to udělat?</p>
+<p>Úloha je stará přes 1 200 let. Zapsal ji anglický učenec <strong>Alkuin z Yorku</strong> (asi 735–804), rádce Karla Velikého, ve sbírce <i>Propositiones ad acuendos iuvenes</i> (Úlohy k bystření mladíků) jako úlohu číslo 18.<sup class="ref"><a href="#z1">1</a>,</sup><sup class="ref"><a href="#z2">2</a></sup> Stejná sbírka obsahuje i další úlohy o přepravě přes řeku.</p>
+<p>Klíčový postřeh: koza nesmí zůstat sama ani s vlkem, ani se zelím. První plavba proto musí být s kozou. Pak převozník pro jednu z dvou zbylých věcí a kozu přiveze zpátky, aby ji nenechal s tím, co právě převezl. Nejkratší řešení má <strong>7 plaveb</strong> a existují <strong>dvě</strong>:</p>
+<ol>
+  <li>koza tam, sám zpět, <strong>vlk</strong> tam, koza zpět, <strong>zelí</strong> tam, sám zpět, koza tam;</li>
+  <li>koza tam, sám zpět, <strong>zelí</strong> tam, koza zpět, <strong>vlk</strong> tam, sám zpět, koza tam.</li>
+</ol>
+<p>Člověk na řešení přijde úvahou. My ale chceme postup, který funguje i pro úlohy, kde nás žádný chytrý postřeh nenapadne, a který zvládne počítač. K tomu slouží <dfn>stavový prostor</dfn>.</p>
+</section>
+
+<p class="part">Modelování</p>
+
+<section id="stav">
+<h2>Stav</h2>
+<p>Představ si, že úlohu řešíš s kamarádem po telefonu. On řeku nevidí a ty mu máš popsat, jak to právě vypadá, aby mohl poradit další tah. Co mu musíš říct? Barva loďky, počasí ani to, kolikrát už převozník plul, ho nezajímá. Potřebuje vědět jen <strong>kdo stojí na kterém břehu</strong>. Z toho pozná, jestli někdo někoho nesežere, co může převozník naložit a jestli už je hotovo.</p>
+<p>Přesně tohle je <dfn>stav</dfn>: nejmenší popis situace, podle kterého jde rozhodnout, co smí následovat. Nepatří do něj historie (jak jsme se do situace dostali) ani nepodstatné detaily.</p>
+
+<h3>Proč jen dvě možnosti</h3>
+<p>Situaci popisujeme jen <strong>mezi plavbami</strong>, když loďka stojí u břehu. Samotnou plavbu bereme jako jeden okamžitý krok, chvíle uprostřed řeky nás nezajímá. Proto má každá ze čtyř postav právě dvě možnosti: levý, nebo pravý břeh. Možnost „v loďce“ neexistuje.</p>
+
+<h3>Proč bity</h3>
+<p>Informace, která má jen dvě možné hodnoty, se vejde do jednoho <strong>bitu</strong>. Dohodneme se: <strong>0 = levý břeh, 1 = pravý břeh</strong>. Pro čtyři postavy potřebujeme čtyři bity. Aby šel zápis přečíst, musí mít bity <strong>pevné pořadí</strong>: první vždy patří převozníkovi, druhý vlkovi, třetí koze, čtvrtý zelí. Pořadí je naše dohoda. Mohli bychom zvolit jiné, ale pak ho musíme dodržovat všude.</p>
+
+<figure class="fig bf" id="bitfig">
+  <p class="bf-title">Jak přečíst stav <span class="bf-code" id="bfCode">1010</span></p>
+  <div class="bf-row" role="group" aria-label="Čtyři bity stavu">
+    <button type="button" class="bf-cell is-1" data-i="0" aria-label="1. bit, převozník"><span class="bf-pos">1. bit</span><span class="bf-bit">1</span><span class="bf-em" aria-hidden="true">🧑‍🌾</span><span class="bf-name">převozník</span><span class="bf-var">p</span></button>
+    <button type="button" class="bf-cell is-0" data-i="1" aria-label="2. bit, vlk"><span class="bf-pos">2. bit</span><span class="bf-bit">0</span><span class="bf-em" aria-hidden="true">🐺</span><span class="bf-name">vlk</span><span class="bf-var">v</span></button>
+    <button type="button" class="bf-cell is-1" data-i="2" aria-label="3. bit, koza"><span class="bf-pos">3. bit</span><span class="bf-bit">1</span><span class="bf-em" aria-hidden="true">🐐</span><span class="bf-name">koza</span><span class="bf-var">k</span></button>
+    <button type="button" class="bf-cell is-0" data-i="3" aria-label="4. bit, zelí"><span class="bf-pos">4. bit</span><span class="bf-bit">0</span><span class="bf-em" aria-hidden="true">🥬</span><span class="bf-name">zelí</span><span class="bf-var">z</span></button>
+  </div>
+  <div class="bf-key"><span class="bf-k0"><b>0</b> = levý břeh</span><span class="bf-k1"><b>1</b> = pravý břeh</span></div>
+  <div class="bf-scene" aria-live="polite">
+    <div class="bf-bank b0"><span class="bf-bank-lab">levý břeh · 0</span><div class="bf-who" id="bfL"><span>🐺<small>vlk</small></span><span>🥬<small>zelí</small></span></div></div>
+    <div class="bf-water" aria-hidden="true"></div>
+    <div class="bf-bank b1"><span class="bf-bank-lab">pravý břeh · 1</span><div class="bf-who" id="bfR"><span>🧑‍🌾<small>převozník</small></span><span>🐐<small>koza</small></span></div></div>
+  </div>
+  <p class="bf-verdict" id="bfVerdict">Zápis dvou břehů: <code>VZ|PK</code>. <b>Povolený stav</b>, vlk se zelím si nic neudělají.</p>
+  <figcaption>Každý bit patří jedné postavě a jeho hodnota říká, na kterém břehu stojí. Klikni na bit a přehoď ho: přesně to dělá zápis <code>p ← 1 − p</code> z části <a href="#operatory">Operátory</a>.</figcaption>
+</figure>
+
+<p>Kolik je stavů? Převozník má 2 možnosti. Ke každé z nich má 2 možnosti vlk, to jsou 2 · 2 = 4 kombinace. Ke každé z nich má 2 možnosti koza, tedy 8, a se zelím 16. Celkem <strong>2 · 2 · 2 · 2 = 2⁴ = 16 stavů</strong>, stejně jako čtyři bity dají 16 čísel od 0 do 15.</p>
+<div class="tbl"><table>
+  <thead><tr><th>bity p v k z</th><th>zápis břehů</th><th>význam</th></tr></thead>
+  <tbody>
+    <tr><td><code>0000</code></td><td><code>PVKZ|·</code></td><td>počáteční stav, všichni vlevo</td></tr>
+    <tr><td><code>1010</code></td><td><code>VZ|PK</code></td><td>po první plavbě: převozník a koza vpravo</td></tr>
+    <tr><td><code>0001</code></td><td><code>PVK|Z</code></td><td>zelí vpravo, ostatní vlevo</td></tr>
+    <tr><td><code>1111</code></td><td><code>·|PVKZ</code></td><td>cílový stav, všichni vpravo</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Stejný stav, různé zápisy</h3>
+<p>Bity nejsou jediný možný zápis. Stav <code>1010</code> jde zapsat i jinak a pokaždé nese tutéž informaci:</p>
+<div class="tbl"><table>
+  <thead><tr><th>zápis</th><th>stav 1010</th></tr></thead>
+  <tbody>
+    <tr><td>čtyři bity v pořadí p, v, k, z</td><td><code>1010</code></td></tr>
+    <tr><td>n-tice v Pythonu</td><td><code>(1, 0, 1, 0)</code></td></tr>
+    <tr><td>množina těch, kdo stojí vlevo</td><td><code>{V, Z}</code></td></tr>
+    <tr><td>dva břehy oddělené čarou</td><td><code>VZ|PK</code></td></tr>
+    <tr><td>slovy</td><td>vlevo vlk a zelí, vpravo převozník a koza</td></tr>
+  </tbody>
+</table></div>
+<p>V zápisu dvou břehů stojí písmena vlevo od svislé čáry na levém břehu, písmena vpravo na pravém a tečka znamená prázdný břeh. Je čitelnější pro lidi, proto ho používáme v obrázcích. Počítač pracuje s bity, protože:</p>
+<ul>
+  <li><strong>jdou s nimi dělat výpočty:</strong> přesun na druhý břeh je jednoduchý vzorec (viz <a href="#operatory">Operátory</a>) a otázka „stojí koza u převozníka?“ je porovnání dvou čísel <code>k = p</code>;</li>
+  <li><strong>v programu jsou přirozené:</strong> stav je obyčejná n-tice čísel;</li>
+  <li><strong>navazují na blok Informace:</strong> jedním bitem jde popsat cokoli, co má dvě možnosti.</li>
+</ul>
+<div class="note mat"><b class="lbl">Proč ve stavu není loďka</b><p>Loďka je vždycky tam, kde převozník, nikdo jiný ji neřídí. Její poloha je tedy stejná jako první bit a další bit by nepřinesl žádnou novou informaci. U misionářů a kanibalů žádný převozník není, tam polohu loďky zapsat musíme.</p></div>
+
+<h3>Zakázané stavy</h3>
+<p>Některé stavy jsou <dfn>zakázané</dfn>: v nich by někdo někoho sežral. Je jich šest, povolených stavů zbývá <strong>10</strong>.</p>
+<div class="tbl"><table>
+  <thead><tr><th>zakázaný stav</th><th>proč</th></tr></thead>
+  <tbody>
+    <tr><td><code>PV|KZ</code>, <code>KZ|PV</code></td><td>koza se zelím bez převozníka (vlk je jinde)</td></tr>
+    <tr><td><code>PZ|VK</code>, <code>VK|PZ</code></td><td>vlk s kozou bez převozníka</td></tr>
+    <tr><td><code>P|VKZ</code>, <code>VKZ|P</code></td><td>všichni tři bez převozníka: vlk s kozou i koza se zelím</td></tr>
+  </tbody>
+</table></div>
+<div class="note tip"><b class="lbl">Podmínka zákazu</b><p>Stav (p, v, k, z) je zakázaný právě tehdy, když <code>(v = k ∧ p ≠ k) ∨ (k = z ∧ p ≠ k)</code>. Čteme: vlk stojí na stejném břehu jako koza a převozník je jinde, nebo koza stojí na stejném břehu jako zelí a převozník je jinde. Koza je vždy u problému, proto se všude porovnává s ní.</p></div>
+</section>
+
+<section id="definice">
+<h2>Definice stavového prostoru</h2>
+<p><dfn>Stavový prostor</dfn> úlohy je čtveřice <strong>(S, s₀, C, O)</strong>:</p>
+<ul>
+  <li><strong>S</strong> je množina všech stavů,</li>
+  <li><strong>s₀ ∈ S</strong> je počáteční stav,</li>
+  <li><strong>C ⊆ S</strong> je množina cílových stavů (může jich být víc, často je cíl zadán podmínkou),</li>
+  <li><strong>O</strong> je množina <dfn>operátorů</dfn>: tahů, které převedou jeden stav na jiný.</li>
+</ul>
+<p><dfn>Řešení</dfn> úlohy je posloupnost operátorů, která vede z s₀ do některého stavu z C. <dfn>Optimální řešení</dfn> je řešení s nejmenším počtem kroků, případně s nejmenší celkovou cenou, mají-li kroky různou cenu (třeba délku cesty v kilometrech).</p>
+<p>Pro převozníka: S je 16 čtveřic bitů (z toho 10 povolených), s₀ = <code>0000</code>, C = {<code>1111</code>}. Zbývají operátory.</p>
+
+<h3 id="operatory">Operátory</h3>
+<p>Operátor je jeden druh tahu. Převozník má čtyři: plout sám, s vlkem, s kozou, nebo se zelím. U každého potřebujeme vědět dvě věci: <strong>kdy ho smíme použít</strong> (podmínka použitelnosti) a <strong>jak změní stav</strong> (účinek).</p>
+
+<h3>Jak zapsat „přejdi na druhý břeh“</h3>
+<p>Když převozník přepluje, jeho bit se změní: z 0 na 1, nebo z 1 na 0. Zapisujeme to</p>
+<p class="bf-formula"><code>p ← 1 − p</code></p>
+<ul>
+  <li><strong>Šipka ← znamená přiřazení.</strong> Spočítej výraz vpravo a výsledek ulož do proměnné vlevo. Čte se „p bude 1 minus p“. V Pythonu se totéž píše <code>p = 1 - p</code>.</li>
+  <li><strong>Není to rovnice.</strong> Rovnice p = 1 − p by platila jen pro p = 0,5 a takový břeh neexistuje. Šipka říká, že se hodnota mění: nová hodnota vznikne ze staré.</li>
+  <li><strong>Proč zrovna 1 − p:</strong> p je vždy 0, nebo 1, a odečtením od jedničky se tyto dvě hodnoty prohodí:</li>
+</ul>
+<div class="tbl"><table>
+  <thead><tr><th>stará hodnota p</th><th>výpočet 1 − p</th><th>nová hodnota p</th><th>význam</th></tr></thead>
+  <tbody>
+    <tr><td><code>0</code></td><td>1 − 0</td><td><code>1</code></td><td>byl vlevo, teď je vpravo</td></tr>
+    <tr><td><code>1</code></td><td>1 − 1</td><td><code>0</code></td><td>byl vpravo, teď je vlevo</td></tr>
+  </tbody>
+</table></div>
+<p>Výraz <code>1 − p</code> tedy jedním vzorcem říká „přejdi na druhou stranu“, ať jsi kdekoli, a nemusíme rozlišovat, jestli převozník pluje tam, nebo zpátky. Stejně dobře by šlo napsat <code>p ← not p</code> nebo <code>p ← p XOR 1</code>. To je další důvod, proč jsme stav zapsali bity.</p>
+
+<h3>Čtyři operátory převozníka</h3>
+<div class="tbl"><table>
+  <thead><tr><th>tah</th><th>smím ho udělat, když…</th><th>co se změní</th><th>zápis</th></tr></thead>
+  <tbody>
+    <tr><td>pluj sám</td><td>po plavbě nikdo nikoho nesežere</td><td>převozník přejde na druhý břeh</td><td><code>p ← 1 − p</code></td></tr>
+    <tr><td>pluj s vlkem</td><td>vlk stojí u převozníka (<code>v = p</code>) a po plavbě nikdo nikoho nesežere</td><td>převozník i vlk přejdou na druhý břeh</td><td><code>p ← 1 − p</code><br><code>v ← 1 − v</code></td></tr>
+    <tr><td>pluj s kozou</td><td>koza stojí u převozníka (<code>k = p</code>) a po plavbě nikdo nikoho nesežere</td><td>převozník i koza přejdou na druhý břeh</td><td><code>p ← 1 − p</code><br><code>k ← 1 − k</code></td></tr>
+    <tr><td>pluj se zelím</td><td>zelí stojí u převozníka (<code>z = p</code>) a po plavbě nikdo nikoho nesežere</td><td>převozník i zelí přejdou na druhý břeh</td><td><code>p ← 1 − p</code><br><code>z ← 1 − z</code></td></tr>
+  </tbody>
+</table></div>
+<p>Podmínka má vždy dvě části. První (třeba <code>k = p</code>) říká, že naložit jde jen to, co stojí na stejném břehu jako převozník: kozu, která je na druhé straně řeky, nenaložíš. Druhá hlídá pravidla úlohy: výsledný stav nesmí být zakázaný.</p>
+
+<h3>Tah krok za krokem</h3>
+<p>Použijeme operátor <strong>pluj s kozou</strong> na počáteční stav <code>0000</code>:</p>
+<figure class="fig bf">
+  <div class="bt" role="table" aria-label="Operátor pluj s kozou použitý na stav 0000">
+    <div class="bt-r bt-h" role="row"><span role="columnheader"></span><span role="columnheader">🧑‍🌾<small>p</small></span><span role="columnheader">🐺<small>v</small></span><span role="columnheader">🐐<small>k</small></span><span role="columnheader">🥬<small>z</small></span></div>
+    <div class="bt-r" role="row"><span class="bt-lab" role="rowheader">stav před</span><span class="bv is-0" role="cell">0</span><span class="bv is-0" role="cell">0</span><span class="bv is-0" role="cell">0</span><span class="bv is-0" role="cell">0</span></div>
+    <div class="bt-r bt-op" role="row"><span class="bt-lab" role="rowheader">pluj s kozou</span><span role="cell">1 − 0</span><span role="cell">—</span><span role="cell">1 − 0</span><span role="cell">—</span></div>
+    <div class="bt-r" role="row"><span class="bt-lab" role="rowheader">stav po</span><span class="bv is-1 is-chg" role="cell">1</span><span class="bv is-0" role="cell">0</span><span class="bv is-1 is-chg" role="cell">1</span><span class="bv is-0" role="cell">0</span></div>
+  </div>
+  <figcaption>Operátor změní jen bity převozníka a nákladu (zvýrazněné). Pomlčka znamená, že bit zůstane, jak byl.</figcaption>
+</figure>
+<ol>
+  <li><strong>Smím kozu naložit?</strong> k = 0 a p = 0, tedy <code>k = p</code>. Koza stojí u převozníka, ano.</li>
+  <li><strong>Účinek:</strong> p ← 1 − 0 = 1 a k ← 1 − 0 = 1. Vlk a zelí se nemění. Nový stav je <code>1010</code>, tedy <code>VZ|PK</code>.</li>
+  <li><strong>Je nový stav povolený?</strong> Vlevo zůstali vlk a zelí, ti si nic neudělají. Povolený, tah je platný.</li>
+</ol>
+<p>Stejně vyzkoušíme ze startu všechny čtyři operátory:</p>
+<div class="tbl"><table>
+  <thead><tr><th>tah ze stavu 0000</th><th>nový stav</th><th>výsledek</th></tr></thead>
+  <tbody>
+    <tr><td>pluj sám</td><td><code>1000</code> = <code>VKZ|P</code></td><td>zakázaný: vlevo zůstali všichni tři</td></tr>
+    <tr><td>pluj s vlkem</td><td><code>1100</code> = <code>KZ|PV</code></td><td>zakázaný: koza se zelím</td></tr>
+    <tr><td>pluj s kozou</td><td><code>1010</code> = <code>VZ|PK</code></td><td><strong>povolený</strong></td></tr>
+    <tr><td>pluj se zelím</td><td><code>1001</code> = <code>VK|PZ</code></td><td>zakázaný: vlk s kozou</td></tr>
+  </tbody>
+</table></div>
+<p>Ze startu tedy vede jediný povolený tah, s kozou. Proto v grafu stavů v další části vede z počátečního stavu jediná hrana.</p>
+</section>
+
+<section id="graf">
+<h2>Graf stavů</h2>
+<p>Stavový prostor si můžeme nakreslit jako <dfn>graf</dfn>: každý povolený stav je <dfn>vrchol</dfn>, každé použití operátoru je <dfn>hrana</dfn> z jednoho stavu do druhého. Hledání řešení úlohy je pak hledání <strong>cesty v grafu</strong> z počátečního vrcholu do cílového.</p>
+<figure class="fig">
+<svg class="svgfig" viewBox="0 0 1000 250" role="img" aria-label="Graf deseti povolených stavů úlohy o převozníkovi, zvýrazněné řešení A">
+<line class="spg-edge is-path" x1="50" y1="125" x2="178" y2="125"/>
+<line class="spg-edge is-path" x1="178" y1="125" x2="306" y2="125"/>
+<line class="spg-edge is-path" x1="306" y1="125" x2="434" y2="45"/>
+<line class="spg-edge" x1="306" y1="125" x2="434" y2="205"/>
+<line class="spg-edge is-path" x1="434" y1="45" x2="562" y2="45"/>
+<line class="spg-edge" x1="434" y1="205" x2="562" y2="205"/>
+<line class="spg-edge is-path" x1="562" y1="45" x2="690" y2="125"/>
+<line class="spg-edge" x1="562" y1="205" x2="690" y2="125"/>
+<line class="spg-edge is-path" x1="690" y1="125" x2="818" y2="125"/>
+<line class="spg-edge is-path" x1="818" y1="125" x2="946" y2="125"/>
+<text class="spg-lab" x="114" y="117" text-anchor="middle">K</text>
+<text class="spg-lab" x="242" y="117" text-anchor="middle">–</text>
+<text class="spg-lab" x="357" y="81" text-anchor="middle">V</text>
+<text class="spg-lab" x="357" y="179" text-anchor="middle">Z</text>
+<text class="spg-lab" x="498" y="37" text-anchor="middle">K</text>
+<text class="spg-lab" x="498" y="197" text-anchor="middle">K</text>
+<text class="spg-lab" x="639" y="81" text-anchor="middle">Z</text>
+<text class="spg-lab" x="639" y="179" text-anchor="middle">V</text>
+<text class="spg-lab" x="754" y="117" text-anchor="middle">–</text>
+<text class="spg-lab" x="882" y="117" text-anchor="middle">K</text>
+<g class="spg-node is-path"><rect x="6" y="106" width="88" height="38" rx="12"/><text x="50" y="130" text-anchor="middle">PVKZ|·</text></g>
+<g class="spg-node is-path"><rect x="134" y="106" width="88" height="38" rx="12"/><text x="178" y="130" text-anchor="middle">VZ|PK</text></g>
+<g class="spg-node is-path"><rect x="262" y="106" width="88" height="38" rx="12"/><text x="306" y="130" text-anchor="middle">PVZ|K</text></g>
+<g class="spg-node is-path"><rect x="390" y="26" width="88" height="38" rx="12"/><text x="434" y="50" text-anchor="middle">Z|PVK</text></g>
+<g class="spg-node"><rect x="390" y="186" width="88" height="38" rx="12"/><text x="434" y="210" text-anchor="middle">V|PKZ</text></g>
+<g class="spg-node is-path"><rect x="518" y="26" width="88" height="38" rx="12"/><text x="562" y="50" text-anchor="middle">PKZ|V</text></g>
+<g class="spg-node"><rect x="518" y="186" width="88" height="38" rx="12"/><text x="562" y="210" text-anchor="middle">PVK|Z</text></g>
+<g class="spg-node is-path"><rect x="646" y="106" width="88" height="38" rx="12"/><text x="690" y="130" text-anchor="middle">K|PVZ</text></g>
+<g class="spg-node is-path"><rect x="774" y="106" width="88" height="38" rx="12"/><text x="818" y="130" text-anchor="middle">PK|VZ</text></g>
+<g class="spg-node is-path"><rect x="902" y="106" width="88" height="38" rx="12"/><text x="946" y="130" text-anchor="middle">·|PVKZ</text></g>
+<text class="svg-txt" x="50" y="166" text-anchor="middle">START</text><text class="svg-txt" x="946" y="166" text-anchor="middle">CÍL</text>
+</svg>
+<figcaption>Graf úlohy o převozníkovi: 10 vrcholů, 10 hran. Písmeno na hraně říká, co převozník veze, pomlčka znamená, že pluje sám. Zvýrazněné je řešení 1 (vlk před zelím), řešení 2 vede spodní větví.</figcaption>
+</figure>
+<p>Na obrázku je vidět celá struktura úlohy: z počátečního stavu vede jediná hrana (jediná rozumná první plavba je s kozou), pak se cesta rozdělí na dvě souměrné větve a zase spojí. Delších řešení je nekonečně mnoho, stačí po hraně jet tam a zpět, ale nejkratší jsou právě dvě.</p>
+<div class="note warn"><b class="lbl">Orientované hrany</b><p>U převozníka jde každou plavbu vrátit, hrany vedou oběma směry. Obecně to neplatí. Vylitou vodu z džbánu zpátky nenabereš, takže v úloze s džbány vede hrana „vylij“ jen jedním směrem. Takový graf je <strong>orientovaný</strong>.</p></div>
+</section>
+
+<section id="volba">
+<h2>Jak zvolit stav</h2>
+<p>Volba stavu je nejdůležitější a nejtvořivější část modelování. Dobrý stav obsahuje přesně tolik informací, kolik je potřeba k rozhodnutí, které tahy jsou dovolené a jestli jsme v cíli.</p>
+<div class="tbl"><table>
+  <thead><tr><th>úloha</th><th>stav</th><th>počet stavů</th></tr></thead>
+  <tbody>
+    <tr><td>Převozník, vlk, koza, zelí</td><td>břeh každého ze 4 (bity)</td><td>2⁴ = 16, povolených 10</td></tr>
+    <tr><td>Džbány 3 l a 5 l, odměř 4 l</td><td>(litry v menším, litry ve větším)</td><td>4 · 6 = 24, dosažitelných 16</td></tr>
+    <tr><td>Misionáři a kanibalové (3 + 3, loďka pro 2)</td><td>(misionáři vlevo, kanibalové vlevo, strana loďky)</td><td>4 · 4 · 2 = 32, povolených 20</td></tr>
+    <tr><td>Hanojské věže s n disky</td><td>tyč, na které leží každý disk</td><td>3ⁿ</td></tr>
+    <tr><td>Posunovací hlavolam 3 × 3</td><td>rozmístění 8 kostiček a mezery</td><td>9! = 362 880, dosažitelných 181 440</td></tr>
+  </tbody>
+</table></div>
+<p>U Hanojských věží nemusíme ukládat pořadí disků na tyči: menší disk smí ležet jen na větším, takže pořadí plyne z pravidel. Stačí vědět, na které tyči je který disk. U misionářů nemusíme ukládat pravý břeh, dopočítá se odečtením od tří.</p>
+<div class="note warn"><b class="lbl">Dvě časté chyby</b><p><strong>Příliš mnoho informací:</strong> když do stavu přidáš historii tahů, každá cesta vede do jiného stavu a stavů je nekonečně mnoho. <strong>Příliš málo informací:</strong> když u převozníka vynecháš, kde je převozník, nepoznáš, jestli koza se zelím zůstaly bez dozoru.</p></div>
+</section>
+
+<p class="part">Prohledávání</p>
+
+<section id="bfs">
+<h2>Prohledávání do šířky (BFS)</h2>
+<p>Malý graf prohlédneme očima, ale počítač potřebuje postup. <dfn>Prohledávání do šířky</dfn> (anglicky <i>breadth-first search</i>, BFS) prochází stavy postupně podle vzdálenosti od startu: nejdřív všechny o jeden krok dál, pak o dva kroky a tak dále. Používá <dfn>frontu</dfn> (FIFO, first in, first out): co do ní přišlo první, první odchází.</p>
+<pre><code>fronta ← [s₀];  předchůdce[s₀] ← nic
+dokud fronta není prázdná:
+    s ← odeber první prvek fronty
+    pokud s ∈ C: zrekonstruuj cestu po předchůdcích, konec
+    pro každý stav t, do kterého vede z s operátor:
+        pokud t ještě nemá předchůdce:      (t vidíme poprvé)
+            předchůdce[t] ← s
+            přidej t na konec fronty
+cíl není dosažitelný</code></pre>
+<p>Průběh pro převozníka (sousedy zkoumáme v pořadí: sám, vlk, koza, zelí):</p>
+<div class="tbl"><table>
+  <thead><tr><th>krok</th><th>odebraný stav</th><th>nově objevení sousedé</th><th>fronta po kroku</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><code>PVKZ|·</code></td><td><code>VZ|PK</code></td><td><code>VZ|PK</code></td></tr>
+    <tr><td>2</td><td><code>VZ|PK</code></td><td><code>PVZ|K</code></td><td><code>PVZ|K</code></td></tr>
+    <tr><td>3</td><td><code>PVZ|K</code></td><td><code>Z|PVK</code>, <code>V|PKZ</code></td><td><code>Z|PVK</code>, <code>V|PKZ</code></td></tr>
+    <tr><td>4</td><td><code>Z|PVK</code></td><td><code>PKZ|V</code></td><td><code>V|PKZ</code>, <code>PKZ|V</code></td></tr>
+    <tr><td>5</td><td><code>V|PKZ</code></td><td><code>PVK|Z</code></td><td><code>PKZ|V</code>, <code>PVK|Z</code></td></tr>
+    <tr><td>6</td><td><code>PKZ|V</code></td><td><code>K|PVZ</code></td><td><code>PVK|Z</code>, <code>K|PVZ</code></td></tr>
+    <tr><td>7</td><td><code>PVK|Z</code></td><td>nic nového</td><td><code>K|PVZ</code></td></tr>
+    <tr><td>8</td><td><code>K|PVZ</code></td><td><code>PK|VZ</code></td><td><code>PK|VZ</code></td></tr>
+    <tr><td>9</td><td><code>PK|VZ</code></td><td><code>·|PVKZ</code></td><td><code>·|PVKZ</code></td></tr>
+    <tr><td>10</td><td><code>·|PVKZ</code></td><td colspan="2">cíl, konec</td></tr>
+  </tbody>
+</table></div>
+<p>Cestu získáme pozpátku: předchůdce cíle je <code>PK|VZ</code>, jeho předchůdce <code>K|PVZ</code>, … až ke startu. Vyjde řešení 1 se 7 plavbami.</p>
+<p><strong>Vlastnosti BFS.</strong> Je <dfn>úplné</dfn>: pokud řešení existuje a stavů je konečně mnoho, najde ho. Je <dfn>optimální</dfn> co do počtu kroků: protože prochází stavy po vrstvách, první nalezený cíl je nejblíž startu. Platí to, když všechny kroky stojí stejně. Nevýhodou je paměť: fronta může obsahovat celou jednu vrstvu grafu a ta bývá obrovská.</p>
+<div class="note mat"><b class="lbl">Proč si pamatovat navštívené stavy</b><p>Převozník může vozit kozu tam a zpátky donekonečna. Bez kontroly „už jsem tu byl“ by algoritmus přidával do fronty pořád ty samé stavy a v grafu s cyklem by nemusel skončit. Slovník <code>předchůdce</code> plní dvě úlohy najednou: říká, které stavy už jsme objevili, a umožní zpětně složit cestu.</p></div>
+</section>
+
+<section id="dfs">
+<h2>Prohledávání do hloubky (DFS)</h2>
+<p><dfn>Prohledávání do hloubky</dfn> (<i>depth-first search</i>, DFS) je stejný algoritmus, jen místo fronty používá <dfn>zásobník</dfn> (LIFO, last in, first out): jako další zkoumá stav, který přidalo naposledy. Pouští se tedy co nejhlouběji jednou cestou a teprve když nemůže dál, vrací se a zkouší jinou odbočku. Tak bys nejspíš postupoval v bludišti.</p>
+<p>Na úloze s džbány (3 l a 5 l, odměř 4 l, operátory v pořadí naplň 3l, naplň 5l, vylij 3l, vylij 5l, přelij 3l → 5l, přelij 5l → 3l) je rozdíl vidět:</p>
+<ul>
+  <li><strong>BFS</strong> najde řešení se <strong>6 kroky</strong>: (0, 0) → (0, 5) → (3, 2) → (0, 2) → (2, 0) → (2, 5) → (3, 4).</li>
+  <li><strong>DFS</strong> se nejdřív pustí cestou „naplň 3l“ a najde řešení s <strong>8 kroky</strong>: (0, 0) → (3, 0) → (0, 3) → (3, 3) → (1, 5) → (1, 0) → (0, 1) → (3, 1) → (0, 4).</li>
+</ul>
+<p>DFS tedy nemusí najít nejkratší řešení. Jeho výhodou je menší paměť: drží jen odbočky na aktuální cestě. Pokud je graf nekonečný (nebo obrovský), může DFS zabloudit do nekonečné větve a řešení nenajít vůbec, i když existuje. Proto se používá i varianta s omezenou hloubkou.</p>
+<div class="note tip"><b class="lbl">Rekurzí</b><p>DFS se často píše rekurzivně: funkce navštíví stav a pro každého nenavštíveného souseda zavolá sama sebe. Zásobník tu za nás vede Python, je to zásobník volání funkcí.</p></div>
+</section>
+
+<section id="srovnani">
+<h2>Srovnání BFS a DFS</h2>
+<div class="tbl"><table>
+  <thead><tr><th></th><th>do šířky (BFS)</th><th>do hloubky (DFS)</th></tr></thead>
+  <tbody>
+    <tr><td>datová struktura</td><td>fronta (FIFO)</td><td>zásobník (LIFO) nebo rekurze</td></tr>
+    <tr><td>pořadí</td><td>po vrstvách podle vzdálenosti od startu</td><td>jednou větví co nejhlouběji, pak návrat</td></tr>
+    <tr><td>nejkratší řešení</td><td>ano (při stejné ceně kroků)</td><td>nezaručuje</td></tr>
+    <tr><td>najde řešení, když existuje</td><td>ano, i v nekonečném grafu, má-li každý stav konečně mnoho sousedů</td><td>v konečném grafu ano, v nekonečném nemusí</td></tr>
+    <tr><td>paměť</td><td>celá vrstva, může být obrovská</td><td>jen aktuální cesta a odbočky</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<section id="python">
+<h2>Program v Pythonu</h2>
+<div class="note tip"><b class="lbl">Džbány v Pythonu</b><p>Podrobný výklad programu po částech a krokování, jak prohledávání do šířky řeší úlohu s džbány, najdeš na stránce <a href="01_stavovy_prostor_python.html">Džbány v Pythonu</a>.</p></div>
+<p>Pro zájemce: celý postup pro převozníka. Stav je n-tice <code>(p, v, k, z)</code>, předchůdce si ukládáme do slovníku a jako frontu používáme <code>deque</code> z modulu <code>collections</code>, ze které jde rychle odebírat zepředu. Ulož si program do souboru a spusť ho u sebe.</p>
+<div class="codehead"><span>prevoznik.py</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">from collections import deque
+
+# stav = (převozník, vlk, koza, zelí); 0 = levý břeh, 1 = pravý břeh
+START = (0, 0, 0, 0)
+CIL = (1, 1, 1, 1)
+
+
+def je_bezpecny(stav):
+    p, v, k, z = stav
+    if v == k and p != k:      # vlk s kozou bez převozníka
+        return False
+    if k == z and p != k:      # koza se zelím bez převozníka
+        return False
+    return True
+
+
+def nasledovnici(stav):
+    """Vrátí seznam stavů, do kterých se dá dostat jednou plavbou."""
+    vysledek = []
+    for naklad in (None, 1, 2, 3):          # sám, vlk, koza, zelí
+        if naklad is not None and stav[naklad] != stav[0]:
+            continue                        # náklad není na břehu převozníka
+        novy = list(stav)
+        novy[0] = 1 - novy[0]               # převozník přepluje
+        if naklad is not None:
+            novy[naklad] = 1 - novy[naklad] # a veze náklad
+        novy = tuple(novy)
+        if je_bezpecny(novy):
+            vysledek.append(novy)
+    return vysledek
+
+
+def bfs(start, cil):
+    predchudce = {start: None}              # zároveň množina objevených stavů
+    fronta = deque([start])
+    while fronta:
+        stav = fronta.popleft()
+        if stav == cil:
+            cesta = []
+            while stav is not None:         # pozpátku po předchůdcích
+                cesta.append(stav)
+                stav = predchudce[stav]
+            return cesta[::-1]
+        for dalsi in nasledovnici(stav):
+            if dalsi not in predchudce:
+                predchudce[dalsi] = stav
+                fronta.append(dalsi)
+    return None                             # cíl není dosažitelný
+
+
+def zapis(stav):
+    jmena = "PVKZ"
+    vlevo = "".join(j for j, b in zip(jmena, stav) if b == 0) or "·"
+    vpravo = "".join(j for j, b in zip(jmena, stav) if b == 1) or "·"
+    return vlevo + "|" + vpravo
+
+
+cesta = bfs(START, CIL)
+print("Počet plaveb:", len(cesta) - 1)
+for stav in cesta:
+    print(zapis(stav))</code></pre>
+<p>Výstup:</p>
+<pre><code>Počet plaveb: 7
+PVKZ|·
+VZ|PK
+PVZ|K
+Z|PVK
+PKZ|V
+K|PVZ
+PK|VZ
+·|PVKZ</code></pre>
+<p>Funkce <code>bfs</code> neví nic o vlcích ani kozách. Pracuje s libovolnými stavy, stačí jí start, cíl a funkce <code>nasledovnici</code>. Na jinou úlohu ji použiješ tak, že napíšeš jinou funkci <code>nasledovnici</code>. Když v <code>bfs</code> zaměníš <code>popleft()</code> za <code>pop()</code>, bude se fronta chovat jako zásobník a z BFS se stane DFS.</p>
+</section>
+
+<p class="part">Velikost</p>
+
+<section id="exploze">
+<h2>Kombinatorická exploze</h2>
+<p>Počet stavů obvykle roste <strong>exponenciálně</strong> s velikostí úlohy. Každý disk Hanojských věží navíc ztrojnásobí počet stavů, každé pole hlavolamu navíc ho zhruba vynásobí počtem polí.</p>
+<div class="tbl"><table>
+  <thead><tr><th>úloha</th><th>počet stavů</th><th>poznámka</th></tr></thead>
+  <tbody>
+    <tr><td>Převozník</td><td>16</td><td>projde se ručně</td></tr>
+    <tr><td>Hanojské věže, 10 disků</td><td>3¹⁰ = 59 049</td><td>nejkratší řešení 2¹⁰ − 1 = 1 023 tahů</td></tr>
+    <tr><td>Hlavolam 3 × 3</td><td>181 440 dosažitelných</td><td>počítač za zlomek sekundy, nejtěžší pozice 31 tahů<sup class="ref"><a href="#z5">5</a></sup></td></tr>
+    <tr><td>Hlavolam 4 × 4</td><td>16! / 2 ≈ 1,05 · 10¹³</td><td>nejtěžší pozice 80 tahů, zjištěno v roce 1999<sup class="ref"><a href="#z5">5</a></sup></td></tr>
+    <tr><td>Rubikova kostka</td><td>≈ 4,3 · 10¹⁹</td><td>každý stav jde složit nejvýš 20 tahy, dokázáno 2010<sup class="ref"><a href="#z6">6</a></sup></td></tr>
+    <tr><td>Šachy</td><td>≈ 4,8 · 10⁴⁴ legálních pozic</td><td>odhad Johna Trompa z roku 2022<sup class="ref"><a href="#z7">7</a></sup></td></tr>
+    <tr><td>Go 19 × 19</td><td>≈ 2,1 · 10¹⁷⁰ legálních pozic</td><td>přesně spočítáno v roce 2016<sup class="ref"><a href="#z8">8</a></sup></td></tr>
+  </tbody>
+</table></div>
+<p>Pro představu: počítač, který zvládne miliardu stavů za sekundu, by Rubikovu kostku procházel asi 1 400 let. Šachové pozice by procházel asi 10²⁸ let, přičemž vesmír je starý asi 1,4 · 10¹⁰ let. Počet pozic v Go převyšuje i počet atomů v pozorovatelném vesmíru (odhadem 10⁸⁰).</p>
+<p>U velkých úloh proto hrubá síla nestačí. Pomáhají <dfn>heuristiky</dfn>, odhady, který stav je blíž cíli, aby algoritmus zkoumal nejdřív slibné stavy (algoritmus A*). Důkaz u Rubikovy kostky využil symetrie, díky kterým stačilo prověřit jen zlomek stavů, a i tak spotřeboval asi 35 let procesorového času na počítačích Googlu.<sup class="ref"><a href="#z6">6</a></sup> Program AlphaGo neprohledával všechny tahy, neuronová síť mu radila, které stojí za prozkoumání.</p>
+</section>
+
+<section id="dosazitelnost">
+<h2>Dosažitelné stavy</h2>
+<p>Ne každý stav z množiny S jde z počátečního stavu skutečně získat. <dfn>Dosažitelný</dfn> je stav, do kterého vede z s₀ nějaká cesta. BFS i DFS projdou právě dosažitelné stavy, proto se dají použít i k jejich spočítání.</p>
+<ul>
+  <li>U džbánů 3 l a 5 l je dvojic 24, ale dosažitelných jen 16. Po každém kroku je totiž aspoň jeden džbán prázdný nebo plný, takže třeba stav (1, 1) nikdy nenastane.</li>
+  <li>U hlavolamu 3 × 3 je rozmístění 9! = 362 880, ale posouváním jde získat jen polovina. Stavy se dělí na dvě stejně velké skupiny podle <dfn>parity permutace</dfn> a žádný tah z jedné do druhé nevede. Když z hlavolamu vytáhneš dvě kostičky a vrátíš je prohozené, dostaneš se do druhé skupiny a hlavolam už nesložíš.<sup class="ref"><a href="#z5">5</a></sup></li>
+</ul>
+<p>Pokud cílový stav není dosažitelný, úloha nemá řešení. BFS to pozná tak, že se mu vyprázdní fronta.</p>
+</section>
+
+<p class="part">Procvičení</p>
+
+<section id="ulohy">
+<h2>Úlohy</h2>
+<details class="q"><summary>1. Misionáři a kanibalové: tři misionáři a tři kanibalové mají přejet řeku loďkou pro dva. Loďka nepluje prázdná. Kde jsou misionáři v menšině, kanibalové je sní. Navrhni stav, spočítej všechny a povolené stavy.</summary><div class="a"><p>Stav (m, k, l): misionáři a kanibalové na levém břehu a strana loďky. 4 · 4 · 2 = 32 stavů. Povolená je dvojice (m, k), kde na žádném břehu nejsou misionáři v menšině (nebo tam žádní nejsou): takových dvojic je 10, s loďkou 20 stavů. Z (3, 3, levý) je dosažitelných 16 a nejkratší řešení má 11 plaveb.<sup class="ref"><a href="#z3">3</a></sup></p></div></details>
+<details class="q"><summary>2. Máš džbány na 4 l a 9 l. Kolik nejméně kroků potřebuješ, abys v jednom měl 6 litrů?</summary><div class="a"><p>8 kroků: (0, 0) → (0, 9) → (4, 5) → (0, 5) → (4, 1) → (0, 1) → (1, 0) → (1, 9) → (4, 6). Ověřit to můžeš programem z této kapitoly s jinou funkcí <code>nasledovnici</code>.</p></div></details>
+<details class="q"><summary>3. Máš džbány na 2 l a 4 l. Jde odměřit 3 litry?</summary><div class="a"><p>Nejde. Každý operátor zachovává sudost: plné džbány mají sudý objem a přeléváním sudých čísel vznikne zase sudé číslo. Dosažitelné stavy mají v obou džbánech sudý počet litrů. Obecně jde odměřit jen násobky největšího společného dělitele objemů džbánů.</p></div></details>
+<details class="q"><summary>4. Hanojské věže se 3 disky: kolik je stavů a kolik tahů má nejkratší řešení?</summary><div class="a"><p>3³ = 27 stavů, nejkratší řešení 2³ − 1 = 7 tahů. Graf stavů Hanojských věží má tvar Sierpińského trojúhelníku.<sup class="ref"><a href="#z4">4</a></sup></p></div></details>
+<details class="q"><summary>5. Programátorská: uprav program pro převozníka tak, aby řešil džbány 3 l a 5 l. Co změníš?</summary><div class="a"><p>Funkce <code>bfs</code> zůstane stejná. Změní se start (0, 0), test cíle (místo <code>stav == cil</code> podmínka, že ve větším džbánu jsou 4 litry) a funkce <code>nasledovnici</code>, která vrátí výsledky šesti operátorů: naplň, vylij a přelij pro každý džbán. Při přelévání se přelije <code>min(a, 5 − b)</code> litrů.</p></div></details>
+</section>
+
+<section id="osnova">
+<h2>Jak odpovídat u maturity</h2>
+<ol class="plan">
+  <li><b>Motivace:</b> úloha o převozníkovi (Alkuin, asi 800), proč hledat obecný postup.</li>
+  <li><b>Stav:</b> co do něj patří a co ne, zápis, počet stavů, zakázané stavy.</li>
+  <li><b>Definice:</b> (S, s₀, C, O), operátor s podmínkou a účinkem, řešení a optimální řešení.</li>
+  <li><b>Graf stavů:</b> vrcholy a hrany, orientovaný a neorientovaný, řešení jako cesta.</li>
+  <li><b>BFS:</b> fronta, průběh na příkladu, úplnost a optimalita, paměť.</li>
+  <li><b>DFS:</b> zásobník nebo rekurze, rozdíl od BFS, příklad džbánů.</li>
+  <li><b>Navštívené stavy:</b> cykly, rekonstrukce cesty přes předchůdce.</li>
+  <li><b>Velikost:</b> kombinatorická exploze, dosažitelné stavy, heuristiky.</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Co je stav a co do něj nepatří?</summary><div class="a"><p>Popis celé situace v jednom okamžiku, ze kterého jde rozhodnout, jaké tahy jsou dovolené a jestli jsme v cíli. Nepatří do něj historie tahů ani nepodstatné detaily.</p></div></details>
+<details class="q"><summary>Z čeho se skládá stavový prostor?</summary><div class="a"><p>Z množiny stavů S, počátečního stavu s₀, množiny cílových stavů C a množiny operátorů O.</p></div></details>
+<details class="q"><summary>Kolik stavů má úloha o převozníkovi a kolik z nich je povolených?</summary><div class="a"><p>16 (čtyři bity), povolených 10, zakázaných 6.</p></div></details>
+<details class="q"><summary>Co tvoří vrcholy a co hrany grafu stavů?</summary><div class="a"><p>Vrcholy jsou stavy, hrany použití operátorů. Řešení je cesta z počátečního vrcholu do cílového.</p></div></details>
+<details class="q"><summary>Jakou datovou strukturu používá BFS a jakou DFS?</summary><div class="a"><p>BFS frontu (FIFO), DFS zásobník (LIFO), případně rekurzi.</p></div></details>
+<details class="q"><summary>Proč BFS najde nejkratší řešení?</summary><div class="a"><p>Prochází stavy po vrstvách podle vzdálenosti od startu. Všechny stavy ve vzdálenosti d zpracuje dřív než kterýkoli ve vzdálenosti d + 1, takže první nalezený cíl je nejblíž. Platí to, když mají všechny kroky stejnou cenu.</p></div></details>
+<details class="q"><summary>Kdy je DFS výhodnější než BFS?</summary><div class="a"><p>Když záleží na paměti a nepotřebujeme nejkratší řešení, například když je řešení hodně a leží hluboko. DFS drží v paměti jen aktuální cestu, BFS celou vrstvu.</p></div></details>
+<details class="q"><summary>Co se stane, když si algoritmus nepamatuje navštívené stavy?</summary><div class="a"><p>Bude stejné stavy zkoumat znovu a v grafu s cyklem (převozník s kozou tam a zpět) se může zacyklit.</p></div></details>
+<details class="q"><summary>Jak z výsledku BFS získáme samotnou cestu?</summary><div class="a"><p>U každého objeveného stavu si pamatujeme předchůdce. Od cíle jdeme po předchůdcích zpět ke startu a posloupnost otočíme.</p></div></details>
+<details class="q"><summary>Proč nejde vyřešit šachy prohledáním všech pozic?</summary><div class="a"><p>Legálních pozic je asi 4,8 · 10⁴⁴. Ani při miliardě pozic za sekundu by to nešlo stihnout za dobu existence vesmíru. Je to příklad kombinatorické exploze.</p></div></details>
+<details class="q"><summary>Proč nejde složit hlavolam 3 × 3, ve kterém někdo prohodil dvě kostičky?</summary><div class="a"><p>Stavy hlavolamu se dělí na dvě poloviny podle parity permutace a posouvání nikdy nepřevede stav z jedné poloviny do druhé. Prohozením dvou kostiček se parita změní, cílový stav je pak nedosažitelný.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Stav</dt><dd>popis celé situace v jednom okamžiku</dd>
+  <dt>Stavový prostor</dt><dd>čtveřice (S, s₀, C, O): stavy, počáteční stav, cílové stavy, operátory</dd>
+  <dt>Operátor</dt><dd>akce převádějící stav na jiný, s podmínkou použitelnosti a účinkem</dd>
+  <dt>Zakázaný stav</dt><dd>stav, který porušuje pravidla úlohy</dd>
+  <dt>Dosažitelný stav</dt><dd>stav, do kterého vede cesta z počátečního stavu</dd>
+  <dt>Graf stavů</dt><dd>stavy jako vrcholy, přechody jako hrany</dd>
+  <dt>Řešení</dt><dd>posloupnost operátorů z počátečního do cílového stavu</dd>
+  <dt>Optimální řešení</dt><dd>řešení s nejmenším počtem kroků nebo nejmenší cenou</dd>
+  <dt>Fronta (FIFO)</dt><dd>první vložený prvek odchází první</dd>
+  <dt>Zásobník (LIFO)</dt><dd>poslední vložený prvek odchází první</dd>
+  <dt>BFS</dt><dd>prohledávání do šířky, používá frontu, najde nejkratší řešení</dd>
+  <dt>DFS</dt><dd>prohledávání do hloubky, používá zásobník nebo rekurzi</dd>
+  <dt>Předchůdce</dt><dd>stav, ze kterého algoritmus daný stav objevil; slouží k rekonstrukci cesty</dd>
+  <dt>Kombinatorická exploze</dt><dd>exponenciální růst počtu stavů s velikostí úlohy</dd>
+  <dt>Heuristika</dt><dd>odhad, jak daleko je stav od cíle, který zrychlí hledání</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v listopadu 2026. Počty stavů převozníka, džbánů a misionářů jsou spočítané programem.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://en.wikipedia.org/wiki/Wolf,_goat_and_cabbage_problem">Wikipedia: Wolf, goat and cabbage problem</a></li>
+  <li id="z2"><a href="https://www.proofwiki.org/wiki/Propositiones_ad_Acuendos_Juvenes/Problems/18_-_De_Lupo_et_Capra_et_Fasciculo_Cauli">ProofWiki: Propositiones ad Acuendos Juvenes, Problem 18</a></li>
+  <li id="z3"><a href="https://en.wikipedia.org/wiki/Missionaries_and_cannibals_problem">Wikipedia: Missionaries and cannibals problem</a></li>
+  <li id="z4"><a href="https://en.wikipedia.org/wiki/Tower_of_Hanoi">Wikipedia: Tower of Hanoi</a></li>
+  <li id="z5"><a href="https://en.wikipedia.org/wiki/15_puzzle">Wikipedia: 15 puzzle</a>, <a href="https://oeis.org/A087725">OEIS A087725: nejdelší optimální řešení posunovacích hlavolamů</a></li>
+  <li id="z6"><a href="https://cube20.org/">Rokicki, Kociemba, Davidson, Dethridge: God's Number is 20 (cube20.org)</a></li>
+  <li id="z7"><a href="https://github.com/tromp/ChessPositionRanking">John Tromp: Chess Position Ranking</a></li>
+  <li id="z8"><a href="https://en.wikipedia.org/wiki/Go_and_mathematics">Wikipedia: Go and mathematics</a></li>
+  <li id="z9"><a href="https://en.wikipedia.org/wiki/Breadth-first_search">Wikipedia: Breadth-first search</a>, <a href="https://en.wikipedia.org/wiki/Depth-first_search">Depth-first search</a></li>
+  <li id="z10">S. Russell, P. Norvig: <i>Artificial Intelligence: A Modern Approach</i>, 4. vydání, kapitola 3 Solving Problems by Searching</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k bloku Algoritmy. Interaktivní ukázky (hra s převozníkem, graf stavů, BFS krok za krokem, džbány, strom prohledávání, hlavolam 3 × 3) najdeš v prezentaci 01.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
+    });
+  });
+  var fig = document.getElementById('bitfig');
+  if (fig) {
+    var JM = ['🧑‍🌾', '🐺', '🐐', '🥬'], JN = ['převozník', 'vlk', 'koza', 'zelí'], JL = 'PVKZ', st = [1, 0, 1, 0];
+    var cells = Array.prototype.slice.call(fig.querySelectorAll('.bf-cell'));
+    var kdo = function (strana) { return st.map(function (b, i) { return b === strana ? '<span>' + JM[i] + '<small>' + JN[i] + '</small></span>' : ''; }).join('') || '<em>nikdo</em>'; };
+    var bfDraw = function () {
+      cells.forEach(function (c, i) { c.classList.toggle('is-1', st[i] === 1); c.classList.toggle('is-0', st[i] === 0); c.querySelector('.bf-bit').textContent = st[i]; });
+      document.getElementById('bfCode').textContent = st.join('');
+      document.getElementById('bfL').innerHTML = kdo(0);
+      document.getElementById('bfR').innerHTML = kdo(1);
+      var l = '', r = ''; st.forEach(function (b, i) { if (b) r += JL[i]; else l += JL[i]; });
+      var p = st[0], v = st[1], k = st[2], z = st[3], proc = '';
+      if (v === k && p !== k) proc = 'vlk sežere kozu';
+      else if (k === z && p !== k) proc = 'koza sežere zelí';
+      var zap = 'Zápis dvou břehů: <code>' + (l || '·') + '|' + (r || '·') + '</code>. ';
+      document.getElementById('bfVerdict').innerHTML = zap + (proc ? '<b class="bf-bad">Zakázaný stav:</b> ' + proc + ', převozník je na druhém břehu.' : st.join('') === '0000' ? '<b>Počáteční stav.</b>' : st.join('') === '1111' ? '<b>Cílový stav.</b>' : '<b>Povolený stav.</b>');
+    };
+    cells.forEach(function (c, i) { c.addEventListener('click', function () { st[i] = 1 - st[i]; bfDraw(); }); });
+    bfDraw();
+  }
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

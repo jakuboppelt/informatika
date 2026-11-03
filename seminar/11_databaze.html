@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Databáze a SQL</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <!-- 0 titul -->
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 11</div>
+      <h1>Databáze a základy SQL</h1>
+      <p class="lede">Druhy databází, tabulky a vztahy mezi nimi, klíče, datové typy a základní příkazy SQL. Všechno na jedné malé školní databázi, kterou si pak postavíš na vlastním počítači.</p>
+      <p class="hint">Praktická ukázka a studijní text jsou na rozcestníku vedle prezentace.</p>
+    </div></section>
+
+    <!-- 1 otázka -->
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Na začátek</div>
+      <div class="qmark">?</div>
+      <h2>Kolikrát ses dnes dotkl databáze?</h2>
+      <p class="lede">Zkus spočítat, kolik databází dnes pracovalo pro tebe. Známky v EduPage, jízdenka v telefonu, platba kartou v jídelně, zprávy v chatu, seznam písniček, kontakty v mobilu.</p>
+      <p class="lede">Za každou z těch věcí je program, který si data někam ukládá, hlídá je a umí v nich rychle hledat.</p>
+    </div></section>
+
+    <!-- 2 proč ne excel -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Proč databáze</div>
+      <h2 class="slide-title">Proč nestačí tabulka v Excelu</h2>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">Tabulka v Excelu</div>
+          <div class="compare-row"><span>Kdo píše</span><span>většinou jeden člověk</span></div>
+          <div class="compare-row"><span>Kontrola dat</span><span>do buňky jde napsat cokoli</span></div>
+          <div class="compare-row"><span>Opakování</span><span>třída se píše u každého žáka znovu</span></div>
+          <div class="compare-row"><span>Velikost</span><span>tisíce řádků</span></div>
+          <div class="compare-row"><span>Hledání</span><span>ručně, filtrem</span></div>
+        </div>
+        <div class="compare-col"><div class="compare-head">Databáze</div>
+          <div class="compare-row"><span>Kdo píše</span><span>tisíce uživatelů současně</span></div>
+          <div class="compare-row"><span>Kontrola dat</span><span>typy, povinné hodnoty, klíče</span></div>
+          <div class="compare-row"><span>Opakování</span><span>údaj je uložený jen jednou</span></div>
+          <div class="compare-row"><span>Velikost</span><span>miliardy záznamů</span></div>
+          <div class="compare-row"><span>Hledání</span><span>dotazem v SQL, s indexy</span></div>
+        </div>
+      </div>
+      <p class="lede">Databáze nezakazuje Excel. Hodí se ve chvíli, kdy dat přibývá, pracuje s nimi víc lidí najednou a chyby v nich něco stojí.</p>
+    </div></section>
+
+    <!-- 3 pojmy -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Pojmy</div>
+      <h2 class="slide-title">Databáze, SŘBD a databázový systém</h2>
+      <div class="split">
+        <div class="stack">
+          <p class="lede"><b>Databáze</b> je uspořádaná sbírka dat uložených podle pevných pravidel.</p>
+          <p class="lede"><b>SŘBD</b>, systém řízení báze dat (anglicky <i>DBMS</i>), je program, který databázi spravuje: ukládá, hlídá pravidla, vyřizuje dotazy a řídí přístup.</p>
+          <p class="lede"><b>Databázový systém</b> = databáze + SŘBD. Aplikace se nikdy nehrabe v souborech přímo, ptá se SŘBD.</p>
+        </div>
+        <div class="stack">
+          <div class="cards4" id="dbmsCards"></div>
+          <div class="panel" id="dbmsPanel"></div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 4 historie -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Historie</div>
+      <h2 class="slide-title">Od Apolla k SQLite v každém telefonu</h2>
+      <div class="tl-chips" id="hist"></div>
+      <div class="panel p-tall" id="histPanel"></div>
+    </div></section>
+
+    <!-- 5 druhy -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Druhy databází</div>
+      <h2 class="slide-title">Jak může databáze uspořádat data</h2>
+      <div class="cards4" id="kindCards"></div>
+      <div class="split">
+        <div class="panel p-tall" id="kindPanel"></div>
+        <pre class="code" id="kindCode"></pre>
+      </div>
+    </div></section>
+
+    <!-- 6 relační × NoSQL -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Srovnání</div>
+      <h2 class="slide-title">Relační, nebo NoSQL?</h2>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">Relační (SQL)</div>
+          <div class="compare-row"><span>Struktura</span><span>tabulky s pevným schématem</span></div>
+          <div class="compare-row"><span>Dotazy</span><span>jazyk SQL, spojování tabulek</span></div>
+          <div class="compare-row"><span>Konzistence</span><span>transakce ACID</span></div>
+          <div class="compare-row"><span>Růst</span><span>hlavně silnější server</span></div>
+          <div class="compare-row"><span>Příklady</span><span>PostgreSQL, MySQL, SQLite</span></div>
+        </div>
+        <div class="compare-col"><div class="compare-head">NoSQL</div>
+          <div class="compare-row"><span>Struktura</span><span>dokumenty, klíče, grafy, volné schéma</span></div>
+          <div class="compare-row"><span>Dotazy</span><span>vlastní jazyk nebo API každého systému</span></div>
+          <div class="compare-row"><span>Konzistence</span><span>často jen „časem se srovná“</span></div>
+          <div class="compare-row"><span>Růst</span><span>víc serverů vedle sebe</span></div>
+          <div class="compare-row"><span>Příklady</span><span>MongoDB, Redis, Cassandra, Neo4j</span></div>
+        </div>
+      </div>
+      <p class="lede">Žádný druh není lepší obecně. Banka, škola nebo e-shop chtějí přesná a provázaná data, proto relační. Sociální síť, cache nebo data ze senzorů často volí NoSQL. Velké firmy používají obojí.</p>
+    </div></section>
+
+    <!-- 7 anatomie tabulky -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Relační model</div>
+      <h2 class="slide-title">Z čeho se skládá tabulka</h2>
+      <div class="seg" id="anaSeg"></div>
+      <div class="table-wrap"><table class="datatable db-tbl" id="anaTbl">
+        <thead><tr><th data-r="col pk">id</th><th data-r="col">jmeno</th><th data-r="col">prijmeni</th><th data-r="col">email</th><th data-r="col fk">trida_id</th></tr></thead>
+        <tbody>
+          <tr data-r="row"><td data-r="pk">1</td><td data-r="val">Adam</td><td>Novák</td><td>adam.novak@skola.example</td><td data-r="fk">1</td></tr>
+          <tr><td data-r="pk">2</td><td>Eliška</td><td>Svobodová</td><td>eliska.svobodova@skola.example</td><td data-r="fk">1</td></tr>
+          <tr><td data-r="pk">3</td><td>Tomáš</td><td>Dvořák</td><td data-r="null">NULL</td><td data-r="fk">1</td></tr>
+          <tr><td data-r="pk">4</td><td>Klára</td><td>Černá</td><td>klara.cerna@skola.example</td><td data-r="fk">1</td></tr>
+          <tr><td data-r="pk">5</td><td>Jakub</td><td>Procházka</td><td>jakub.prochazka@skola.example</td><td data-r="fk">2</td></tr>
+        </tbody>
+      </table></div>
+      <div class="panel" id="anaPanel"></div>
+    </div></section>
+
+    <!-- 8 dva významy slova relace -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Pozor na slovo</div>
+      <h2 class="slide-title">Relace není vztah. Tedy v teorii</h2>
+      <div class="compare-grid">
+        <div class="compare-col"><div class="compare-head">V teorii (Codd, 1970)</div>
+          <div class="compare-row"><span>Relace</span><span>= tabulka</span></div>
+          <div class="compare-row"><span>Proč</span><span>množina n-tic, matematický pojem</span></div>
+          <div class="compare-row"><span>N-tice</span><span>= řádek, záznam</span></div>
+          <div class="compare-row"><span>Atribut</span><span>= sloupec</span></div>
+        </div>
+        <div class="compare-col"><div class="compare-head">V běžné řeči</div>
+          <div class="compare-row"><span>„Relace“</span><span>= vztah mezi tabulkami</span></div>
+          <div class="compare-row"><span>Správně</span><span>vztah, vazba (relationship)</span></div>
+          <div class="compare-row"><span>Druhy</span><span>1 : 1, 1 : N, M : N</span></div>
+          <div class="compare-row"><span>Proto</span><span>se databázím říká „relační“ kvůli tabulkám</span></div>
+        </div>
+      </div>
+      <p class="lede">Odtud název <b>relační databáze</b>: data jsou v relacích, tedy v tabulkách. U maturity se hodí oba významy znát a říct, který myslíš.</p>
+    </div></section>
+
+    <!-- 9 klíče -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Klíče</div>
+      <h2 class="slide-title">Jak najít právě jeden záznam</h2>
+      <div class="table-wrap"><table class="datatable"><thead><tr><th>Klíč</th><th>Co to je</th><th>Příklad</th></tr></thead><tbody>
+        <tr><td><b>Primární</b></td><td>jednoznačně určí řádek, nesmí být prázdný ani se opakovat</td><td><code>studenti.id</code></td></tr>
+        <tr><td><b>Cizí</b></td><td>odkazuje na primární klíč jiné tabulky, tím vzniká vztah</td><td><code>studenti.trida_id</code> → <code>tridy.id</code></td></tr>
+        <tr><td><b>Kandidátní</b></td><td>každý sloupec, který by mohl být primárním klíčem</td><td><code>email</code>, <code>id</code></td></tr>
+        <tr><td><b>Složený</b></td><td>klíč z víc sloupců, jeden by nestačil</td><td>(třída, číslo v katalogu)</td></tr>
+        <tr><td><b>Přirozený</b></td><td>vychází z reálného světa</td><td>e-mail, ISBN, SPZ</td></tr>
+        <tr><td><b>Umělý</b></td><td>číslo bez významu, které přidělí databáze</td><td><code>id</code> = 1, 2, 3 …</td></tr>
+      </tbody></table></div>
+      <p class="lede">V praxi se skoro vždy volí <b>umělý klíč</b>. Přirozený se může změnit: student si změní e-mail, auto dostane novou SPZ. Rodné číslo jako klíč nevolíme vůbec: je to citlivý osobní údaj.</p>
+    </div></section>
+
+    <!-- 10 vztahy -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Vztahy mezi tabulkami</div>
+      <h2 class="slide-title">1 : 1, 1 : N a M : N</h2>
+      <div class="seg" id="relSeg"></div>
+      <div class="db-er" id="relEr"></div>
+      <div class="panel" id="relPanel"></div>
+    </div></section>
+
+    <!-- 11 integrita -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Integrita</div>
+      <h2 class="slide-title">Databáze hlídá, aby data dávala smysl</h2>
+      <div class="cards4" id="intCards"></div>
+      <div class="panel" id="intPanel"></div>
+    </div></section>
+
+    <!-- 12 normalizace -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Normalizace</div>
+      <h2 class="slide-title">Každý údaj uložit jen jednou</h2>
+      <div class="seg" id="normSeg"></div>
+      <div class="split">
+        <div class="table-wrap" id="normTbl"></div>
+        <div class="panel p-tall" id="normPanel"></div>
+      </div>
+    </div></section>
+
+    <!-- 13 datové typy -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Datové typy</div>
+      <h2 class="slide-title">Každý sloupec má svůj typ</h2>
+      <div class="table-wrap"><table class="datatable"><thead><tr><th>Typ</th><th>Co ukládá</th><th>Příklad</th></tr></thead><tbody>
+        <tr><td><code>INTEGER</code></td><td>celé číslo</td><td>počet kusů, ročník, id</td></tr>
+        <tr><td><code>DECIMAL(p, s)</code></td><td>přesné desetinné číslo: p číslic, z toho s za čárkou</td><td>cena <code>DECIMAL(10, 2)</code></td></tr>
+        <tr><td><code>REAL</code>, <code>FLOAT</code></td><td>desetinné číslo s plovoucí čárkou, nepřesné</td><td>teplota, souřadnice</td></tr>
+        <tr><td><code>CHAR(n)</code></td><td>text pevné délky n znaků</td><td>kód země <code>CZ</code></td></tr>
+        <tr><td><code>VARCHAR(n)</code></td><td>text proměnné délky, nejvýš n znaků</td><td>jméno, e-mail</td></tr>
+        <tr><td><code>TEXT</code></td><td>dlouhý text</td><td>popis, poznámka</td></tr>
+        <tr><td><code>DATE</code>, <code>TIME</code>, <code>DATETIME</code></td><td>datum a čas</td><td><code>'2026-11-04'</code></td></tr>
+        <tr><td><code>BOOLEAN</code></td><td>pravda, nebo nepravda</td><td>souhlas s podmínkami</td></tr>
+        <tr><td><code>BLOB</code></td><td>binární data</td><td>obrázek, soubor</td></tr>
+      </tbody></table></div>
+      <p class="lede"><b>NULL</b> není nula ani prázdný text. Znamená „hodnota chybí“. Proto se testuje <code>IS NULL</code>, ne <code>= NULL</code>.</p>
+    </div></section>
+
+    <!-- 14 hádej typ -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Vyzkoušej</div>
+      <h2 class="slide-title">Jaký typ bys zvolil?</h2>
+      <p class="lede">Nejdřív si odpověď řekni sám, pak klikni.</p>
+      <div class="cards4" id="typeCards"></div>
+      <div class="panel" id="typePanel"></div>
+    </div></section>
+
+    <!-- 15 SQL -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">SQL</div>
+      <h2 class="slide-title">Jazyk, kterým se s databází mluví</h2>
+      <p class="lede"><b>SQL</b> (Structured Query Language) vznikl v IBM v roce 1974 pod jménem SEQUEL. Je <b>deklarativní</b>: řekneš, <i>co</i> chceš dostat, a databáze sama vymyslí, <i>jak</i> to najít. Standard ISO/IEC 9075, poslední vydání SQL:2023.</p>
+      <div class="table-wrap"><table class="datatable"><thead><tr><th>Skupina</th><th>K čemu</th><th>Příkazy</th></tr></thead><tbody>
+        <tr><td><b>DDL</b> definice dat</td><td>vytvořit a měnit strukturu</td><td><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code></td></tr>
+        <tr><td><b>DML</b> manipulace s daty</td><td>vkládat, měnit, mazat řádky</td><td><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code></td></tr>
+        <tr><td><b>DQL</b> dotazy</td><td>číst data</td><td><code>SELECT</code></td></tr>
+        <tr><td><b>DCL</b> řízení přístupu</td><td>práva uživatelů</td><td><code>GRANT</code>, <code>REVOKE</code></td></tr>
+        <tr><td><b>TCL</b> transakce</td><td>potvrdit, nebo vrátit změny</td><td><code>BEGIN</code>, <code>COMMIT</code>, <code>ROLLBACK</code></td></tr>
+      </tbody></table></div>
+      <p class="tiny">Velikost písmen u příkazů nerozhoduje. Klíčová slova se píšou velkými písmeny, aby byla v dotazu dobře vidět.</p>
+    </div></section>
+
+    <!-- 16 CREATE -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">DDL</div>
+      <h2 class="slide-title">CREATE TABLE: postav tabulku</h2>
+      <div class="split">
+<pre class="code"><span class="k">CREATE TABLE</span> studenti (
+  id        <span class="k">INTEGER PRIMARY KEY</span>,
+  jmeno     <span class="k">VARCHAR</span>(<span class="n">40</span>) <span class="k">NOT NULL</span>,
+  prijmeni  <span class="k">VARCHAR</span>(<span class="n">40</span>) <span class="k">NOT NULL</span>,
+  narozen   <span class="k">DATE</span>,
+  email     <span class="k">VARCHAR</span>(<span class="n">80</span>) <span class="k">UNIQUE</span>,
+  trida_id  <span class="k">INTEGER NOT NULL</span>
+            <span class="k">REFERENCES</span> tridy(id)
+);</pre>
+        <div class="stack">
+          <p class="lede">Každý řádek = jeden sloupec: <b>název</b>, <b>typ</b> a <b>omezení</b>.</p>
+          <ul class="summary-list">
+            <li><code>PRIMARY KEY</code> primární klíč</li>
+            <li><code>NOT NULL</code> hodnota je povinná</li>
+            <li><code>UNIQUE</code> hodnota se nesmí opakovat</li>
+            <li><code>REFERENCES</code> cizí klíč do jiné tabulky</li>
+            <li><code>CHECK (…)</code> vlastní podmínka, třeba známka 1 až 5</li>
+          </ul>
+          <p class="tiny">Strukturu jde změnit: <code>ALTER TABLE studenti ADD COLUMN telefon VARCHAR(20);</code> a smazat i s daty: <code>DROP TABLE studenti;</code></p>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 17 DML -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">DML</div>
+      <h2 class="slide-title">Vložit, změnit, smazat</h2>
+<pre class="code"><span class="k">INSERT INTO</span> studenti (jmeno, prijmeni, narozen, trida_id)
+<span class="k">VALUES</span> (<span class="s">'Petr'</span>, <span class="s">'Beneš'</span>, <span class="s">'2010-04-04'</span>, <span class="n">1</span>);
+
+<span class="k">UPDATE</span> studenti
+<span class="k">SET</span> email = <span class="s">'petr.benes@skola.example'</span>
+<span class="k">WHERE</span> prijmeni = <span class="s">'Beneš'</span>;
+
+<span class="k">DELETE FROM</span> studenti
+<span class="k">WHERE</span> prijmeni = <span class="s">'Beneš'</span>;</pre>
+      <p class="lede"><b>Bez <code>WHERE</code> platí <code>UPDATE</code> a <code>DELETE</code> pro všechny řádky tabulky.</b> <code>DELETE FROM studenti;</code> smaže celou školu. Proto si podmínku nejdřív vyzkoušej v <code>SELECT</code>.</p>
+      <p class="tiny">Texty a data jsou v jednoduchých apostrofech, čísla bez nich. Datum se píše ve tvaru rok-měsíc-den.</p>
+    </div></section>
+
+    <!-- 18 SELECT -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">DQL</div>
+      <h2 class="slide-title">SELECT: zeptej se databáze</h2>
+      <div class="seg" id="qSeg"></div>
+      <div class="split">
+        <pre class="code" id="qCode"></pre>
+        <div class="stack"><div class="table-wrap" id="qRes"></div><p class="note" id="qNote"></p></div>
+      </div>
+      <p class="tiny">Pořadí částí je pevné: <code>SELECT</code> → <code>FROM</code> → <code>JOIN</code> → <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code> → <code>ORDER BY</code> → <code>LIMIT</code>. Výsledky jsou ze školní databáze z praktické ukázky.</p>
+    </div></section>
+
+    <!-- 19 JOIN -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Spojování tabulek</div>
+      <h2 class="slide-title">JOIN skládá řádky podle klíčů</h2>
+      <div class="seg" id="jSeg"></div>
+      <div class="split">
+        <pre class="code" id="jCode"></pre>
+        <div class="stack"><div class="table-wrap" id="jRes"></div><p class="note" id="jNote"></p></div>
+      </div>
+    </div></section>
+
+    <!-- 20 transakce -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Transakce</div>
+      <h2 class="slide-title">Všechno, nebo nic</h2>
+      <div class="split">
+<pre class="code"><span class="k">BEGIN</span>;
+<span class="k">UPDATE</span> ucty <span class="k">SET</span> zustatek = zustatek - <span class="n">500</span>
+  <span class="k">WHERE</span> id = <span class="n">1</span>;   <span class="c">-- Adam posílá</span>
+<span class="k">UPDATE</span> ucty <span class="k">SET</span> zustatek = zustatek + <span class="n">500</span>
+  <span class="k">WHERE</span> id = <span class="n">2</span>;   <span class="c">-- Eliška dostává</span>
+<span class="k">COMMIT</span>;</pre>
+        <p class="lede">Kdyby server spadl mezi oběma příkazy, peníze by zmizely. <b>Transakce</b> spojí příkazy do jednoho celku: buď proběhnou všechny (<code>COMMIT</code>), nebo žádný (<code>ROLLBACK</code>).</p>
+      </div>
+      <div class="cards4" id="acidCards"></div>
+      <div class="panel" id="acidPanel"></div>
+    </div></section>
+
+    <!-- 21 SQL injection -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Bezpečnost</div>
+      <h2 class="slide-title">Když aplikace skládá SQL z toho, co napíše uživatel</h2>
+      <p class="lede">Přihlašovací formulář, který vloží text z pole přímo do dotazu, dovolí útočníkovi změnit význam dotazu. Tomu se říká <b>SQL injection</b> a pořád patří k nejčastějším chybám webových aplikací.</p>
+<pre class="code"><span class="c">-- špatně: text od uživatele se přilepí do příkazu</span>
+dotaz = <span class="s">"SELECT * FROM uzivatele WHERE jmeno = '"</span> + jmeno + <span class="s">"'"</span>
+
+<span class="c">-- správně: parametrizovaný dotaz, hodnota jde zvlášť</span>
+con.execute(<span class="s">"SELECT * FROM uzivatele WHERE jmeno = ?"</span>, (jmeno,))</pre>
+      <p class="lede">Obrana je jednoduchá: <b>nikdy neskládat SQL z textu od uživatele</b> a používat parametrizované dotazy. Skutečné případy jsou v prezentaci <a href="../bezpecnost/03_uniky_a_utoky.html">Úniky a útoky</a>.</p>
+    </div></section>
+
+    <!-- 22 kvíz -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Pravda, nebo ne?</h2>
+      <p class="score" id="qzScore"></p>
+      <div class="clue" id="qzText"></div>
+      <div class="seg"><button class="calc-btn" data-a="1">Pravda</button><button class="calc-btn" data-a="0">Není pravda</button><button class="calc-btn" id="qzNext" hidden>Další →</button></div>
+      <div class="feedback" id="qzFb"></div>
+    </div></section>
+
+    <!-- 23 shrnutí -->
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li><b>Databáze</b> = data, <b>SŘBD</b> = program, který je spravuje. Druhy: hierarchické, síťové, <b>relační</b>, objektové a NoSQL.</li>
+        <li>Relační model (Codd, 1970): data v <b>tabulkách</b>. Řádek = <b>záznam</b>, sloupec = <b>atribut</b>. V teorii je relace sama tabulka.</li>
+        <li><b>Primární klíč</b> určí řádek, <b>cizí klíč</b> vytvoří vztah 1 : 1, 1 : N, nebo přes spojovací tabulku M : N.</li>
+        <li>Každý sloupec má <b>datový typ</b>. NULL znamená, že hodnota chybí.</li>
+        <li>SQL: <b>DDL</b> CREATE, ALTER, DROP · <b>DML</b> INSERT, UPDATE, DELETE · <b>DQL</b> SELECT s WHERE, ORDER BY, GROUP BY a JOIN.</li>
+        <li><b>Transakce</b> drží data v pořádku (ACID). SQL nikdy neskládej z textu od uživatele.</li>
+      </ul>
+    </div></section>
+
+    <!-- 24 zdroje -->
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud informace jsou</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Historie</h3><ul class="src-list">
+          <li><a href="https://dl.acm.org/doi/10.1145/362384.362685" target="_blank" rel="noopener">E. F. Codd: A Relational Model of Data for Large Shared Data Banks (1970)</a></li>
+          <li><a href="https://www.ibm.com/history/relational-database" target="_blank" rel="noopener">IBM: The relational database</a></li>
+          <li><a href="https://www.ibm.com/history/information-management-system" target="_blank" rel="noopener">IBM: IMS a program Apollo</a></li>
+          <li><a href="https://dl.acm.org/doi/10.1145/800296.811515" target="_blank" rel="noopener">Chamberlin, Boyce: SEQUEL (1974)</a></li>
+          <li><a href="https://www.oracle.com/corporate/history/" target="_blank" rel="noopener">Oracle: historie firmy</a></li>
+          <li><a href="https://www.postgresql.org/docs/current/history.html" target="_blank" rel="noopener">PostgreSQL: A Brief History</a></li>
+          <li><a href="https://www.sqlite.org/mostdeployed.html" target="_blank" rel="noopener">SQLite: Most Widely Deployed</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Standardy a dokumentace</h3><ul class="src-list">
+          <li><a href="https://www.iso.org/standard/76584.html" target="_blank" rel="noopener">ISO/IEC 9075-2:2023 (SQL/Foundation)</a></li>
+          <li><a href="https://www.sqlite.org/datatype3.html" target="_blank" rel="noopener">SQLite: Datatypes</a> · <a href="https://www.sqlite.org/foreignkeys.html" target="_blank" rel="noopener">Foreign Keys</a></li>
+          <li><a href="https://www.sqlite.org/lang.html" target="_blank" rel="noopener">SQLite: SQL As Understood By SQLite</a></li>
+          <li><a href="https://www.postgresql.org/docs/current/tutorial-sql.html" target="_blank" rel="noopener">PostgreSQL: The SQL Language (tutoriál)</a></li>
+          <li><a href="https://owasp.org/www-community/attacks/SQL_Injection" target="_blank" rel="noopener">OWASP: SQL Injection</a></li>
+          <li><a href="https://sqlitebrowser.org/" target="_blank" rel="noopener">DB Browser for SQLite</a></li>
+        </ul></div>
+      </div>
+      <p class="note">Ověřeno v listopadu 2026.</p>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  /* ---------- navigace ---------- */
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  /* výběr položky: tlačítka + panel; panel drží výšku podle nejdelšího obsahu, aby slajd neposkakoval */
+  function picker(host,items,mk,panel,show){
+    var btns=[];
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");show(it,i);
+      });host.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");show(items[0],0);
+    if(panel)fits.push({slide:host.closest(".slide"),fn:function(){
+      var act=btns.findIndex(function(b){return b.classList.contains("is-active");});
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){show(it,i);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";show(items[act],act);
+    }});
+  }
+  function card(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");}
+  function chip(c){return el("button","calc-btn",c.n);}
+  function table(cols,rows){
+    var h="<table class=\"datatable\"><thead><tr>"+cols.map(function(c){return "<th>"+esc(c)+"</th>";}).join("")+"</tr></thead><tbody>";
+    rows.forEach(function(r){h+="<tr>"+r.map(function(v){return "<td>"+(v===null?"<i>NULL</i>":esc(v))+"</td>";}).join("")+"</tr>";});
+    return h+"</tbody></table>";
+  }
+  /* jednoduché obarvení SQL do <pre class="code"> */
+  var KW=/\b(SELECT|FROM|WHERE|AND|OR|NOT|NULL|IS|LIKE|ORDER BY|GROUP BY|HAVING|LIMIT|AS|JOIN|LEFT JOIN|ON|COUNT|AVG|MIN|MAX|SUM|ROUND|DESC|ASC|BETWEEN)\b/g;
+  function hl(sql){
+    return esc(sql).replace(/('[^']*')/g,"\u0001$1\u0002").replace(/--[^\n]*/g,function(m){return "<span class=\"c\">"+m+"</span>";})
+      .replace(KW,"<span class=\"k\">$1</span>").replace(/\b(\d+(?:\.\d+)?)\b/g,"<span class=\"n\">$1</span>")
+      .replace(/\u0001([^\u0002]*)\u0002/g,function(m,s){return "<span class=\"s\">"+s.replace(/<[^>]+>/g,"")+"</span>";});
+  }
+
+  /* ---------- 3: SŘBD ---------- */
+  var DBMS=[
+    {n:"SQLite",s:"v telefonu i v prohlížeči",d:"Celá databáze je jeden soubor a SŘBD je knihovna přímo v aplikaci, bez serveru. Je v každém Androidu, iPhonu, v prohlížečích i ve Windows. Autoři ji odhadují na víc než bilion používaných databází. Volné dílo (public domain), vznikla v roce 2000."},
+    {n:"PostgreSQL",s:"open source server",d:"Výkonný relační databázový server s otevřeným kódem. Vychází z projektu Postgres na Kalifornské univerzitě v Berkeley (od 1986), jméno PostgreSQL nese od roku 1996."},
+    {n:"MySQL / MariaDB",s:"weby a e-shopy",d:"MySQL vyšla v roce 1995, dnes ji vlastní Oracle. MariaDB je její otevřená odbočka od původního autora. Pohání velkou část webů, třeba redakční systém WordPress."},
+    {n:"Oracle, SQL Server",s:"komerční",d:"Placené systémy pro velké firmy, banky a státní správu. Oracle Database vyšla v roce 1979 jako první komerčně prodávaná databáze s SQL. Microsoft SQL Server je od roku 1989."},
+    {n:"MongoDB, Redis",s:"NoSQL",d:"Nerelační systémy. MongoDB ukládá dokumenty ve formátu podobném JSON, Redis páry klíč–hodnota v operační paměti, takže je extrémně rychlý. Hodí se jako cache nebo na rychle se měnící data."}
+  ];
+  picker($("dbmsCards"),DBMS,card,$("dbmsPanel"),function(c){$("dbmsPanel").innerHTML="<span class=\"meta\">"+c.s+"</span><h3>"+c.n+"</h3><p>"+c.d+"</p>";});
+
+  /* ---------- 4: historie ---------- */
+  var HIST=[
+    {y:"1967–68",n:"IMS",d:"IBM spolu s firmami North American Aviation (později Rockwell) a Caterpillar vyvíjí systém IMS pro evidenci milionů dílů lodi Apollo a rakety Saturn V. První verze vyšla v roce 1967, NASA ji dostala o rok později. Je to <b>hierarchická</b> databáze: data jsou ve stromu, každý záznam má jednoho rodiče. IMS se používá dodnes."},
+    {y:"1969",n:"CODASYL",d:"Výbor CODASYL popisuje <b>síťový model</b>: záznam může mít víc rodičů, data tvoří graf. Programátor ale musí znát cesty mezi záznamy a po nich se v datech „procházet“."},
+    {y:"1970",n:"Codd",d:"Edgar F. Codd z IBM publikuje článek <i>A Relational Model of Data for Large Shared Data Banks</i>. Data mají být v tabulkách (relacích) a ptát se na ně má jít bez znalosti, jak jsou uložena. Za relační model dostal v roce 1981 Turingovu cenu."},
+    {y:"1974",n:"SEQUEL",d:"Donald Chamberlin a Raymond Boyce v IBM navrhují jazyk SEQUEL pro relační databáze. Kvůli ochranné známce se později přejmenuje na <b>SQL</b>."},
+    {y:"1979",n:"Oracle",d:"Firma Relational Software (dnešní Oracle) vydává Oracle V2, první komerčně prodávanou relační databázi s SQL. Dostala se na trh dřív než IBM."},
+    {y:"1986–87",n:"Standard",d:"SQL se stává normou: nejdřív americkou ANSI (1986), pak mezinárodní ISO (1987). Norma ISO/IEC 9075 se od té doby průběžně rozšiřuje, zatím poslední vydání je <b>SQL:2023</b>."},
+    {y:"1995–2000",n:"Open source",d:"Vychází MySQL (1995), PostgreSQL (1996) a SQLite (2000). Databáze zdarma pohánějí rozmach webu: e-shopy, fóra, redakční systémy."},
+    {y:"2009",n:"NoSQL",d:"Velké weby jako Google, Amazon nebo Facebook potřebují data rozložit na tisíce serverů. Vznikají nerelační systémy a pro celé hnutí se ujme název <b>NoSQL</b>. Téhož roku vychází MongoDB."}
+  ];
+  picker($("hist"),HIST,function(c){return el("button","",c.y+"<span>"+c.n+"</span>");},$("histPanel"),function(c){$("histPanel").innerHTML="<span class=\"meta\">"+c.y+"</span><h3>"+c.n+"</h3><p>"+c.d+"</p>";});
+
+  /* ---------- 5: druhy ---------- */
+  var KIND=[
+    {n:"Hierarchická",s:"strom",d:"Záznamy tvoří strom, každý má právě jednoho rodiče. Rychlé, když se ptáš po větvích. Nehodí se, když jeden údaj patří víc rodičům. Dnes: IMS, ale i registr Windows nebo souborový systém mají stejný tvar.",c:"Škola\n├─ 1.A\n│  ├─ Adam Novák\n│  └─ Eliška Svobodová\n└─ 2.A\n   └─ Jakub Procházka"},
+    {n:"Síťová",s:"graf záznamů",d:"Záznam může mít víc rodičů, vazby jsou ukazatele mezi záznamy. Pružnější než strom, ale program musí znát cesty, po kterých data prochází. Dnes se skoro nepoužívá.",c:"Adam ──┬── 1.A\n       ├── Matematika\n       └── Informatika\nEliška ┴── Matematika"},
+    {n:"Relační",s:"tabulky",d:"Data jsou v tabulkách, vztahy vznikají přes hodnoty klíčů, ne přes ukazatele. Dotaz se píše v SQL a databáze sama najde cestu. Nejrozšířenější druh: banky, školy, e-shopy, úřady.",c:"tridy            studenti\nid │ nazev        id │ prijmeni │ trida_id\n 1 │ 1.A           1 │ Novák    │ 1\n 2 │ 2.A           5 │ Procházka│ 2"},
+    {n:"Objektová",s:"objekty",d:"Ukládá objekty z programu i s jejich vlastnostmi a dědičností. Samostatně se příliš neujala. Myšlenky převzaly objektově-relační databáze (PostgreSQL) a knihovny ORM, které převádějí objekty na tabulky.",c:"class Student:\n    jmeno = \"Adam\"\n    trida = Trida(\"1.A\")\n    znamky = [2, 1, 3]"},
+    {n:"Dokumentová",s:"NoSQL · JSON",d:"Každý záznam je dokument, typicky ve formátu podobném JSON. Dokumenty ve stejné kolekci můžou mít různá pole. Hodí se pro katalogy výrobků nebo profily uživatelů. Příklad: MongoDB.",c:"{\n  \"jmeno\": \"Adam Novák\",\n  \"trida\": \"1.A\",\n  \"znamky\": [\n    {\"predmet\": \"M\", \"znamka\": 2}\n  ]\n}"},
+    {n:"Klíč–hodnota",s:"NoSQL · slovník",d:"Obří slovník: ke klíči uloží hodnotu a podle klíče ji bleskově vrátí. Neumí hledat podle obsahu hodnoty. Hodí se na přihlášení (session), košík v e-shopu, cache. Příklad: Redis.",c:"session:8f3a → {\"uzivatel\": 17}\nkosik:17     → [\"mys\", \"klavesnice\"]\nzobrazeni:42 → 1873"},
+    {n:"Sloupcová",s:"NoSQL · široké řádky",d:"Data jsou rozložená na mnoha serverech podle klíče řádku. Zvládne obrovské množství zápisů, třeba z měření nebo logů. Příklad: Apache Cassandra.",c:"cidlo-07 │ 10:00=21.5 │ 10:01=21.6 │ …\ncidlo-08 │ 10:00=19.2 │ 10:01=19.4 │ …"},
+    {n:"Grafová",s:"NoSQL · uzly a hrany",d:"Ukládá uzly (lidi, místa) a hrany mezi nimi (zná, sleduje, leží u). Rychle odpoví na otázky typu „přátelé mých přátel“ nebo „nejkratší cesta“. Příklad: Neo4j.",c:"(Adam)-[:ZNA]->(Eliška)\n(Eliška)-[:ZNA]->(Tomáš)\n(Adam)-[:CHODI_DO]->(1.A)"}
+  ];
+  picker($("kindCards"),KIND,card,$("kindPanel"),function(c){$("kindPanel").innerHTML="<span class=\"meta\">"+c.s+"</span><h3>"+c.n+"</h3><p>"+c.d+"</p>";$("kindCode").textContent=c.c;});
+
+  /* ---------- 7: anatomie tabulky ---------- */
+  var ANA=[
+    {n:"Tabulka",k:"all",d:"<b>Tabulka</b> (v teorii <b>relace</b>) popisuje jeden druh věcí, tady studenty. Má název a pevně dané sloupce."},
+    {n:"Záznam",k:"row",d:"<b>Záznam</b> (řádek, v teorii <b>n-tice</b>) = údaje o jedné konkrétní věci, tady o jednom studentovi. Pořadí řádků v tabulce nic neznamená."},
+    {n:"Atribut",k:"col",d:"<b>Atribut</b> (sloupec, pole) = jedna vlastnost, kterou sledujeme u všech záznamů. Má název a <b>datový typ</b>, který určuje, jaké hodnoty v něm smí být (jeho <i>doménu</i>)."},
+    {n:"Hodnota",k:"val",d:"<b>Hodnota</b> je jeden údaj na průsečíku řádku a sloupce. V relačním modelu má být <b>atomická</b>: jedno jméno, ne seznam jmen."},
+    {n:"Primární klíč",k:"pk",d:"<b>Primární klíč</b> jednoznačně určí řádek. Nesmí se opakovat a nesmí chybět. Když se student smaže, jeho číslo se znovu nepřidělí."},
+    {n:"Cizí klíč",k:"fk",d:"<b>Cizí klíč</b> <code>trida_id</code> odkazuje na primární klíč tabulky <code>tridy</code>. Hodnota 1 znamená třídu 1.A. Název třídy tak není uložený u každého studenta znovu."},
+    {n:"NULL",k:"null",d:"<b>NULL</b> znamená, že hodnota chybí: Tomáš e-mail nezadal. Není to nula ani prázdný text. Proto se hledá <code>WHERE email IS NULL</code>."}
+  ];
+  var anaCells=Array.prototype.slice.call(document.querySelectorAll("#anaTbl [data-r], #anaTbl td, #anaTbl th, #anaTbl tr"));
+  picker($("anaSeg"),ANA,chip,$("anaPanel"),function(c){
+    $("anaTbl").classList.toggle("db-all",c.k==="all");
+    anaCells.forEach(function(x){
+      var r=(x.getAttribute("data-r")||"").split(" ");
+      var on=false;
+      if(c.k==="row") on=x.tagName==="TR"&&r.indexOf("row")>=0;
+      else if(c.k==="col") on=x.tagName!=="TR"&&x.cellIndex===2;
+      else if(c.k!=="all") on=x.tagName!=="TR"&&r.indexOf(c.k)>=0;
+      x.classList.toggle("db-on",on);
+    });
+    $("anaPanel").innerHTML="<h3>"+c.n+"</h3><p>"+c.d+"</p>";
+  });
+
+  /* ---------- 10: vztahy ---------- */
+  var REL=[
+    {n:"1 : 1",a:"studenti",b:"prukazy",l:"1",r:"1",d:"Jednomu studentovi patří nejvýš jeden studentský průkaz a průkaz patří jednomu studentovi. Řeší se cizím klíčem s omezením <code>UNIQUE</code>. Často jde obě tabulky sloučit do jedné; oddělují se kvůli přehlednosti nebo citlivým údajům."},
+    {n:"1 : N",a:"tridy",b:"studenti",l:"1",r:"N",d:"Do jedné třídy chodí mnoho studentů, ale každý student je v jedné třídě. Nejčastější vztah. Cizí klíč <code>trida_id</code> je vždy na straně <b>N</b>, tedy u studentů."},
+    {n:"M : N",a:"studenti",b:"predmety",l:"M",r:"N",m:"znamky",d:"Jeden student má mnoho předmětů a jeden předmět má mnoho studentů. Do tabulky to přímo zapsat nejde, proto vzniká <b>spojovací tabulka</b> <code>znamky</code> se dvěma cizími klíči (<code>student_id</code>, <code>predmet_id</code>). M : N se tak rozloží na dva vztahy 1 : N."}
+  ];
+  picker($("relSeg"),REL,chip,$("relPanel"),function(c){
+    var h="<div class=\"db-ent\">"+c.a+"</div><div class=\"db-link\"><span>"+c.l+"</span><i></i><span>"+(c.m?"N":c.r)+"</span></div>";
+    if(c.m)h+="<div class=\"db-ent db-mid\">"+c.m+"</div><div class=\"db-link\"><span>N</span><i></i><span>1</span></div>";
+    h+="<div class=\"db-ent\">"+c.b+"</div>";
+    $("relEr").innerHTML=h;
+    $("relPanel").innerHTML="<h3>Vztah "+c.n+"</h3><p>"+c.d+"</p>";
+  });
+
+  /* ---------- 11: integrita ---------- */
+  var INT=[
+    {n:"Entitní",s:"primární klíč",d:"Každý řádek má primární klíč, který není prázdný a neopakuje se. Dva studenti se stejným <code>id</code> nemůžou vzniknout."},
+    {n:"Doménová",s:"typ a podmínky",d:"Hodnota musí odpovídat typu a omezením sloupce: <code>NOT NULL</code>, <code>UNIQUE</code>, <code>CHECK (znamka BETWEEN 1 AND 5)</code>. Známka 7 se do databáze nedostane."},
+    {n:"Referenční",s:"cizí klíče",d:"Cizí klíč musí ukazovat na existující řádek. Nejde zapsat známku studentovi s <code>id</code> 99, který neexistuje, a nejde smazat studenta, který má známky. Pokud to tabulka nedovolí jinak: <code>ON DELETE CASCADE</code> smaže i jeho známky."},
+    {n:"Uživatelská",s:"pravidla aplikace",d:"Pravidla z reálného světa, která obecný model nezná: třeba že student nesmí mít víc než 30 hodin týdně. Hlídá je aplikace, nebo spouště (triggery) v databázi."}
+  ];
+  picker($("intCards"),INT,card,$("intPanel"),function(c){$("intPanel").innerHTML="<span class=\"meta\">"+c.s+"</span><h3>Integrita "+c.n.toLowerCase()+"</h3><p>"+c.d+"</p>";});
+
+  /* ---------- 12: normalizace ---------- */
+  var NORM=[
+    {n:"Před",cols:["student","třída","třídní","předměty"],rows:[["Adam Novák","1.A","Mgr. Malá","M, IVT, ČJ"],["Eliška Svobodová","1.A","Mgr. Malá","M, IVT, ČJ"],["Jakub Procházka","2.A","Mgr. Hrubý","M, IVT, F"]],h:"Jedna velká tabulka",d:"Vypadá přehledně, ale: v buňce „předměty“ je seznam, ne jedna hodnota. Třídní učitelka je zapsaná u každého žáka znovu, takže při změně ji musíš přepsat na mnoha místech a snadno vznikne rozpor (<b>anomálie</b>)."},
+    {n:"1. NF",cols:["student","třída","třídní","předmět"],rows:[["Adam Novák","1.A","Mgr. Malá","M"],["Adam Novák","1.A","Mgr. Malá","IVT"],["Adam Novák","1.A","Mgr. Malá","ČJ"],["…","…","…","…"]],h:"První normální forma",d:"Každá buňka obsahuje <b>jednu hodnotu</b>. Seznam předmětů se rozložil do řádků. Opakování je ale ještě víc."},
+    {n:"2. a 3. NF",cols:["tabulka","sloupce"],rows:[["studenti","id, jmeno, trida_id"],["tridy","id, nazev, tridni"],["predmety","id, nazev"],["zapis","student_id, predmet_id"]],h:"Druhá a třetí normální forma",d:"Každý údaj, který závisí na něčem jiném než na klíči řádku, se přesune do vlastní tabulky. Třídní učitel závisí na třídě, ne na studentovi, proto je v tabulce <code>tridy</code>. Teď je každý údaj uložen <b>jen jednou</b> a tabulky propojují klíče."}
+  ];
+  picker($("normSeg"),NORM,chip,$("normPanel"),function(c){$("normTbl").innerHTML=table(c.cols,c.rows);$("normPanel").innerHTML="<h3>"+c.h+"</h3><p>"+c.d+"</p>";});
+
+  /* ---------- 14: hádej typ ---------- */
+  var TYPE=[
+    {n:"PSČ",s:"753 01",a:"VARCHAR(6), ne číslo",d:"PSČ se s ničím nesčítá a může začínat nulou nebo obsahovat mezeru. Čísla jsou jen pro hodnoty, se kterými se počítá."},
+    {n:"Telefon",s:"+420 601 123 456",a:"VARCHAR(20)",d:"Plus, mezery a úvodní nuly by číslo zničilo. Telefon je text, který se jen skládá z číslic."},
+    {n:"Cena",s:"1 299,90 Kč",a:"DECIMAL(10, 2)",d:"Peníze musí být přesné. FLOAT by kvůli dvojkové soustavě sečetl 0,1 + 0,2 jako 0,30000000000000004."},
+    {n:"Datum narození",s:"14. 3. 2010",a:"DATE",d:"Datum jako typ DATE se dá správně řadit, porovnávat a počítat s ním (věk, rozdíl dnů). Jako text by se řadilo podle znaků."},
+    {n:"Počet kusů",s:"12",a:"INTEGER",d:"Celé číslo, se kterým se počítá. Vhodné je přidat <code>CHECK (pocet >= 0)</code>."},
+    {n:"Souhlas s podmínkami",s:"ano / ne",a:"BOOLEAN",d:"Dvě možné hodnoty. Některé systémy, třeba SQLite a MySQL, ukládají BOOLEAN jako čísla 0 a 1."}
+  ];
+  var typeBtns=[];
+  function typeShow(c,open){$("typePanel").innerHTML="<span class=\"meta\">"+c.n+": "+c.s+"</span><h3>"+(open?c.a:"Jaký typ?")+"</h3><p>"+(open?c.d:"Nejdřív si typ řekni nahlas, pak klikni na kartu.")+"</p>";}
+  TYPE.forEach(function(c,i){var b=card(c);b.addEventListener("click",function(){typeBtns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");typeShow(c,true);});$("typeCards").appendChild(b);typeBtns.push(b);});
+  $("typePanel").innerHTML="<h3>Vyber údaj</h3><p>Klikni na kartu a uvidíš doporučený typ i důvod.</p>";
+  fits.push({slide:$("typeCards").closest(".slide"),fn:function(){var p=$("typePanel"),keep=p.innerHTML,m=0;p.style.minHeight="0px";TYPE.forEach(function(c){typeShow(c,true);m=Math.max(m,p.offsetHeight);});p.style.minHeight=m+"px";p.innerHTML=keep;}});
+
+  /* ---------- 18: SELECT ---------- */
+  var SEL=[
+    {n:"WHERE",q:"SELECT jmeno, prijmeni, narozen\nFROM studenti\nWHERE trida_id = 2;",c:["jmeno","prijmeni","narozen"],r:[["Jakub","Procházka","2009-05-17"],["Natálie","Kučerová","2009-09-08"],["Matěj","Veselý","2008-12-01"],["Tereza","Horáková","2009-02-19"]],t:"WHERE vybere řádky, SELECT sloupce. Studenti třídy 2.A."},
+    {n:"ORDER BY",q:"SELECT jmeno, prijmeni, narozen\nFROM studenti\nORDER BY narozen\nLIMIT 3;",c:["jmeno","prijmeni","narozen"],r:[["Vojtěch","Král","2007-10-05"],["Ondřej","Marek","2008-04-11"],["Anna","Němcová","2008-06-12"]],t:"Seřadí od nejstaršího. DESC by řadil opačně. LIMIT vezme jen první tři řádky."},
+    {n:"LIKE",q:"SELECT jmeno, prijmeni\nFROM studenti\nWHERE prijmeni LIKE '%ová';",c:["jmeno","prijmeni"],r:[["Eliška","Svobodová"],["Natálie","Kučerová"],["Tereza","Horáková"],["Anna","Němcová"]],t:"% znamená libovolný text, _ jeden znak. Hledáme příjmení končící na „ová“."},
+    {n:"IS NULL",q:"SELECT jmeno, prijmeni\nFROM studenti\nWHERE email IS NULL;",c:["jmeno","prijmeni"],r:[["Tomáš","Dvořák"],["Matěj","Veselý"],["Anna","Němcová"]],t:"Studenti bez e-mailu. Podmínka email = NULL by nevrátila nic."},
+    {n:"COUNT, AVG",q:"SELECT COUNT(*) AS pocet,\n       ROUND(AVG(znamka), 2) AS prumer,\n       MIN(znamka), MAX(znamka)\nFROM znamky;",c:["pocet","prumer","MIN(znamka)","MAX(znamka)"],r:[["31","2.03","1","5"]],t:"Agregační funkce spočítají jednu hodnotu z mnoha řádků. AS dá sloupci výsledku jméno."},
+    {n:"GROUP BY",q:"SELECT s.jmeno, s.prijmeni,\n       ROUND(AVG(z.znamka), 2) AS prumer\nFROM studenti AS s\nJOIN znamky AS z ON z.student_id = s.id\nGROUP BY s.id\nHAVING AVG(z.znamka) <= 1.5\nORDER BY prumer;",c:["jmeno","prijmeni","prumer"],r:[["Eliška","Svobodová","1.0"],["Natálie","Kučerová","1.33"],["Barbora","Pokorná","1.33"],["Tereza","Horáková","1.5"]],t:"GROUP BY rozdělí známky do skupin po studentech, AVG počítá v každé skupině zvlášť. HAVING filtruje až skupiny, WHERE řádky před seskupením."}
+  ];
+  picker($("qSeg"),SEL,chip,null,function(c){$("qCode").innerHTML=hl(c.q);$("qRes").innerHTML=table(c.c,c.r);$("qNote").textContent=c.t;});
+
+  /* ---------- 19: JOIN ---------- */
+  var JN=[
+    {n:"JOIN",q:"SELECT studenti.jmeno, studenti.prijmeni,\n       tridy.nazev AS trida\nFROM studenti\nJOIN tridy ON studenti.trida_id = tridy.id\nWHERE tridy.rocnik = 3;",c:["jmeno","prijmeni","trida"],r:[["Ondřej","Marek","3.B"],["Barbora","Pokorná","3.B"],["Vojtěch","Král","3.B"],["Anna","Němcová","3.B"]],t:"Ke každému studentovi se přiloží řádek třídy, jejíž id se rovná jeho trida_id. Tak se místo čísla 3 objeví název 3.B."},
+    {n:"Tři tabulky",q:"SELECT s.prijmeni, p.nazev AS predmet, z.znamka\nFROM znamky AS z\nJOIN studenti AS s ON z.student_id = s.id\nJOIN predmety AS p ON z.predmet_id = p.id\nWHERE z.znamka >= 4;",c:["prijmeni","predmet","znamka"],r:[["Dvořák","Matematika","4"],["Veselý","Matematika","5"],["Král","Fyzika","4"]],t:"Spojovací tabulka znamky drží jen čísla. Dvěma JOINy k ní přidáme jméno studenta i název předmětu. AS dává tabulkám krátké přezdívky."},
+    {n:"LEFT JOIN",q:"SELECT s.jmeno, s.prijmeni,\n       COUNT(z.id) AS pocet_znamek\nFROM studenti AS s\nLEFT JOIN znamky AS z ON z.student_id = s.id\nWHERE s.trida_id = 3\nGROUP BY s.id;",c:["jmeno","prijmeni","pocet_znamek"],r:[["Ondřej","Marek","3"],["Barbora","Pokorná","3"],["Vojtěch","Král","3"],["Anna","Němcová","0"]],t:"Obyčejný JOIN by Annu vynechal, protože k ní žádná známka neexistuje. LEFT JOIN vezme všechny řádky z levé tabulky a chybějící hodnoty doplní NULL."}
+  ];
+  picker($("jSeg"),JN,chip,null,function(c){$("jCode").innerHTML=hl(c.q);$("jRes").innerHTML=table(c.c,c.r);$("jNote").textContent=c.t;});
+
+  /* ---------- 20: ACID ---------- */
+  var ACID=[
+    {n:"A",s:"Atomicity, atomičnost",d:"Transakce proběhne celá, nebo vůbec. Když druhý UPDATE selže, vrátí se i první."},
+    {n:"C",s:"Consistency, konzistence",d:"Po transakci platí všechna pravidla databáze: klíče, typy, CHECK. Neplatný stav se neuloží."},
+    {n:"I",s:"Isolation, izolace",d:"Souběžné transakce se navzájem neruší. Kdo čte zůstatek, uvidí stav před převodem, nebo po něm, nikdy uprostřed."},
+    {n:"D",s:"Durability, trvalost",d:"Co je potvrzené, zůstane uložené i po výpadku proudu. Databáze to zapisuje na disk dřív, než ohlásí COMMIT."}
+  ];
+  picker($("acidCards"),ACID,card,$("acidPanel"),function(c){$("acidPanel").innerHTML="<span class=\"meta\">ACID · "+c.n+"</span><h3>"+c.s+"</h3><p>"+c.d+"</p>";});
+
+  /* ---------- 22: kvíz ---------- */
+  var Q=[
+    {t:"V relační teorii znamená slovo relace tabulku.",a:1,f:"Codd nazval tabulku relací, protože je to množina n-tic. Vztah mezi tabulkami se správně jmenuje vztah nebo vazba."},
+    {t:"Primární klíč se může v tabulce opakovat, když se liší jména.",a:0,f:"Primární klíč musí být jedinečný a nesmí být NULL. Jinak by nešlo určit, o který řádek jde."},
+    {t:"Cizí klíč je u vztahu 1 : N na straně N.",a:1,f:"Každý student nese trida_id své třídy. U třídy by se seznam studentů do jedné buňky nevešel."},
+    {t:"Vztah M : N se zapíše jedním cizím klíčem.",a:0,f:"M : N potřebuje spojovací tabulku se dvěma cizími klíči, třeba znamky (student_id, predmet_id)."},
+    {t:"Podmínka WHERE email = NULL najde studenty bez e-mailu.",a:0,f:"Porovnání s NULL nikdy není pravdivé. Správně je WHERE email IS NULL."},
+    {t:"DELETE FROM studenti; smaže všechny studenty.",a:1,f:"Bez WHERE platí DELETE i UPDATE pro všechny řádky. Struktura tabulky zůstane, zmizí data."},
+    {t:"PSČ je nejlepší uložit jako INTEGER.",a:0,f:"S PSČ se nepočítá a může mít mezeru nebo úvodní nulu. Patří do VARCHAR."},
+    {t:"SELECT patří do příkazů DDL.",a:0,f:"DDL mění strukturu (CREATE, ALTER, DROP). SELECT data jen čte, řadí se do DQL, někdy se počítá k DML."},
+    {t:"HAVING filtruje skupiny vzniklé z GROUP BY.",a:1,f:"WHERE filtruje řádky před seskupením, HAVING skupiny po něm, typicky podle AVG nebo COUNT."},
+    {t:"SQLite potřebuje ke spuštění databázový server.",a:0,f:"SQLite je knihovna přímo v aplikaci a celá databáze je jeden soubor. Proto je v každém telefonu."}
+  ];
+  var qI=0,qOk=0,qAns=false,ansBtns=Array.prototype.slice.call(document.querySelectorAll("[data-a]"));
+  function qRender(){qAns=false;var q=Q[qI];$("qzScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;$("qzText").textContent=q.t;$("qzFb").innerHTML="";$("qzNext").hidden=true;ansBtns.forEach(function(b){b.hidden=false;b.disabled=false;b.classList.remove("is-right","is-wrong");});}
+  ansBtns.forEach(function(b){b.addEventListener("click",function(){
+    if(qAns)return;qAns=true;var q=Q[qI],ok=+b.dataset.a===q.a;if(ok)qOk++;
+    ansBtns.forEach(function(x){if(+x.dataset.a===q.a)x.classList.add("is-right");x.disabled=true;});
+    if(!ok)b.classList.add("is-wrong");
+    $("qzScore").textContent="Tvrzení "+(qI+1)+" z "+Q.length+" · správně "+qOk;
+    $("qzFb").innerHTML="<b>"+(ok?"Správně.":"Tentokrát ne.")+"</b> "+q.f;
+    $("qzNext").hidden=false;$("qzNext").textContent=qI===Q.length-1?"Výsledek":"Další →";
+  });});
+  $("qzNext").addEventListener("click",function(){
+    if(qI===Q.length-1){$("qzText").innerHTML="<b>Výsledek: "+qOk+" z "+Q.length+".</b>";$("qzFb").innerHTML=qOk>=8?"Výborně.":"Projdi si ještě snímky o klíčích, vztazích a NULL.";ansBtns.forEach(function(b){b.hidden=true;});$("qzNext").textContent="Znovu";qI=-1;qOk=0;return;}
+    qI++;qRender();
+  });
+  qRender();
+
+  goTo(0);
+})();
+</script>
+</body>
+</html>

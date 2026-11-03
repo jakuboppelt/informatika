@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databáze a základy SQL – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Úvod</li>
+    <li><a href="#co-je">Co je databáze</a></li>
+    <li><a href="#proc">Proč ne obyčejné soubory</a></li>
+    <li><a href="#historie">Historie</a></li>
+    <li class="grp">Druhy databází</li>
+    <li><a href="#druhy">Datové modely</a></li>
+    <li><a href="#nosql">NoSQL</a></li>
+    <li class="grp">Relační model</li>
+    <li><a href="#pojmy">Tabulka, záznam, atribut</a></li>
+    <li><a href="#relace">Dva významy slova relace</a></li>
+    <li><a href="#typy">Datové typy a NULL</a></li>
+    <li><a href="#klice">Klíče</a></li>
+    <li><a href="#vztahy">Vztahy 1:1, 1:N, M:N</a></li>
+    <li><a href="#integrita">Integrita</a></li>
+    <li><a href="#normalizace">Normalizace</a></li>
+    <li><a href="#indexy">Indexy</a></li>
+    <li class="grp">SQL</li>
+    <li><a href="#sql">Jazyk SQL</a></li>
+    <li><a href="#ddl">CREATE, ALTER, DROP</a></li>
+    <li><a href="#dml">INSERT, UPDATE, DELETE</a></li>
+    <li><a href="#select">SELECT</a></li>
+    <li><a href="#agregace">Agregace a GROUP BY</a></li>
+    <li><a href="#join">JOIN</a></li>
+    <li><a href="#transakce">Transakce a práva</a></li>
+    <li><a href="#injection">SQL injection</a></li>
+    <li class="grp">K maturitě</li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 11 · Studijní text</p>
+  <h1>Databáze a základy SQL <span class="t">SELECT * FROM</span></h1>
+  <p class="lead">Co je databáze a systém řízení báze dat, jaké druhy databází existují, jak funguje relační model s tabulkami, klíči a vztahy, jaké jsou datové typy a jak se v SQL vytváří tabulky, vkládají data a kladou dotazy. Všechny příklady pracují se stejnou malou školní databází jako <a href="11_databaze_prakticky.html">praktická ukázka</a>, takže si je můžeš hned vyzkoušet.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit pojmy databáze, SŘBD a databázový systém</li>
+      <li>popsat hlavní milníky historie databází</li>
+      <li>porovnat hierarchický, síťový, relační a objektový model a NoSQL</li>
+      <li>vysvětlit tabulku, záznam, atribut, doménu a NULL</li>
+      <li>vysvětlit oba významy slova relace</li>
+      <li>vybrat vhodný datový typ sloupce</li>
+      <li>popsat primární a cizí klíč a vztahy 1:1, 1:N, M:N</li>
+      <li>vysvětlit integritu a normalizaci</li>
+      <li>napsat CREATE TABLE, INSERT, UPDATE a DELETE</li>
+      <li>napsat SELECT s WHERE, ORDER BY, GROUP BY a JOIN</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Úvod</p>
+
+<section id="co-je">
+<h2>Co je databáze</h2>
+<p><dfn>Databáze</dfn> (báze dat) je uspořádaná sbírka vzájemně souvisejících dat, uložená podle pevně daných pravidel tak, aby se v ní dalo rychle hledat a aby data zůstala správná.</p>
+<p><dfn>Systém řízení báze dat</dfn>, zkratkou <dfn>SŘBD</dfn> (anglicky <i>DBMS</i>, Database Management System), je program, který s databází pracuje: ukládá data na disk, hlídá jejich pravidla, vyřizuje dotazy, řídí, kdo k čemu smí, a zajišťuje, aby si souběžní uživatelé nepřepisovali práci. Příklady: SQLite, PostgreSQL, MySQL a MariaDB, Oracle Database, Microsoft SQL Server, MongoDB.</p>
+<p><dfn>Databázový systém</dfn> je databáze a SŘBD dohromady. Aplikace (web, mobilní aplikace, EduPage) nikdy nečte soubory databáze přímo, posílá dotazy SŘBD a ten jí vrátí výsledek.</p>
+<div class="tbl"><table>
+<thead><tr><th>Aplikace</th><th>Co v databázi je</th></tr></thead>
+<tbody>
+<tr><td>školní systém</td><td>studenti, třídy, rozvrh, známky, omluvenky</td></tr>
+<tr><td>e-shop</td><td>zboží, zákazníci, objednávky, platby, sklad</td></tr>
+<tr><td>banka</td><td>účty, zůstatky, transakce</td></tr>
+<tr><td>mobil</td><td>kontakty, zprávy, historie hovorů, nastavení aplikací (SQLite)</td></tr>
+<tr><td>prohlížeč</td><td>historie, záložky, cookies (SQLite)</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="proc">
+<h2>Proč ne obyčejné soubory nebo tabulka v Excelu</h2>
+<p>Data jde ukládat i do textových souborů nebo do tabulkového procesoru. Pro malou osobní evidenci to stačí. S růstem dat a počtu uživatelů ale vznikají problémy, které databáze řeší:</p>
+<ul>
+  <li><strong>Redundance:</strong> stejný údaj je uložen na víc místech (název třídy u každého žáka). Zabírá místo a při změně se snadno zapomene na jedno z míst.</li>
+  <li><strong>Nekonzistence:</strong> když se údaj změní jen na některých místech, data si začnou odporovat.</li>
+  <li><strong>Souběžný přístup:</strong> do jednoho souboru nemůže bezpečně psát tisíc lidí zároveň.</li>
+  <li><strong>Kontrola dat:</strong> do buňky jde napsat cokoli, třeba známku 7 nebo datum „zítra“.</li>
+  <li><strong>Hledání ve velkých datech:</strong> databáze najde jeden řádek mezi miliardami během milisekund díky indexům.</li>
+  <li><strong>Bezpečnost a obnova:</strong> práva pro jednotlivé uživatele, zálohy, obnova po výpadku.</li>
+</ul>
+</section>
+
+<section id="historie">
+<h2>Historie databází</h2>
+<ol class="timeline">
+  <li><span class="yr">1967–1968</span> <span class="ev">IMS pro program Apollo</span><span class="d">IBM s firmami North American Aviation (později Rockwell) a Caterpillar vyvinula systém IMS, který evidoval miliony dílů lodi Apollo a rakety Saturn V. První verze vyšla v roce 1967. Je to <strong>hierarchická</strong> databáze a používá se dodnes, hlavně v bankách.<sup class="ref"><a href="#z1">1</a></sup></span></li>
+  <li><span class="yr">1969</span> <span class="ev">Síťový model CODASYL</span><span class="d">Výbor CODASYL popsal síťový model, ve kterém záznam může mít víc nadřízených. Programátor ale musel znát cesty mezi záznamy.</span></li>
+  <li><span class="yr">1970</span> <span class="ev">Edgar F. Codd: relační model</span><span class="d">Matematik z IBM publikoval článek <i>A Relational Model of Data for Large Shared Data Banks</i>. Navrhl ukládat data do tabulek (relací) a ptát se na ně bez znalosti, jak jsou fyzicky uložena. V roce 1981 za to dostal Turingovu cenu.<sup class="ref"><a href="#z2">2</a></sup></span></li>
+  <li><span class="yr">1974</span> <span class="ev">SEQUEL, později SQL</span><span class="d">Donald Chamberlin a Raymond Boyce v IBM navrhli dotazovací jazyk SEQUEL. Kvůli ochranné známce se přejmenoval na SQL.<sup class="ref"><a href="#z3">3</a></sup></span></li>
+  <li><span class="yr">1976</span> <span class="ev">ER diagram</span><span class="d">Peter Chen popsal model entit a vztahů (entity–relationship), dodnes nejpoužívanější způsob, jak databázi navrhnout na papíře.</span></li>
+  <li><span class="yr">1979</span> <span class="ev">Oracle V2</span><span class="d">Firma Relational Software, dnešní Oracle, vydala první komerčně prodávanou relační databázi s SQL.<sup class="ref"><a href="#z4">4</a></sup></span></li>
+  <li><span class="yr">1986–1987</span> <span class="ev">Norma SQL</span><span class="d">SQL se stal normou ANSI (1986) a ISO (1987). Norma ISO/IEC 9075 se průběžně rozšiřuje, zatím poslední vydání je SQL:2023.<sup class="ref"><a href="#z5">5</a></sup></span></li>
+  <li><span class="yr">1995–2000</span> <span class="ev">Databáze zdarma</span><span class="d">Vyšly MySQL (1995), PostgreSQL (1996, z projektu Postgres v Berkeley z roku 1986) a SQLite (2000). Pomohly rozmachu webu.<sup class="ref"><a href="#z6">6</a></sup></span></li>
+  <li><span class="yr">2009</span> <span class="ev">NoSQL</span><span class="d">Velké weby potřebovaly data rozložit na tisíce serverů. Ujal se název NoSQL pro nerelační systémy, téhož roku vyšla MongoDB.</span></li>
+</ol>
+</section>
+
+<p class="part">Druhy databází</p>
+
+<section id="druhy">
+<h2>Datové modely</h2>
+<p><dfn>Datový model</dfn> určuje, v jakém tvaru databáze data uchovává a jak se mezi nimi vyjadřují vztahy. Podle něj se databáze dělí na druhy:</p>
+<div class="tbl"><table>
+<thead><tr><th>Model</th><th>Tvar dat</th><th>Výhody a nevýhody</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td><strong>Hierarchický</strong></td><td>strom: každý záznam má jednoho rodiče</td><td>rychlé hledání po větvích; nejde vyjádřit, že údaj patří víc rodičům</td><td>IBM IMS, registr Windows</td></tr>
+<tr><td><strong>Síťový</strong></td><td>graf: záznam může mít víc rodičů, vazby jsou ukazatele</td><td>pružnější; program musí znát cesty v datech</td><td>IDMS (dnes vzácně)</td></tr>
+<tr><td><strong>Relační</strong></td><td>tabulky propojené hodnotami klíčů</td><td>jednoduchý, matematicky podložený, dotazy v SQL; pevné schéma</td><td>PostgreSQL, MySQL, SQLite, Oracle</td></tr>
+<tr><td><strong>Objektový</strong></td><td>objekty z programu i s dědičností</td><td>blízký programovacím jazykům; neujal se samostatně</td><td>db4o, ObjectDB</td></tr>
+<tr><td><strong>Objektově-relační</strong></td><td>tabulky rozšířené o vlastní typy, pole, dědičnost</td><td>kompromis, dnes běžný</td><td>PostgreSQL, Oracle</td></tr>
+<tr><td><strong>NoSQL</strong></td><td>dokumenty, páry klíč–hodnota, sloupce, grafy</td><td>volné schéma, růst na mnoho serverů; slabší záruky konzistence</td><td>MongoDB, Redis, Cassandra, Neo4j</td></tr>
+</tbody></table></div>
+<p>Dnes jasně převažují <strong>relační databáze</strong>. Na ně se zaměřuje zbytek textu i maturitní otázka.</p>
+</section>
+
+<section id="nosql">
+<h2>NoSQL</h2>
+<p><dfn>NoSQL</dfn> („not only SQL“) je souhrnné označení pro nerelační databáze. Nevznikly proto, že by relační databáze byly špatné, ale protože některé úlohy potřebují něco jiného: obrovské množství zápisů, data rozložená na tisíce serverů nebo data bez pevné struktury.</p>
+<div class="tbl"><table>
+<thead><tr><th>Druh</th><th>Jak ukládá</th><th>Kde se hodí</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td><strong>Dokumentová</strong></td><td>dokumenty ve formátu podobném JSON, každý může mít jiná pole</td><td>katalog zboží, profily uživatelů</td><td>MongoDB</td></tr>
+<tr><td><strong>Klíč–hodnota</strong></td><td>obří slovník: ke klíči hodnota</td><td>přihlášení (session), košík, cache</td><td>Redis</td></tr>
+<tr><td><strong>Sloupcová</strong></td><td>řádky s mnoha sloupci rozložené na mnoho serverů</td><td>měření ze senzorů, logy</td><td>Apache Cassandra</td></tr>
+<tr><td><strong>Grafová</strong></td><td>uzly a hrany mezi nimi</td><td>sociální sítě, doporučování, trasy</td><td>Neo4j</td></tr>
+</tbody></table></div>
+<p>Relační databáze zaručují transakce <strong>ACID</strong> (viz <a href="#transakce">Transakce</a>). Mnoho NoSQL systémů výměnou za rychlost a dostupnost slibuje jen <dfn>případnou konzistenci</dfn> (eventual consistency): data na všech serverech se srovnají až po chvíli.</p>
+</section>
+
+<p class="part">Relační model</p>
+
+<section id="pojmy">
+<h2>Tabulka, záznam, atribut</h2>
+<p>Relační databáze ukládá data do <dfn>tabulek</dfn>. Každá tabulka popisuje jeden druh věcí, kterým se říká <dfn>entity</dfn>: studenty, třídy, předměty. Takhle vypadá kousek tabulky <code>studenti</code> ze školní databáze:</p>
+<div class="tbl"><table>
+<thead><tr><th>id</th><th>jmeno</th><th>prijmeni</th><th>narozen</th><th>email</th><th>trida_id</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Adam</td><td>Novák</td><td>2010-03-14</td><td>adam.novak@skola.example</td><td>1</td></tr>
+<tr><td>2</td><td>Eliška</td><td>Svobodová</td><td>2010-07-02</td><td>eliska.svobodova@skola.example</td><td>1</td></tr>
+<tr><td>3</td><td>Tomáš</td><td>Dvořák</td><td>2009-11-23</td><td><i>NULL</i></td><td>1</td></tr>
+</tbody></table></div>
+<ul>
+  <li><dfn>Záznam</dfn> (řádek, n-tice) obsahuje údaje o jedné věci, tady o jednom studentovi.</li>
+  <li><dfn>Atribut</dfn> (sloupec, pole) je jedna vlastnost, kterou sledujeme u všech záznamů. Má název a datový typ.</li>
+  <li><dfn>Doména</dfn> atributu je množina hodnot, které v něm smí být: celá čísla 1 až 5 u známky, platná data u data narození.</li>
+  <li><dfn>Hodnota</dfn> je jeden údaj na průsečíku řádku a sloupce. Má být <strong>atomická</strong>, tedy dál nedělitelná: jeden e-mail, ne seznam.</li>
+  <li><dfn>Schéma</dfn> tabulky je její popis: název a seznam sloupců s typy a omezeními. Schéma databáze je popis všech tabulek.</li>
+</ul>
+<p>Pořadí řádků v tabulce nic neznamená. Kdo chce výsledek seřazený, musí o to v dotazu požádat (<code>ORDER BY</code>). Dva stejné řádky v tabulce mít nechceme, proto má každá tabulka <a href="#klice">primární klíč</a>.</p>
+</section>
+
+<section id="relace">
+<h2>Dva významy slova relace</h2>
+<p>V relační teorii, jak ji popsal Codd, je <dfn>relace</dfn> matematický pojem: množina n-tic, které mají stejné atributy. Prakticky je <strong>relace totéž co tabulka</strong>. Odtud název <strong>relační databáze</strong>.</p>
+<p>V běžné řeči, v návodech a často i ve školních materiálech se ale slovem „relace“ myslí <strong>vztah mezi tabulkami</strong> (1:N, M:N). Správnější je říkat <dfn>vztah</dfn> nebo <dfn>vazba</dfn> (anglicky <i>relationship</i>).</p>
+<div class="tbl"><table>
+<thead><tr><th>Relační teorie</th><th>SQL</th><th>Běžná řeč</th></tr></thead>
+<tbody>
+<tr><td>relace</td><td>tabulka</td><td>tabulka</td></tr>
+<tr><td>n-tice</td><td>řádek</td><td>záznam</td></tr>
+<tr><td>atribut</td><td>sloupec</td><td>pole</td></tr>
+<tr><td>doména</td><td>datový typ a omezení</td><td>povolené hodnoty</td></tr>
+<tr><td>(vztah)</td><td>cizí klíč</td><td>„relace“, vazba</td></tr>
+</tbody></table></div>
+<div class="note mat"><b class="lbl">K maturitě</b><p>Řekni oba významy a který používáš. Ukazuje to, že rozumíš, proč se databázím říká relační.</p></div>
+</section>
+
+<section id="typy">
+<h2>Datové typy a NULL</h2>
+<p>Každý sloupec má <dfn>datový typ</dfn>. Typ určuje, jaké hodnoty sloupec přijme, kolik místa zaberou a co se s nimi dá dělat (sčítat, řadit podle data, hledat v textu). Názvy typů se mezi systémy trochu liší, tyhle jsou nejběžnější:</p>
+<div class="tbl"><table>
+<thead><tr><th>Typ</th><th>Ukládá</th><th>Příklad použití</th></tr></thead>
+<tbody>
+<tr><td><code>INTEGER</code>, <code>SMALLINT</code>, <code>BIGINT</code></td><td>celá čísla různého rozsahu</td><td>id, počet kusů, ročník</td></tr>
+<tr><td><code>DECIMAL(p, s)</code>, <code>NUMERIC</code></td><td>přesné desetinné číslo: p číslic celkem, z toho s za čárkou</td><td>cena <code>DECIMAL(10, 2)</code></td></tr>
+<tr><td><code>REAL</code>, <code>FLOAT</code>, <code>DOUBLE</code></td><td>desetinné číslo s plovoucí čárkou, malá nepřesnost</td><td>teplota, souřadnice GPS</td></tr>
+<tr><td><code>CHAR(n)</code></td><td>text pevné délky n znaků (doplní se mezerami)</td><td>kód země <code>CZ</code></td></tr>
+<tr><td><code>VARCHAR(n)</code></td><td>text proměnné délky, nejvýš n znaků</td><td>jméno, e-mail, PSČ, telefon</td></tr>
+<tr><td><code>TEXT</code></td><td>dlouhý text bez pevné hranice</td><td>poznámka, článek</td></tr>
+<tr><td><code>DATE</code>, <code>TIME</code>, <code>DATETIME</code>, <code>TIMESTAMP</code></td><td>datum, čas, obojí</td><td><code>'2026-11-04'</code>, <code>'2026-11-04 08:00:00'</code></td></tr>
+<tr><td><code>BOOLEAN</code></td><td>pravda, nebo nepravda</td><td>souhlas s podmínkami, aktivní účet</td></tr>
+<tr><td><code>BLOB</code></td><td>binární data (Binary Large Object)</td><td>obrázek, soubor</td></tr>
+</tbody></table></div>
+<p>Jak typ vybrat: <strong>číslo jen pro hodnoty, se kterými se počítá</strong>. PSČ, telefon nebo číslo popisné patří do textu, protože můžou začínat nulou nebo obsahovat mezeru či lomítko. Peníze vždy do <code>DECIMAL</code>, nikdy do <code>FLOAT</code>: ve dvojkové soustavě nejde 0,1 zapsat přesně a <code>0.1 + 0.2</code> pak dá 0,30000000000000004. Datum do <code>DATE</code>, aby se dalo správně řadit a počítat.</p>
+<h3>NULL</h3>
+<p><dfn>NULL</dfn> znamená, že hodnota <strong>chybí nebo není známá</strong>. Není to nula ani prázdný text. Každé porovnání s NULL dá výsledek „neznámo“, proto <code>WHERE email = NULL</code> nevrátí nic a správně se píše <code>WHERE email IS NULL</code> nebo <code>IS NOT NULL</code>. Omezení <code>NOT NULL</code> zakáže, aby hodnota ve sloupci chyběla.</p>
+<div class="note warn"><b class="lbl">SQLite je benevolentní</b><p>SQLite používá <em>dynamické typy</em>: typ sloupce je jen doporučení a do sloupce <code>INTEGER</code> jde uložit i text. Přísnou kontrolu zapnou tabulky s klíčovým slovem <code>STRICT</code>. PostgreSQL, MySQL nebo Oracle typy hlídají vždy.<sup class="ref"><a href="#z7">7</a></sup></p></div>
+</section>
+
+<section id="klice">
+<h2>Klíče</h2>
+<div class="tbl"><table>
+<thead><tr><th>Klíč</th><th>Co to je</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td><strong>Primární</strong> (PRIMARY KEY)</td><td>sloupec nebo sloupce, které jednoznačně určí řádek; hodnota se nesmí opakovat ani chybět</td><td><code>studenti.id</code></td></tr>
+<tr><td><strong>Cizí</strong> (FOREIGN KEY)</td><td>sloupec, jehož hodnota odkazuje na primární klíč jiné (nebo téže) tabulky; vytváří vztah</td><td><code>studenti.trida_id</code> → <code>tridy.id</code></td></tr>
+<tr><td><strong>Kandidátní</strong></td><td>každý sloupec, který by mohl být primárním klíčem; jeden se vybere, ostatní dostanou <code>UNIQUE</code></td><td><code>id</code>, <code>email</code></td></tr>
+<tr><td><strong>Složený</strong></td><td>primární klíč z více sloupců, žádný sám nestačí</td><td>(<code>trida_id</code>, <code>cislo_v_katalogu</code>)</td></tr>
+<tr><td><strong>Přirozený</strong></td><td>vychází z reálného světa</td><td>ISBN knihy, SPZ auta</td></tr>
+<tr><td><strong>Umělý</strong> (surrogate)</td><td>číslo bez významu, které přidělí databáze</td><td><code>id</code> = 1, 2, 3 …</td></tr>
+</tbody></table></div>
+<p>V praxi se primárním klíčem skoro vždy dělá <strong>umělý klíč</strong>. Přirozený se může změnit (e-mail, SPZ, příjmení po svatbě) a změna by se musela promítnout do všech tabulek, které na něj odkazují. Rodné číslo jako klíč nevolíme, protože je to citlivý osobní údaj.</p>
+</section>
+
+<section id="vztahy">
+<h2>Vztahy 1:1, 1:N, M:N</h2>
+<p>Vztah mezi dvěma tabulkami vzniká tak, že jedna obsahuje cizí klíč do druhé. Podle toho, kolik řádků na každé straně si odpovídá (<dfn>kardinalita</dfn>), rozlišujeme tři druhy:</p>
+<div class="tbl"><table>
+<thead><tr><th>Vztah</th><th>Význam</th><th>Příklad</th><th>Jak se zapíše</th></tr></thead>
+<tbody>
+<tr><td><strong>1 : 1</strong></td><td>jednomu řádku odpovídá nejvýš jeden řádek</td><td>student – studentský průkaz</td><td>cizí klíč s omezením <code>UNIQUE</code></td></tr>
+<tr><td><strong>1 : N</strong></td><td>jednomu řádku odpovídá mnoho řádků, ne naopak</td><td>třída – studenti</td><td>cizí klíč na straně N: <code>studenti.trida_id</code></td></tr>
+<tr><td><strong>M : N</strong></td><td>mnoho řádků na obou stranách</td><td>studenti – předměty</td><td><strong>spojovací tabulka</strong> se dvěma cizími klíči</td></tr>
+</tbody></table></div>
+<p>Vztah M : N nejde zapsat jedním cizím klíčem, do buňky by se musel vejít seznam. Proto vznikne <dfn>spojovací (vazební) tabulka</dfn>. Ve školní databázi je to tabulka <code>znamky</code>: každý řádek říká, který student dostal jakou známku z kterého předmětu. M : N se tak rozloží na dva vztahy 1 : N.</p>
+<pre><code>tridy (1) ───< (N) studenti (1) ───< (N) znamky (N) >─── (1) predmety</code></pre>
+<p>Návrh databáze se kreslí jako <dfn>ER diagram</dfn> (entity–relationship): entity jako obdélníky, atributy u nich a vztahy jako čáry s označením kardinality.</p>
+</section>
+
+<section id="integrita">
+<h2>Integrita dat</h2>
+<p><dfn>Integrita</dfn> znamená, že data jsou úplná, správná a neodporují si. SŘBD ji hlídá sám podle omezení ve schématu:</p>
+<ul>
+  <li><strong>Entitní integrita:</strong> každý řádek má primární klíč, který není NULL a neopakuje se.</li>
+  <li><strong>Doménová integrita:</strong> hodnota odpovídá typu a omezením sloupce (<code>NOT NULL</code>, <code>UNIQUE</code>, <code>CHECK</code>, <code>DEFAULT</code>).</li>
+  <li><strong>Referenční integrita:</strong> cizí klíč ukazuje na existující řádek. Nejde zapsat známku neexistujícímu studentovi a nejde smazat studenta, který má známky. Pokud to tabulka nedovolí jinak: <code>ON DELETE CASCADE</code> smaže i navázané řádky, <code>ON DELETE SET NULL</code> u nich klíč vymaže.</li>
+  <li><strong>Uživatelská integrita:</strong> pravidla z reálného světa, která hlídá aplikace nebo spouště (triggery) v databázi.</li>
+</ul>
+</section>
+
+<section id="normalizace">
+<h2>Normalizace</h2>
+<p><dfn>Normalizace</dfn> je postup návrhu tabulek, který odstraní redundanci a s ní <dfn>anomálie</dfn>: chyby při vkládání, změně a mazání. Cíl zní jednoduše: <strong>každý údaj uložit jen jednou</strong>. Postupuje se po <dfn>normálních formách</dfn> (NF):</p>
+<div class="tbl"><table>
+<thead><tr><th>Forma</th><th>Pravidlo</th><th>Jinými slovy</th></tr></thead>
+<tbody>
+<tr><td><strong>1. NF</strong></td><td>každá hodnota je atomická, žádné seznamy v buňce ani opakující se sloupce</td><td>ne „M, IVT, ČJ“ v jedné buňce, ne sloupce predmet1, predmet2, predmet3</td></tr>
+<tr><td><strong>2. NF</strong></td><td>1. NF a každý atribut závisí na <em>celém</em> primárním klíči</td><td>týká se složených klíčů: v tabulce (student, předmět) nemá co dělat jméno studenta</td></tr>
+<tr><td><strong>3. NF</strong></td><td>2. NF a žádný atribut nezávisí na jiném neklíčovém atributu</td><td>třídní učitel závisí na třídě, ne na studentovi, patří do tabulky <code>tridy</code></td></tr>
+</tbody></table></div>
+<p>Příklad: tabulka <i>student | třída | třídní | předměty</i> porušuje 1. NF (seznam předmětů v buňce) i 3. NF (třídní se opakuje u každého žáka). Po normalizaci vzniknou tabulky <code>studenti</code>, <code>tridy</code>, <code>predmety</code> a spojovací tabulka mezi studenty a předměty.</p>
+<p>Normalizace má i cenu: dat je víc tabulek a dotazy je musí spojovat. Velké systémy proto občas vědomě <em>denormalizují</em>, aby byly rychlejší při čtení.</p>
+</section>
+
+<section id="indexy">
+<h2>Indexy</h2>
+<p>Bez indexu musí databáze při hledání projít celou tabulku řádek po řádku. <dfn>Index</dfn> je pomocná struktura, typicky B-strom, ve které jsou hodnoty sloupce seřazené s odkazy na řádky. Funguje jako rejstřík v knize: místo čtení celé knihy se podíváš dozadu a nalistuješ stránku.</p>
+<pre><code class="language-sql">CREATE INDEX idx_studenti_prijmeni ON studenti (prijmeni);</code></pre>
+<p>Primární klíč a sloupce s <code>UNIQUE</code> mají index automaticky. Index zrychlí hledání, ale zpomalí zápisy (při každé změně se musí upravit) a zabere místo. Proto se dává jen na sloupce, podle kterých se často hledá nebo spojuje.</p>
+</section>
+
+<p class="part">SQL</p>
+
+<section id="sql">
+<h2>Jazyk SQL</h2>
+<p><dfn>SQL</dfn> (Structured Query Language) je standardní jazyk relačních databází. Vznikl v IBM v roce 1974 jako SEQUEL a od roku 1986 je normou ANSI, od 1987 ISO (ISO/IEC 9075). Jednotlivé systémy přidávají vlastní rozšíření, základ je ale všude stejný.</p>
+<p>SQL je <strong>deklarativní</strong>: popíšeš, <em>co</em> chceš dostat, ne <em>jak</em> to najít. O postupu (které indexy použít, v jakém pořadí spojit tabulky) rozhodne <dfn>optimalizátor dotazů</dfn> v SŘBD. Python nebo C jsou naproti tomu <em>imperativní</em>: píšeš kroky.</p>
+<div class="tbl"><table>
+<thead><tr><th>Skupina</th><th>Účel</th><th>Příkazy</th></tr></thead>
+<tbody>
+<tr><td><strong>DDL</strong> (Data Definition Language)</td><td>struktura: tabulky, indexy, pohledy</td><td><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code></td></tr>
+<tr><td><strong>DML</strong> (Data Manipulation Language)</td><td>data: vkládání, změny, mazání</td><td><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code></td></tr>
+<tr><td><strong>DQL</strong> (Data Query Language)</td><td>dotazy, čtení dat</td><td><code>SELECT</code></td></tr>
+<tr><td><strong>DCL</strong> (Data Control Language)</td><td>přístupová práva</td><td><code>GRANT</code>, <code>REVOKE</code></td></tr>
+<tr><td><strong>TCL</strong> (Transaction Control Language)</td><td>transakce</td><td><code>BEGIN</code>, <code>COMMIT</code>, <code>ROLLBACK</code></td></tr>
+</tbody></table></div>
+<p>Pravidla zápisu: příkaz končí středníkem; na velikosti písmen u klíčových slov nezáleží, ale píšou se velkými, aby byla vidět; texty a data se píšou do <strong>jednoduchých apostrofů</strong> <code>'Novák'</code>, čísla bez nich; komentář začíná <code>--</code>.</p>
+</section>
+
+<section id="ddl">
+<h2>CREATE, ALTER, DROP</h2>
+<p>Tabulka se vytvoří příkazem <code>CREATE TABLE</code>. Každý řádek definice je jeden sloupec: název, typ a omezení.</p>
+<pre><code class="language-sql">CREATE TABLE tridy (
+  id      INTEGER PRIMARY KEY,
+  nazev   VARCHAR(10) NOT NULL UNIQUE,
+  rocnik  INTEGER NOT NULL CHECK (rocnik BETWEEN 1 AND 4)
+);
+
+CREATE TABLE studenti (
+  id        INTEGER PRIMARY KEY,
+  jmeno     VARCHAR(40) NOT NULL,
+  prijmeni  VARCHAR(40) NOT NULL,
+  narozen   DATE,
+  email     VARCHAR(80) UNIQUE,
+  trida_id  INTEGER NOT NULL REFERENCES tridy(id)
+);</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Omezení</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>PRIMARY KEY</code></td><td>primární klíč (obsahuje i NOT NULL a UNIQUE)</td></tr>
+<tr><td><code>NOT NULL</code></td><td>hodnota je povinná</td></tr>
+<tr><td><code>UNIQUE</code></td><td>hodnota se v sloupci nesmí opakovat</td></tr>
+<tr><td><code>DEFAULT x</code></td><td>výchozí hodnota, když se nezadá</td></tr>
+<tr><td><code>CHECK (podmínka)</code></td><td>vlastní podmínka pro hodnotu</td></tr>
+<tr><td><code>REFERENCES t(sl)</code> nebo <code>FOREIGN KEY</code></td><td>cizí klíč do tabulky t</td></tr>
+</tbody></table></div>
+<p>Změna struktury a smazání tabulky:</p>
+<pre><code class="language-sql">ALTER TABLE studenti ADD COLUMN telefon VARCHAR(20);   -- přidá sloupec
+ALTER TABLE studenti RENAME COLUMN telefon TO mobil;   -- přejmenuje ho
+DROP TABLE studenti;                                   -- smaže tabulku i s daty</code></pre>
+</section>
+
+<section id="dml">
+<h2>INSERT, UPDATE, DELETE</h2>
+<pre><code class="language-sql">-- vložení jednoho nebo více řádků
+INSERT INTO studenti (jmeno, prijmeni, narozen, trida_id)
+VALUES ('Petr', 'Beneš', '2010-04-04', 1),
+       ('Lucie', 'Malá',  '2010-09-15', 1);
+
+-- změna existujících řádků
+UPDATE studenti
+SET email = 'petr.benes@skola.example'
+WHERE jmeno = 'Petr' AND prijmeni = 'Beneš';
+
+-- smazání řádků
+DELETE FROM studenti
+WHERE prijmeni = 'Malá';</code></pre>
+<p>V <code>INSERT</code> se vyjmenují sloupce a pak hodnoty ve stejném pořadí. Sloupce, které se neuvedou, dostanou <code>DEFAULT</code> nebo NULL. Primární klíč <code>INTEGER PRIMARY KEY</code> doplní databáze sama.</p>
+<div class="note warn"><b class="lbl">Pozor na WHERE</b><p>Bez <code>WHERE</code> platí <code>UPDATE</code> i <code>DELETE</code> pro <strong>všechny řádky tabulky</strong>. <code>DELETE FROM studenti;</code> smaže všechny studenty. Dobrý zvyk: podmínku nejdřív vyzkoušej jako <code>SELECT * FROM studenti WHERE …</code> a podívej se, které řádky vrátí.</p></div>
+</section>
+
+<section id="select">
+<h2>SELECT</h2>
+<p>Příkaz <code>SELECT</code> čte data. Jeho výsledkem je opět tabulka. Části se píšou v pevném pořadí, povinné jsou jen <code>SELECT</code> a <code>FROM</code>:</p>
+<pre><code class="language-sql">SELECT   sloupce            -- co chci vidět
+FROM     tabulka            -- odkud
+JOIN     další tabulka ON …  -- připojení dalších tabulek
+WHERE    podmínka           -- které řádky
+GROUP BY sloupce            -- seskupení
+HAVING   podmínka           -- které skupiny
+ORDER BY sloupce            -- řazení
+LIMIT    n;                 -- kolik řádků</code></pre>
+<p>Databáze je ale vyhodnocuje v jiném, <dfn>logickém pořadí</dfn>: <code>FROM</code> a <code>JOIN</code> → <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code> → <code>SELECT</code> → <code>ORDER BY</code> → <code>LIMIT</code>. Proto podle normy nejde ve <code>WHERE</code> použít přezdívku sloupce z <code>SELECT</code>, v <code>ORDER BY</code> ano.</p>
+<h3>Příklady</h3>
+<pre><code class="language-sql">SELECT * FROM tridy;                       -- všechny sloupce a řádky
+
+SELECT jmeno, prijmeni FROM studenti
+WHERE trida_id = 2;                        -- studenti třídy 2.A
+
+SELECT jmeno, prijmeni, narozen FROM studenti
+ORDER BY narozen DESC                      -- od nejmladšího
+LIMIT 3;
+
+SELECT DISTINCT trida_id FROM studenti;    -- každá hodnota jen jednou</code></pre>
+<h3>Podmínky ve WHERE</h3>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><code>=</code>, <code>&lt;&gt;</code> (nebo <code>!=</code>), <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></td><td>porovnání</td></tr>
+<tr><td><code>AND</code>, <code>OR</code>, <code>NOT</code></td><td>spojení podmínek; AND má přednost, jinak použij závorky</td></tr>
+<tr><td><code>BETWEEN 1 AND 3</code></td><td>v rozsahu včetně krajních hodnot</td></tr>
+<tr><td><code>IN (1, 3)</code></td><td>jedna z vyjmenovaných hodnot</td></tr>
+<tr><td><code>LIKE 'No%'</code></td><td>vzor textu: <code>%</code> libovolný text, <code>_</code> jeden znak</td></tr>
+<tr><td><code>IS NULL</code>, <code>IS NOT NULL</code></td><td>chybějící hodnota</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="agregace">
+<h2>Agregace a GROUP BY</h2>
+<p><dfn>Agregační funkce</dfn> spočítají jednu hodnotu z mnoha řádků: <code>COUNT</code> (počet), <code>SUM</code> (součet), <code>AVG</code> (průměr), <code>MIN</code>, <code>MAX</code>. Bez <code>GROUP BY</code> pracují s celou tabulkou:</p>
+<pre><code class="language-sql">SELECT COUNT(*) AS pocet, ROUND(AVG(znamka), 2) AS prumer
+FROM znamky;                               -- 31 známek, průměr 2,03</code></pre>
+<p><code>GROUP BY</code> rozdělí řádky do skupin podle hodnoty sloupce a agregační funkce počítá v každé skupině zvlášť. <code>HAVING</code> pak filtruje celé skupiny:</p>
+<pre><code class="language-sql">SELECT student_id, ROUND(AVG(znamka), 2) AS prumer
+FROM znamky
+GROUP BY student_id
+HAVING AVG(znamka) &lt;= 1.5
+ORDER BY prumer;</code></pre>
+<div class="note tip"><b class="lbl">WHERE × HAVING</b><p><code>WHERE</code> filtruje jednotlivé řádky <em>před</em> seskupením, <code>HAVING</code> skupiny <em>po</em> něm. Podmínku s agregační funkcí (<code>AVG(znamka) &lt;= 1.5</code>) jde napsat jen do <code>HAVING</code>.</p></div>
+</section>
+
+<section id="join">
+<h2>JOIN: spojování tabulek</h2>
+<p>Data jsou po normalizaci rozložená do víc tabulek. <code>JOIN</code> je za dotazu zase spojí: ke každému řádku jedné tabulky připojí řádky druhé, které splňují podmínku za <code>ON</code>, obvykle rovnost cizího a primárního klíče.</p>
+<pre><code class="language-sql">SELECT s.jmeno, s.prijmeni, t.nazev AS trida
+FROM studenti AS s
+JOIN tridy AS t ON s.trida_id = t.id;</code></pre>
+<p><code>AS</code> dává tabulkám a sloupcům přezdívky (alias), aby byl dotaz kratší. Přes spojovací tabulku jde spojit i tři tabulky najednou:</p>
+<pre><code class="language-sql">SELECT s.prijmeni, p.nazev AS predmet, z.znamka
+FROM znamky AS z
+JOIN studenti AS s ON z.student_id = s.id
+JOIN predmety AS p ON z.predmet_id = p.id
+WHERE z.znamka &gt;= 4;</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Druh</th><th>Co vrátí</th></tr></thead>
+<tbody>
+<tr><td><code>INNER JOIN</code> (stačí <code>JOIN</code>)</td><td>jen řádky, ke kterým se našel protějšek v obou tabulkách</td></tr>
+<tr><td><code>LEFT JOIN</code></td><td>všechny řádky levé tabulky; kde protějšek chybí, doplní NULL</td></tr>
+<tr><td><code>RIGHT JOIN</code></td><td>totéž pro pravou tabulku</td></tr>
+<tr><td><code>FULL JOIN</code></td><td>všechny řádky z obou tabulek</td></tr>
+<tr><td><code>CROSS JOIN</code></td><td>každý řádek s každým (kartézský součin)</td></tr>
+</tbody></table></div>
+<p>Typické použití <code>LEFT JOIN</code>: najít studenty, kteří zatím nemají žádnou známku. Obyčejný <code>JOIN</code> by je vynechal.</p>
+<pre><code class="language-sql">SELECT s.jmeno, s.prijmeni
+FROM studenti AS s
+LEFT JOIN znamky AS z ON z.student_id = s.id
+WHERE z.id IS NULL;                        -- Anna Němcová</code></pre>
+</section>
+
+<section id="transakce">
+<h2>Transakce a práva</h2>
+<p><dfn>Transakce</dfn> je skupina příkazů, která se provede celá, nebo vůbec. Klasický příklad je převod peněz: odečtení z jednoho účtu a připsání na druhý musí proběhnout společně.</p>
+<pre><code class="language-sql">BEGIN;
+UPDATE ucty SET zustatek = zustatek - 500 WHERE id = 1;
+UPDATE ucty SET zustatek = zustatek + 500 WHERE id = 2;
+COMMIT;      -- potvrdí změny, ROLLBACK by je vrátil</code></pre>
+<p>Relační databáze zaručují u transakcí vlastnosti <dfn>ACID</dfn>:</p>
+<ul>
+  <li><strong>Atomicity</strong> (atomičnost): všechno, nebo nic.</li>
+  <li><strong>Consistency</strong> (konzistence): po transakci platí všechna pravidla databáze.</li>
+  <li><strong>Isolation</strong> (izolace): souběžné transakce se navzájem neruší.</li>
+  <li><strong>Durability</strong> (trvalost): potvrzená data přežijí i výpadek proudu.</li>
+</ul>
+<p>Přístupová práva se v databázových serverech přidělují příkazy DCL. Učitel smí známky zapisovat, žák je jen číst:</p>
+<pre><code class="language-sql">GRANT SELECT, INSERT, UPDATE ON znamky TO ucitel;
+GRANT SELECT ON znamky TO zak;
+REVOKE UPDATE ON znamky FROM ucitel;</code></pre>
+<p>SQLite práva nemá: kdo může číst soubor databáze, vidí všechno. Práva řeší databázové servery jako PostgreSQL nebo MySQL.</p>
+</section>
+
+<section id="injection">
+<h2>SQL injection</h2>
+<p>Když aplikace skládá SQL dotaz z textu, který napsal uživatel, může útočník napsat text, který změní význam dotazu. Tomu se říká <dfn>SQL injection</dfn> a patří k nejčastějším i nejnebezpečnějším chybám webových aplikací.<sup class="ref"><a href="#z8">8</a></sup></p>
+<pre><code class="language-python"># špatně: text od uživatele se vlepí přímo do příkazu
+dotaz = "SELECT * FROM uzivatele WHERE jmeno = '" + jmeno + "'"
+
+# správně: parametrizovaný dotaz, hodnota jde do databáze zvlášť
+con.execute("SELECT * FROM uzivatele WHERE jmeno = ?", (jmeno,))</code></pre>
+<p>U parametrizovaného dotazu databáze ví, že hodnota je jen data, nikdy kus příkazu. Skutečné případy úniků jsou v prezentaci <a href="../bezpecnost/03_uniky_a_utoky.html">Úniky a útoky</a>.</p>
+</section>
+
+<p class="part">K maturitě</p>
+
+<section id="osnova">
+<h2>Jak odpovídat u maturity</h2>
+<ol class="plan">
+  <li><b>Pojmy:</b> databáze, SŘBD (DBMS), databázový systém. Proč ne soubory: redundance, nekonzistence, souběžný přístup, integrita.</li>
+  <li><b>Historie:</b> IMS a Apollo, CODASYL, Codd 1970, SEQUEL 1974, Oracle 1979, norma SQL 1986/87, MySQL, PostgreSQL, SQLite, NoSQL.</li>
+  <li><b>Druhy databází:</b> hierarchická, síťová, relační, objektová, NoSQL (dokumentová, klíč–hodnota, sloupcová, grafová), kdy se která hodí.</li>
+  <li><b>Relační model:</b> tabulka (relace), záznam (n-tice), atribut, doména, hodnota, schéma. Dva významy slova relace.</li>
+  <li><b>Datové typy:</b> celá a desetinná čísla, DECIMAL na peníze, text CHAR, VARCHAR, TEXT, datum, BOOLEAN, BLOB. NULL.</li>
+  <li><b>Klíče a vztahy:</b> primární, cizí, kandidátní, složený, umělý. 1:1, 1:N, M:N se spojovací tabulkou. ER diagram.</li>
+  <li><b>Integrita a normalizace:</b> entitní, doménová, referenční. 1. až 3. NF na příkladu.</li>
+  <li><b>SQL:</b> DDL, DML, DQL, DCL, TCL. Napsat CREATE TABLE, INSERT, UPDATE, DELETE a SELECT s WHERE, ORDER BY, GROUP BY, JOIN.</li>
+  <li><b>Transakce a bezpečnost:</b> ACID, COMMIT a ROLLBACK, práva, SQL injection.</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Jaký je rozdíl mezi databází a SŘBD?</summary><div class="a"><p>Databáze jsou samotná uspořádaná data. SŘBD je program, který je ukládá, hlídá pravidla, vyřizuje dotazy a řídí přístup. Dohromady tvoří databázový systém.</p></div></details>
+<details class="q"><summary>Proč nestačí data ukládat do tabulky v Excelu?</summary><div class="a"><p>Redundance a z ní nekonzistence, žádná kontrola hodnot, nemožnost bezpečného souběžného zápisu mnoha uživatelů, pomalé hledání ve velkých datech, chybějící práva a transakce.</p></div></details>
+<details class="q"><summary>Čím se liší hierarchický a síťový model od relačního?</summary><div class="a"><p>Hierarchický a síťový model propojují záznamy ukazateli (strom, graf) a program musí znát cesty v datech. Relační model ukládá data do tabulek, vztahy vyjadřuje hodnotami klíčů a dotaz se píše deklarativně v SQL.</p></div></details>
+<details class="q"><summary>Uveď čtyři druhy NoSQL databází a k čemu se hodí.</summary><div class="a"><p>Dokumentová (MongoDB, katalogy, profily), klíč–hodnota (Redis, cache, session), sloupcová (Cassandra, měření, logy), grafová (Neo4j, sociální sítě, doporučování).</p></div></details>
+<details class="q"><summary>Co znamená slovo relace v relační teorii?</summary><div class="a"><p>Tabulku, tedy množinu n-tic se stejnými atributy. V běžné řeči se tak nepřesně říká vztahu mezi tabulkami.</p></div></details>
+<details class="q"><summary>Jaký datový typ zvolíš pro PSČ, cenu a datum narození?</summary><div class="a"><p>PSČ VARCHAR (nepočítá se s ním, může mít mezeru a úvodní nulu), cenu DECIMAL(10, 2) (peníze musí být přesné), datum narození DATE (řazení a výpočty).</p></div></details>
+<details class="q"><summary>Co je NULL a jak se na něj ptá?</summary><div class="a"><p>Chybějící nebo neznámá hodnota, ne nula ani prázdný text. Ptá se <code>IS NULL</code> nebo <code>IS NOT NULL</code>, porovnání <code>= NULL</code> nikdy neplatí.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi primárním a cizím klíčem?</summary><div class="a"><p>Primární klíč jednoznačně určí řádek ve své tabulce. Cizí klíč je sloupec, který odkazuje na primární klíč jiné tabulky, a tím vytváří vztah.</p></div></details>
+<details class="q"><summary>Jak se v databázi zapíše vztah M : N?</summary><div class="a"><p>Spojovací tabulkou se dvěma cizími klíči, například <code>znamky (student_id, predmet_id, …)</code>. Vztah se tím rozloží na dva vztahy 1 : N.</p></div></details>
+<details class="q"><summary>Co je referenční integrita?</summary><div class="a"><p>Pravidlo, že cizí klíč musí odkazovat na existující řádek. Databáze nedovolí zapsat známku neexistujícímu studentovi ani smazat studenta se známkami, pokud není nastaveno ON DELETE CASCADE nebo SET NULL.</p></div></details>
+<details class="q"><summary>K čemu je normalizace a co říká 1. normální forma?</summary><div class="a"><p>Normalizace odstraňuje redundanci a anomálie: každý údaj je uložen jen jednou. 1. NF požaduje atomické hodnoty, žádné seznamy v buňce ani opakující se sloupce.</p></div></details>
+<details class="q"><summary>Rozděl příkazy SQL do skupin DDL, DML, DQL.</summary><div class="a"><p>DDL: CREATE, ALTER, DROP. DML: INSERT, UPDATE, DELETE. DQL: SELECT.</p></div></details>
+<details class="q"><summary>Co se stane po <code>UPDATE studenti SET trida_id = 1;</code>?</summary><div class="a"><p>Chybí WHERE, takže se všichni studenti přesunou do třídy 1. UPDATE i DELETE bez WHERE platí pro celou tabulku.</p></div></details>
+<details class="q"><summary>Jaký je rozdíl mezi WHERE a HAVING?</summary><div class="a"><p>WHERE filtruje řádky před seskupením, HAVING filtruje skupiny po GROUP BY a smí obsahovat agregační funkce.</p></div></details>
+<details class="q"><summary>Kdy použiješ LEFT JOIN místo JOIN?</summary><div class="a"><p>Když chceš všechny řádky levé tabulky, i ty bez protějšku. Například všechny studenty i s těmi, kteří ještě nemají známku.</p></div></details>
+<details class="q"><summary>Co znamená ACID?</summary><div class="a"><p>Atomicity (vše, nebo nic), Consistency (platí pravidla), Isolation (souběžné transakce se neruší), Durability (potvrzená data přežijí výpadek).</p></div></details>
+<details class="q"><summary>Jak se bránit SQL injection?</summary><div class="a"><p>Nikdy neskládat SQL z textu od uživatele, používat parametrizované dotazy (zástupné znaky <code>?</code>), dát aplikaci jen nutná práva.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Databáze</dt><dd>uspořádaná sbírka souvisejících dat</dd>
+  <dt>SŘBD (DBMS)</dt><dd>program, který databázi spravuje</dd>
+  <dt>Relace</dt><dd>v teorii tabulka; v běžné řeči vztah mezi tabulkami</dd>
+  <dt>Záznam (n-tice)</dt><dd>řádek tabulky, údaje o jedné věci</dd>
+  <dt>Atribut</dt><dd>sloupec, jedna vlastnost</dd>
+  <dt>Doména</dt><dd>množina povolených hodnot atributu</dd>
+  <dt>Schéma</dt><dd>popis tabulek, sloupců, typů a omezení</dd>
+  <dt>NULL</dt><dd>chybějící nebo neznámá hodnota</dd>
+  <dt>Primární klíč</dt><dd>jednoznačný identifikátor řádku</dd>
+  <dt>Cizí klíč</dt><dd>odkaz na primární klíč jiné tabulky</dd>
+  <dt>Kardinalita</dt><dd>druh vztahu podle počtu řádků: 1:1, 1:N, M:N</dd>
+  <dt>Spojovací tabulka</dt><dd>tabulka, která rozkládá vztah M:N</dd>
+  <dt>Integrita</dt><dd>správnost a bezespornost dat</dd>
+  <dt>Normalizace</dt><dd>návrh tabulek bez redundance, normální formy</dd>
+  <dt>Index</dt><dd>pomocná struktura pro rychlé hledání</dd>
+  <dt>SQL</dt><dd>Structured Query Language, jazyk relačních databází</dd>
+  <dt>DDL, DML, DQL, DCL, TCL</dt><dd>skupiny příkazů SQL</dd>
+  <dt>JOIN</dt><dd>spojení řádků dvou tabulek podle podmínky</dd>
+  <dt>Agregační funkce</dt><dd>COUNT, SUM, AVG, MIN, MAX</dd>
+  <dt>Transakce</dt><dd>skupina příkazů provedená celá, nebo vůbec</dd>
+  <dt>ACID</dt><dd>atomičnost, konzistence, izolace, trvalost</dd>
+  <dt>NoSQL</dt><dd>souhrnný název pro nerelační databáze</dd>
+  <dt>SQL injection</dt><dd>útok podstrčením kódu SQL do vstupu aplikace</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v listopadu 2026.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://www.ibm.com/history/information-management-system">IBM: IMS and the Apollo program</a></li>
+  <li id="z2"><a href="https://dl.acm.org/doi/10.1145/362384.362685">E. F. Codd: A Relational Model of Data for Large Shared Data Banks, Communications of the ACM, 1970</a> · <a href="https://amturing.acm.org/award_winners/codd_1000892.cfm">ACM: Turingova cena 1981</a></li>
+  <li id="z3"><a href="https://dl.acm.org/doi/10.1145/800296.811515">D. Chamberlin, R. Boyce: SEQUEL: A Structured English Query Language, 1974</a></li>
+  <li id="z4"><a href="https://www.oracle.com/corporate/history/">Oracle: historie firmy</a></li>
+  <li id="z5"><a href="https://www.iso.org/standard/76584.html">ISO/IEC 9075-2:2023 SQL/Foundation</a></li>
+  <li id="z6"><a href="https://www.postgresql.org/docs/current/history.html">PostgreSQL: A Brief History</a> · <a href="https://www.sqlite.org/mostdeployed.html">SQLite: Most Widely Deployed</a></li>
+  <li id="z7"><a href="https://www.sqlite.org/datatype3.html">SQLite: Datatypes</a> · <a href="https://www.sqlite.org/stricttables.html">STRICT Tables</a> · <a href="https://www.sqlite.org/foreignkeys.html">Foreign Keys</a></li>
+  <li id="z8"><a href="https://owasp.org/www-community/attacks/SQL_Injection">OWASP: SQL Injection</a> · <a href="https://owasp.org/Top10/">OWASP Top 10</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 11 „Databáze a základy SQL“. Vyzkoušej si všechno v <a href="11_databaze_prakticky.html">praktické ukázce</a> na vlastním počítači.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

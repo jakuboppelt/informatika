@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Džbány v Pythonu</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Úloha</li>
+    <li><a href="#uloha">Odměř 4 litry</a></li>
+    <li class="grp">Program krok za krokem</li>
+    <li><a href="#stav">1. Stav</a></li>
+    <li><a href="#tahy">2. Tahy</a></li>
+    <li><a href="#cil">3. Cíl</a></li>
+    <li><a href="#bfs">4. Hledání do šířky</a></li>
+    <li><a href="#cesta">5. Cesta zpátky</a></li>
+    <li><a href="#program">Celý program</a></li>
+    <li class="grp">Jak algoritmus postupuje</li>
+    <li><a href="#vizualizace">Krokování</a></li>
+    <li><a href="#co-videt">Co si všimnout</a></li>
+    <li class="grp">Procvičení</li>
+    <li><a href="#vyzkousej">Vyzkoušej</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Algoritmy · Python</p>
+  <h1>Džbány v Pythonu <span class="t">stav · tahy · BFS</span></h1>
+  <p class="lead">Hádanku ze Smrtonosné pasti 3 jsi řešil zkoušením. Teď ji naučíme řešit počítač. Program napíšeme po částech a pak se podíváme krok za krokem, jak prohledávání do šířky postupuje, než najde nejkratší řešení.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>zapsat stav úlohy v Pythonu jako n-tici</li>
+      <li>napsat funkci, která vrátí všechny tahy ze stavu</li>
+      <li>vysvětlit, k čemu je fronta a slovník předchůdců</li>
+      <li>zrekonstruovat cestu od cíle zpátky ke startu</li>
+      <li>upravit program pro jiné džbány nebo jinou úlohu</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Úloha</p>
+
+<section id="uloha">
+<h2>Odměř 4 litry</h2>
+<p>Máš džbán na 3 litry, džbán na 5 litrů, kohoutek a umyvadlo. Smíš džbán <strong>naplnit</strong> až po okraj, celý ho <strong>vylít</strong>, nebo <strong>přelít</strong> vodu z jednoho do druhého, dokud první není prázdný, nebo druhý plný. Cílem je mít ve velkém džbánu přesně 4 litry.</p>
+<p>Z prezentace víš, jak to popsat jako stavový prostor:</p>
+<ul>
+  <li><strong>stav</strong> je dvojice (litry v malém, litry ve velkém),</li>
+  <li><strong>počáteční stav</strong> je (0, 0),</li>
+  <li><strong>cílové stavy</strong> jsou všechny, kde je ve velkém 4 litry,</li>
+  <li><strong>operátorů</strong> je šest: naplň, vylij a přelij pro každý džbán.</li>
+</ul>
+<p>Přesně tyhle čtyři věci teď přepíšeme do Pythonu. Program si průběžně skládej do jednoho souboru, celý je na konci v části <a href="#program">Celý program</a>.</p>
+</section>
+
+<p class="part">Program krok za krokem</p>
+
+<section id="stav">
+<h2>1. Stav</h2>
+<p>Stav zapíšeme jako <strong>n-tici</strong> (anglicky <i>tuple</i>) dvou čísel. Na začátku jsou oba džbány prázdné:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">start = (0, 0)       # (malý džbán, velký džbán)
+a, b = start         # rozbalení: a = 0, b = 0</code></pre>
+<p>Proč n-tice a ne seznam <code>[0, 0]</code>? N-tici nejde změnit, a proto ji Python dovolí použít jako <strong>klíč ve slovníku</strong>. To budeme za chvíli potřebovat, až si budeme pamatovat, které stavy už jsme viděli.</p>
+<p>Objemy džbánů a cíl uložíme do konstant na začátek programu. Když je změníš, program bude řešit jinou úlohu:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">MALY = 3     # objem malého džbánu v litrech
+VELKY = 5    # objem velkého džbánu v litrech
+CIL = 4      # kolik litrů chceme mít ve velkém džbánu</code></pre>
+</section>
+
+<section id="tahy">
+<h2>2. Tahy</h2>
+<p>Funkce <code>nasledovnici</code> dostane stav a vrátí seznam všech tahů, které z něj jdou udělat. Každý tah je dvojice <strong>(popis, nový stav)</strong>. Popis potřebujeme jen proto, abychom na konci mohli vypsat, co dělat.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def nasledovnici(stav):
+    """Vrátí seznam dvojic (popis tahu, nový stav)."""
+    a, b = stav                       # a = malý džbán, b = velký džbán
+    do_velkeho = min(a, VELKY - b)    # kolik se přelije z malého do velkého
+    do_maleho = min(b, MALY - a)      # kolik se přelije z velkého do malého
+    return [
+        ("naplň malý", (MALY, b)),
+        ("naplň velký", (a, VELKY)),
+        ("vylij malý", (0, b)),
+        ("vylij velký", (a, 0)),
+        ("přelij malý → velký", (a - do_velkeho, b + do_velkeho)),
+        ("přelij velký → malý", (a + do_maleho, b - do_maleho)),
+    ]</code></pre>
+<p>Naplnění a vylití jsou jednoduché: jeden džbán bude plný, nebo prázdný, druhý se nezmění. Zajímavé je <strong>přelévání</strong>. Kolik vody se přelije z malého do velkého džbánu? Přelévání skončí, jakmile nastane jedna ze dvou věcí:</p>
+<ul>
+  <li>malý džbán se vyprázdní, tedy se přelije všech <code>a</code> litrů, které v něm byly, nebo</li>
+  <li>velký se naplní, tedy se přelije tolik, kolik je v něm volného místa: <code>VELKY - b</code>.</li>
+</ul>
+<p>Nastane to, co přijde dřív, tedy menší z obou čísel. Proto <code>min(a, VELKY - b)</code>.</p>
+<div class="tbl"><table>
+  <thead><tr><th>stav</th><th>v malém</th><th>volno ve velkém</th><th>přelije se</th><th>nový stav</th></tr></thead>
+  <tbody>
+    <tr><td><code>(3, 0)</code></td><td>3</td><td>5 − 0 = 5</td><td>min(3, 5) = <b>3</b></td><td><code>(0, 3)</code>, malý se vyprázdnil</td></tr>
+    <tr><td><code>(3, 4)</code></td><td>3</td><td>5 − 4 = 1</td><td>min(3, 1) = <b>1</b></td><td><code>(2, 5)</code>, velký se naplnil</td></tr>
+  </tbody>
+</table></div>
+<p>Vyzkoušej si funkci samostatně:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">for tah, novy in nasledovnici((3, 4)):
+    print(tah, novy)</code></pre>
+<pre><code>naplň malý (3, 4)
+naplň velký (3, 5)
+vylij malý (0, 4)
+vylij velký (3, 0)
+přelij malý → velký (2, 5)
+přelij velký → malý (3, 4)</code></pre>
+<p>Některé tahy stav nezmění (naplnit už plný džbán). Nevadí to, za chvíli je algoritmus sám přeskočí, protože takový stav už zná.</p>
+</section>
+
+<section id="cil">
+<h2>3. Cíl</h2>
+<p>Cíl je zadaný podmínkou, ne jedním stavem: stačí, aby ve velkém džbánu bylo <code>CIL</code> litrů, v malém může být cokoli.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def je_cil(stav):
+    return stav[1] == CIL       # stav[1] je velký džbán</code></pre>
+</section>
+
+<section id="bfs">
+<h2>4. Hledání do šířky</h2>
+<p>Teď samotné prohledávání do šířky. Potřebujeme dvě datové struktury:</p>
+<ul>
+  <li><strong>fronta</strong> stavů, které čekají na prozkoumání. Bereme zepředu, přidáváme dozadu. Použijeme <code>deque</code> z modulu <code>collections</code>, ze které jde rychle odebírat zepředu metodou <code>popleft()</code>.</li>
+  <li><strong>slovník předchůdců</strong> <code>predchudce</code>. Ke každému objevenému stavu si uloží, ze kterého stavu a jakým tahem jsme do něj přišli. Slouží dvakrát: podle něj poznáme, jestli stav už známe (<code>novy not in predchudce</code>), a na konci podle něj složíme cestu.</li>
+</ul>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">from collections import deque
+
+def bfs(start):
+    predchudce = {start: None}        # stav -> (předchozí stav, tah)
+    fronta = deque([start])
+    while fronta:
+        stav = fronta.popleft()
+        if je_cil(stav):
+            return predchudce, stav
+        for tah, novy in nasledovnici(stav):
+            if novy not in predchudce:
+                predchudce[novy] = (stav, tah)
+                fronta.append(novy)
+    return predchudce, None</code></pre>
+<p>Řádek po řádku:</p>
+<ol>
+  <li>Start nemá předchůdce (<code>None</code>) a je jediný ve frontě.</li>
+  <li>Dokud fronta není prázdná, vezmi z ní první stav.</li>
+  <li>Je to cíl? Pak vrať slovník předchůdců a nalezený cíl.</li>
+  <li>Jinak projdi všechny tahy. Každý nový stav, který ještě není ve slovníku, si zapiš (odkud a jak jsme přišli) a zařaď na konec fronty.</li>
+  <li>Když se fronta vyprázdní a cíl nepřišel, řešení neexistuje. Vrátíme <code>None</code>.</li>
+</ol>
+<div class="note warn"><b class="lbl">Bez slovníku by se program zacyklil</b><p>Ze stavu (0, 0) vede tah „naplň velký“ do (0, 5) a z (0, 5) tah „vylij velký“ zpátky do (0, 0). Kdybychom si nepamatovali, co už známe, fronta by se plnila pořád stejnými stavy a program by nikdy neskončil.</p></div>
+</section>
+
+<section id="cesta">
+<h2>5. Cesta zpátky</h2>
+<p>Funkce <code>bfs</code> vrátí jen cílový stav. Celou cestu složíme pozpátku: od cíle se podíváme do slovníku na předchůdce, od něj na jeho předchůdce, a tak dál až ke startu, který má předchůdce <code>None</code>. Nakonec seznam otočíme.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def cesta(predchudce, cil):
+    kroky = []
+    stav = cil
+    while predchudce[stav] is not None:
+        predchozi, tah = predchudce[stav]
+        kroky.append((tah, stav))
+        stav = predchozi
+    kroky.reverse()
+    return kroky</code></pre>
+</section>
+
+<section id="program">
+<h2>Celý program</h2>
+<p>Ulož program do souboru <code>dzbany.py</code> a spusť ho v terminálu příkazem <code>python dzbany.py</code> (na macOS a Linuxu případně <code>python3 dzbany.py</code>).</p>
+<div class="codehead"><span>dzbany.py</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">from collections import deque
+
+MALY = 3     # objem malého džbánu v litrech
+VELKY = 5    # objem velkého džbánu v litrech
+CIL = 4      # kolik litrů chceme mít ve velkém džbánu
+
+
+def nasledovnici(stav):
+    """Vrátí seznam dvojic (popis tahu, nový stav)."""
+    a, b = stav                       # a = malý džbán, b = velký džbán
+    do_velkeho = min(a, VELKY - b)    # kolik se přelije z malého do velkého
+    do_maleho = min(b, MALY - a)      # kolik se přelije z velkého do malého
+    return [
+        ("naplň malý", (MALY, b)),
+        ("naplň velký", (a, VELKY)),
+        ("vylij malý", (0, b)),
+        ("vylij velký", (a, 0)),
+        ("přelij malý → velký", (a - do_velkeho, b + do_velkeho)),
+        ("přelij velký → malý", (a + do_maleho, b - do_maleho)),
+    ]
+
+
+def je_cil(stav):
+    return stav[1] == CIL
+
+
+def bfs(start):
+    predchudce = {start: None}        # stav -&gt; (předchozí stav, tah)
+    fronta = deque([start])
+    while fronta:
+        stav = fronta.popleft()
+        if je_cil(stav):
+            return predchudce, stav
+        for tah, novy in nasledovnici(stav):
+            if novy not in predchudce:
+                predchudce[novy] = (stav, tah)
+                fronta.append(novy)
+    return predchudce, None
+
+
+def cesta(predchudce, cil):
+    kroky = []
+    stav = cil
+    while predchudce[stav] is not None:
+        predchozi, tah = predchudce[stav]
+        kroky.append((tah, stav))
+        stav = predchozi
+    kroky.reverse()
+    return kroky
+
+
+predchudce, cil = bfs((0, 0))
+print("Objevených stavů:", len(predchudce))
+if cil is None:
+    print("Řešení neexistuje.")
+else:
+    print("start                   (0, 0)")
+    for i, (tah, stav) in enumerate(cesta(predchudce, cil), start=1):
+        print(f"{i}. {tah:&lt;21} {stav}")</code></pre>
+<p>Výstup:</p>
+<pre><code>Objevených stavů: 15
+start                   (0, 0)
+1. naplň velký           (0, 5)
+2. přelij velký → malý   (3, 2)
+3. vylij malý            (0, 2)
+4. přelij velký → malý   (2, 0)
+5. naplň velký           (2, 5)
+6. přelij velký → malý   (3, 4)</code></pre>
+<p>Program objevil 15 stavů a našel řešení na 6 tahů. Je to stejné řešení, jaké používají hrdinové ve filmu.</p>
+</section>
+
+<p class="part">Jak algoritmus postupuje</p>
+
+<section id="vizualizace">
+<h2>Krokování</h2>
+<p>Tady vidíš, co program dělá uvnitř. Mřížka ukazuje všech 24 dvojic: sloupce jsou litry v malém džbánu, řádky litry ve velkém. U každého objeveného stavu je napsáno, ze kterého stavu do něj algoritmus přišel. To je přesně obsah slovníku <code>predchudce</code>. Vpravo je zvýrazněný řádek programu, který se právě provádí.</p>
+<div class="bw" id="bw">
+  <div class="bw-ctrl">
+    <button type="button" class="bw-btn" id="bwStep">Krok</button>
+    <button type="button" class="bw-btn" id="bwNext">Další stav z fronty</button>
+    <button type="button" class="bw-btn" id="bwPlay">Přehrát</button>
+    <button type="button" class="bw-btn" id="bwReset">Znovu</button>
+    <span class="bw-count" id="bwCount"></span>
+  </div>
+  <p class="bw-say" id="bwSay" aria-live="polite"></p>
+  <div class="bw-main">
+    <div class="bw-mapwrap">
+      <div class="bw-axis-y">velký džbán (l)</div>
+      <div class="bw-map" id="bwMap"></div>
+      <div class="bw-axis-x">malý džbán (l)</div>
+    </div>
+    <pre class="bw-code" id="bwCode"></pre>
+  </div>
+  <div class="bw-queue"><span class="bw-qlab">fronta</span><div id="bwQueue"></div></div>
+  <p class="bw-legend"><span class="bw-k q">ve frontě</span><span class="bw-k cur">právě zkoumaný</span><span class="bw-k look">zkoumaný tah</span><span class="bw-k done">prozkoumaný</span><span class="bw-k path">nalezená cesta</span><span class="bw-k goal">cílový stav</span></p>
+</div>
+</section>
+
+<section id="co-videt">
+<h2>Co si všimnout</h2>
+<ul>
+  <li><strong>Stavy se objevují po vrstvách.</strong> Nejdřív všechny o 1 tah od startu ((3, 0) a (0, 5)), pak všechny o 2 tahy a tak dál. Proto je první nalezený cíl ten nejbližší a řešení je nejkratší.</li>
+  <li><strong>Fronta určuje pořadí.</strong> Stav zařazený dřív se prozkoumá dřív.</li>
+  <li><strong>Známé stavy se přeskakují.</strong> Většina tahů vede do stavu, který už je ve slovníku. Díky tomu algoritmus skončí.</li>
+  <li><strong>Algoritmus nic „neví“.</strong> Nezná trik s odečítáním, jen systematicky zkouší všechno. Stačí mu správně popsaný stav, tahy a cíl.</li>
+  <li><strong>Některé stavy se v mřížce vůbec neobjeví.</strong> Algoritmus objeví 15 stavů z 24. Osm zbylých dvojic není z (0, 0) dosažitelných vůbec a jeden dosažitelný stav, (0, 4), algoritmus nepotřeboval, protože našel cíl (3, 4) dřív.</li>
+</ul>
+</section>
+
+<p class="part">Procvičení</p>
+
+<section id="vyzkousej">
+<h2>Vyzkoušej</h2>
+<details class="q"><summary>1. Změň program pro džbány na 4 l a 9 l a cíl 6 litrů. Kolik tahů je potřeba?</summary><div class="a"><p>Nastav <code>MALY = 4</code>, <code>VELKY = 9</code>, <code>CIL = 6</code>. Program najde řešení na 8 tahů: naplň velký (0, 9), přelij do malého (4, 5), vylij malý (0, 5), přelij (4, 1), vylij malý (0, 1), přelij (1, 0), naplň velký (1, 9), přelij do malého (4, 6). Objeví přitom 19 stavů.</p></div></details>
+<details class="q"><summary>2. Zkus džbány na 2 l a 4 l a cíl 3 litry. Co program vypíše a proč?</summary><div class="a"><p>„Řešení neexistuje.“ Program objeví jen 6 stavů a všechny mají v obou džbánech sudý počet litrů. Naplněním vznikne 2 nebo 4, vylitím 0 a přelitím sudého množství zase sudé. Lichých 3 litrů tak nikdy nedosáhneš. Obecně jde odměřit jen násobky největšího společného dělitele objemů.</p></div></details>
+<details class="q"><summary>3. Kolik stavů je z (0, 0) vůbec dosažitelných?</summary><div class="a"><p>Uprav <code>je_cil</code>, aby vracela vždy <code>False</code>. Algoritmus pak projde všechno, co jde, a vypíše „Objevených stavů: 16“. Zbylých 8 z 24 dvojic nejde získat, protože po každém tahu je aspoň jeden džbán prázdný, nebo plný.</p></div></details>
+<details class="q"><summary>4. Zaměň <code>fronta.popleft()</code> za <code>fronta.pop()</code>. Co se změní?</summary><div class="a"><p>Fronta se začne chovat jako zásobník: bere se naposledy přidaný stav. Z prohledávání do šířky se stane <strong>prohledávání do hloubky</strong>. U džbánů 3 a 5 najde náhodou stejné řešení na 6 tahů a objeví jen 9 stavů. Když ale procházíš tahy v obráceném pořadí (<code>for tah, novy in reversed(nasledovnici(stav)):</code>), najde řešení na 8 tahů. Do hloubky tedy nejkratší řešení nezaručuje, záleží na pořadí tahů.</p></div></details>
+<details class="q"><summary>5. Přidej třetí džbán. Co všechno musíš změnit?</summary><div class="a"><p>Stav bude trojice <code>(a, b, c)</code>. Funkce <code>nasledovnici</code> bude vracet 12 tahů: naplň a vylij pro každý ze tří džbánů (6) a přelij pro každou uspořádanou dvojici džbánů (3 · 2 = 6). Upravíš i <code>je_cil</code>. Funkce <code>bfs</code> a <code>cesta</code> zůstanou úplně stejné, na tvaru stavu nezávisí.</p></div></details>
+<details class="q"><summary>6. Stejný postup pro převozníka</summary><div class="a"><p>Program pro převozníka, vlka, kozu a zelí najdeš ve <a href="01_stavovy_prostor_studijni_text.html#python">studijním textu</a>. Porovnej ho s tímto: funkce <code>bfs</code> je skoro stejná, liší se jen stav a funkce <code>nasledovnici</code>.</p></div></details>
+</section>
+
+<p class="foot">Python k bloku Algoritmy. Prezentace: <a href="01_stavovy_prostor.html">Stavový prostor</a>, studijní text: <a href="01_stavovy_prostor_studijni_text.html">Stavový prostor</a>.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
+    });
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+
+  /* ---------- krokování BFS ---------- */
+  var MALY = 3, VELKY = 5, CIL = 4;
+  var $ = function (id) { return document.getElementById(id); };
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function txt(s) { return '(' + s[0] + ', ' + s[1] + ')'; }
+  function key(s) { return s[0] + ',' + s[1]; }
+  function nasledovnici(s) {
+    var a = s[0], b = s[1], dv = Math.min(a, VELKY - b), dm = Math.min(b, MALY - a);
+    return [['naplň malý', [MALY, b]], ['naplň velký', [a, VELKY]], ['vylij malý', [0, b]], ['vylij velký', [a, 0]],
+            ['přelij malý → velký', [a - dv, b + dv]], ['přelij velký → malý', [a + dm, b - dm]]];
+  }
+
+  var CODE = [
+    'def bfs(start):',
+    '    predchudce = {start: None}',
+    '    fronta = deque([start])',
+    '    while fronta:',
+    '        stav = fronta.popleft()',
+    '        if je_cil(stav):',
+    '            return predchudce, stav',
+    '        for tah, novy in nasledovnici(stav):',
+    '            if novy not in predchudce:',
+    '                predchudce[novy] = (stav, tah)',
+    '                fronta.append(novy)',
+    '    return predchudce, None'
+  ];
+  var codeEl = $('bwCode');
+  var codeLines = CODE.map(function (l) { var s = document.createElement('span'); s.className = 'bw-line'; s.textContent = l; codeEl.appendChild(s); return s; });
+
+  /* Předem projdeme BFS a zapíšeme si každý krok jako snímek celého stavu. */
+  var FRAMES = (function () {
+    var fr = [], pred = {}, order = [], queue = [], done = {}, cur = null, look = null, path = [];
+    function snap(lines, say, pop) {
+      fr.push({ lines: lines, say: say, pop: !!pop, pred: JSON.parse(JSON.stringify(pred)), order: order.slice(), queue: queue.slice(),
+                done: JSON.parse(JSON.stringify(done)), cur: cur, look: look, path: path.slice() });
+    }
+    var start = [0, 0];
+    pred[key(start)] = null; order.push(key(start)); queue.push(key(start));
+    snap([1, 2], 'Start (0, 0) zapíšeme do slovníku předchůdců (nemá předchůdce, proto None) a dáme ho do fronty.');
+    var goal = null;
+    while (queue.length) {
+      var k = queue.shift(), s = k.split(',').map(Number);
+      cur = k; look = null;
+      if (s[1] === CIL) {
+        goal = k;
+        snap([4, 5, 6], 'Z fronty beru <b>' + txt(s) + '</b>. Ve velkém džbánu jsou ' + CIL + ' litry, <b>to je cíl!</b> Hledání končí.', true);
+        break;
+      }
+      snap([3, 4, 5], 'Z fronty beru <b>' + txt(s) + '</b>. Je to cíl? Ve velkém džbánu je ' + s[1] + ' l, ne ' + CIL + '. Projdu všech šest tahů.', true);
+      nasledovnici(s).forEach(function (t) {
+        var nk = key(t[1]);
+        look = nk;
+        if (nk in pred) {
+          snap([7, 8], 'Tah <b>' + t[0] + '</b> vede do ' + txt(t[1]) + '. ' + (nk === k ? 'Stav se vůbec nezměnil.' : 'Ten už ve slovníku je.') + ' Přeskakuji.');
+        } else {
+          pred[nk] = [k, t[0]]; order.push(nk); queue.push(nk);
+          snap([7, 8, 9, 10], 'Tah <b>' + t[0] + '</b> vede do <b>' + txt(t[1]) + '</b>. Nový stav! Zapíšu předchůdce ' + txt(s) + ' a zařadím ho na konec fronty.');
+        }
+      });
+      look = null; done[k] = 1;
+    }
+    /* rekonstrukce cesty */
+    if (goal) {
+      var x = goal, chain = [];
+      while (x) { chain.push(x); x = pred[x] ? pred[x][0] : null; }
+      chain.reverse();
+      cur = null; look = null;
+      var back = goal;
+      path = [goal];
+      snap([], 'Teď složíme cestu pozpátku podle slovníku předchůdců. Začínáme v cíli <b>' + txt(goal.split(',')) + '</b>.');
+      while (pred[back]) {
+        var p = pred[back];
+        path.unshift(p[0]);
+        snap([], 'Do <b>' + txt(back.split(',')) + '</b> jsme přišli z <b>' + txt(p[0].split(',')) + '</b> tahem „' + p[1] + '“.');
+        back = p[0];
+      }
+      var steps = chain.slice(1).map(function (c, i) { return (i + 1) + '. ' + pred[c][1] + ' → ' + txt(c.split(',')); });
+      snap([], '<b>Hotovo: řešení má ' + (chain.length - 1) + ' tahů</b> a algoritmus při hledání objevil ' + Object.keys(pred).length + ' stavů.<br>' + steps.join('<br>'));
+    }
+    return fr;
+  })();
+
+  /* mřížka */
+  var cells = {};
+  for (var b = VELKY; b >= 0; b--) for (var a = 0; a <= MALY; a++) {
+    var c = document.createElement('div'), k = a + ',' + b;
+    c.className = 'bw-cell' + (b === CIL ? ' is-goal' : '');
+    c.innerHTML = '<span class="bw-st">(' + a + ', ' + b + ')</span><span class="bw-from"></span>';
+    $('bwMap').appendChild(c); cells[k] = c;
+  }
+
+  var fi = 0, timer = null;
+  function draw() {
+    var f = FRAMES[fi];
+    codeLines.forEach(function (l, i) { l.classList.toggle('is-on', f.lines.indexOf(i) >= 0); });
+    Object.keys(cells).forEach(function (k) {
+      var c = cells[k], known = k in f.pred, inPath = f.path.indexOf(k) >= 0;
+      c.classList.toggle('is-known', known);
+      c.classList.toggle('is-q', f.queue.indexOf(k) >= 0 && k !== f.cur);
+      c.classList.toggle('is-done', !!f.done[k]);
+      c.classList.toggle('is-cur', k === f.cur);
+      c.classList.toggle('is-look', k === f.look);
+      c.classList.toggle('is-path', inPath);
+      var from = c.querySelector('.bw-from');
+      if (!known) from.textContent = '';
+      else if (f.pred[k] === null) from.textContent = 'start';
+      else from.textContent = 'z (' + f.pred[k][0].replace(',', ', ') + ')';
+    });
+    $('bwQueue').innerHTML = f.queue.length ? f.queue.map(function (k, i) { return '<span class="bw-qi' + (i === 0 ? ' is-first' : '') + '">(' + k.replace(',', ', ') + ')</span>'; }).join('') : '<span class="bw-empty">prázdná</span>';
+    $('bwSay').innerHTML = f.say;
+    $('bwCount').textContent = 'krok ' + (fi + 1) + ' z ' + FRAMES.length;
+    $('bwStep').disabled = $('bwNext').disabled = fi >= FRAMES.length - 1;
+    $('bwPlay').disabled = fi >= FRAMES.length - 1 && !timer;
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } $('bwPlay').textContent = 'Přehrát'; }
+  $('bwStep').addEventListener('click', function () { stop(); if (fi < FRAMES.length - 1) { fi++; draw(); } });
+  $('bwNext').addEventListener('click', function () {
+    stop();
+    while (fi < FRAMES.length - 1) { fi++; if (FRAMES[fi].pop || fi === FRAMES.length - 1) break; }
+    draw();
+  });
+  $('bwReset').addEventListener('click', function () { stop(); fi = 0; draw(); });
+  $('bwPlay').addEventListener('click', function () {
+    if (timer) { stop(); draw(); return; }
+    if (fi >= FRAMES.length - 1) fi = 0;
+    $('bwPlay').textContent = 'Pozastavit';
+    timer = setInterval(function () { if (fi < FRAMES.length - 1) { fi++; draw(); } if (fi >= FRAMES.length - 1) { stop(); draw(); } }, reduce ? 1200 : 900);
+  });
+  draw();
+})();
+</script>
+</body>
+</html>
