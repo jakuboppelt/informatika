@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hash funkce</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Bezpečnost · 5. materiál</div>
+        <h1>Hash funkce</h1>
+        <p class="lede">Otisk dat, ze kterého se data nedají vrátit. Jak hash funkce funguje, proč se kolize nedají úplně vyloučit, k čemu se používá a jak na ní stojí elektronický podpis.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="n1"><div class="slide-inner">
+      <div class="eyebrow">Úplný začátek</div>
+      <h2 class="slide-title">Hash funkce je černá krabička</h2>
+      <p class="lede">Něco do ní vložíš a vyjde z ní číslo. Pro stejný vstup vyjde vždy stejné číslo. Co se uvnitř krabičky děje, zatím nevíme. Tak se do ní podíváme.</p>
+      <div id="toyRows" style="display:grid;gap:.8rem"></div>
+      <p class="note">Ze samotného výstupu nepoznáš, co bylo na vstupu. Zkus uhodnout, jaké pravidlo tahle krabička používá.</p>
+    </div></section>
+
+    <section class="slide" data-index="n2"><div class="slide-inner">
+      <div class="eyebrow">Otevřeme krabičku</div>
+      <h2 class="slide-title">Naše první hash funkce</h2>
+      <p class="lede">Každé písmeno nahraď jeho pořadím v abecedě (A = 1, B = 2, … Z = 26). Čísla sečti a vezmi zbytek po dělení deseti. Ten zbytek je hash. Napiš vlastní slovo.</p>
+      <div class="calc-row"><input class="text-in" id="toyIn" type="text" value="KOS" maxlength="14" autocomplete="off" spellcheck="false" aria-label="Slovo k zahashování"></div>
+      <div class="panel p-hash" id="toyPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="n3"><div class="slide-inner">
+      <div class="eyebrow">Co hračka umí a neumí</div>
+      <h2 class="slide-title">Stejný hash mají i různá slova</h2>
+      <p class="lede">Spočítali jsme hash dvanácti slov. Červeně jsou ta, která mají hash shodný s nějakým jiným slovem.</p>
+      <div class="blocks" id="toyBlocks"></div>
+      <p class="note">Hashe jsou jen čísla od 0 do 9, takže se slova potkávají hned. Slova KOS, SOK a OKS mají vždy stejný hash, protože součet nezávisí na pořadí písmen. Z čísla 5 nepoznáš, které slovo to bylo.</p>
+    </div></section>
+
+    <section class="slide" data-index="n4"><div class="slide-inner">
+      <div class="eyebrow">Hračka a skutečnost</div>
+      <h2 class="slide-title">Co hračce chybí a co má SHA-256</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Vlastnost</th><th>Naše hračka</th><th>SHA-256</th></tr></thead>
+          <tbody>
+            <tr><td><b>Počet možných hashů</b></td><td class="ko">10</td><td class="ok">2<sup>256</sup>, zhruba 10<sup>77</sup></td></tr>
+            <tr><td><b>Přehazení písmen</b></td><td class="ko">stejný hash (KOS = SOK)</td><td class="ok">úplně jiný hash</td></tr>
+            <tr><td><b>Změna jednoho písmene</b></td><td class="ko">hash se změní jen málo (KOS 5, KOT 6)</td><td class="ok">změní se zhruba polovina bitů</td></tr>
+            <tr><td><b>Hledání kolize</b></td><td class="ko">okamžitě, stačí přeházet písmena</td><td class="ok">nikdo žádnou nenašel</td></tr>
+            <tr><td><b>Hledání vstupu k hashi</b></td><td class="ko">snadné, stačí zkoušet slova</td><td class="ok">jde jen zkoušením všeho</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Skutečná hash funkce musí všechny tyhle slabiny odstranit. Jak to dělá, ukážeme na SHA-256, jedné z nejpoužívanějších.</p>
+    </div></section>
+
+    <section class="slide" data-index="n5"><div class="slide-inner">
+      <div class="eyebrow">SHA-256 zevnitř</div>
+      <h2 class="slide-title">Čtyři kroky skutečné hash funkce</h2>
+      <p class="lede">Je to stejný nápad jako u hračky, jen mnohem důkladněji zamíchaný. Vyber krok.</p>
+      <div class="cards4" id="shaSteps"></div>
+      <div class="panel" id="shaPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="n6"><div class="slide-inner">
+      <div class="eyebrow">SHA-256 naživo</div>
+      <h2 class="slide-title">Co se děje v 64 kolech</h2>
+      <p class="lede">Zadej krátké slovo (do 55 bajtů) a posouvej jezdcem. Vidíš skutečné hodnoty osmi registrů a až v kole 64 je výsledek.</p>
+      <div class="calc-row"><input class="text-in" id="shaIn" type="text" value="kos" maxlength="40" autocomplete="off" spellcheck="false" aria-label="Slovo pro SHA-256"></div>
+      <div class="slider-row"><input type="range" id="shaRound" min="0" max="64" value="0" aria-label="Číslo kola"><span class="big-val" id="shaRoundVal">kolo 0 / 64</span></div>
+      <div class="regs" id="shaRegs"></div>
+      <div class="panel p-hash"><div class="hexline" id="shaInfo"></div></div>
+    </div></section>
+
+    <section class="slide pause-slide" data-index="1"><div class="slide-inner">
+      <div class="qmark">?</div>
+      <h2>Jak poznáš, že se soubor cestou nezměnil, aniž bys ho porovnával znak po znaku?</h2>
+      <p class="lede">Stáhneš si instalační soubor o velikosti několika gigabajtů. Jak zjistíš, že je stejný jako originál?</p>
+    </div></section>
+
+    <section class="slide" data-index="2"><div class="slide-inner">
+      <div class="eyebrow">Co je hash funkce</div>
+      <h2 class="slide-title">Z libovolných dat vznikne krátký otisk</h2>
+      <p class="lede">Hash funkce vezme vstup jakékoli délky a spočítá z něj číslo pevné délky, zvané hash. Napiš cokoli a zkus různé algoritmy.</p>
+      <div class="calc-row"><input class="text-in" id="hashIn" type="text" value="Ahoj" maxlength="200" autocomplete="off" spellcheck="false" aria-label="Text k zahashování"></div>
+      <div class="seg" id="hashAlg"></div>
+      <div class="panel p-hash">
+        <div class="quote" id="hashOut">…</div>
+        <p class="note" id="hashLen"></p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="3"><div class="slide-inner">
+      <div class="eyebrow">Lavinový efekt</div>
+      <h2 class="slide-title">Jedna změna a hash je úplně jiný</h2>
+      <p class="lede">Změň v druhém textu jediný znak. Přibližně polovina bitů hashe se změní a není vidět žádná podobnost.</p>
+      <div class="pair">
+        <input class="text-in" id="avA" type="text" value="Posílám Janě 100 Kč" maxlength="80" autocomplete="off" spellcheck="false" aria-label="První text">
+        <input class="text-in" id="avB" type="text" value="Posílám Janě 900 Kč" maxlength="80" autocomplete="off" spellcheck="false" aria-label="Druhý text">
+      </div>
+      <div class="panel p-hash">
+        <div class="hexline" id="avHexA"></div>
+        <div class="hexline" id="avHexB"></div>
+        <p class="note" id="avInfo"></p>
+      </div>
+      <div class="bitgrid" id="avGrid" aria-label="Bity, které se liší"></div>
+    </div></section>
+
+    <section class="slide" data-index="4"><div class="slide-inner">
+      <div class="eyebrow">Vlastnosti</div>
+      <h2 class="slide-title">Co musí dobrá hash funkce splňovat</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Vlastnost</th><th>Co znamená</th><th>Příklad</th></tr></thead>
+          <tbody>
+            <tr><td><b>Deterministická</b></td><td>Stejný vstup dá vždy stejný hash.</td><td>Hash souboru si můžeš spočítat doma i kdokoli jiný.</td></tr>
+            <tr><td><b>Pevná délka</b></td><td>Výstup má stejnou velikost pro krátký i dlouhý vstup.</td><td>SHA-256 dá vždy 256 bitů, tedy 64 hexadecimálních znaků.</td></tr>
+            <tr><td><b>Rychlá</b></td><td>Výpočet hashe je levný, i pro velké soubory.</td><td>Hash filmu na disku se spočítá během chvilky.</td></tr>
+            <tr><td><b>Jednosměrná</b></td><td>Z hashe se nedá spočítat původní vstup (odolnost proti zpětnému nalezení).</td><td>Hash hesla v databázi neprozradí heslo.</td></tr>
+            <tr><td><b>Odolná proti druhému vstupu</b></td><td>K danému vstupu nejde najít jiný se stejným hashem.</td><td>Nejde podvrhnout jiný dokument pod stejný podpis.</td></tr>
+            <tr><td><b>Odolná proti kolizím</b></td><td>Nejde najít žádné dva vstupy se stejným hashem.</td><td>Útočník nemůže připravit dvě verze smlouvy s jedním hashem.</td></tr>
+            <tr><td><b>Lavinový efekt</b></td><td>Malá změna vstupu změní zhruba polovinu bitů výstupu.</td><td>Posílám 100 Kč a posílám 900 Kč mají naprosto jiný hash.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="5"><div class="slide-inner">
+      <div class="eyebrow">Kolize</div>
+      <h2 class="slide-title">Kolizím se nedá vyhnout, jen je nenajít</h2>
+      <p class="lede">Vstupů je nekonečně mnoho, hashů jen konečně mnoho, takže se některé vstupy musí potkat. Dobrá funkce zajistí, že je nikdo nedokáže najít. Vyber délku hashe.</p>
+      <div class="seg" id="colSeg"></div>
+      <div class="panel" id="colPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="6"><div class="slide-inner">
+      <div class="eyebrow">Rodina algoritmů</div>
+      <h2 class="slide-title">MD5, SHA-1, SHA-2, SHA-3</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Algoritmus</th><th>Délka</th><th>Stav</th><th>Použití dnes</th></tr></thead>
+          <tbody>
+            <tr><td><b>MD5</b> (1992)</td><td>128 bitů</td><td class="ko">rozbitý, kolize jdou vyrobit</td><td>jen kontrola chyb, nikdy pro bezpečnost</td></tr>
+            <tr><td><b>SHA-1</b> (1995)</td><td>160 bitů</td><td class="ko">rozbitý, první kolize 2017</td><td>zastaralé, vyřazuje se (Git přechází na SHA-256)</td></tr>
+            <tr><td><b>SHA-2</b> (2001): SHA-256, SHA-512</td><td>256 až 512 bitů</td><td class="ok">bezpečný</td><td>podpisy, certifikáty, integrita, Bitcoin</td></tr>
+            <tr><td><b>SHA-3</b> (2015)</td><td>224 až 512 bitů</td><td class="ok">bezpečný</td><td>záloha, jiná konstrukce než SHA-2</td></tr>
+            <tr><td><b>CRC32</b></td><td>32 bitů</td><td>není kryptografický</td><td>odhalí náhodné chyby (ZIP, Ethernet), ne útočníka</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">SHA-3 (Keccak) vybrala americká agentura NIST v soutěži a vydala jako standard FIPS 202 v srpnu 2015. SHA-2 a SHA-3 se liší vnitřním návrhem, takže kdyby se objevila chyba v jedné, druhá zůstane.</p>
+    </div></section>
+
+    <section class="slide" data-index="7"><div class="slide-inner">
+      <div class="eyebrow">Když hash selže</div>
+      <h2 class="slide-title">Slabý hash znamená slabou důvěru</h2>
+      <div class="seg" id="failSeg"></div>
+      <div class="panel" id="failPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="8"><div class="slide-inner">
+      <div class="eyebrow">Často se pletou</div>
+      <h2 class="slide-title">Hash, šifrování a kódování</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th></th><th>Kódování</th><th>Šifrování</th><th>Hash</th></tr></thead>
+          <tbody>
+            <tr><td><b>Účel</b></td><td>Změnit zápis dat do jiného tvaru</td><td>Utajit obsah před cizími</td><td>Ověřit, že se data nezměnila</td></tr>
+            <tr><td><b>Dá se vrátit?</b></td><td class="ok">ano, bez klíče</td><td class="ok">ano, s klíčem</td><td class="ko">ne</td></tr>
+            <tr><td><b>Klíč</b></td><td>žádný</td><td>ano</td><td>žádný (u HMAC ano)</td></tr>
+            <tr><td><b>Délka výstupu</b></td><td>podobná vstupu</td><td>podobná vstupu</td><td>pevná</td></tr>
+            <tr><td><b>Příklady</b></td><td>UTF-8, Base64, URL kódování</td><td>AES, ChaCha20, RSA</td><td>SHA-256, SHA-3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Časté chyby: „heslo je v databázi zašifrované“ (mělo by být zahashované) a „Base64 je šifrování“ (je to jen kódování, kdokoli ho přečte).</p>
+    </div></section>
+
+    <section class="slide" data-index="9"><div class="slide-inner">
+      <div class="eyebrow">K čemu se používá</div>
+      <h2 class="slide-title">Hash je všude, kde jde o integritu</h2>
+      <div class="seg" id="useSeg"></div>
+      <div class="panel" id="usePanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="10"><div class="slide-inner">
+      <div class="eyebrow">Kontrola integrity</div>
+      <h2 class="slide-title">Spočítej hash svého souboru</h2>
+      <p class="lede">Vyber nebo přetáhni libovolný soubor. Počítá se přímo v tvém prohlížeči a soubor se nikam neodesílá.</p>
+      <div class="filezone">
+        <input type="file" id="fileIn" aria-label="Soubor k zahashování">
+        <div class="quote" id="fileOut">SHA-256 se zobrazí tady.</div>
+        <input class="text-in" id="fileExp" type="text" placeholder="Sem vlož hash, který uvádí web, a porovná se" autocomplete="off" spellcheck="false" aria-label="Očekávaný hash">
+        <div class="hverd" id="fileVerdict"></div>
+      </div>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Systém</th><th>Příkaz</th></tr></thead>
+          <tbody>
+            <tr><td><b>Windows (PowerShell)</b></td><td class="mono-s">Get-FileHash soubor.iso -Algorithm SHA256</td></tr>
+            <tr><td><b>Windows (cmd)</b></td><td class="mono-s">certutil -hashfile soubor.iso SHA256</td></tr>
+            <tr><td><b>Linux</b></td><td class="mono-s">sha256sum soubor.iso</td></tr>
+            <tr><td><b>macOS</b></td><td class="mono-s">shasum -a 256 soubor.iso</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Pozor: hash vedle souboru na stejném webu chrání před chybou při stahování, ne před útočníkem, který změní obojí. Proti tomu je podpis.</p>
+    </div></section>
+
+    <section class="slide" data-index="11"><div class="slide-inner">
+      <div class="eyebrow">HMAC</div>
+      <h2 class="slide-title">Hash s tajným klíčem</h2>
+      <p class="lede">Obyčejný hash může spočítat každý. HMAC přidá tajný klíč: správný otisk spočítá jen ten, kdo klíč zná. Používá se u API, webhooků a v authenticatoru z minulé hodiny.</p>
+      <div class="pair">
+        <input class="text-in" id="hmKey" type="text" value="tajny-klic" maxlength="60" autocomplete="off" spellcheck="false" aria-label="Tajný klíč">
+        <input class="text-in" id="hmMsg" type="text" value="prevod 100 Kc na ucet 123" maxlength="100" autocomplete="off" spellcheck="false" aria-label="Zpráva">
+      </div>
+      <div class="panel p-hash">
+        <h3>HMAC-SHA256</h3>
+        <div class="quote" id="hmOut">…</div>
+        <h3>Samotný SHA-256 zprávy (spočítá kdokoli)</h3>
+        <div class="quote" id="hmPlain">…</div>
+      </div>
+      <p class="note">Klíč se nesmí jen přilepit ke zprávě a zahashovat (u SHA-2 to umožňuje útok prodloužením zprávy). Správná konstrukce je HMAC.</p>
+    </div></section>
+
+    <section class="slide" data-index="12"><div class="slide-inner">
+      <div class="eyebrow">Elektronický podpis</div>
+      <h2 class="slide-title">Podepisuje se hash, ne celý dokument</h2>
+      <div class="chain" id="sigChain"></div>
+      <div class="panel" id="sigPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="13"><div class="slide-inner">
+      <div class="eyebrow">Zkus podpis</div>
+      <h2 class="slide-title">Podepiš text a zkus ho změnit</h2>
+      <p class="lede">V prohlížeči se vytvoří nový pár klíčů (ECDSA P-256), text se podepíše soukromým klíčem a příjemce ověří podpis veřejným. Zkus text na straně příjemce přepsat.</p>
+      <div class="sign-grid">
+        <div class="sign-col">
+          <h3>Odesílatel</h3>
+          <textarea class="text-in" id="sgText" rows="3" maxlength="300" spellcheck="false" aria-label="Text k podpisu">Platím 100 000 Kč za byt.</textarea>
+          <button class="calc-btn" id="sgBtn" type="button">Vygenerovat klíče a podepsat</button>
+          <div class="quote" id="sgSig">Podpis se zobrazí tady.</div>
+        </div>
+        <div class="sign-col">
+          <h3>Příjemce</h3>
+          <textarea class="text-in" id="sgRecv" rows="3" maxlength="300" spellcheck="false" aria-label="Přijatý text" disabled></textarea>
+          <div class="hverd" id="sgVerdict">Nejdřív podepiš.</div>
+          <div class="quote" id="sgHashes"></div>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="14"><div class="slide-inner">
+      <div class="eyebrow">Komu věřit</div>
+      <h2 class="slide-title">Čí je ten veřejný klíč?</h2>
+      <div class="seg" id="certSeg"></div>
+      <div class="panel" id="certPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="15"><div class="slide-inner">
+      <div class="eyebrow">Právo v ČR a EU</div>
+      <h2 class="slide-title">Tři druhy elektronického podpisu</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Druh podpisu</th><th>Co to je</th><th>Příklad</th></tr></thead>
+          <tbody>
+            <tr><td><b>Prostý</b></td><td>Jakákoli data připojená k dokumentu, kterými se podepisující identifikuje.</td><td>Jméno pod e-mailem, kliknutí na „Souhlasím“.</td></tr>
+            <tr><td><b>Zaručený</b></td><td>Jednoznačně spojený s podepisujícím, vytvořený jeho kontrolovaným klíčem, odhalí pozdější změnu dat.</td><td>Podpis PDF certifikátem.</td></tr>
+            <tr><td><b>Kvalifikovaný</b></td><td>Zaručený podpis vytvořený kvalifikovaným prostředkem a založený na kvalifikovaném certifikátu. Má účinek vlastnoručního podpisu.</td><td>Podpis kvalifikovaným certifikátem uloženým na čipové kartě nebo USB tokenu.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Základ je nařízení eIDAS a v ČR zákon č. 297/2016 Sb. o službách vytvářejících důvěru. Elektronickému podpisu nelze upřít právní účinky jen proto, že je elektronický. Úřady a stát při podepisování obvykle musí používat kvalifikovaný podpis. Před praktickým použitím si ověř aktuální znění zákona.</p>
+    </div></section>
+
+    <section class="slide" data-index="16"><div class="slide-inner">
+      <div class="eyebrow">Řetězení hashů</div>
+      <h2 class="slide-title">Git a blockchain v malém</h2>
+      <p class="lede">Hash každého bloku se počítá i z hashe předchozího. Přepiš data v kterémkoli bloku a všechny další hashe se rozbijí.</p>
+      <div class="blocks" id="blocks"></div>
+      <div class="calc-row"><button class="calc-btn" id="blkReset" type="button">Obnovit původní data</button><span class="note" id="blkInfo"></span></div>
+    </div></section>
+
+    <section class="slide" data-index="17"><div class="slide-inner">
+      <div class="eyebrow">Zkus doma</div>
+      <h2 class="slide-title">Hash textu, souboru a HMAC</h2>
+      <p class="lede">Spusť v Pythonu na svém počítači. Stačí standardní knihovna.</p>
+      <div class="codebox">
+        <button class="copy" type="button" data-for="code1">Kopírovat</button>
+        <pre class="code" id="code1"><span class="k">import</span> hashlib, hmac, sys
+
+<span class="c"># 1) Hash textu: jedno písmeno jinak a hash je úplně jiný</span>
+<span class="k">print</span>(hashlib.sha256(<span class="s">"Ahoj"</span>.encode()).hexdigest())
+<span class="k">print</span>(hashlib.sha256(<span class="s">"ahoj"</span>.encode()).hexdigest())
+
+<span class="c"># 2) Hash souboru po částech (funguje i pro velké soubory)</span>
+<span class="k">def</span> hash_souboru(cesta, algoritmus=<span class="s">"sha256"</span>):
+    h = hashlib.new(algoritmus)
+    <span class="k">with</span> <span class="k">open</span>(cesta, <span class="s">"rb"</span>) <span class="k">as</span> f:
+        <span class="k">while</span> blok := f.read(<span class="n">1024</span> * <span class="n">1024</span>):
+            h.update(blok)
+    <span class="k">return</span> h.hexdigest()
+
+<span class="k">print</span>(hash_souboru(sys.argv[<span class="n">0</span>]))   <span class="c"># hash tohoto skriptu</span>
+
+<span class="c"># 3) HMAC: hash s tajným klíčem</span>
+znacka = hmac.new(<span class="s">b"tajny-klic"</span>, <span class="s">b"prevod 100 Kc"</span>, hashlib.sha256).hexdigest()
+<span class="k">print</span>(znacka)</pre>
+      </div>
+      <p class="note">Zkus doplnit hash souboru, který jsi stáhl, a porovnat ho s hodnotou na webu. Zkus v souboru změnit jediný znak.</p>
+    </div></section>
+
+    <section class="slide" data-index="18"><div class="slide-inner">
+      <div class="eyebrow">Zkus doma</div>
+      <h2 class="slide-title">Najdi kolizi zkráceného hashe</h2>
+      <p class="lede">Z hashe vezmeme jen prvních 8 znaků (32 bitů) a hledáme dvě různé zprávy, které je mají stejné. Kolik pokusů to bude?</p>
+      <div class="codebox">
+        <button class="copy" type="button" data-for="code2">Kopírovat</button>
+        <pre class="code" id="code2"><span class="k">import</span> hashlib, itertools, time
+
+videno = {}
+start = time.time()
+<span class="k">for</span> i <span class="k">in</span> itertools.count():
+    text = <span class="s">f"zprava {i}"</span>
+    kratky = hashlib.sha256(text.encode()).hexdigest()[:<span class="n">8</span>]
+    <span class="k">if</span> kratky <span class="k">in</span> videno:
+        <span class="k">print</span>(<span class="s">"Kolize po"</span>, i + <span class="n">1</span>, <span class="s">"pokusech za"</span>, <span class="k">round</span>(time.time() - start, <span class="n">2</span>), <span class="s">"s"</span>)
+        <span class="k">print</span>(videno[kratky], <span class="s">"a"</span>, text, <span class="s">"mají stejný začátek hashe"</span>, kratky)
+        <span class="k">break</span>
+    videno[kratky] = text</pre>
+      </div>
+      <div class="panel">
+        <h3>Co uvidíš</h3>
+        <p>Kolize se najde zhruba po 60 až 100 tisících pokusech, ne po čtyřech miliardách. To je narozeninový paradox: kolize vznikne po zhruba druhé odmocnině počtu možností. Zkus 10 hexadecimálních znaků (40 bitů). U plných 256 bitů by to bylo 2<sup>128</sup> pokusů.</p>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="19"><div class="slide-inner">
+      <div class="eyebrow">Zkus doma</div>
+      <h2 class="slide-title">Podepiš a ověř podpis</h2>
+      <p class="lede">Elektronický podpis na několika řádcích. Potřebuješ balíček <b>cryptography</b>: <span class="mono-s">pip install cryptography</span>.</p>
+      <div class="codebox">
+        <button class="copy" type="button" data-for="code3">Kopírovat</button>
+        <pre class="code" id="code3"><span class="k">from</span> cryptography.exceptions <span class="k">import</span> InvalidSignature
+<span class="k">from</span> cryptography.hazmat.primitives.asymmetric.ed25519 <span class="k">import</span> Ed25519PrivateKey
+
+soukromy = Ed25519PrivateKey.generate()   <span class="c"># tajný klíč podepisujícího</span>
+verejny = soukromy.public_key()           <span class="c"># veřejný klíč, ten se rozdává</span>
+
+dokument = <span class="s">"Smlouva: 100 000 Kč"</span>.encode()
+podpis = soukromy.sign(dokument)
+
+<span class="k">for</span> text <span class="k">in</span> (dokument, <span class="s">"Smlouva: 900 000 Kč"</span>.encode()):
+    <span class="k">try</span>:
+        verejny.verify(podpis, text)
+        <span class="k">print</span>(text.decode(), <span class="s">"-> podpis platí"</span>)
+    <span class="k">except</span> InvalidSignature:
+        <span class="k">print</span>(text.decode(), <span class="s">"-> PODPIS NEPLATÍ"</span>)</pre>
+      </div>
+      <p class="note">Ed25519 hashuje data uvnitř podpisového algoritmu. U RSA nebo ECDSA se hash počítá zvlášť a podepisuje se on.</p>
+    </div></section>
+
+    <section class="slide" data-index="20"><div class="slide-inner">
+      <div class="eyebrow">Nejčastější omyly</div>
+      <h2 class="slide-title">Mýtus a skutečnost</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Mýtus</th><th>Skutečnost</th></tr></thead>
+          <tbody>
+            <tr><td>Hash se dá „dešifrovat“.</td><td>Nedá. Dá se jen zkoušet vstupy, dokud nevyjde stejný hash, nebo hledat v tabulkách už spočítaných hashů.</td></tr>
+            <tr><td>Hesla stačí uložit jako SHA-256.</td><td>Ne. SHA-256 je rychlá, proto se na hesla používají pomalé funkce se solí (bcrypt, Argon2).</td></tr>
+            <tr><td>Hash vedle souboru zaručuje, že soubor není podvržený.</td><td>Jen když je hash z důvěryhodného místa. Útočník změní soubor i hash. Proti tomu je podpis.</td></tr>
+            <tr><td>MD5 a SHA-1 jsou v pořádku na všechno.</td><td>Pro bezpečnost ne. Kolize jdou vyrobit. Na kontrolu náhodné chyby stačí.</td></tr>
+            <tr><td>Podpis je obrázek vlastnoručního podpisu.</td><td>Elektronický podpis je matematická hodnota spojená s obsahem dokumentu. Při změně jediného znaku přestane platit.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="21"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li><b>Hash funkce</b> z dat libovolné délky vyrobí otisk pevné délky. Stejný vstup dá stejný hash, malá změna hash úplně změní a zpět se z něj data nespočítají.</li>
+        <li>Kolize existují vždy, jde o to, aby je <b>nikdo nedokázal najít</b>. Proto jsou MD5 a SHA-1 rozbité a používá se SHA-2 nebo SHA-3.</li>
+        <li>Hash není šifrování ani kódování. Slouží k <b>ověření integrity</b>.</li>
+        <li><b>HMAC</b> přidává tajný klíč, takže správný otisk spočítá jen ten, kdo ho zná.</li>
+        <li><b>Elektronický podpis</b> podepisuje hash dokumentu soukromým klíčem a ověřuje se veřejným. Certifikát říká, komu klíč patří.</li>
+        <li>Řetězení hashů drží pohromadě <b>Git a blockchain</b>: změna minulosti rozbije všechno za ní.</li>
+      </ul>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="22"><div class="slide-inner">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud jsou fakta a kde číst dál</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Případy a standardy</h3><ul class="src-list">
+          <li><a href="https://www.eff.org/deeplinks/2017/02/cryptographers-demonstrate-collision-popular-sha-1-algorithm" target="_blank" rel="noopener">EFF: první kolize SHA-1 (2017)</a></li>
+          <li><a href="https://www.eweek.com/security/flame-exploited-long-known-flaw-in-md5-certificate-algorithm/" target="_blank" rel="noopener">eWeek: Flame a kolize MD5</a></li>
+          <li><a href="https://csrc.nist.gov/pubs/fips/202/final" target="_blank" rel="noopener">NIST: FIPS 202 (SHA-3)</a></li>
+          <li><a href="https://code.googlesource.com/git/+/HEAD/Documentation/technical/hash-function-transition.txt" target="_blank" rel="noopener">Git: přechod na novou hash funkci</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Elektronický podpis</h3><ul class="src-list">
+          <li><a href="https://www.epravo.cz/top/clanky/elektronicky-podpis-ve-svetle-eidas-103884.html" target="_blank" rel="noopener">epravo.cz: elektronický podpis ve světle eIDAS</a></li>
+          <li><a href="https://www.epravo.cz/top/zakony/sbirka-zakonu/sb/2016/297" target="_blank" rel="noopener">Zákon č. 297/2016 Sb.</a></li>
+          <li><a href="https://datatracker.ietf.org/doc/html/rfc2104" target="_blank" rel="noopener">RFC 2104: HMAC</a></li>
+        </ul></div>
+      </div>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 23</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=document.getElementById("dots"),counterEl=document.getElementById("counter");
+  var prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=document.createElement("button");d.className="dot"+(i===0?" is-active":"");
+    d.setAttribute("aria-label","Snímek "+(i+1));d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    var t=e.target&&e.target.tagName;
+    if(t==="INPUT"||t==="TEXTAREA")return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  function picker(btnHost,items,mk,panel,showFn){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;showFn(it,i);
+      });btnHost.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");showFn(items[0],0);
+    fits.push({slide:btnHost.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){showFn(it,i);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";showFn(items[act],act);
+    }});
+  }
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function panelHtml(p,title,text,extra){p.innerHTML="<h3>"+title+"</h3><p>"+text+"</p>"+(extra||"");}
+  function quote(q){return '<div class="quote">'+esc(q)+"</div>";}
+
+  /* ---- pomocné funkce pro hash ---- */
+  var HAS=!!(window.crypto&&window.crypto.subtle);
+  var NOHASH="Tento prohlížeč neumí počítat hash (je potřeba https nebo localhost).";
+  function toHex(buf){return Array.prototype.map.call(new Uint8Array(buf),function(b){return ("0"+b.toString(16)).slice(-2);}).join("");}
+  function utf8(s){return new TextEncoder().encode(s);}
+  function digest(alg,data){
+    if(!HAS)return Promise.resolve(null);
+    return crypto.subtle.digest(alg,data).then(toHex);
+  }
+  function hexBits(h){var out=[];for(var i=0;i<h.length;i++){var n=parseInt(h.charAt(i),16);for(var b=3;b>=0;b--)out.push((n>>b)&1);}return out;}
+
+  /* ---- úvod: hračka ---- */
+  function toyLetters(w){return w.toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^A-Z]/g,"");}
+  function toySum(w){var s=0,l=toyLetters(w);for(var i=0;i<l.length;i++)s+=l.charCodeAt(i)-64;return s;}
+  function toyHash(w){return toySum(w)%10;}
+  ["KOS","AHOJ","PES"].forEach(function(w){
+    $("toyRows").appendChild(el("div","hrow",'<span class="hb">'+w+'</span><span class="harr">→</span><span class="hb hq">?</span><span class="harr">→</span><span class="hb hout">'+toyHash(w)+"</span>"));
+  });
+  function toyUpdate(){
+    var l=toyLetters($("toyIn").value),p=$("toyPanel");
+    if(!l){p.innerHTML="<p>Napiš aspoň jedno písmeno (A až Z).</p>";return;}
+    var cols="",nums=[],s=0;
+    for(var i=0;i<l.length;i++){var n=l.charCodeAt(i)-64;nums.push(n);s+=n;cols+='<div class="toycol"><b>'+l.charAt(i)+"</b><span>"+n+"</span></div>";}
+    p.innerHTML='<div class="toycols">'+cols+"</div>"+
+      '<p class="note">Součet: '+nums.join(" + ")+" = <b>"+s+"</b></p>"+
+      '<p class="note">Zbytek po dělení 10: '+s+" = "+Math.floor(s/10)+" · 10 + <b>"+(s%10)+"</b></p>"+
+      '<div class="big-val">hash('+esc(l)+") = "+(s%10)+"</div>";
+  }
+  $("toyIn").addEventListener("input",toyUpdate);toyUpdate();
+  (function(){
+    var ws=["KOS","SOK","OKS","PES","DUB","ROK","LES","DEN","MOST","STOL","NOC","KOT"],cnt={};
+    ws.forEach(function(w){var h=toyHash(w);cnt[h]=(cnt[h]||0)+1;});
+    ws.forEach(function(w){var h=toyHash(w);
+      $("toyBlocks").appendChild(el("div","block"+(cnt[h]>1?" is-bad":""),'<span class="blabel">'+w+'</span><span class="bhash">hash '+h+"</span>"));});
+  })();
+
+  /* ---- SHA-256 po kolech ---- */
+  function rotr(x,n){return (x>>>n)|(x<<(32-n));}
+  function frac32(x){return Math.floor((x-Math.floor(x))*4294967296)>>>0;}
+  var PR=[];for(var pn=2;PR.length<64;pn++){var ip=true;for(var pd=2;pd*pd<=pn;pd++)if(pn%pd===0){ip=false;break;}if(ip)PR.push(pn);}
+  var SK=PR.map(function(p){return frac32(Math.cbrt(p));});
+  var SH0=PR.slice(0,8).map(function(p){return frac32(Math.sqrt(p));});
+  function h8(x){return ("00000000"+(x>>>0).toString(16)).slice(-8);}
+  function shaTrace(bytes){
+    var n=bytes.length,blk=new Uint8Array(64),bits=n*8,W=[],i;
+    blk.set(bytes);blk[n]=0x80;blk[62]=(bits>>>8)&255;blk[63]=bits&255;
+    for(i=0;i<16;i++)W[i]=((blk[4*i]<<24)|(blk[4*i+1]<<16)|(blk[4*i+2]<<8)|blk[4*i+3])>>>0;
+    for(i=16;i<64;i++){
+      var s0=rotr(W[i-15],7)^rotr(W[i-15],18)^(W[i-15]>>>3),s1=rotr(W[i-2],17)^rotr(W[i-2],19)^(W[i-2]>>>10);
+      W[i]=(W[i-16]+s0+W[i-7]+s1)>>>0;
+    }
+    var st=SH0.slice(),states=[st.slice()],rounds=[];
+    for(var t=0;t<64;t++){
+      var a=st[0],b=st[1],c=st[2],d=st[3],e=st[4],f=st[5],g=st[6],h=st[7];
+      var S1=rotr(e,6)^rotr(e,11)^rotr(e,25),ch=(e&f)^(~e&g);
+      var T1=(h+S1+ch+SK[t]+W[t])>>>0;
+      var S0=rotr(a,2)^rotr(a,13)^rotr(a,22),mj=(a&b)^(a&c)^(b&c),T2=(S0+mj)>>>0;
+      st=[(T1+T2)>>>0,a,b,c,(d+T1)>>>0,e,f,g];
+      states.push(st.slice());rounds.push({W:W[t],K:SK[t],T1:T1,T2:T2});
+    }
+    var out="";for(i=0;i<8;i++)out+=h8(SH0[i]+states[64][i]);
+    return {W:W,states:states,rounds:rounds,hash:out,bytes:bytes};
+  }
+  var REG="abcdefgh";
+  for(var ri=0;ri<8;ri++)$("shaRegs").appendChild(el("div","reg",'<span class="blabel">'+REG.charAt(ri)+'</span><span class="rv"></span>'));
+  function shaUpdate(){
+    var bytes=utf8($("shaIn").value),info=$("shaInfo");
+    if(bytes.length>55){info.textContent="Vstup je delší než 55 bajtů, na jeden blok se nevejde. Zkrať ho.";return;}
+    var tr=shaTrace(bytes),r=parseInt($("shaRound").value,10);
+    $("shaRoundVal").textContent="kolo "+r+" / 64";
+    var cells=$("shaRegs").children;
+    for(var i=0;i<8;i++){
+      cells[i].querySelector(".rv").textContent=h8(tr.states[r][i]);
+      var ch=r>0&&tr.states[r][i]!==tr.states[r-1][i]&&(i===0||i===4);
+      cells[i].classList.toggle("is-new",ch);
+    }
+    var hx=Array.prototype.map.call(bytes,function(b){return ("0"+b.toString(16)).slice(-2);}).join(" ");
+    var html="Bajty vstupu: "+(hx||"(prázdný)")+"<br>Blok: W0 = "+h8(tr.W[0])+", W1 = "+h8(tr.W[1])+", …, W15 = "+h8(tr.W[15])+" (délka v bitech)<br>";
+    if(r===0)html+="Kolo 0: počáteční stav z odmocnin prvních osmi prvočísel.";
+    else{var q=tr.rounds[r-1];html+="Kolo "+r+": W = "+h8(q.W)+", K = "+h8(q.K)+", T1 = "+h8(q.T1)+", T2 = "+h8(q.T2)+". Nové a = T1 + T2, nové e = d + T1, ostatní registry se jen posunou.";}
+    if(r===64){
+      html+='<br>Po sečtení s počátečním stavem: <span class="d">'+tr.hash+"</span>";
+      digest("SHA-256",bytes).then(function(h){if(h!==null&&$("shaRound").value==="64"&&$("shaInfo")===info)info.innerHTML=html+(h===tr.hash?"<br>Souhlasí s výsledkem z knihovny prohlížeče.":"<br>Pozor: výsledek z knihovny se liší.");});
+    }
+    info.innerHTML=html;
+  }
+  $("shaIn").addEventListener("input",shaUpdate);$("shaRound").addEventListener("input",shaUpdate);shaUpdate();
+  var shaSteps=[
+    {n:"1. Příprava",s:"bajty a blok",d:"Vstup se převede na bajty. Připojí se jeden bit 1, potom nuly a na konec délka vstupu v bitech, aby celek byl násobkem 512 bitů. Blok se rozdělí na 16 čísel po 32 bitech.",q:"kos → 6b 6f 73 80 00 … 00 18"},
+    {n:"2. Počáteční stav",s:"8 čísel",d:"Funkce má osm 32bitových registrů a až h. Jejich počáteční hodnoty jsou zlomkové části odmocnin prvních osmi prvočísel. Nejsou v nich žádná tajná čísla a každý si je může spočítat.",q:"a = 6a09e667 (ze druhé odmocniny ze 2)"},
+    {n:"3. 64 kol",s:"míchání",d:"Šestnáct čísel z bloku se nejdřív natáhne na 64. V každém kole se do registrů zamíchá jedno z nich a jedna konstanta (zlomková část třetí odmocniny prvočísla). Používají se jen rotace bitů, XOR, AND a sčítání.",q:"T1 = h + Σ1(e) + Ch(e,f,g) + K + W"},
+    {n:"4. Výsledek",s:"256 bitů",d:"Po 64 kolech se registry sečtou s počátečním stavem a osm čísel se zřetězí. 8 × 32 bitů je 256 bitů. U delšího vstupu se to opakuje po blocích a výstup jednoho bloku je počáteční stav dalšího.",q:"ba7816bf … 15ad (hash textu abc)"}
+  ];
+  picker($("shaSteps"),shaSteps,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("shaPanel"),function(c){panelHtml($("shaPanel"),c.n,c.d,quote(c.q));});
+
+  /* ---- 2: živý hash ---- */
+  var algs=["SHA-1","SHA-256","SHA-384","SHA-512"],algIdx=1;
+  function hashUpdate(){
+    var t=$("hashIn").value;
+    digest(algs[algIdx],utf8(t)).then(function(h){
+      if(h===null){$("hashOut").textContent=NOHASH;$("hashLen").textContent="";return;}
+      $("hashOut").textContent=h;
+      $("hashLen").textContent=algs[algIdx]+": "+(h.length*4)+" bitů, "+h.length+" hexadecimálních znaků. Vstup: "+t.length+" znaků.";
+    });
+  }
+  algs.forEach(function(a,i){
+    var b=el("button","calc-btn"+(i===algIdx?" is-active":""),esc(a));
+    b.addEventListener("click",function(){algIdx=i;Array.prototype.forEach.call($("hashAlg").children,function(x,j){x.classList.toggle("is-active",j===i);});hashUpdate();});
+    $("hashAlg").appendChild(b);
+  });
+  $("hashIn").addEventListener("input",hashUpdate);hashUpdate();
+
+  /* ---- 3: lavinový efekt ---- */
+  for(var gi=0;gi<256;gi++)$("avGrid").appendChild(el("i"));
+  function avUpdate(){
+    Promise.all([digest("SHA-256",utf8($("avA").value)),digest("SHA-256",utf8($("avB").value))]).then(function(r){
+      if(r[0]===null){$("avHexA").textContent=NOHASH;$("avHexB").textContent="";return;}
+      var a=r[0],b=r[1],ha="",hb="";
+      for(var i=0;i<a.length;i++){
+        var diff=a.charAt(i)!==b.charAt(i);
+        ha+=diff?'<span class="d">'+a.charAt(i)+"</span>":a.charAt(i);
+        hb+=diff?'<span class="d">'+b.charAt(i)+"</span>":b.charAt(i);
+      }
+      $("avHexA").innerHTML=ha;$("avHexB").innerHTML=hb;
+      var ba=hexBits(a),bb=hexBits(b),n=0,cells=$("avGrid").children;
+      for(var k=0;k<256;k++){var x=ba[k]!==bb[k];if(x)n++;cells[k].className=x?"on":"";}
+      $("avInfo").textContent=($("avA").value===$("avB").value)
+        ? "Texty jsou stejné, hashe se neliší."
+        : "Liší se "+n+" z 256 bitů ("+Math.round(n/2.56)+" %). U náhodných dat by to bylo zhruba 50 %.";
+    });
+  }
+  $("avA").addEventListener("input",avUpdate);$("avB").addEventListener("input",avUpdate);avUpdate();
+
+  /* ---- 5: kolize a narozeninový paradox ---- */
+  var cols=[
+    {n:"32 bitů",t:"CRC32 a podobné",d:"Kolize se najde zhruba po 65 tisících pokusech (2<sup>16</sup>), na obyčejném počítači během zlomku sekundy. Zkusíš si to v Pythonu na slidu „Najdi kolizi zkráceného hashe“.",q:"2^16 ≈ 65 536 pokusů · okamžitě"},
+    {n:"128 bitů",t:"MD5",d:"Kdyby byl MD5 bez chyby, kolize by vyžadovala asi 2<sup>64</sup> pokusů. Kvůli slabinám v návrhu se ale kolize vyrábějí běžně, od roku 2004 prakticky okamžitě.",q:"teoreticky 2^64 · v praxi kolize jdou vyrobit"},
+    {n:"160 bitů",t:"SHA-1",d:"Teoreticky 2<sup>80</sup> pokusů. Útok z roku 2017 potřeboval 2<sup>63</sup> výpočtů SHA-1, tedy asi 6 500 let práce procesoru a 110 let práce grafických karet. Pro velké organizace dosažitelné.",q:"teoreticky 2^80 · reálný útok 2^63 (2017)"},
+    {n:"256 bitů",t:"SHA-256",d:"Narozeninový útok by potřeboval asi 2<sup>128</sup> pokusů. I kdyby někdo počítal deset miliard hashů za sekundu, trvalo by to řádově 10<sup>21</sup> let, což je mnohem víc než stáří vesmíru. Proto se SHA-256 považuje za bezpečný.",q:"2^128 ≈ 3,4 · 10^38 pokusů · prakticky nemožné"}
+  ];
+  picker($("colSeg"),cols,function(c){return el("button","calc-btn",esc(c.n));},$("colPanel"),function(c){panelHtml($("colPanel"),c.t,c.d,quote(c.q));});
+
+  /* ---- 7: když hash selže ---- */
+  var fail=[
+    {n:"MD5: Flame (2012)",t:"Falešný certifikát Windows Update",d:"Škodlivý program Flame využil slabinu MD5 k vytvoření certifikátu, který vypadal jako platný certifikát Microsoftu. Díky tomu mohl dostat do počítačů škodlivý kód jako „aktualizaci Windows“. Microsoft musel vydat nouzovou opravu 3. června.",q:"slabý hash → padělaný certifikát → falešná aktualizace"},
+    {n:"SHA-1: SHAttered (2017)",t:"První kolize SHA-1",d:"Google a CWI Amsterdam vyrobili dva různé PDF soubory se stejným SHA-1 hashem. Stálo to 9 trilionů SHA-1 výpočtů. Po první kolizi MD5 (2004) následovala kolize certifikátu za necelých sedm měsíců, proto se SHA-1 vyřazoval z certifikátů.",q:"2^63 výpočtů SHA-1 · dva PDF, jeden hash"},
+    {n:"Git: SHA-1 uvnitř",t:"Verzovací systém na SHA-1",d:"Git pojmenovává soubory a commity pomocí SHA-1. Od verze 2.13.0 používá zesílenou variantu odolnou proti útoku SHAttered a v roce 2018 vybral jako náhradu SHA-256. Přechod probíhá postupně, aby se nerozbily existující repozitáře.",q:"git rev-parse HEAD → 40 hexadecimálních znaků (SHA-1)"}
+  ];
+  picker($("failSeg"),fail,function(c){return el("button","calc-btn",esc(c.n));},$("failPanel"),function(c){panelHtml($("failPanel"),c.t,c.d,quote(c.q));});
+
+  /* ---- 9: použití ---- */
+  var uses=[
+    {n:"Integrita souboru",t:"Je to opravdu ten soubor?",d:"Web uvádí SHA-256 hash instalačního souboru. Po stažení si hash spočítáš a porovnáš. Odhalí poškozený přenos, u podepsaných hashů i podvržený soubor."},
+    {n:"Hesla",t:"Server si pamatuje hash, ne heslo",d:"Při přihlášení se hash zadaného hesla porovná s uloženým. Aby se z úniku nedalo hesla luštit, používá se salt a pomalé funkce (bcrypt, Argon2). Viz prezentace o únicích a hesla."},
+    {n:"Podpis",t:"Podepisuje se hash dokumentu",d:"Dokument může mít megabajty, hash má pár desítek bajtů. Podpisový algoritmus pracuje s hashem. Změna jediného znaku změní hash a podpis přestane platit."},
+    {n:"Git",t:"Každý commit má hash",d:"Název commitu je hash jeho obsahu a hashe předchozího commitu. Změna historie změní hashe všech následujících commitů, takže se nedá potají přepsat."},
+    {n:"Blockchain",t:"Řetěz bloků a Merkleův strom",d:"Každý blok obsahuje hash předchozího, takže změna starého bloku rozbije celý řetěz za ním. Transakce v bloku se shrnují do Merkleova stromu: hash hashů až do jednoho kořene. Bitcoin používá SHA-256 i v těžbě, kde se hledá hash s mnoha nulami na začátku (proof of work)."},
+    {n:"Hash tabulka",t:"Rychlé hledání v paměti",d:"Slovník v Pythonu (dict) a množina (set) spočítají z klíče hash a podle něj najdou místo v paměti. Hledání je rychlé bez ohledu na velikost. Tady se používají rychlé nekryptografické hashe, bezpečnost nehraje roli."},
+    {n:"Duplicity a viry",t:"Hledání shodných souborů",d:"Cloudová úložiště a zálohy poznají stejné soubory podle hashe a uloží je jednou. Antiviry a forenzní nástroje porovnávají hashe se seznamy známých škodlivých nebo známých neškodných souborů."}
+  ];
+  picker($("useSeg"),uses,function(c){return el("button","calc-btn",esc(c.n));},$("usePanel"),function(c){panelHtml($("usePanel"),c.t,c.d);});
+
+  /* ---- 10: hash souboru ---- */
+  function fileCompare(){
+    var h=$("fileOut").dataset.hash||"",exp=$("fileExp").value.trim().toLowerCase().replace(/\s+/g,"");
+    var v=$("fileVerdict");
+    if(!h||!exp){v.textContent="";v.className="hverd";return;}
+    if(h===exp){v.textContent="Hash se shoduje.";v.className="hverd is-ok";}
+    else{v.textContent="Hash se NELIŠÍ. Soubor se změnil nebo hash patří jinému souboru.";v.className="hverd is-bad";}
+  }
+  $("fileIn").addEventListener("change",function(){
+    var f=$("fileIn").files&&$("fileIn").files[0];
+    $("fileOut").dataset.hash="";fileCompare();
+    if(!f)return;
+    if(!HAS){$("fileOut").textContent=NOHASH;return;}
+    if(f.size>300*1024*1024){$("fileOut").textContent="Soubor je moc velký pro prohlížeč. Použij příkaz z tabulky.";return;}
+    $("fileOut").textContent="Počítám…";
+    var rd=new FileReader();
+    rd.onload=function(){digest("SHA-256",rd.result).then(function(h){
+      $("fileOut").textContent=f.name+" ("+f.size+" B)\nSHA-256: "+h;
+      $("fileOut").dataset.hash=h;fileCompare();
+    });};
+    rd.onerror=function(){$("fileOut").textContent="Soubor se nepodařilo přečíst.";};
+    rd.readAsArrayBuffer(f);
+  });
+  $("fileExp").addEventListener("input",fileCompare);
+
+  /* ---- 11: HMAC ---- */
+  function hmacUpdate(){
+    var k=$("hmKey").value,m=$("hmMsg").value;
+    if(!HAS){$("hmOut").textContent=NOHASH;return;}
+    crypto.subtle.importKey("raw",utf8(k),{name:"HMAC",hash:"SHA-256"},false,["sign"]).then(function(key){
+      return crypto.subtle.sign("HMAC",key,utf8(m));
+    }).then(function(sig){$("hmOut").textContent=toHex(sig);},function(){$("hmOut").textContent="Klíč nesmí být prázdný.";});
+    digest("SHA-256",utf8(m)).then(function(h){$("hmPlain").textContent=h;});
+  }
+  $("hmKey").addEventListener("input",hmacUpdate);$("hmMsg").addEventListener("input",hmacUpdate);hmacUpdate();
+
+  /* ---- 12: princip podpisu ---- */
+  var sig=[
+    {n:"1 · Hash",s:"odesílatel",t:"Spočítá hash dokumentu",d:"Z celého dokumentu, ať má kilobajty, nebo gigabajty, vznikne otisk pevné délky, například 256 bitů."},
+    {n:"2 · Podpis",s:"odesílatel",t:"Podepíše hash soukromým klíčem",d:"Podpisový algoritmus (RSA, ECDSA, EdDSA) vytvoří z hashe a soukromého klíče podpis. Soukromý klíč zná jen podepisující, často je na čipové kartě."},
+    {n:"3 · Odeslání",s:"cesta",t:"Posílá se dokument, podpis a certifikát",d:"Dokument zůstává čitelný. Podpis nic neutajuje, jen dokazuje, kdo ho vytvořil a že se obsah nezměnil. Certifikát obsahuje veřejný klíč a jméno vlastníka."},
+    {n:"4 · Hash",s:"příjemce",t:"Spočítá hash přijatého dokumentu",d:"Příjemce použije stejnou hash funkci. Pokud někdo cestou dokument změnil, vyjde jiný hash."},
+    {n:"5 · Ověření",s:"příjemce",t:"Ověří podpis veřejným klíčem",d:"Veřejný klíč z certifikátu ověří, že podpis patří k tomuto hashi. Když sedí, dokument pochází od držitele klíče a je beze změny. Když ne, podpis neplatí."}
+  ];
+  picker($("sigChain"),sig,function(c){return el("button","",esc(c.n)+"<span>"+c.s+"</span>");},$("sigPanel"),function(c){panelHtml($("sigPanel"),c.t,c.d);});
+
+  /* ---- 13: podpis v prohlížeči ---- */
+  var sgKeys=null,sgSigBytes=null,sgSigned="";
+  function sgVerify(){
+    var v=$("sgVerdict");
+    if(!sgKeys||!sgSigBytes)return;
+    var recv=$("sgRecv").value;
+    Promise.all([
+      crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},sgKeys.publicKey,sgSigBytes,utf8(recv)),
+      digest("SHA-256",utf8(sgSigned)),digest("SHA-256",utf8(recv))
+    ]).then(function(r){
+      v.textContent=r[0]?"Podpis platí. Text je beze změny.":"PODPIS NEPLATÍ. Text se změnil.";
+      v.className="hverd "+(r[0]?"is-ok":"is-bad");
+      $("sgHashes").textContent="hash odeslaného: "+r[1].slice(0,24)+"…\nhash přijatého:  "+r[2].slice(0,24)+"…";
+    });
+  }
+  $("sgBtn").addEventListener("click",function(){
+    if(!HAS||!crypto.subtle.generateKey){$("sgSig").textContent=NOHASH;return;}
+    var text=$("sgText").value;
+    crypto.subtle.generateKey({name:"ECDSA",namedCurve:"P-256"},false,["sign","verify"]).then(function(k){
+      sgKeys=k;
+      return crypto.subtle.sign({name:"ECDSA",hash:"SHA-256"},k.privateKey,utf8(text));
+    }).then(function(s){
+      sgSigBytes=s;sgSigned=text;
+      $("sgSig").textContent="podpis (64 B): "+toHex(s).slice(0,48)+"…";
+      $("sgRecv").disabled=false;$("sgRecv").value=text;
+      sgVerify();
+    }).catch(function(){$("sgSig").textContent="Tento prohlížeč nepodporuje ECDSA v WebCrypto.";});
+  });
+  $("sgRecv").addEventListener("input",sgVerify);
+
+  /* ---- 14: certifikát ---- */
+  var cert=[
+    {n:"Problém",t:"Podpis dokazuje klíč, ne člověka",d:"Ověřením zjistíš, že podpis vytvořil držitel určitého soukromého klíče. Že ten klíč patří konkrétní osobě nebo firmě, z toho ještě nevyplývá. Kdokoli si může vytvořit klíč a tvrdit, že je banka."},
+    {n:"Certifikát",t:"Potvrzení od důvěryhodné autority",d:"Certifikační autorita ověří totožnost žadatele a podepíše certifikát: jméno plus veřejný klíč. Autorita sama má certifikát od vyšší autority, až ke kořenovým certifikátům, kterým věří operační systém nebo prohlížeč. Řetězec důvěry. Stejně funguje zámeček HTTPS u webů."},
+    {n:"Časové razítko",t:"Důkaz, že dokument existoval",d:"Autorita časového razítka dostane jen hash dokumentu (dokument samotný neviděla), připojí čas a podepíše. Pak jde dokázat, že dokument s tímto obsahem existoval už v tom čase. Hodí se, když podpisový certifikát později vyprší."},
+    {n:"Odvolání",t:"Co když se klíč ztratí",d:"Ztracený nebo ukradený klíč se musí odvolat: autorita ho zapíše na seznam zneplatněných certifikátů. Proto je důležitý soukromý klíč chránit PIN kódem a čipovou kartou, ne jen souborem na disku."}
+  ];
+  picker($("certSeg"),cert,function(c){return el("button","calc-btn",esc(c.n));},$("certPanel"),function(c){panelHtml($("certPanel"),c.t,c.d);});
+
+  /* ---- 16: řetězení ---- */
+  var blkData=["Anna → Boris: 50 Kč","Boris → Cyril: 20 Kč","Cyril → Dana: 5 Kč","Dana → Anna: 10 Kč"];
+  var blkOrig=[],blkInputs=[],blkHashEls=[],blkCards=[];
+  function chainHashes(list){
+    var res=[],prev="0000";
+    return list.reduce(function(p,d,i){
+      return p.then(function(){return digest("SHA-256",utf8(prev+"|"+d));}).then(function(h){
+        if(h===null)throw new Error("nohash");
+        res.push(h);prev=h.slice(0,10);
+      });
+    },Promise.resolve()).then(function(){return res;});
+  }
+  blkData.forEach(function(d,i){
+    var card=el("div","block");
+    card.innerHTML='<div class="blabel">Blok '+(i+1)+'</div>';
+    var inp=el("input","text-in");inp.type="text";inp.value=d;inp.maxLength=40;inp.setAttribute("aria-label","Data bloku "+(i+1));
+    var hs=el("div","bhash");
+    card.appendChild(inp);card.appendChild(hs);
+    $("blocks").appendChild(card);
+    blkInputs.push(inp);blkHashEls.push(hs);blkCards.push(card);
+    inp.addEventListener("input",blkUpdate);
+  });
+  function blkUpdate(){
+    chainHashes(blkInputs.map(function(i){return i.value;})).then(function(hs){
+      var bad=0;
+      hs.forEach(function(h,i){
+        var same=blkOrig.length?h===blkOrig[i]:true;
+        blkHashEls[i].textContent="hash: "+h.slice(0,10)+"…";
+        blkCards[i].classList.toggle("is-bad",!same);
+        if(!same)bad++;
+      });
+      $("blkInfo").textContent=bad?("Rozbitých bloků: "+bad+" ze 4. Změna se přenesla do všech následujících bloků."):"Řetěz je v pořádku.";
+    },function(){$("blkInfo").textContent=NOHASH;});
+  }
+  $("blkReset").addEventListener("click",function(){blkInputs.forEach(function(inp,i){inp.value=blkData[i];});blkUpdate();});
+  chainHashes(blkData).then(function(h){blkOrig=h;blkUpdate();},function(){$("blkInfo").textContent=NOHASH;});
+
+  /* ---- kopírování kódu ---- */
+  Array.prototype.forEach.call(document.querySelectorAll("button.copy"),function(b){
+    b.addEventListener("click",function(){
+      var src=document.getElementById(b.dataset["for"]);if(!src)return;
+      var text=src.textContent;
+      function ok(){b.textContent="Zkopírováno";setTimeout(function(){b.textContent="Kopírovat";},1600);}
+      function fallback(){
+        var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+        document.body.appendChild(ta);ta.select();
+        try{if(document.execCommand("copy"))ok();}catch(e){}
+        document.body.removeChild(ta);
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fallback);}else{fallback();}
+    });
+  });
+
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>

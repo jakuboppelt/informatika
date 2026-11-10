@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hash funkce – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Základ</li>
+    <li><a href="#co-je">Co je hash funkce</a></li>
+    <li><a href="#vlastnosti">Vlastnosti</a></li>
+    <li><a href="#pojmy">Hash, šifrování, kódování</a></li>
+    <li class="grp">Kolize a algoritmy</li>
+    <li><a href="#kolize">Kolize a narozeninový paradox</a></li>
+    <li><a href="#algoritmy">MD5, SHA-1, SHA-2, SHA-3</a></li>
+    <li><a href="#selhani">Když hash selže</a></li>
+    <li class="grp">Použití</li>
+    <li><a href="#integrita">Kontrola integrity</a></li>
+    <li><a href="#hesla">Hesla</a></li>
+    <li><a href="#hmac">HMAC</a></li>
+    <li><a href="#tabulky">Hash tabulky a CRC</a></li>
+    <li><a href="#retezeni">Git a blockchain</a></li>
+    <li class="grp">Elektronický podpis</li>
+    <li><a href="#podpis">Jak podpis funguje</a></li>
+    <li><a href="#certifikat">Certifikát a časové razítko</a></li>
+    <li><a href="#pravo">Právo v ČR a EU</a></li>
+    <li class="grp">Prakticky</li>
+    <li><a href="#prikazy">Příkazy v systému</a></li>
+    <li><a href="#python">Python</a></li>
+    <li><a href="#ukoly">Úkoly</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#otazky">Otázky</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Informace · Bezpečnost · Studijní text</p>
+  <h1>Hash funkce <span class="t">SHA-256</span></h1>
+  <p class="lead">Co je hash funkce, jaké vlastnosti musí mít, proč se dají najít kolize a které algoritmy se dnes smějí používat. K čemu hash slouží při kontrole souborů, ukládání hesel, v Gitu a blockchainu a jak na něm stojí elektronický podpis. Všechny ukázky si můžeš vyzkoušet na vlastním počítači, souvisejí s <a href="05_hash_funkce.html">prezentací</a>.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit, co je hash funkce, a vyjmenovat její vlastnosti</li>
+      <li>rozlišit hash, šifrování a kódování</li>
+      <li>popsat lavinový efekt a kolizi</li>
+      <li>vysvětlit narozeninový paradox a proč jsou MD5 a SHA-1 rozbité</li>
+      <li>vybrat vhodnou hash funkci pro daný účel</li>
+      <li>vysvětlit, proč se hesla ukládají jako hash se solí</li>
+      <li>popsat HMAC a k čemu je tajný klíč</li>
+      <li>popsat, jak funguje elektronický podpis, certifikát a časové razítko</li>
+      <li>vysvětlit řetězení hashů v Gitu a blockchainu</li>
+      <li>spočítat hash souboru příkazem a v Pythonu</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Základ</p>
+
+<section id="co-je">
+<h2>Co je hash funkce</h2>
+<p><dfn>Hash funkce</dfn> je funkce, která vezme data libovolné délky (text, soubor, celý disk) a spočítá z nich číslo pevné délky. Tomu číslu se říká <dfn>hash</dfn>, otisk, kontrolní součet nebo <i>digest</i>. Dá se přirovnat k otisku prstu: je malý, vždy stejný pro stejného člověka a z otisku se člověk znovu sestavit nedá.</p>
+<pre><code>SHA-256("Ahoj")  = f23e6807b3fb0be0ea999ea8cb88a3e94dc359c84230461f9761efac57dcb081
+SHA-256("ahoj")  = 3f3b08eca62c21d76256e6e1d0b8bf99f4efbe376f64335b72f4163a8fc50dba</code></pre>
+<p>Dva texty se liší jediným písmenem a jejich hashe nemají nic společného. Výstup SHA-256 má vždy 256 bitů, tedy 64 hexadecimálních znaků, ať je vstup jedno písmeno, nebo celý film. Hash se zapisuje šestnáctkově, jedna číslice stojí za čtyři bity (viz studijní text o bitech).</p>
+<div class="note mat"><b class="lbl">Hlavní myšlenka</b><p>Hash je <strong>krátký otisk dat</strong>. Když se data změní, změní se hash. Díky tomu můžeš ověřit, že jsou data stejná, aniž bys je musel porovnávat po jednom.</p></div>
+</section>
+
+<section id="vlastnosti">
+<h2>Vlastnosti dobré hash funkce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Vlastnost</th><th>Co znamená</th><th>Proč je důležitá</th></tr></thead>
+<tbody>
+<tr><td><strong>Deterministická</strong></td><td>stejný vstup dá vždy stejný hash</td><td>jinak by se hashe nedaly porovnávat</td></tr>
+<tr><td><strong>Pevná délka výstupu</strong></td><td>výstup má vždy stejnou velikost</td><td>hash velkého souboru zabere pár bajtů</td></tr>
+<tr><td><strong>Rychlá</strong></td><td>hash se spočítá levně i pro velká data</td><td>hash disku nesmí trvat hodiny</td></tr>
+<tr><td><strong>Jednosměrná</strong> (odolnost proti zpětnému nalezení, <i>preimage resistance</i>)</td><td>z hashe se nedá spočítat vstup</td><td>hash hesla neprozradí heslo</td></tr>
+<tr><td><strong>Odolnost proti nalezení druhého vstupu</strong> (<i>second preimage</i>)</td><td>k danému vstupu nejde najít jiný se stejným hashem</td><td>nejde podvrhnout jiný dokument pod existující podpis</td></tr>
+<tr><td><strong>Odolnost proti kolizím</strong> (<i>collision resistance</i>)</td><td>nejde najít žádné dva různé vstupy se stejným hashem</td><td>útočník nemůže předem připravit dvě verze dokumentu se stejným hashem</td></tr>
+<tr><td><strong>Lavinový efekt</strong></td><td>změna jednoho bitu vstupu změní zhruba polovinu bitů výstupu</td><td>z podobných vstupů nejde odhadnout podobný hash</td></tr>
+</tbody></table></div>
+<p>V prezentaci si můžeš lavinový efekt zkusit: změň v druhém textu jediný znak a uvidíš, že se změní zhruba polovina z 256 bitů, tedy tolik, kolik by se změnilo u dvou náhodných hashů.</p>
+<div class="note warn"><b class="lbl">Pozor</b><p>Zdaleka ne každá hash funkce splňuje i odolnost proti kolizím a jednosměrnost. Rychlý hash pro hash tabulky (viz <a href="#tabulky">Hash tabulky a CRC</a>) je slabý záměrně, protože na bezpečnosti u něj nezáleží. Pro bezpečnost se používají <dfn>kryptografické hash funkce</dfn>.</p></div>
+</section>
+
+<section id="pojmy">
+<h2>Hash, šifrování a kódování</h2>
+<p>Tyto tři pojmy se často pletou. Liší se tím, co s daty dělají a jestli se dají vrátit.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Kódování</th><th>Šifrování</th><th>Hash</th></tr></thead>
+<tbody>
+<tr><td><strong>Účel</strong></td><td>změnit zápis dat do jiného tvaru</td><td>utajit obsah před cizími</td><td>ověřit, že se data nezměnila</td></tr>
+<tr><td><strong>Dá se vrátit?</strong></td><td>ano, bez klíče</td><td>ano, s klíčem</td><td>ne</td></tr>
+<tr><td><strong>Klíč</strong></td><td>ne</td><td>ano</td><td>ne (u HMAC ano)</td></tr>
+<tr><td><strong>Délka výstupu</strong></td><td>podobná vstupu</td><td>podobná vstupu</td><td>pevná</td></tr>
+<tr><td><strong>Příklady</strong></td><td>UTF-8, Base64, URL kódování</td><td>AES, ChaCha20, RSA</td><td>SHA-256, SHA-3</td></tr>
+</tbody></table></div>
+<p>Časté chyby: tvrzení „heslo je v databázi zašifrované“ (správně je zahashované, šifrované by šlo odemknout klíčem) a „Base64 je šifrování“ (je to jen kódování, přečte ho každý).</p>
+</section>
+
+<p class="part">Kolize a algoritmy</p>
+
+<section id="kolize">
+<h2>Kolize a narozeninový paradox</h2>
+<p>Vstupů je nekonečně mnoho, hashů pevné délky jen konečně. Podle <dfn>Dirichletova principu</dfn> (princip holubníku) se proto musí některé různé vstupy zobrazit na stejný hash. Takové dvojici se říká <dfn>kolize</dfn>. Kolize existují vždy, otázka je, jestli je někdo dokáže <em>najít</em>.</p>
+<h3>Narozeninový paradox</h3>
+<p>V místnosti s 23 lidmi je přes 50 % šance, že dva mají narozeniny stejný den, i když dnů je 365. Důvod je, že nehledáme někoho, kdo má narozeniny jako ty, ale <em>jakoukoli</em> shodnou dvojici, a těch dvojic je hodně. Stejně to platí u hashů: kolize mezi N možnými hashi se najde zhruba po √N pokusech, tedy u hashe o n bitech po asi <strong>2<sup>n/2</sup></strong> pokusech.</p>
+<div class="tbl"><table>
+<thead><tr><th>Délka hashe</th><th>Možných hashů</th><th>Pokusů na kolizi (zhruba)</th><th>Realita</th></tr></thead>
+<tbody>
+<tr><td>32 bitů</td><td>2<sup>32</sup> ≈ 4,3 miliardy</td><td>2<sup>16</sup> ≈ 65 tisíc</td><td>zlomek sekundy na obyčejném počítači</td></tr>
+<tr><td>128 bitů (MD5)</td><td>2<sup>128</sup></td><td>2<sup>64</sup></td><td>kvůli slabinám v návrhu jdou kolize vyrobit okamžitě</td></tr>
+<tr><td>160 bitů (SHA-1)</td><td>2<sup>160</sup></td><td>2<sup>80</sup></td><td>útok z roku 2017 stačil na 2<sup>63</sup> výpočtů</td></tr>
+<tr><td>256 bitů (SHA-256)</td><td>2<sup>256</sup></td><td>2<sup>128</sup> ≈ 3,4 · 10<sup>38</sup></td><td>prakticky nemožné</td></tr>
+</tbody></table></div>
+<div class="note tip"><b class="lbl">Zkus doma</b><p>V části <a href="#python">Python</a> je program, který najde kolizi zkráceného 32bitového hashe. Trvá to kolem 60 až 100 tisíc pokusů, ne čtyři miliardy, přesně podle narozeninového paradoxu.</p></div>
+<p>Proto musí být hash dostatečně dlouhý. Hash o n bitech nabízí odolnost proti kolizím jen na úrovni n/2 bitů. SHA-256 tak dává „128 bitů bezpečnosti“, což je dnes i v budoucnu daleko za hranicí možností.</p>
+</section>
+
+<section id="algoritmy">
+<h2>MD5, SHA-1, SHA-2, SHA-3</h2>
+<div class="tbl"><table>
+<thead><tr><th>Algoritmus</th><th>Rok</th><th>Délka</th><th>Stav</th><th>Použití dnes</th></tr></thead>
+<tbody>
+<tr><td><strong>MD5</strong></td><td>1992</td><td>128 bitů</td><td>rozbitý, kolize jdou vyrobit</td><td>jen kontrola náhodných chyb, nikdy bezpečnost</td></tr>
+<tr><td><strong>SHA-1</strong></td><td>1995</td><td>160 bitů</td><td>rozbitý, první kolize 2017</td><td>zastaralý, vyřazuje se (viz Git)</td></tr>
+<tr><td><strong>SHA-2</strong> (SHA-224, <strong>SHA-256</strong>, SHA-384, <strong>SHA-512</strong>)</td><td>2001</td><td>224 až 512 bitů</td><td>bezpečný</td><td>podpisy, certifikáty, integrita, Bitcoin</td></tr>
+<tr><td><strong>SHA-3</strong> (SHA3-256 atd.)</td><td>2015</td><td>224 až 512 bitů</td><td>bezpečný</td><td>záloha pro případ chyby v SHA-2</td></tr>
+</tbody></table></div>
+<p>SHA znamená <i>Secure Hash Algorithm</i>. Rodinu SHA-2 vydal americký institut NIST. <strong>SHA-3</strong> vznikl ve veřejné soutěži a NIST jej vydal jako standard <strong>FIPS 202</strong> v srpnu 2015. Je založen na algoritmu Keccak a vnitřně funguje jinak než SHA-2, takže chyba objevená v jednom by druhý nezasáhla.<sup class="ref"><a href="#z3">3</a></sup></p>
+<p>Pro nové aplikace platí jednoduché pravidlo: <strong>SHA-256 nebo SHA-3</strong>. MD5 a SHA-1 jen tam, kde bezpečnost nehraje roli, nebo kde se musí zachovat kompatibilita se starým systémem.</p>
+</section>
+
+<section id="selhani">
+<h2>Když hash selže</h2>
+<h3>MD5 a falešná aktualizace Windows (Flame, 2012)</h3>
+<p>První úplná kolize MD5 byla předvedena v srpnu 2004. O osm let později využil škodlivý program <strong>Flame</strong> slabinu MD5 k vytvoření certifikátu, který vypadal jako platný certifikát Microsoftu pro Windows Update. Díky němu mohl do napadených počítačů dostat škodlivý kód jako „aktualizaci systému“. Microsoft musel 3. června vydat nouzovou opravu.<sup class="ref"><a href="#z2">2</a></sup></p>
+<h3>SHA-1 a SHAttered (2017)</h3>
+<p>V únoru 2017 vyrobili výzkumníci z CWI Amsterdam a Googlu <strong>první kolizi SHA-1</strong>: dva různé PDF soubory se stejným hashem. Stálo je to přibližně 9 trilionů (2<sup>63</sup>) výpočtů SHA-1, což odpovídá asi 6 500 letům práce procesoru a 110 letům práce grafických karet. Pro velkou organizaci je to dosažitelné, proto se SHA-1 přestalo používat v certifikátech.<sup class="ref"><a href="#z1">1</a></sup></p>
+<h3>Poučení</h3>
+<p>Hash funkce neselhávají naráz. Nejdřív se objeví teoretická slabina, pak první praktický útok a nakonec se útok zlevní. Dobré návrhy proto počítají s výměnou algoritmu: v podpisech a certifikátech je vždy uvedeno, jaká hash funkce se použila.</p>
+</section>
+
+<p class="part">Použití</p>
+
+<section id="integrita">
+<h2>Kontrola integrity souboru</h2>
+<p><dfn>Integrita</dfn> znamená, že se data od vzniku nezměnila. Weby s instalačními soubory často uvádějí vedle odkazu hash, například SHA-256. Po stažení si hash souboru spočítáš a porovnáš. Když se shoduje, soubor je stejný jako originál, nezáleží na jeho velikosti.</p>
+<div class="note warn"><b class="lbl">Co to nezaručí</b><p>Hash vedle souboru na stejném webu chrání před <strong>chybou při přenosu</strong>, ne před <strong>útočníkem</strong>. Kdo dokáže změnit soubor na serveru, změní i hash vedle něj. Aby bylo jisté, že soubor nikdo nepodvrhl, musí být hash z jiného důvěryhodného místa, nebo musí být <a href="#podpis">podepsaný</a>.</p></div>
+<p>Tentýž princip používají zálohovací programy (poznají, že se soubor nezměnil), cloudová úložiště (stejný soubor uloží jednou, <dfn>deduplikace</dfn>), antiviry a forenzní nástroje (porovnávají hashe se seznamy známých souborů).</p>
+</section>
+
+<section id="hesla">
+<h2>Hesla</h2>
+<p>Server nemá znát heslo, má si pamatovat jeho hash. Při přihlášení spočítá hash zadaného hesla a porovná ho s uloženým. Kdyby databáze unikla, útočník by v ní nenašel hesla, jen hashe.</p>
+<p>Obyčejný SHA-256 ale na hesla nestačí, protože je <strong>rychlý</strong>: grafická karta zkouší miliardy hesel za sekundu. Proto se hesla ukládají:</p>
+<ul>
+  <li>se <dfn>solí</dfn> (salt): ke každému heslu se před hashováním přidá náhodný text, takže stejné heslo má u každého uživatele jiný hash a nedají se použít předpočítané tabulky;</li>
+  <li>pomalou funkcí (<strong>bcrypt, scrypt, Argon2, PBKDF2</strong>), která je navržena tak, aby jeden pokus trval dlouho a hádání miliard hesel bylo drahé.</li>
+</ul>
+<p>Podrobně je to v prezentacích <a href="03_uniky_a_utoky.html">Úniky a útoky</a> (uložení hesel, osolení) a <a href="04_hesla_a_ucty.html">Hesla a zabezpečení účtů</a> (jak dlouho trvá luštění).</p>
+</section>
+
+<section id="hmac">
+<h2>HMAC: hash s tajným klíčem</h2>
+<p>Obyčejný hash může spočítat kdokoli, kdo zná data. <dfn>HMAC</dfn> (<i>Hash-based Message Authentication Code</i>, RFC 2104) k tomu přidává <strong>tajný klíč</strong>. Správnou hodnotu spočítá jen ten, kdo klíč zná, takže HMAC dokazuje dvě věci: data se nezměnila a pocházejí od někoho, kdo klíč má.<sup class="ref"><a href="#z7">7</a></sup></p>
+<pre><code>HMAC(klíč, zpráva) = hash( klíč ⊕ vnější ‖ hash( klíč ⊕ vnitřní ‖ zpráva ) )</code></pre>
+<p>Klíč se nesmí jen přilepit ke zprávě a zahashovat. U SHA-2 by to umožňovalo útok <i>prodloužením zprávy</i>, při kterém útočník dopočítá hash delší zprávy, aniž by znal klíč. HMAC má dvě vnořené vrstvy hashování právě proto, aby se tomu zabránilo.</p>
+<div class="tbl"><table>
+<thead><tr><th>Kde se HMAC používá</th><th>K čemu</th></tr></thead>
+<tbody>
+<tr><td>API a webhooky</td><td>server pozná, že požadavek pochází od oprávněného klienta</td></tr>
+<tr><td>JWT tokeny (HS256)</td><td>podpis přihlašovacího tokenu sdíleným klíčem</td></tr>
+<tr><td>TOTP (authenticator)</td><td>jednorázový kód se počítá jako HMAC z tajného klíče a času</td></tr>
+<tr><td>Wi-Fi a VPN</td><td>ověřování, že pakety nikdo nezměnil</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="tabulky">
+<h2>Hash tabulky a CRC</h2>
+<p>Hash se používá i tam, kde o bezpečnost nejde, hlavně kvůli rychlosti.</p>
+<h3>Hash tabulka</h3>
+<p><dfn>Hash tabulka</dfn> je datová struktura, ve které se z klíče spočítá hash a podle něj se určí místo v paměti. Hledání, vkládání i mazání pak trvá v průměru stejně dlouho, ať je v tabulce deset, nebo miliarda položek. Slovník (<code>dict</code>) a množina (<code>set</code>) v Pythonu jsou hash tabulky. Různé klíče se někdy trefí do stejného místa (kolize) a tabulka s tím musí počítat. Python navíc u textů používá <i>náhodnou</i> sůl, takže <code>hash("abc")</code> je při každém spuštění programu jiný. Tahle funkce je rychlá a bezpečnost od ní nikdo nečeká.</p>
+<h3>CRC</h3>
+<p><dfn>CRC</dfn> (cyklický redundantní součet, třeba CRC32) je velmi rychlý kontrolní součet. Používá se v ZIP, v Ethernetu a při přenosu dat. Spolehlivě odhalí <strong>náhodné chyby</strong>, ale není kryptografický: útočník dokáže data upravit tak, aby měla stejné CRC.</p>
+</section>
+
+<section id="retezeni">
+<h2>Řetězení hashů: Git a blockchain</h2>
+<p>Když se hash každého záznamu počítá i z hashe předchozího záznamu, vznikne řetěz, ve kterém se nedá nic potají změnit. Změna starého záznamu změní jeho hash, tím změní hash dalšího záznamu a tak dál až do konce.</p>
+<h3>Git</h3>
+<p>Verzovací systém Git pojmenovává soubory, složky i commity podle hashe jejich obsahu. Commit obsahuje hash předchozího commitu, takže historie nejde přepsat bez toho, aby se změnily hashe všech následujících commitů. Git používá <strong>SHA-1</strong>. Od verze 2.13.0 má zesílenou verzi odolnou proti útoku SHAttered a v roce 2018 projekt vybral jako náhradu SHA-256. Přechod probíhá postupně, aby se nerozbily existující repozitáře.<sup class="ref"><a href="#z4">4</a></sup></p>
+<pre><code>git log --format="%H %s" -3     # úplný hash a popis posledních tří commitů</code></pre>
+<h3>Blockchain</h3>
+<p><dfn>Blockchain</dfn> je řetěz bloků, ve kterém každý blok obsahuje hash předchozího. Transakce v bloku se shrnují do <dfn>Merkleova stromu</dfn>: z hashů jednotlivých transakcí se po dvojicích počítají hashe vyšší úrovně, až vznikne jediný <i>kořen</i>. Stačí pak porovnat kořen a lze rychle ověřit, že konkrétní transakce v bloku je (stačí hashe z jedné větve stromu, ne všechny transakce). Bitcoin používá SHA-256 (aplikovaný dvakrát za sebou). V těžbě se hledá blok, jehož hash začíná dostatečným počtem nul (<dfn>proof of work</dfn>), a protože hash nejde odhadnout, zbývá jen zkoušet.</p>
+<div class="note tip"><b class="lbl">Vyzkoušej</b><p>V prezentaci je slide „Řetězení hashů“ se čtyřmi bloky. Přepiš data v druhém bloku a uvidíš, že se rozbijí všechny následující hashe.</p></div>
+</section>
+
+<p class="part">Elektronický podpis</p>
+
+<section id="podpis">
+<h2>Jak elektronický podpis funguje</h2>
+<p>Elektronický podpis stojí na dvou věcech: na <strong>hash funkci</strong> a na <strong>asymetrické kryptografii</strong>. Podepisující má dvojici klíčů. <dfn>Soukromý klíč</dfn> zná jen on a používá ho k podpisu. <dfn>Veřejný klíč</dfn> může dostat kdokoli a slouží k ověření. Z veřejného klíče se soukromý nedá spočítat.</p>
+<ol class="plan">
+  <li><b>Hash:</b> odesílatel spočítá hash dokumentu (například SHA-256).</li>
+  <li><b>Podpis:</b> podpisový algoritmus (RSA, ECDSA, EdDSA) vytvoří z hashe a soukromého klíče podpis.</li>
+  <li><b>Odeslání:</b> příjemce dostane dokument, podpis a certifikát s veřejným klíčem.</li>
+  <li><b>Hash:</b> příjemce spočítá hash přijatého dokumentu stejnou funkcí.</li>
+  <li><b>Ověření:</b> veřejným klíčem ověří, že podpis patří k tomuto hashi. Když ano, dokument se nezměnil a podepsal ho držitel soukromého klíče.</li>
+</ol>
+<h3>Proč se podepisuje hash</h3>
+<ul>
+  <li><strong>Rychlost:</strong> asymetrické algoritmy jsou pomalé, hash má pár desítek bajtů, zatímco dokument má třeba megabajty.</li>
+  <li><strong>Pevná velikost:</strong> podpisové algoritmy zpracují jen krátký vstup.</li>
+  <li><strong>Citlivost na změnu:</strong> díky lavinovému efektu změna jediného znaku změní hash, a podpis tedy přestane platit.</li>
+  <li><strong>Bezpečnost závisí na hashi:</strong> kdyby šly vyrobit kolize, útočník by připravil dvě verze dokumentu se stejným hashem a podpis z jedné by platil i pro druhou. Proto bylo selhání MD5 a SHA-1 tak vážné.</li>
+</ul>
+<div class="note mat"><b class="lbl">Co podpis není</b><p>Podpis <strong>nešifruje</strong> dokument, ten zůstává čitelný. Ani to není obrázek vlastnoručního podpisu. Je to matematická hodnota, která prokazuje původ a nezměněnost obsahu.</p></div>
+<p>Některé algoritmy (třeba Ed25519) hashování zahrnují přímo ve svém výpočtu. Princip zůstává stejný.</p>
+</section>
+
+<section id="certifikat">
+<h2>Certifikát a časové razítko</h2>
+<h3>Komu patří veřejný klíč</h3>
+<p>Ověření podpisu dokazuje jen to, že ho vytvořil držitel určitého klíče. Kdo ten klíč je, z toho ještě nevyplývá, protože si klíče může vytvořit kdokoli. Proto existují <dfn>certifikáty</dfn>: <dfn>certifikační autorita</dfn> ověří totožnost žadatele a podepíše certifikát, ve kterém je jeho jméno a veřejný klíč. Samotná autorita má certifikát od vyšší autority a tak dále až ke kořenovým certifikátům, kterým důvěřuje operační systém nebo prohlížeč. Tomu se říká <dfn>řetězec důvěry</dfn>. Stejně funguje zámeček HTTPS u webů.</p>
+<p>Ztracený nebo ukradený klíč se musí odvolat: autorita ho zapíše na seznam zneplatněných certifikátů. Proto se soukromý klíč chrání PIN kódem a ukládá na čipovou kartu nebo token místo do souboru na disku.</p>
+<h3>Časové razítko</h3>
+<p><dfn>Časové razítko</dfn> dokazuje, že dokument s daným obsahem existoval v určitém čase. Autorita časového razítka dostane jen <strong>hash</strong> dokumentu (dokument samotný nevidí), připojí k němu čas a podepíše. Protokol se jmenuje RFC 3161. Hodí se, když později vyprší platnost podpisového certifikátu: razítko prokáže, že dokument byl podepsán, dokud byl certifikát platný.</p>
+</section>
+
+<section id="pravo">
+<h2>Právo v ČR a EU</h2>
+<p>Elektronické podpisy v Evropské unii upravuje nařízení <strong>eIDAS</strong> a v České republice zákon č. 297/2016 Sb., o službách vytvářejících důvěru pro elektronické transakce. Zrušil dřívější zákon o elektronickém podpisu č. 227/2000 Sb.<sup class="ref"><a href="#z5">5</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th>Druh podpisu</th><th>Co to je</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td><strong>Prostý</strong></td><td>data připojená k dokumentu nebo s ním logicky spojená, kterými se podepisující identifikuje</td><td>jméno pod e-mailem, kliknutí na „Souhlasím“</td></tr>
+<tr><td><strong>Zaručený</strong></td><td>splňuje požadavky nařízení: jednoznačně spojený s podepisujícím, vytvořený klíčem pod jeho kontrolou, odhalí pozdější změnu dat</td><td>podpis PDF osobním certifikátem</td></tr>
+<tr><td><strong>Kvalifikovaný</strong></td><td>zaručený podpis vytvořený kvalifikovaným prostředkem a založený na kvalifikovaném certifikátu</td><td>podpis certifikátem uloženým na čipové kartě nebo tokenu</td></tr>
+</tbody></table></div>
+<ul>
+  <li>Elektronickému podpisu <strong>nelze upřít právní účinky</strong> a nelze ho odmítnout jako důkaz jen proto, že je elektronický.</li>
+  <li><strong>Kvalifikovaný podpis má právní účinek rovnocenný vlastnoručnímu podpisu.</strong></li>
+  <li>Když dokumenty podepisuje stát nebo obdobný subjekt, smí použít pouze kvalifikovaný podpis. U soukromoprávních jednání lze použít i zaručený a prostý.</li>
+</ul>
+<div class="note warn"><b class="lbl">Ověř aktuální znění</b><p>Informace o podpisech vycházejí z odborného článku o eIDAS a zákoně č. 297/2016 Sb. Zákony se mění (eIDAS se novelizuje). Pro konkrétní právní jednání si ověř aktuální znění nebo se obrať na odborníka. Tento text není právní porada.</p></div>
+</section>
+
+<p class="part">Prakticky</p>
+
+<section id="prikazy">
+<h2>Příkazy v systému</h2>
+<p>Každý operační systém umí spočítat hash souboru. Nahraď <code>soubor.iso</code> názvem svého souboru.</p>
+<div class="tbl"><table>
+<thead><tr><th>Systém</th><th>Příkaz</th></tr></thead>
+<tbody>
+<tr><td><strong>Windows (PowerShell)</strong></td><td><code>Get-FileHash soubor.iso -Algorithm SHA256</code></td></tr>
+<tr><td><strong>Windows (cmd)</strong></td><td><code>certutil -hashfile soubor.iso SHA256</code></td></tr>
+<tr><td><strong>Linux</strong></td><td><code>sha256sum soubor.iso</code></td></tr>
+<tr><td><strong>macOS</strong></td><td><code>shasum -a 256 soubor.iso</code></td></tr>
+</tbody></table></div>
+<p>Spočítaný hash porovnej s hodnotou na stránce, odkud jsi soubor stáhl. Stačí porovnat začátek a konec, ale bezpečnější je celý řetězec. V prezentaci je i slide, na kterém soubor přetáhneš do prohlížeče a hash se spočítá, aniž by se soubor někam odeslal.</p>
+</section>
+
+<section id="python">
+<h2>Python</h2>
+<p>Všechny ukázky pouštěj na svém počítači. Pro první dvě stačí standardní knihovna, třetí potřebuje balíček <code>cryptography</code> (<code>pip install cryptography</code>).</p>
+<h3>Hash textu, souboru a HMAC</h3>
+<div class="codehead"><span>Python</span><button class="copy" type="button" data-for="p1">Kopírovat</button></div>
+<pre><code id="p1" class="language-python">import hashlib, hmac, sys
+
+# 1) Hash textu: jedno písmeno jinak a hash je úplně jiný
+print(hashlib.sha256("Ahoj".encode()).hexdigest())
+print(hashlib.sha256("ahoj".encode()).hexdigest())
+
+# 2) Hash souboru po částech (funguje i pro velké soubory)
+def hash_souboru(cesta, algoritmus="sha256"):
+    h = hashlib.new(algoritmus)
+    with open(cesta, "rb") as f:
+        while blok := f.read(1024 * 1024):
+            h.update(blok)
+    return h.hexdigest()
+
+print(hash_souboru(sys.argv[0]))   # hash tohoto skriptu
+
+# 3) HMAC: hash s tajným klíčem
+znacka = hmac.new(b"tajny-klic", b"prevod 100 Kc", hashlib.sha256).hexdigest()
+print(znacka)</code></pre>
+<h3>Narozeninový paradox: kolize zkráceného hashe</h3>
+<div class="codehead"><span>Python</span><button class="copy" type="button" data-for="p2">Kopírovat</button></div>
+<pre><code id="p2" class="language-python">import hashlib, itertools, time
+
+# Hledáme dvě různé zprávy se stejnými prvními 8 znaky SHA-256 (32 bitů)
+videno = {}
+start = time.time()
+for i in itertools.count():
+    text = f"zprava {i}"
+    kratky = hashlib.sha256(text.encode()).hexdigest()[:8]
+    if kratky in videno:
+        print("Kolize po", i + 1, "pokusech za", round(time.time() - start, 2), "s")
+        print(videno[kratky], "a", text, "mají stejný začátek hashe", kratky)
+        break
+    videno[kratky] = text</code></pre>
+<p>Kolize se najde po zhruba 60 000 pokusech, ne po čtyřech miliardách. Zkus změnit <code>[:8]</code> na <code>[:10]</code> (40 bitů): pokusů bude řádově desetkrát víc (zhruba 2<sup>20</sup> místo 2<sup>16</sup>, tedy kolem 700 tisíc).</p>
+<h3>Elektronický podpis</h3>
+<div class="codehead"><span>Python</span><button class="copy" type="button" data-for="p3">Kopírovat</button></div>
+<pre><code id="p3" class="language-python">from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+soukromy = Ed25519PrivateKey.generate()   # tajný klíč podepisujícího
+verejny = soukromy.public_key()           # veřejný klíč, ten se rozdává
+
+dokument = "Smlouva: 100 000 Kč".encode()
+podpis = soukromy.sign(dokument)
+
+for text in (dokument, "Smlouva: 900 000 Kč".encode()):
+    try:
+        verejny.verify(podpis, text)
+        print(text.decode(), "-> podpis platí")
+    except InvalidSignature:
+        print(text.decode(), "-> PODPIS NEPLATÍ")</code></pre>
+<p>Podpis platí jen pro původní text. Změna jediného znaku ho zneplatní.</p>
+</section>
+
+<section id="ukoly">
+<h2>Úkoly</h2>
+<ol class="plan">
+  <li><b>Hash souboru:</b> spočítej SHA-256 jednoho svého souboru příkazem v systému a pak v Pythonu. Porovnej výsledky.</li>
+  <li><b>Lavinový efekt:</b> změň v souboru jediný znak a spočítej hash znovu. Kolik znaků hashe se změnilo?</li>
+  <li><b>Kontrola stahování:</b> stáhni libovolný instalační soubor (například Python), najdi na webu jeho hash a ověř ho.</li>
+  <li><b>Kolize:</b> spusť program pro kolizi 32 bitů a pak 40 bitů. Kolikrát se zvětšil počet pokusů? Odpovídá to narozeninovému paradoxu?</li>
+  <li><b>Podpis:</b> spusť ukázku podpisu a pak změň v dokumentu jeden znak. Co se stane s ověřením?</li>
+  <li><b>Git:</b> v libovolném repozitáři spusť <code>git log --format="%H %s" -3</code>. Jaká hash funkce se používá a podle čeho to poznáš (délka hashe)?</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Co je hash funkce a jaké má vlastnosti?</summary><div class="a"><p>Funkce, která z dat libovolné délky spočítá otisk pevné délky. Je deterministická, rychlá, jednosměrná, odolná proti druhému vstupu a proti kolizím a má lavinový efekt.</p></div></details>
+<details class="q"><summary>Čím se liší hash od šifrování?</summary><div class="a"><p>Šifrování se dá s klíčem vrátit a slouží k utajení. Hash se vrátit nedá, nemá klíč a slouží k ověření, že se data nezměnila.</p></div></details>
+<details class="q"><summary>Co je lavinový efekt?</summary><div class="a"><p>Změna jednoho bitu vstupu změní zhruba polovinu bitů výstupu, takže z podobných vstupů vzniknou naprosto odlišné hashe.</p></div></details>
+<details class="q"><summary>Proč musí kolize existovat a proč to nevadí?</summary><div class="a"><p>Vstupů je nekonečně mnoho a hashů konečně, takže se některé vstupy potkají (princip holubníku). Nevadí to, pokud je nikdo nedokáže najít. U SHA-256 by to vyžadovalo asi 2<sup>128</sup> pokusů.</p></div></details>
+<details class="q"><summary>Co říká narozeninový paradox o hash funkcích?</summary><div class="a"><p>Kolize hashe o n bitech se najde po zhruba 2<sup>n/2</sup> pokusech, ne po 2<sup>n</sup>. Proto musí být hash dvakrát delší, než je požadovaná odolnost proti kolizím.</p></div></details>
+<details class="q"><summary>Které hash funkce se nesmí používat pro bezpečnost?</summary><div class="a"><p>MD5 a SHA-1, protože pro ně existují praktické kolize. Používá se SHA-256 (SHA-2) nebo SHA-3.</p></div></details>
+<details class="q"><summary>Co se stalo s MD5 v případě Flame?</summary><div class="a"><p>Útočníci využili slabinu MD5 k vytvoření falešného certifikátu, který vypadal jako certifikát Microsoftu, a pomocí něj dodali škodlivý kód jako aktualizaci Windows.</p></div></details>
+<details class="q"><summary>Proč nestačí hesla ukládat jako SHA-256?</summary><div class="a"><p>SHA-256 je rychlá, takže útočník po úniku zkouší miliardy hesel za sekundu a bez soli stejné heslo vede ke stejnému hashi. Hesla se ukládají se solí a pomalou funkcí (bcrypt, Argon2).</p></div></details>
+<details class="q"><summary>Co je HMAC a proč nestačí hash(klíč + zpráva)?</summary><div class="a"><p>HMAC je hash s tajným klíčem, správnou hodnotu spočítá jen ten, kdo klíč zná. Prosté spojení klíče se zprávou u SHA-2 umožňuje útok prodloužením zprávy, HMAC to řeší dvojitým hashováním.</p></div></details>
+<details class="q"><summary>Jak funguje elektronický podpis?</summary><div class="a"><p>Odesílatel spočítá hash dokumentu a podepíše ho soukromým klíčem. Příjemce spočítá hash přijatého dokumentu a veřejným klíčem ověří podpis. Když sedí, dokument se nezměnil a podepsal ho držitel klíče.</p></div></details>
+<details class="q"><summary>Proč se podepisuje hash a ne celý dokument?</summary><div class="a"><p>Je to rychlé, hash má pevnou malou velikost a díky lavinovému efektu změna jediného znaku podpis zneplatní.</p></div></details>
+<details class="q"><summary>K čemu je certifikát a časové razítko?</summary><div class="a"><p>Certifikát spojuje veřejný klíč s totožností a podepisuje ho důvěryhodná autorita. Časové razítko podepsaným hashem dokazuje, že dokument existoval v určitém čase.</p></div></details>
+<details class="q"><summary>Jaké tři druhy elektronického podpisu rozlišuje eIDAS?</summary><div class="a"><p>Prostý, zaručený a kvalifikovaný. Kvalifikovaný má účinek vlastnoručního podpisu.</p></div></details>
+<details class="q"><summary>Jak hash drží pohromadě Git a blockchain?</summary><div class="a"><p>Hash každého commitu nebo bloku se počítá i z hashe předchozího. Změna starého záznamu změní všechny následující hashe, takže se nedá potají přepsat.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Hash funkce</dt><dd>funkce, která z dat libovolné délky spočítá otisk pevné délky</dd>
+  <dt>Hash (otisk, digest)</dt><dd>výsledek hash funkce</dd>
+  <dt>Kryptografická hash funkce</dt><dd>hash funkce odolná proti zpětnému nalezení a proti kolizím</dd>
+  <dt>Lavinový efekt</dt><dd>malá změna vstupu změní zhruba polovinu bitů výstupu</dd>
+  <dt>Kolize</dt><dd>dva různé vstupy se stejným hashem</dd>
+  <dt>Narozeninový paradox</dt><dd>kolize mezi N možnostmi se najde po zhruba √N pokusech</dd>
+  <dt>SHA-2, SHA-3</dt><dd>dnes bezpečné rodiny hash funkcí</dd>
+  <dt>MD5, SHA-1</dt><dd>rozbité hash funkce, pro bezpečnost se nesmí používat</dd>
+  <dt>Sůl (salt)</dt><dd>náhodný text přidaný k heslu před hashováním</dd>
+  <dt>HMAC</dt><dd>hash s tajným klíčem, dokazuje původ a nezměněnost</dd>
+  <dt>Hash tabulka</dt><dd>datová struktura s rychlým hledáním podle hashe klíče</dd>
+  <dt>CRC</dt><dd>rychlý kontrolní součet, odhalí náhodné chyby, není bezpečný</dd>
+  <dt>Soukromý klíč</dt><dd>tajný klíč, kterým se podepisuje</dd>
+  <dt>Veřejný klíč</dt><dd>klíč, kterým se podpis ověřuje</dd>
+  <dt>Elektronický podpis</dt><dd>hash dokumentu podepsaný soukromým klíčem</dd>
+  <dt>Certifikát</dt><dd>potvrzení autority, že veřejný klíč patří určité osobě</dd>
+  <dt>Časové razítko</dt><dd>podepsaný hash s časem, dokazuje existenci dokumentu v čase</dd>
+  <dt>Merkleův strom</dt><dd>strom hashů, jehož kořen shrnuje všechna data</dd>
+  <dt>eIDAS</dt><dd>nařízení EU o elektronické identifikaci a službách vytvářejících důvěru</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v listopadu 2026.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://www.eff.org/deeplinks/2017/02/cryptographers-demonstrate-collision-popular-sha-1-algorithm">EFF: Cryptographers demonstrate collision in popular SHA-1 algorithm (únor 2017)</a></li>
+  <li id="z2"><a href="https://www.eweek.com/security/flame-exploited-long-known-flaw-in-md5-certificate-algorithm/">eWeek: Flame exploited long-known flaw in MD5 certificate algorithm</a></li>
+  <li id="z3"><a href="https://csrc.nist.gov/pubs/fips/202/final">NIST: FIPS 202, SHA-3 Standard (srpen 2015)</a></li>
+  <li id="z4"><a href="https://code.googlesource.com/git/+/HEAD/Documentation/technical/hash-function-transition.txt">Git: hash function transition</a></li>
+  <li id="z5"><a href="https://www.epravo.cz/top/clanky/elektronicky-podpis-ve-svetle-eidas-103884.html">epravo.cz: Elektronický podpis ve světle eIDAS</a> · <a href="https://www.epravo.cz/top/zakony/sbirka-zakonu/sb/2016/297">Zákon č. 297/2016 Sb.</a></li>
+  <li id="z6"><a href="https://docs.python.org/3/library/hashlib.html">Python: modul hashlib</a></li>
+  <li id="z7"><a href="https://datatracker.ietf.org/doc/html/rfc2104">RFC 2104: HMAC</a> · <a href="https://datatracker.ietf.org/doc/html/rfc3161">RFC 3161: časová razítka</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k prezentaci <a href="05_hash_funkce.html">Hash funkce</a>. Související materiály: <a href="03_uniky_a_utoky.html">Úniky a útoky</a>, <a href="04_hesla_a_ucty.html">Hesla a zabezpečení účtů</a>.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+  Array.prototype.forEach.call(document.querySelectorAll('button.copy'), function (b) {
+    b.addEventListener('click', function () {
+      var src = document.getElementById(b.getAttribute('data-for')); if (!src) return;
+      var text = src.textContent;
+      function ok() { b.textContent = 'Zkopírováno'; setTimeout(function () { b.textContent = 'Kopírovat'; }, 1600); }
+      function fb() {
+        var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { if (document.execCommand('copy')) ok(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(ok, fb); } else { fb(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

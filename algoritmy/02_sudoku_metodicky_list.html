@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Sudoku a návrat</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Před hodinou</li>
+    <li><a href="#info">Základní údaje</a></li>
+    <li><a href="#cile">Cíle</a></li>
+    <li><a href="#priprava">Co připravit</a></li>
+    <li><a href="#plan">Časový plán</a></li>
+    <li class="grp">1. hodina · Ručně</li>
+    <li><a href="#a1">1 · Motivace a pravidla</a></li>
+    <li><a href="#a2">2 · Kandidáti, příklad 1</a></li>
+    <li><a href="#a3">3 · Kontrola a stavový prostor</a></li>
+    <li><a href="#a4">4 · Příklad 2: zaseknutí</a></li>
+    <li><a href="#a5">5 · Pokus, spor, návrat</a></li>
+    <li><a href="#a6">6 · Algoritmus</a></li>
+    <li><a href="#a7">7 · Kvíz a exit ticket</a></li>
+    <li class="grp">2. hodina · Python</li>
+    <li><a href="#b1">1 · Opakování</a></li>
+    <li><a href="#b2">2 · Program po částech</a></li>
+    <li><a href="#b3">3 · Sudoku 9 × 9</a></li>
+    <li><a href="#b4">4 · Souvislosti a exit ticket</a></li>
+    <li class="grp">Podklady</li>
+    <li><a href="#tabule">Zápis na tabuli</a></li>
+    <li><a href="#chyby">Časté chyby</a></li>
+    <li><a href="#diferenciace">Rychlí a pomalejší</a></li>
+    <li><a href="#zaloha">Když nejde technika</a></li>
+    <li><a href="#jedna">Jen jedna hodina?</a></li>
+    <li><a href="#reflexe">Po hodině</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Algoritmy · Metodický list pro učitele</p>
+  <h1>Sudoku a návrat <span class="t">1–2 × 45′</span></h1>
+  <p class="lead">Navazuje na hodinu o stavovém prostoru (džbány, převozník, BFS a DFS). V první hodině studenti ručně vyřeší dvě sudoku 6 × 6: první jen pomocí jediných možností, ve druhém se zaseknou, musí zkusit pokus, dojdou ke sporu a vrátí se. Z toho vyvodíte backtracking. Druhá hodina je v učebně: stejný postup napíšou v Pythonu. Hodinu vedeš podle <a href="02_sudoku.html">prezentace</a>, studenti mají <a href="02_sudoku_prakticky.html">praktickou ukázku</a> a <a href="02_sudoku_studijni_text.html">studijní text</a>.</p>
+  <div class="facts">
+    <div><span class="k">Navazuje na</span><span class="v">Stavový prostor, prohledávání do hloubky, funkce v Pythonu</span></div>
+    <div><span class="k">Metody</span><span class="v">řešení ve dvojicích, krokování, programování</span></div>
+    <div><span class="k">Výstup</span><span class="v">vyřešené příklady, exit tickety, funkční program</span></div>
+  </div>
+</header>
+
+<p class="part">Před hodinou</p>
+
+<section id="info">
+<h2>Základní údaje</h2>
+<div class="tbl"><table>
+<tbody>
+<tr><th scope="row">Předmět</th><td>Informatika, blok Algoritmy</td></tr>
+<tr><th scope="row">Třída</th><td>2.–3. ročník gymnázia, využitelné i v maturitním semináři</td></tr>
+<tr><th scope="row">Rozsah</th><td><strong>1. hodina</strong> (nutná): ručně, pokus a návrat, algoritmus. <strong>2. hodina</strong> (doporučená, v učebně): program v Pythonu.</td></tr>
+<tr><th scope="row">Předchozí znalosti</th><td>stavový prostor (S, s₀, C, O), prohledávání do hloubky a do šířky, zásobník a fronta. Pro 2. hodinu: funkce, seznamy, cykly, <code>return</code>. Rekurze není podmínkou, na sudoku se dá dobře zavést.</td></tr>
+<tr><th scope="row">Mezipředmětové vazby</th><td>matematika (kombinatorika, mocniny, důkaz výpočtem), logika (spor)</td></tr>
+<tr><th scope="row">Materiály</th><td><a href="02_sudoku.html">prezentace</a> (16 snímků), <a href="02_sudoku_prakticky.html">praktická ukázka</a> (krokování obou příkladů, tabulky postupu, program), <a href="02_sudoku_studijni_text.html">studijní text</a></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="cile">
+<h2>Cíle</h2>
+<div class="two">
+  <div class="card">
+    <h3>Po 1. hodině student</h3>
+    <ul>
+      <li>určí kandidáty políčka a najde jedinou možnost;</li>
+      <li>popíše sudoku jako stavový prostor;</li>
+      <li>ve chvíli bez jediné možnosti zvolí pokus a pozná spor;</li>
+      <li>vysvětlí, co se při návratu smaže a proč;</li>
+      <li>popíše backtracking a jeho vztah k prohledávání do hloubky;</li>
+      <li>uvede rozdíly mezi sudoku a úlohou o džbánech.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Po 2. hodině student</h3>
+    <ul>
+      <li>napíše funkci, která vrátí kandidáty políčka;</li>
+      <li>napíše rekurzivní funkci s návratem a vysvětlí každý <code>return</code>;</li>
+      <li>spustí program a porovná výpis s ručním postupem;</li>
+      <li>změří, jak výběr políčka ovlivní počet kroků;</li>
+      <li>vysvětlí pojem heuristika na příkladu.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="priprava">
+<h2>Co připravit</h2>
+<ul class="check">
+  <li><strong>Zadání příkladů 1 a 2 na papír.</strong> Buď vytiskni z praktické ukázky začátek stránky (obě mřížky jsou v části Příklad 1 a 2), nebo je studenti obkreslí z projektoru. Mřížka 6 × 6 se obkreslí za minutu. Každý student potřebuje příklad 2 dvakrát, protože se v něm bude gumovat.</li>
+  <li><strong>Tužku a gumu</strong>, ideálně i pastelku nebo druhou barvu na označení pokusu.</li>
+  <li><strong>Projektor</strong> s prezentací. Krokování funguje i offline, stačí otevřít soubor.</li>
+  <li>Pro 2. hodinu <strong>učebnu s Pythonem</strong> (stačí IDLE nebo VS Code). Program se pouští lokálně, žádné knihovny nejsou potřeba.</li>
+  <li>Lístečky na exit tickety.</li>
+</ul>
+<div class="note tip"><b class="lbl">Proč 6 × 6, a ne 9 × 9 nebo 4 × 4</b><p>Na 9 × 9 se ve 45 minutách nestihne ruční řešení a kroky nejsou na projektoru čitelné. A sudoku 4 × 4 je naopak moc snadné: při přípravě jsme programem vyzkoušeli 87 tisíc zadání 4 × 4 s jediným řešením a ani jedno nepotřebovalo hádat. Příklad 2 je vybraný tak, že bez pokusu nejde ani „lidskými“ triky.</p></div>
+</section>
+
+<section id="plan">
+<h2>Časový plán</h2>
+<h3>1. hodina · Ručně</h3>
+<div class="tl-bar" role="img" aria-label="Rozdělení první hodiny do sedmi fází">
+  <a href="#a1" class="f5">1</a>
+  <a href="#a2" class="f8">2 · Příklad 1</a>
+  <a href="#a3" class="f5">3</a>
+  <a href="#a4" class="f7">4 · Zaseknutí</a>
+  <a href="#a5" class="f8">5 · Návrat</a>
+  <a href="#a6" class="f6">6 · Algoritmus</a>
+  <a href="#a7" class="f6">7</a>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Snímky</th><th>Forma</th></tr></thead>
+<tbody>
+<tr><td class="num">0–5</td><td><a href="#a1">Motivace, pravidla, značení políček</a></td><td class="num">1, 2</td><td>rozhovor</td></tr>
+<tr><td class="num">5–13</td><td><a href="#a2">Kandidáti, studenti řeší příklad 1</a></td><td class="num">3</td><td>dvojice, papír</td></tr>
+<tr><td class="num">13–18</td><td><a href="#a3">Kontrola krokováním, sudoku jako stavový prostor</a></td><td class="num">4, 5</td><td>výklad</td></tr>
+<tr><td class="num">18–25</td><td><a href="#a4">Příklad 2: studenti zjistí, že jediná možnost není</a></td><td class="num">6</td><td>dvojice, diskuse</td></tr>
+<tr><td class="num">25–33</td><td><a href="#a5">Pokus, spor a návrat ručně, pak krokování a strom</a></td><td class="num">7, 8</td><td>papír, ukázka</td></tr>
+<tr><td class="num">33–39</td><td><a href="#a6">Backtracking, srovnání s džbány</a></td><td class="num">9, 10</td><td>výklad</td></tr>
+<tr><td class="num">39–45</td><td><a href="#a7">Kvíz, shrnutí, exit ticket</a></td><td class="num">14, 15</td><td>hlasování, písemně</td></tr>
+</tbody></table></div>
+
+<h3>2. hodina · Python</h3>
+<div class="tl-bar" role="img" aria-label="Rozdělení druhé hodiny do čtyř fází">
+  <a href="#b1" class="f5">1</a>
+  <a href="#b2" class="f10">2 · Program po částech</a>
+  <a href="#b3" class="f8">3 · 9 × 9</a>
+  <a href="#b4" class="f7">4</a>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Snímky / materiál</th><th>Forma</th></tr></thead>
+<tbody>
+<tr><td class="num">0–5</td><td><a href="#b1">Opakování: pokus, spor, návrat</a></td><td class="num">8, 9</td><td>rozhovor</td></tr>
+<tr><td class="num">5–27</td><td><a href="#b2">Mřížka, kandidáti, výběr políčka, rekurze</a></td><td>praktická ukázka</td><td>samostatně u počítače</td></tr>
+<tr><td class="num">27–37</td><td><a href="#b3">Sudoku 9 × 9, naivní výběr políčka, měření</a></td><td class="num">11</td><td>pokus u počítače</td></tr>
+<tr><td class="num">37–45</td><td><a href="#b4">Zajímavosti, kde jinde, exit ticket</a></td><td class="num">12, 13</td><td>rozhovor, písemně</td></tr>
+</tbody></table></div>
+<div class="note tip"><b class="lbl">Rezerva</b><p>Když v 1. hodině nestíháš, zkrať fázi 6 na pseudokód (snímek 9) a srovnání s džbány (10) nech na 2. hodinu. Fázi 5 nezkracuj: zažít spor a gumování na vlastním papíře je jádro hodiny.</p></div>
+</section>
+
+<p class="part">1. hodina · Ručně</p>
+
+<section id="a1" class="phase">
+<div class="ph-head"><span class="time">0–5 min</span><h2>1 · Motivace a pravidla</h2><span class="slides-ref">snímky 1, 2</span></div>
+<p class="goal">Připomenout pravidla a domluvit značení políček.</p>
+<h3>Učitel říká</h3>
+<blockquote class="say">„Minule jsme hledali cestu: jak odměřit 4 litry, jak převézt kozu. Dnes je úloha jiná. Nikoho nezajímá, v jakém pořadí jste sudoku vyplnili, zajímá nás jen výsledek. A uvidíte, že i pro takovou úlohu se hodí stavový prostor, jen se v něm hledá trochu jinak.“</blockquote>
+<details class="q"><summary>„Kdo luští sudoku? Jak postupujete, když nevíte, kam co patří?“</summary><div class="a"><p>Typické odpovědi: „píšu si malá čísla do rohu“ (kandidáti), „zkusím to a když to nejde, gumuju“ (backtracking). Obě si zapamatuj a vrať se k nim ve fázích 2 a 5.</p></div></details>
+<p>Na snímku 2 ukaž značení: sloupec písmenem, řádek číslem, jako v Excelu. Bez něj se ve dvojicích nedomluví.</p>
+</section>
+
+<section id="a2" class="phase">
+<div class="ph-head"><span class="time">5–13 min</span><h2>2 · Kandidáti, příklad 1</h2><span class="slides-ref">snímek 3</span></div>
+<p class="goal">Pojem kandidát a jediná možnost. Studenti vyřeší příklad 1 sami.</p>
+<h3>Učitel dělá</h3>
+<p>Na snímku 3 klikni na políčko <code>A1</code>: ukáže řádek, sloupec, čtverec a kandidáty 2, 5. Pojmenuj je <strong>kandidáti</strong>. Pak zadej úkol a nech studenty pracovat ve dvojicích na papíře.</p>
+<blockquote class="say">„V tomhle sudoku je na začátku jediné políčko, kam jde napsat jen jedna číslice. Najděte ho. Pak pokračujte: každé napsané číslo vám otevře další.“</blockquote>
+<details class="q"><summary>Které políčko to je? <span class="key">klíčová</span></summary><div class="a"><p><code>D3 = 5</code>. V řádku 3 jsou 1, 3, 4, 6, ve sloupci D 2, 3, 4, 6, ve čtverci 3, 4, 6. Zbývá jen 5. Pak <code>F3 = 2</code>, <code>F2 = 5</code>, <code>E1 = 2</code>… Celý postup je v praktické ukázce v tabulce.</p></div></details>
+<p>Kdo je hotový, pomáhá sousední dvojici. Po 6 minutách to ukonči, i když nejsou všichni hotoví. Dořeší to krokovač.</p>
+</section>
+
+<section id="a3" class="phase">
+<div class="ph-head"><span class="time">13–18 min</span><h2>3 · Kontrola a stavový prostor</h2><span class="slides-ref">snímky 4, 5</span></div>
+<p class="goal">Ověřit řešení a pojmenovat S, s₀, C, O u sudoku.</p>
+<p>Na snímku 4 klikej <em>Krok</em>. U každého kroku nech jednoho studenta nahlas říct, proč tam ta číslice je. Vpravo je zdůvodnění, ať se můžeš kontrolovat. Po pěti šesti krocích dej <em>Do konce</em>.</p>
+<p>Snímek 5: proklikej karty S, s₀, C, O a hlavně poslední „Co je jinak“.</p>
+<details class="q"><summary>„Co je tady stav a co operátor?“</summary><div class="a"><p>Stav je rozpracovaná mřížka, operátor je „napiš číslici do prázdného políčka“. Podmínka použitelnosti: číslice musí být kandidát.</p></div></details>
+<details class="q"><summary>„Kdybychom hledali do šířky jako u džbánů, co by se stalo?“</summary><div class="a"><p>Fronta by obsahovala obrovské množství rozpracovaných mřížek. A nejkratší řešení nehledáme, všechna mají stejný počet kroků. Odpověď nemusí přijít hned, vrátíš se k ní ve fázi 6.</p></div></details>
+</section>
+
+<section id="a4" class="phase">
+<div class="ph-head"><span class="time">18–25 min</span><h2>4 · Příklad 2: zaseknutí</h2><span class="slides-ref">snímek 6</span></div>
+<p class="goal">Studenti sami zjistí, že jediná možnost tu není.</p>
+<blockquote class="say">„Stejný úkol: najděte políčko s jedinou možností.“</blockquote>
+<p>Nech je hledat 3–4 minuty. Pak se zeptej, kdo něco našel. Kdo tvrdí, že ano, ať to ukáže na snímku 6 kliknutím na políčko. Uvidí, že má aspoň dva kandidáty. Pak klikni na <em>Ukázat kandidáty všude</em> a na <em>Co teď?</em>.</p>
+<details class="q"><summary>„Co teď?“ <span class="key">klíčová</span></summary><div class="a"><p>Nechej padnout návrhy. Cíl: někdo navrhne „zkusit jedno a uvidět“. Doplň: <strong>které políčko?</strong> Takové, kde je nejméně možností, tedy dvě. Bereme první takové shora zleva, <code>A1</code>: 1, nebo 4.</p></div></details>
+<div class="note warn"><b class="lbl">Pozor na zkušené řešitele</b><p>Někdo může hledat „kam v řádku může jít trojka“ (skrytá jediná možnost). Pochval to jako dobrý trik, ale tady nepomůže: v příkladu 2 může každá číslice v každém řádku, sloupci i čtverci aspoň na dvě místa. Je to ověřené programem.</p></div>
+</section>
+
+<section id="a5" class="phase">
+<div class="ph-head"><span class="time">25–33 min</span><h2>5 · Pokus, spor, návrat</h2><span class="slides-ref">snímky 7, 8</span></div>
+<p class="goal">Zažít spor na vlastním papíře a pochopit, co se při návratu smaže.</p>
+<h3>Učitel dělá</h3>
+<p>Řekni studentům, ať napíšou do <code>A1</code> jedničku <strong>jinou barvou</strong> (nebo ji zakroužkují) a pokračují jedinými možnostmi. Po chvíli někdo ohlásí, že do <code>C3</code> nejde nic.</p>
+<blockquote class="say">„Pravidla jsme neporušili, všechno jsme psali poctivě. Kde je chyba? Jediné, co jsme nevěděli jistě, je ta zakroužkovaná jednička. Takže co smažeme?“</blockquote>
+<details class="q"><summary>„Smažeme jen poslední číslo, nebo všechno?“ <span class="key">klíčová</span></summary><div class="a"><p>Všechno od pokusu včetně něj: <code>B3</code>, <code>B4</code>, <code>B1</code> a <code>A1</code>. Všechno po pokusu z něj vyplývalo. Co bylo před pokusem, je jisté a zůstává. Pak do <code>A1</code> napíšeme 4 a ta už musí platit, je to poslední možnost.</p></div></details>
+<p>Pak ukaž totéž na snímku 7: krokuj, u sporu (krok 6) se zastav a ukaž červené políčko, u návratu (krok 7) přeškrtnuté uzly vpravo. Dál <em>Do konce</em>. Na snímku 8 ukaž strom a pojmenuj tři pojmy: <strong>volba, spor, návrat</strong>.</p>
+</section>
+
+<section id="a6" class="phase">
+<div class="ph-head"><span class="time">33–39 min</span><h2>6 · Algoritmus</h2><span class="slides-ref">snímky 9, 10</span></div>
+<p class="goal">Pojmenovat backtracking a zařadit ho jako prohledávání do hloubky.</p>
+<p>Na snímku 9 projdi pseudokód řádek po řádku a u každého řekni, který krok z papíru to je. Důležité: <strong>jediná možnost není zvláštní případ</strong>, cyklus proběhne jednou.</p>
+<blockquote class="say">„Všimněte si, že algoritmus jde po jedné větvi co nejhlouběji a vrací se, až když narazí. To už znáte: je to prohledávání do hloubky. Rozdíl proti džbánům je, že tady nehledáme cestu, ale vyplněnou mřížku.“</blockquote>
+<p>Snímek 10 (srovnání) stačí přečíst a u řádku „Cykly“ se zeptat proč: políčka se jen vyplňují, takže stejný stav se nemůže zopakovat.</p>
+</section>
+
+<section id="a7" class="phase">
+<div class="ph-head"><span class="time">39–45 min</span><h2>7 · Kvíz a exit ticket</h2><span class="slides-ref">snímky 14, 15</span></div>
+<p class="goal">Ověřit pochopení a shrnout.</p>
+<p>Kvíz na snímku 14 hlasováním (ruce nahoru pro „pravda“), 4–5 tvrzení podle času. Pak snímek 15 se shrnutím.</p>
+<h3>Exit ticket</h3>
+<ol>
+  <li>Co jsou kandidáti políčka?</li>
+  <li>Kdy musíme při řešení sudoku hádat a které políčko si pro pokus vybereme?</li>
+  <li>Narazili jsme na spor. Co smažeme a proč?</li>
+</ol>
+<details class="q"><summary>Správné odpovědi</summary><div class="a"><ol><li>Číslice, které nejsou v řádku, sloupci ani čtverci políčka.</li><li>Když žádné políčko nemá jedinou možnost. Vybereme políčko s nejméně kandidáty.</li><li>Všechno od posledního pokusu včetně něj, protože to z pokusu vyplývalo. Pak zkusíme dalšího kandidáta.</li></ol></div></details>
+<h3>Domácí úkol</h3>
+<p>Projít si v praktické ukázce tabulku postupu u příkladu 2. Kdo chce víc: vyřešit libovolné sudoku 9 × 9 z novin a zapsat si, kolikrát musel hádat.</p>
+</section>
+
+<p class="part">2. hodina · Python</p>
+
+<section id="b1" class="phase">
+<div class="ph-head"><span class="time">0–5 min</span><h2>1 · Opakování</h2><span class="slides-ref">snímky 8, 9</span></div>
+<p class="goal">Oživit pokus, spor a návrat, než se začne programovat.</p>
+<details class="q"><summary>„Popište mi algoritmus, jako byste ho diktovali počítači.“</summary><div class="a"><p>Najdi políčko s nejméně kandidáty. Když žádné není, hotovo. Když nemá kandidáty, spor. Jinak zkus kandidáty po jednom, a když zbytek nevyjde, smaž a zkus dalšího. Napiš kostru na tabuli, z ní budou programovat.</p></div></details>
+</section>
+
+<section id="b2" class="phase">
+<div class="ph-head"><span class="time">5–27 min</span><h2>2 · Program po částech</h2><span class="slides-ref">praktická ukázka</span></div>
+<p class="goal">Studenti napíšou a pochopí každou ze čtyř částí programu.</p>
+<p>Studenti otevřou <a href="02_sudoku_prakticky.html#mrizka">praktickou ukázku</a> a postupují částmi 1–4. Doporučení: části nekopírovat celé, ale přepisovat a po každé něco vyzkoušet (<code>print(kandidati(ZADANI, 0, 0))</code> musí vypsat <code>[1, 4]</code>).</p>
+<details class="q"><summary>„Proč <code>r // VYSKA * VYSKA</code>?“</summary><div class="a"><p>Celočíselné dělení a násobení zaokrouhlí index dolů na začátek čtverce. Nakresli na tabuli řádky 0–5 a jejich začátky 0, 0, 2, 2, 4, 4.</p></div></details>
+<details class="q"><summary>„Co se stane po <code>return False</code>? Skončí program?“ <span class="key">klíčová</span></summary><div class="a"><p>Ne. Skončí jen toto volání funkce. Program pokračuje ve volání o úroveň výš, hned za řádkem <code>if res(mrizka):</code>. Tam se políčko smaže a zkusí se další kandidát. Tohle je nejčastější nepochopení rekurze, věnuj mu čas.</p></div></details>
+<p>Na konci fáze spustí celý program pro příklad 2. Výpis musí odpovídat krokovači ze snímku 7: <code>volba v A1</code>, čtyři kroky, <code>slepá ulička: do C3</code>, čtyřikrát <code>zpět</code>, pak <code>A1 = 4</code>.</p>
+</section>
+
+<section id="b3" class="phase">
+<div class="ph-head"><span class="time">27–37 min</span><h2>3 · Sudoku 9 × 9</h2><span class="slides-ref">snímek 11</span></div>
+<p class="goal">Zažít, jak moc záleží na výběru políčka.</p>
+<p>Studenti podle části <a href="02_sudoku_prakticky.html#devet">Sudoku 9 × 9</a> přepnou program na 9 × 9 a vypnou výpis. Program napíše 147 číslic, okamžitě. Pak nahradí výběr políčka naivním („první prázdné“) a změří čas. Na našem počítači 8 sekund a 2 091 289 číslic, na školních počítačích to může být víc.</p>
+<blockquote class="say">„Stejný algoritmus, stejné sudoku, jen jiné pořadí políček. A rozdíl je čtrnáct tisíckrát. Takovému pravidlu, které hledání zrychlí, se říká heuristika.“</blockquote>
+<p>Ukaž snímek 11 a nech studenty vysvětlit, proč to tak je (jediné možnosti jsou zadarmo, méně možností = menší šance na chybu, spor se ukáže dřív).</p>
+</section>
+
+<section id="b4" class="phase">
+<div class="ph-head"><span class="time">37–45 min</span><h2>4 · Souvislosti a exit ticket</h2><span class="slides-ref">snímky 12, 13</span></div>
+<p class="goal">Zasadit backtracking do širšího kontextu.</p>
+<p>Snímek 12: číslo 17 a 7 milionů procesorových hodin je pěkný příklad, kdy se matematická věta dokázala hrubou silou počítače. Snímek 13: osm dam, bludiště, rozvrh. Zeptej se, kde ve škole by se backtracking hodil (rozvrh, rozsazení při testu).</p>
+<h3>Exit ticket</h3>
+<ol>
+  <li>Co vrátí funkce <code>res</code>, když narazí na spor, a co pak udělá volání o úroveň výš?</li>
+  <li>Proč program s výběrem políčka s nejméně kandidáty napíše méně číslic?</li>
+</ol>
+<details class="q"><summary>Správné odpovědi</summary><div class="a"><ol><li>Vrátí <code>False</code>. Volání o úroveň výš smaže své políčko (<code>mrizka[r][s] = 0</code>) a zkusí dalšího kandidáta, případně samo vrátí <code>False</code>.</li><li>Jediné možnosti nevětví strom, pokusy mezi méně možnostmi se méně často pletou a spor (políčko bez kandidátů) se vybere hned.</li></ol></div></details>
+</section>
+
+<p class="part">Podklady</p>
+
+<section id="tabule">
+<h2>Zápis na tabuli</h2>
+<h3>Konec 1. hodiny</h3>
+<div class="board">
+  <div class="bcol">
+    <div class="bh">Sudoku jako stavový prostor</div>
+    <div class="bs">stav = rozpracovaná mřížka</div>
+    <div class="bs">s₀ = zadání, C = plná mřížka</div>
+    <div class="bcode">operátor: napiš c do políčka,<br>pokud c je kandidát</div>
+    <div class="bs">hledáme cíl, ne cestu</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Postup</div>
+    <div class="bcode">kandidáti = 1–6 bez řádku,<br>sloupce a čtverce</div>
+    <div class="bs">1. jediná možnost → piš</div>
+    <div class="bs">2. jinak pokus v políčku<br>s nejméně možnostmi</div>
+    <div class="bs">3. spor → smaž vše od pokusu,<br>zkus další možnost</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Backtracking</div>
+    <div class="bs">prohledávání s návratem</div>
+    <div class="bcode">= do hloubky (DFS)</div>
+    <div class="bs">strom: volba → větve</div>
+    <div class="bs">bez cyklů, nepamatuji si stavy</div>
+  </div>
+</div>
+<h3>Konec 2. hodiny</h3>
+<div class="board">
+  <div class="bcol">
+    <div class="bh">Funkce</div>
+    <div class="bcode">kandidati(m, r, s)</div>
+    <div class="bcode">najdi_policko(m)<br>→ (r, s, kandidáti) / None</div>
+    <div class="bcode">res(m) → True / False</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">res(m)</div>
+    <div class="bcode">None → True (hotovo)</div>
+    <div class="bcode">[] → False (spor)</div>
+    <div class="bcode">for c: m[r][s] = c<br>  if res(m): return True<br>  m[r][s] = 0  ← návrat</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Heuristika</div>
+    <div class="bs">9 × 9, 23 zadaných čísel</div>
+    <div class="bcode">první prázdné: 2 091 289</div>
+    <div class="bcode">nejméně možností: 147</div>
+    <div class="bs">rekurze = zásobník volání</div>
+  </div>
+</div>
+</section>
+
+<section id="chyby">
+<h2>Časté chyby a mylné představy</h2>
+<div class="tbl"><table>
+<thead><tr><th>Mylná představa</th><th>Jak ji vyvrátit</th></tr></thead>
+<tbody>
+<tr><td>„Při sporu smažu jen poslední číslo.“</td><td>Poslední číslo bylo jediná možnost, jiné tam být nemůže. Chyba je v pokusu, a všechno po něm z něj vyplývalo. Smazat vše od pokusu.</td></tr>
+<tr><td>„Když není jediná možnost, sudoku nemá řešení.“</td><td>Příklad 2 řešení má. Jediná možnost je jen nejpohodlnější cesta, ne podmínka řešitelnosti.</td></tr>
+<tr><td>„Spor znamená, že jsem porušil pravidla.“</td><td>V příkladu 2 jsme pravidla neporušili ani jednou. Spor je políčko, kam nejde nic, a vznikl kvůli špatnému pokusu.</td></tr>
+<tr><td>Hádání bez označení pokusu</td><td>Na papíře pak nevíš, co smazat. Proto jiná barva nebo kroužek. Program to má zadarmo: pamatuje si to v rozpracovaných voláních.</td></tr>
+<tr><td>„<code>return False</code> ukončí program.“</td><td>Ukončí jen jedno volání funkce. Nakresli na tabuli zásobník volání (A1 → B1 → B4 → B3 → C3) a ukaž, jak se odebírá.</td></tr>
+<tr><td>Záměna <code>A1</code> a <code>mrizka[0][0]</code>, posun o jedničku</td><td>V Pythonu se počítá od nuly a první index je řádek. <code>D3</code> je <code>mrizka[2][3]</code>.</td></tr>
+<tr><td>„Backtracking je hrubá síla, zkouší všechno.“</td><td>Zkouší jen to, co neporušuje pravidla, a špatnou větev zařízne hned. Naslepo by u příkladu 2 bylo 6<sup>18</sup> ≈ 10<sup>14</sup> kombinací, program napsal 22 číslic.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="diferenciace">
+<h2>Rychlejší a pomalejší studenti</h2>
+<div class="two">
+  <div class="card">
+    <h3>Kdo je hotový dřív</h3>
+    <ul>
+      <li>Úloha 5 z praktické ukázky: funkce <code>pocet_reseni</code>. Po smazání dvojky v <code>C1</code> má příklad 2 sedm řešení.</li>
+      <li>Doplnit do programu skrytou jedinou možnost (číslice, která může v řádku jen na jedno místo) a změřit, kolik pokusů ušetří u 9 × 9.</li>
+      <li>Napsat backtracking pro osm dam a ověřit, že řešení je 92.</li>
+      <li>Najít na internetu sudoku označené jako „nejtěžší na světě“ a změřit, kolik číslic na něj program potřebuje.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Kdo potřebuje víc času</h3>
+    <ul>
+      <li>V 1. hodině stačí zvládnout příklad 1 a v příkladu 2 pochopit, co se smaže. Strom a srovnání s džbány jsou nadstavba.</li>
+      <li>Na hledání kandidátů použít průzkumník v praktické ukázce (kliknutí na políčko).</li>
+      <li>Ve 2. hodině program zkopírovat celý a soustředit se na funkci <code>res</code> a na výpis.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="zaloha">
+<h2>Když nejde technika</h2>
+<ul>
+  <li><strong>Nejde projektor:</strong> nakresli mřížku 6 × 6 na tabuli (silnější čáry mezi čtverci 2 × 3). Krokování nahradí tabulka postupu z praktické ukázky, vytiskni si ji předem. Strom z fáze 5 se kreslí na tabuli snadno.</li>
+  <li><strong>Nefunguje Python v učebně:</strong> 2. hodinu nahraď „lidským počítačem“: jeden student je funkce <code>res</code> a při každém vnořeném volání předá papír s mřížkou dalšímu studentovi. Při sporu se papír vrací zpět. Zásobník volání tak vidí celá třída.</li>
+</ul>
+</section>
+
+<section id="jedna">
+<h2>Máš jen jednu hodinu?</h2>
+<p>Odučí se 1. hodina podle plánu výše. Z 2. hodiny přidej jen snímek 11 (heuristika, minuta na konci fáze 6) a program v Pythonu zadej jako domácí úkol podle praktické ukázky: spustit pro příklad 2 a pro 9 × 9 s oběma výběry políčka a poslat počty napsaných číslic.</p>
+</section>
+
+<section id="reflexe">
+<h2>Po hodině</h2>
+<ul>
+  <li>Kolik dvojic našlo v příkladu 1 políčko <code>D3</code> samo? Kolik jich ho vyřešilo celé?</li>
+  <li>Došli studenti v příkladu 2 ke sporu na papíře sami? Věděli, co smazat?</li>
+  <li>Kolik exit ticketů mělo správně otázku 3 (co se smaže)?</li>
+  <li>Ve 2. hodině: kolik studentů dokázalo vysvětlit, kam se program vrátí po <code>return False</code>?</li>
+</ul>
+</section>
+
+<p class="foot">Metodický list k jedné až dvěma hodinám na téma sudoku a backtracking. Navazuje na prezentaci 02 Sudoku a návrat, praktickou ukázku a studijní text k témuž tématu.</p>
+</main>
+</div>
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>
