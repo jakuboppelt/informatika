@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sudoku a backtracking – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Úvod</li>
+    <li><a href="#sudoku">Sudoku</a></li>
+    <li class="grp">Model</li>
+    <li><a href="#prostor">Stavový prostor sudoku</a></li>
+    <li><a href="#csp">Úlohy s omezujícími podmínkami</a></li>
+    <li><a href="#kandidati">Kandidáti a jediná možnost</a></li>
+    <li class="grp">Algoritmus</li>
+    <li><a href="#backtracking">Backtracking</a></li>
+    <li><a href="#priklad">Příklad: pokus a návrat</a></li>
+    <li><a href="#strom">Strom prohledávání</a></li>
+    <li><a href="#heuristika">Výběr políčka</a></li>
+    <li><a href="#srovnani">Srovnání s džbány</a></li>
+    <li class="grp">Souvislosti</li>
+    <li><a href="#cisla">Čísla a zajímavosti</a></li>
+    <li><a href="#jinde">Kde jinde</a></li>
+    <li class="grp">Procvičení</li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Algoritmy · Studijní text</p>
+  <h1>Sudoku a návrat <span class="t">kandidáti · backtracking · strom</span></h1>
+  <p class="lead">Sudoku jako stavový prostor, ve kterém nehledáme cestu, ale stav splňující všechna pravidla. Jak ho řeší člověk i počítač: jediné možnosti, pokus, spor a návrat. Proč pomáhá vybírat políčko s nejméně možnostmi a kde všude se stejný algoritmus používá. Malá čísla u textu odkazují na zdroje na konci.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>popsat sudoku jako stavový prostor (S, s₀, C, O)</li>
+      <li>vysvětlit, co je úloha s omezujícími podmínkami</li>
+      <li>určit kandidáty políčka a najít jedinou možnost</li>
+      <li>popsat backtracking a krokovat ho na příkladu</li>
+      <li>nakreslit strom prohledávání s pokusem a návratem</li>
+      <li>vysvětlit, proč pomáhá políčko s nejméně možnostmi</li>
+      <li>porovnat sudoku s úlohou o džbánech</li>
+      <li>uvést další úlohy řešené backtrackingem</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Úvod</p>
+
+<section id="sudoku">
+<h2>Sudoku</h2>
+<p>Klasické sudoku je mřížka 9 × 9 rozdělená na devět čtverců 3 × 3. Některá políčka jsou vyplněná, zbylá je třeba doplnit číslicemi 1 až 9 tak, aby v každém <strong>řádku</strong>, <strong>sloupci</strong> i <strong>čtverci</strong> byla každá číslice právě jednou. V tomto textu používáme menší variantu <strong>6 × 6</strong> se čtverci 2 × 3 a číslicemi 1 až 6. Pravidla jsou stejná a každý krok je dobře vidět.</p>
+<p>Políčka značíme jako buňky v tabulkovém procesoru: sloupec písmenem (A až F), řádek číslem (1 až 6). Políčko <code>D3</code> leží ve sloupci D a ve třetím řádku.</p>
+<p>Moderní podobu sudoku vymyslel nejspíš americký architekt Howard Garns. Poprvé vyšla v roce 1979 v časopisech nakladatelství Dell pod názvem <i>Number Place</i>. Od roku 1984 ji vydávalo japonské nakladatelství Nikoli a v roce 1986 ji pojmenovalo <i>sudoku</i>, zhruba „číslice musí být osamělé“. Celosvětově se rozšířila od listopadu 2004, kdy ji začal otiskovat londýnský deník The Times.<sup class="ref"><a href="#z1">1</a></sup></p>
+<div class="sd-static">
+  <figure><div id="f1"></div><figcaption>Příklad 1: 16 prázdných políček. Vyřešíš ho jen pomocí jediných možností.</figcaption></figure>
+  <figure><div id="f2"></div><figcaption>Příklad 2: 18 prázdných políček. Bez pokusu a návratu se tu neobejdeš.</figcaption></figure>
+</div>
+</section>
+
+<p class="part">Model</p>
+
+<section id="prostor">
+<h2>Stavový prostor sudoku</h2>
+<p>Sudoku jde popsat stejnou čtveřicí (S, s₀, C, O) jako džbány nebo převozníka:</p>
+<ul>
+  <li><strong>Stav</strong> je částečně vyplněná mřížka, ve které se nic neopakuje. Na tom, v jakém pořadí jsme políčka vyplnili, nezáleží.</li>
+  <li><strong>Počáteční stav s₀</strong> je zadání.</li>
+  <li><strong>Cílové stavy C</strong> jsou úplně vyplněné mřížky. Dobré sudoku má jediné řešení, takže jediný cílový stav.</li>
+  <li><strong>Operátor</strong>: napiš číslici <i>c</i> do prázdného políčka. <em>Podmínka použitelnosti:</em> <i>c</i> není v řádku, sloupci ani čtverci tohoto políčka.</li>
+</ul>
+<p>Protože operátor hlídá pravidla, každá vyplněná mřížka, ke které dojdeme, je správné řešení. Stačí tedy vyplnit všechna políčka.</p>
+<p>Oproti džbánům jsou tu tři podstatné rozdíly:</p>
+<ol>
+  <li><strong>Nezajímá nás cesta, jen cíl.</strong> U džbánů chceme vědět, jak 4 litry odměřit. U sudoku nikdo nechce postup, chce vyplněnou mřížku.</li>
+  <li><strong>Všechna řešení jsou stejně dlouhá.</strong> Řešení má vždy tolik kroků, kolik je prázdných políček. Hledat nejkratší řešení nemá smysl.</li>
+  <li><strong>Graf stavů nemá cykly.</strong> Políčka se jen vyplňují, takže se nikdy nevrátíme do stejného stavu. Nemusíme si pamatovat navštívené stavy.</li>
+</ol>
+</section>
+
+<section id="csp">
+<h2>Úlohy s omezujícími podmínkami</h2>
+<p>Sudoku patří mezi <dfn>úlohy s omezujícími podmínkami</dfn> (anglicky <i>constraint satisfaction problem</i>, CSP).<sup class="ref"><a href="#z5">5</a></sup> Taková úloha má tři části:</p>
+<ul>
+  <li><strong>proměnné</strong>: u sudoku prázdná políčka,</li>
+  <li><strong>domény</strong>: hodnoty, kterých proměnné můžou nabývat, u sudoku číslice 1 až 6,</li>
+  <li><strong>omezení</strong>: pravidla mezi proměnnými, u sudoku „v řádku, sloupci a čtverci se nic neopakuje“.</li>
+</ul>
+<p>Řešením je přiřazení hodnot všem proměnným, které splní všechna omezení. Stejně se dá popsat rozvrh hodin (proměnné jsou hodiny, hodnoty časy a učebny, omezení „učitel nemůže být na dvou místech“) nebo barvení mapy.</p>
+</section>
+
+<section id="kandidati">
+<h2>Kandidáti a jediná možnost</h2>
+<p><dfn>Kandidáti</dfn> prázdného políčka jsou číslice, které do něj podle pravidel ještě smíme napsat: nejsou v jeho řádku, sloupci ani čtverci.</p>
+<p>Příklad 1, políčko <code>D3</code>: v řádku 3 jsou 1, 3, 4, 6, ve sloupci D jsou 2, 3, 4, 6 a ve čtverci 3, 4, 6. Dohromady je zabráno 1, 2, 3, 4, 6. Zbývá jen <strong>5</strong>, a to je <dfn>jediná možnost</dfn>. Napíšeme ji s jistotou.</p>
+<p>Každé napsané číslo ubere kandidáty v řádku, sloupci a čtverci a často tak vznikne další jediná možnost. V příkladu 1 se to řetězí až do konce: <code>D3 = 5</code>, pak v řádku 3 chybí jen 2, takže <code>F3 = 2</code>, pak <code>F2 = 5</code> a tak dál, celkem 16 kroků bez jediného zaváhání.</p>
+<div class="note tip"><b class="lbl">Skrytá jediná možnost</b><p>Zkušení řešitelé hledají i opačně: „kam v tomhle řádku může jít trojka?“ Když jen na jedno políčko, trojka patří tam, i když políčko má víc kandidátů. Tomu se říká skrytá jediná možnost. Náš program ji nepoužívá, ale v příkladu 2 by nepomohla: každá číslice tam může v každém řádku, sloupci i čtverci aspoň na dvě místa.</p></div>
+<p>Někdy ale žádné políčko jedinou možnost nemá. Na začátku příkladu 2 mají všechna prázdná políčka dva nebo víc kandidátů. Pak už logika nestačí a musíme <strong>zkusit hádat</strong>.</p>
+</section>
+
+<p class="part">Algoritmus</p>
+
+<section id="backtracking">
+<h2>Backtracking</h2>
+<p><dfn>Backtracking</dfn> (česky prohledávání s návratem) staví řešení postupně. Po každém kroku zkontroluje pravidla, a když narazí na <dfn>spor</dfn>, poslední rozhodnutí vezme zpět a zkusí jiné.<sup class="ref"><a href="#z4">4</a></sup></p>
+<pre><code>funkce řeš(mřížka):
+    najdi prázdné políčko s nejméně kandidáty
+    pokud žádné prázdné políčko není:
+        vrať VYŘEŠENO
+    pokud nemá žádného kandidáta:
+        vrať SPOR
+    pro každého kandidáta c:
+        napiš c do políčka
+        pokud řeš(mřížka) vrátí VYŘEŠENO:
+            vrať VYŘEŠENO
+        smaž políčko                        (návrat)
+    vrať SPOR</code></pre>
+<p>Funkce je <dfn>rekurzivní</dfn>: vyplní jedno políčko a na zbytek zavolá sama sebe. Každé rozpracované volání si pamatuje svoje políčko a kandidáty, které ještě nezkusilo. Když vnořené volání vrátí SPOR, políčko se smaže a zkusí se další kandidát. Když už žádný nezbývá, vrátí SPOR i tohle volání, a návrat tak pokračuje dál, až k poslednímu místu, kde ještě zbývá nějaká možnost.</p>
+<p>Políčko s jedinou možností je jen zvláštní případ: cyklus „pro každého kandidáta“ proběhne jednou. Program tedy nerozlišuje „jisté“ a „hádané“ kroky, rozdíl se ukáže jen v tom, kolik možností políčko mělo.</p>
+<div class="note mat"><b class="lbl">Co přesně se smaže</b><p>Při sporu se smaže všechno, co jsme napsali od posledního pokusu, včetně něj. Všechno po pokusu z něj totiž vyplývalo, a pokud byl pokus špatně, nemusí platit nic z toho. Co bylo napsané před pokusem, je jisté a zůstává.</p></div>
+</section>
+
+<section id="priklad">
+<h2>Příklad: pokus a návrat</h2>
+<p>Průběh řešení příkladu 2 (interaktivně ho najdeš v <a href="02_sudoku_prakticky.html#priklad2">praktické ukázce</a>):</p>
+<div class="tbl"><table>
+<thead><tr><th>krok</th><th>co se děje</th><th>proč</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td><b>Pokus A1 = 1</b></td><td>žádné políčko nemá jedinou možnost, A1 má kandidáty 1 a 4</td></tr>
+<tr><td class="num">2</td><td>B1 = 4</td><td>v řádku 1 chybí už jen 4</td></tr>
+<tr><td class="num">3</td><td>B4 = 5</td><td>ve sloupci B jsou 2, 3, 4, 6, v řádku 4 je 1</td></tr>
+<tr><td class="num">4</td><td>B3 = 1</td><td>v řádku 3 jsou 4, 6, ve sloupci B 2, 3, 4, 5, 6</td></tr>
+<tr><td></td><td><b>Spor v C3</b></td><td>řádek 3 má 1, 4, 6, sloupec C má 2, 3, čtverec má 1, 5: zabráno vše</td></tr>
+<tr><td></td><td><b>Návrat</b></td><td>smažeme B3, B4, B1 a A1</td></tr>
+<tr><td class="num">5</td><td><b>A1 = 4</b></td><td>zbývající možnost, musí platit</td></tr>
+<tr><td class="num">6–22</td><td>B1 = 1, B3 = 5, C3 = 1, …</td><td>už jen jediné možnosti, 17 kroků</td></tr>
+</tbody></table></div>
+<p>Program napíše celkem 22 číslic, z toho 4 smaže. Prázdných políček bylo 18.</p>
+</section>
+
+<section id="strom">
+<h2>Strom prohledávání</h2>
+<p>Průběh backtrackingu se dá nakreslit jako <dfn>strom</dfn>. Každý pokus je rozcestí, ze kterého vede tolik větví, kolik mělo políčko kandidátů. Jediné možnosti nevětví, jen prodlužují větev.</p>
+<svg class="sd-tree-svg" viewBox="0 0 1000 230" role="img" aria-label="Strom prohledávání příkladu 2: větev A1 = 1 končí sporem v C3, větev A1 = 4 vede k řešení">
+<path class="sd-t-edge " d="M96 115 C 126 115, 99.5 115, 129.5 115"/>
+<path class="sd-t-edge is-bad" d="M210.5 115 C 240.5 115, 234 50, 264 50"/>
+<path class="sd-t-edge is-bad" d="M336 50 C 366 50, 354 50, 384 50"/>
+<path class="sd-t-edge is-bad" d="M456 50 C 486 50, 454 50, 484 50"/>
+<path class="sd-t-edge is-bad" d="M556 50 C 586 50, 554 50, 584 50"/>
+<path class="sd-t-edge is-bad" d="M656 50 C 686 50, 661 50, 691 50"/>
+<path class="sd-t-edge is-ok" d="M210.5 115 C 240.5 115, 234 180, 264 180"/>
+<path class="sd-t-edge is-ok" d="M336 180 C 366 180, 354 180, 384 180"/>
+<path class="sd-t-edge is-ok" d="M456 180 C 486 180, 454 180, 484 180"/>
+<path class="sd-t-edge is-ok" d="M556 180 C 586 180, 554 180, 584 180"/>
+<path class="sd-t-edge is-ok" d="M656 180 C 686 180, 635 180, 665 180"/>
+<path class="sd-t-edge is-ok" d="M775 180 C 805 180, 760 180, 790 180"/>
+<g class="sd-t-node "><rect x="24" y="100" width="72" height="30" rx="9"/><text x="60" y="120" text-anchor="middle">zadání</text></g>
+<g class="sd-t-node is-guess"><rect x="129.5" y="100" width="81" height="30" rx="9"/><text x="170" y="120" text-anchor="middle">A1: 1/4</text></g>
+<g class="sd-t-node is-guess"><rect x="264" y="35" width="72" height="30" rx="9"/><text x="300" y="55" text-anchor="middle">A1 = 1</text></g>
+<g class="sd-t-node "><rect x="384" y="35" width="72" height="30" rx="9"/><text x="420" y="55" text-anchor="middle">B1 = 4</text></g>
+<g class="sd-t-node "><rect x="484" y="35" width="72" height="30" rx="9"/><text x="520" y="55" text-anchor="middle">B4 = 5</text></g>
+<g class="sd-t-node "><rect x="584" y="35" width="72" height="30" rx="9"/><text x="620" y="55" text-anchor="middle">B3 = 1</text></g>
+<g class="sd-t-node is-bad"><rect x="691" y="35" width="58" height="30" rx="9"/><text x="720" y="55" text-anchor="middle">C3 ✗</text></g>
+<g class="sd-t-node is-guess"><rect x="264" y="165" width="72" height="30" rx="9"/><text x="300" y="185" text-anchor="middle">A1 = 4</text></g>
+<g class="sd-t-node "><rect x="384" y="165" width="72" height="30" rx="9"/><text x="420" y="185" text-anchor="middle">B1 = 1</text></g>
+<g class="sd-t-node "><rect x="484" y="165" width="72" height="30" rx="9"/><text x="520" y="185" text-anchor="middle">B3 = 5</text></g>
+<g class="sd-t-node "><rect x="584" y="165" width="72" height="30" rx="9"/><text x="620" y="185" text-anchor="middle">C3 = 1</text></g>
+<g class="sd-t-node "><rect x="665" y="165" width="110" height="30" rx="9"/><text x="720" y="185" text-anchor="middle">… 14 dalších</text></g>
+<g class="sd-t-node is-ok"><rect x="790" y="165" width="100" height="30" rx="9"/><text x="840" y="185" text-anchor="middle">✓ vyřešeno</text></g>
+<text class="sd-t-lab" x="300" y="22" text-anchor="middle">1. pokus</text><text class="sd-t-lab" x="300" y="222" text-anchor="middle">2. pokus</text>
+<text class="sd-t-lab" x="720" y="22" text-anchor="middle">spor → návrat k volbě</text>
+</svg>
+<p>Algoritmus prochází strom <strong>do hloubky</strong>: jde po jedné větvi co nejdál a vrací se jen při sporu. Je to stejné prohledávání do hloubky, jaké znáš z úlohy o džbánech, jen zásobník tu nevidíš. Je to <strong>zásobník volání funkcí</strong>, do kterého si Python ukládá rozpracovaná volání <code>res</code>.</p>
+<p>Prohledávání do šířky by se na sudoku nehodilo. Procházelo by najednou všechny rozpracované mřížky v jedné hloubce, a těch je obrovské množství. Nejkratší řešení přitom hledat nemusíme, všechna jsou stejně dlouhá.</p>
+</section>
+
+<section id="heuristika">
+<h2>Výběr políčka</h2>
+<p>Kdybychom zkoušeli všechny kombinace naslepo, bylo by jich u příkladu 2 až 6<sup>18</sup> ≈ 1,0 · 10<sup>14</sup>. U sudoku 9 × 9 s 58 prázdnými políčky dokonce 9<sup>58</sup> ≈ 2,2 · 10<sup>55</sup>. Backtracking jich projde jen nepatrnou část, protože kontroluje pravidla po každém kroku: špatnou větev zařízne hned, jak poruší pravidla, a nezkouší její pokračování.</p>
+<p>Hodně záleží na tom, <strong>které políčko</strong> vyplníme jako další. Program v <a href="02_sudoku_prakticky.html#devet">praktické ukázce</a> vyřešil sudoku 9 × 9 s 23 zadanými čísly dvěma způsoby:</p>
+<div class="tbl"><table>
+<thead><tr><th>výběr políčka</th><th>napsaných číslic</th></tr></thead>
+<tbody>
+<tr><td>první prázdné políčko (shora, zleva)</td><td class="num">2 091 289</td></tr>
+<tr><td>políčko s nejméně kandidáty</td><td class="num">147</td></tr>
+</tbody></table></div>
+<p>Rozdíl je asi 14 000×. Proč?</p>
+<ul>
+  <li><strong>Jediné možnosti jsou zadarmo.</strong> Políčko s jedním kandidátem nevětví strom.</li>
+  <li><strong>Méně možností = menší šance na chybu.</strong> Hádat mezi dvěma číslicemi je lepší než mezi pěti.</li>
+  <li><strong>Spor se odhalí dřív.</strong> Políčko, kterému dojdou kandidáti, se vybere hned (nula je nejméně). Naivní postup na něj narazí až ve chvíli, kdy na něj přijde řada, a mezitím zbytečně vyplňuje jiná políčka.</li>
+</ul>
+<p>Takovému pravidlu, které hledání zrychlí, ale nezaručuje ideální výsledek, se říká <dfn>heuristika</dfn>. Tahle se jmenuje „nejméně zbývajících hodnot“ (<i>minimum remaining values</i>).<sup class="ref"><a href="#z5">5</a></sup></p>
+</section>
+
+<section id="srovnani">
+<h2>Srovnání s džbány</h2>
+<div class="tbl"><table>
+<thead><tr><th></th><th>džbány, převozník</th><th>sudoku</th></tr></thead>
+<tbody>
+<tr><td>co hledáme</td><td>cestu (posloupnost tahů)</td><td>cílový stav</td></tr>
+<tr><td>délka řešení</td><td>různá, chceme nejkratší</td><td>vždy počet prázdných políček</td></tr>
+<tr><td>cykly v grafu</td><td>ano</td><td>ne, graf je strom</td></tr>
+<tr><td>paměť navštívených stavů</td><td>nutná</td><td>není potřeba</td></tr>
+<tr><td>vhodné prohledávání</td><td>do šířky (fronta)</td><td>do hloubky s návratem (rekurze)</td></tr>
+<tr><td>co dělá algoritmus chytřejším</td><td>nic, prochází vrstvy</td><td>kontrola pravidel po každém kroku, výběr políčka</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">Souvislosti</p>
+
+<section id="cisla">
+<h2>Čísla a zajímavosti</h2>
+<ul>
+  <li><strong>288</strong> je počet úplně vyplněných mřížek 4 × 4.<sup class="ref"><a href="#z3">3</a></sup> Při přípravě této látky jsme programem vyzkoušeli 87 tisíc náhodných zadání 4 × 4 s jednoznačným řešením. Všechna šla vyřešit jen jedinými možnostmi, proto jsou příklady 6 × 6.</li>
+  <li><strong>6 670 903 752 021 072 936 960</strong> (asi 6,67 · 10<sup>21</sup>) je počet vyplněných mřížek 9 × 9. Spočítali ho Bertram Felgenhauer a Frazer Jarvis v roce 2005. Podstatně různých (bez otočení, zrcadlení a přejmenování číslic) je 5 472 730 538.<sup class="ref"><a href="#z2">2</a></sup></li>
+  <li><strong>17</strong> je nejmenší počet zadaných čísel, se kterým může mít sudoku 9 × 9 jediné řešení. V roce 2012 to dokázali Gary McGuire, Bastian Tugemann a Gilles Civario. Počítač prověřil, že žádné zadání se 16 čísly jednoznačné není. Výpočet trval asi 7 milionů procesorových hodin.<sup class="ref"><a href="#z6">6</a>,</sup><sup class="ref"><a href="#z7">7</a></sup></li>
+</ul>
+</section>
+
+<section id="jinde">
+<h2>Kde jinde se backtracking používá</h2>
+<ul>
+  <li><strong>Osm dam.</strong> Rozmísti na šachovnici 8 dam tak, aby se žádné dvě neohrožovaly. Dámy se dávají řádek po řádku a při ohrožení se algoritmus vrací. Řešení je 92. Úlohu zveřejnil Max Bezzel v roce 1848.<sup class="ref"><a href="#z8">8</a></sup></li>
+  <li><strong>Bludiště.</strong> Jdi chodbou, dokud to jde. Ve slepé uličce se vrať k poslední odbočce a zkus jinou.</li>
+  <li><strong>Rozvrh hodin, směny, sportovní utkání.</strong> Velké úlohy s omezujícími podmínkami, kde se backtracking kombinuje s heuristikami.</li>
+  <li><strong>Barvení mapy.</strong> Sousední státy musí mít různou barvu. Na každou mapu v rovině stačí čtyři barvy.</li>
+  <li><strong>Křížovky a osmisměrky.</strong> Slovo se zkusí na místo a když se nehodí ke křížícím se slovům, vezme se zpět.</li>
+</ul>
+</section>
+
+<p class="part">Procvičení</p>
+
+<section id="osnova">
+<h2>Jak odpovídat u maturity</h2>
+<ol class="plan">
+  <li><b>Úloha:</b> pravidla sudoku, značení políček.</li>
+  <li><b>Stavový prostor:</b> stav, s₀, cíl, operátor s podmínkou. Co je jinak než u džbánů.</li>
+  <li><b>Úloha s omezujícími podmínkami:</b> proměnné, domény, omezení.</li>
+  <li><b>Kandidáti a jediná možnost:</b> postup na příkladu.</li>
+  <li><b>Backtracking:</b> pokus, spor, návrat. Pseudokód, rekurze.</li>
+  <li><b>Strom prohledávání:</b> prohledávání do hloubky, zásobník volání.</li>
+  <li><b>Heuristika:</b> políčko s nejméně kandidáty, proč pomáhá, čísla ze srovnání.</li>
+  <li><b>Další použití:</b> osm dam, bludiště, rozvrh.</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Co jsou kandidáti políčka?</summary><div class="a"><p>Číslice, které nejsou v řádku, sloupci ani čtverci políčka. Jen ty do něj smíme napsat.</p></div></details>
+<details class="q"><summary>Jak vypadá operátor u sudoku a jaká je jeho podmínka použitelnosti?</summary><div class="a"><p>Napiš číslici c do prázdného políčka. Smíme jen tehdy, když c je kandidát, tedy není v řádku, sloupci ani čtverci.</p></div></details>
+<details class="q"><summary>V čem se sudoku liší od úlohy o džbánech?</summary><div class="a"><p>Hledáme cílový stav, ne cestu. Všechna řešení jsou stejně dlouhá. Graf stavů nemá cykly, takže si nemusíme pamatovat navštívené stavy. Hodí se prohledávání do hloubky, ne do šířky.</p></div></details>
+<details class="q"><summary>Co dělá backtracking, když narazí na spor?</summary><div class="a"><p>Smaže všechno od posledního pokusu včetně něj a zkusí u toho políčka dalšího kandidáta. Když žádný nezbývá, vrací se ještě k předchozímu pokusu.</p></div></details>
+<details class="q"><summary>Proč se při sporu smaže všechno od pokusu, a ne jen poslední číslo?</summary><div class="a"><p>Všechno napsané po pokusu z něj vyplývalo. Když je pokus špatně, nemusí platit nic z toho. Jisté je jen to, co bylo napsané před pokusem.</p></div></details>
+<details class="q"><summary>Kde je v rekurzivním programu zásobník?</summary><div class="a"><p>Je to zásobník volání: každé rozpracované volání funkce čeká, až se vnořené vrátí. Návrat v backtrackingu je obyčejný návrat z funkce.</p></div></details>
+<details class="q"><summary>Proč se vyplatí vybírat políčko s nejméně kandidáty?</summary><div class="a"><p>Jediné možnosti nevětví strom, mezi méně možnostmi se hůř splete a políčko bez kandidátů (spor) se vybere hned. U našeho sudoku 9 × 9 to zmenšilo počet napsaných číslic ze 2 091 289 na 147.</p></div></details>
+<details class="q"><summary>Kolik zadaných čísel musí mít nejméně sudoku 9 × 9 s jediným řešením?</summary><div class="a"><p>17. Dokázal to v roce 2012 počítačový výpočet, který prověřil, že se 16 čísly jednoznačné sudoku neexistuje.</p></div></details>
+<details class="q"><summary>Uveď dvě další úlohy, které jde řešit backtrackingem.</summary><div class="a"><p>Například osm dam na šachovnici, cesta bludištěm, barvení mapy, sestavení rozvrhu, křížovka.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Kandidát</dt><dd>číslice, kterou smíme napsat do prázdného políčka</dd>
+  <dt>Jediná možnost</dt><dd>políčko s jediným kandidátem; píšeme s jistotou</dd>
+  <dt>Skrytá jediná možnost</dt><dd>číslice, která může v řádku, sloupci nebo čtverci jen na jedno místo</dd>
+  <dt>Pokus</dt><dd>zvolená hodnota políčka, o které nevíme, jestli je správná</dd>
+  <dt>Spor</dt><dd>prázdné políčko, do kterého nejde napsat nic</dd>
+  <dt>Backtracking</dt><dd>prohledávání s návratem: při sporu vezmeme zpět poslední rozhodnutí</dd>
+  <dt>Rekurze</dt><dd>funkce volá sama sebe na menší úlohu</dd>
+  <dt>Zásobník volání</dt><dd>místo, kam si program ukládá rozpracovaná volání funkcí</dd>
+  <dt>Strom prohledávání</dt><dd>zakreslení všech pokusů a jejich větví</dd>
+  <dt>Úloha s omezujícími podmínkami</dt><dd>proměnné, domény a omezení; hledá se přiřazení splňující všechna omezení</dd>
+  <dt>Heuristika</dt><dd>pravidlo, které hledání zrychlí, ale nezaručuje nejlepší výsledek</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v listopadu 2026. Příklady 1 a 2 a počty kroků jsou spočítané programem z praktické ukázky.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://en.wikipedia.org/wiki/Sudoku">Wikipedia: Sudoku</a></li>
+  <li id="z2"><a href="https://en.wikipedia.org/wiki/Mathematics_of_Sudoku">Wikipedia: Mathematics of Sudoku</a></li>
+  <li id="z3"><a href="https://oeis.org/A107739">OEIS A107739: Number of (completed) sudokus of size n² × n²</a></li>
+  <li id="z4"><a href="https://en.wikipedia.org/wiki/Backtracking">Wikipedia: Backtracking</a></li>
+  <li id="z5">S. Russell, P. Norvig: <i>Artificial Intelligence: A Modern Approach</i>, 4. vydání, kapitola 6 Constraint Satisfaction Problems</li>
+  <li id="z6"><a href="https://arxiv.org/abs/1201.0749">G. McGuire, B. Tugemann, G. Civario: There is no 16-Clue Sudoku (arXiv, 2012)</a></li>
+  <li id="z7"><a href="https://www.irishtimes.com/business/technology/ucd-mathematician-discovers-sudoku-s-magic-number-it-s-17-1.484394">Irish Times: UCD mathematician discovers sudoku's magic number – it's 17</a></li>
+  <li id="z8"><a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle">Wikipedia: Eight queens puzzle</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k materiálu Sudoku a návrat. Interaktivní krokování obou příkladů a program v Pythonu najdeš v <a href="02_sudoku_prakticky.html">praktické ukázce</a>.</p>
+</main>
+</div>
+<script>
+(function () {
+  "use strict";
+  /* ===== sudoku: výpočet kroků (stejný postup jako program v Pythonu) a krokovač ===== */
+  var SD_COLS = "ABCDEFGHI";
+  function sdName(r, c) { return SD_COLS[c] + (r + 1); }
+  function sdList(a) { return a.length ? a.join(", ") : "nic"; }
+  function sdUsed(g, r, c, H, W) {
+    var N = H * W, row = [], col = [], box = [], i, j;
+    for (i = 0; i < N; i++) { if (g[r][i]) row.push(g[r][i]); if (g[i][c]) col.push(g[i][c]); }
+    var r0 = Math.floor(r / H) * H, c0 = Math.floor(c / W) * W;
+    for (i = r0; i < r0 + H; i++) for (j = c0; j < c0 + W; j++) if (g[i][j]) box.push(g[i][j]);
+    var srt = function (a) { return a.slice().sort(function (x, y) { return x - y; }); };
+    return { row: srt(row), col: srt(col), box: srt(box) };
+  }
+  function sdCands(g, r, c, H, W) {
+    var u = sdUsed(g, r, c, H, W), all = u.row.concat(u.col, u.box), out = [];
+    for (var d = 1; d <= H * W; d++) if (all.indexOf(d) < 0) out.push(d);
+    return out;
+  }
+  function sdPick(g, H, W) {
+    var N = H * W, best = null;
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) if (!g[r][c]) {
+      var k = sdCands(g, r, c, H, W);
+      if (!best || k.length < best.k.length) best = { r: r, c: c, k: k };
+    }
+    return best;
+  }
+  function sdWhy(g, r, c, H, W) {
+    var u = sdUsed(g, r, c, H, W);
+    return "V řádku " + (r + 1) + " je " + sdList(u.row) + ", ve sloupci " + SD_COLS[c] + " je " + sdList(u.col) + " a ve čtverci je " + sdList(u.box) + ".";
+  }
+
+  function sdFrames(P, H, W) {
+    var N = H * W, g = P.map(function (x) { return x.slice(); });
+    var kind = P.map(function (x) { return x.map(function (v) { return v ? "given" : ""; }); });
+    var frames = [], rows = [], cur = -1, pending = [], written = 0, erased = 0;
+    function cands() {
+      return g.map(function (row, r) { return row.map(function (v, c) { return v ? null : sdCands(g, r, c, H, W); }); });
+    }
+    function snap(type, msg, cell, extra) {
+      frames.push({ type: type, msg: msg, cell: cell || null, g: g.map(function (x) { return x.slice(); }),
+        kind: kind.map(function (x) { return x.slice(); }), cands: cands(),
+        rows: JSON.parse(JSON.stringify(rows)), extra: extra || null });
+    }
+    var start = sdPick(g, H, W);
+    snap("start", start && start.k.length === 1
+      ? "Zadání. Hledáme prázdné políčko, do kterého jde napsat jen jedna číslice."
+      : "Zadání. Zkus najít políčko, do kterého jde napsat jen jedna číslice.");
+    function rec() {
+      var p = sdPick(g, H, W);
+      if (!p) {
+        if (cur >= 0) rows[cur].state = "ok";
+        snap("solved", "<b>Hotovo, sudoku je vyřešené.</b> Napsali jsme " + written + " číslic" + (erased ? ", z toho " + erased + " jsme museli smazat." : " a nic jsme nemuseli mazat."));
+        return true;
+      }
+      var name = sdName(p.r, p.c);
+      if (!p.k.length) {
+        if (cur >= 0) rows[cur].state = "bad";
+        rows[cur].items.push({ t: name + " ✗", bad: true });
+        snap("dead", "<b>Spor! Do " + name + " nejde napsat nic.</b> " + sdWhy(g, p.r, p.c, H, W) + " Zabraných je všech " + N + " číslic. Někde jsme se museli splést.", [p.r, p.c]);
+        return false;
+      }
+      if (p.k.length > 1) {
+        snap("choice", "<b>Žádné políčko nemá jedinou možnost.</b> Nejméně možností má " + name + ": " + p.k.join(" nebo ") + ". " + sdWhy(g, p.r, p.c, H, W) + " Musíme si vybrat. Zkusíme nejdřív " + p.k[0] + " a zapamatujeme si, že je to jen pokus.", [p.r, p.c]);
+      }
+      for (var i = 0; i < p.k.length; i++) {
+        var d = p.k[i], why = sdWhy(g, p.r, p.c, H, W);
+        if (p.k.length > 1) { rows.push({ label: name + " = " + d, items: [], state: "run" }); cur = rows.length - 1; }
+        else if (cur < 0) { rows.push({ label: "start", items: [], state: "run" }); cur = 0; }
+        g[p.r][p.c] = d; kind[p.r][p.c] = p.k.length > 1 ? "guess" : "put"; written++;
+        if (p.k.length > 1) {
+          snap("guess", "<b>Pokus: " + name + " = " + d + ".</b> Nevíme, jestli je to správně. Pokud dojdeme ke sporu, vrátíme se sem a zkusíme " + p.k[i + 1 < p.k.length ? i + 1 : i] + ".", [p.r, p.c]);
+          if (i === p.k.length - 1) frames[frames.length - 1].msg = "<b>Zkusíme " + name + " = " + d + ".</b> Je to poslední možnost, takže musí být správná.";
+        } else {
+          rows[cur].items.push({ t: name + " = " + d });
+          snap("put", "<b>" + name + " = " + d + "</b>, jediná možnost. " + why + " Zbývá jen " + d + ".", [p.r, p.c]);
+        }
+        if (rec()) return true;
+        g[p.r][p.c] = 0; kind[p.r][p.c] = ""; erased++;
+        pending.push(name);
+        if (p.k.length > 1) {
+          rows[cur].state = "bad";
+          var nxt = p.k[i + 1];
+          snap("undo", "<b>Návrat.</b> Mažeme všechno, co jsme napsali od pokusu: " + pending.join(", ") + ". " + (nxt !== undefined ? "V " + name + " teď zkusíme druhou možnost, " + nxt + "." : "Ani jedna možnost nevyšla."), [p.r, p.c], { erased: pending.slice() });
+          pending = [];
+        }
+      }
+      return false;
+    }
+    rec();
+    return frames;
+  }
+
+  function sdBoard(host, H, W) {
+    var N = H * W, cells = [];
+    var b = document.createElement("div"); b.className = "sd-board sd-n" + N;
+    b.appendChild(document.createElement("span"));
+    for (var c = 0; c < N; c++) { var h = document.createElement("span"); h.className = "sd-lab"; h.textContent = SD_COLS[c]; b.appendChild(h); }
+    for (var r = 0; r < N; r++) {
+      var l = document.createElement("span"); l.className = "sd-lab"; l.textContent = r + 1; b.appendChild(l);
+      cells.push([]);
+      for (c = 0; c < N; c++) {
+        var e = document.createElement("div");
+        e.className = "sd-cell" + ((c + 1) % W === 0 && c < N - 1 ? " sd-br" : "") + ((r + 1) % H === 0 && r < N - 1 ? " sd-bb" : "");
+        b.appendChild(e); cells[r].push(e);
+      }
+    }
+    host.appendChild(b);
+    return { el: b, cells: cells, N: N, H: H, W: W };
+  }
+  function sdPaint(B, g, kind, cands, opt) {
+    opt = opt || {};
+    var N = B.N, hl = opt.cell, H = B.H, W = B.W;
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
+      var e = B.cells[r][c], v = g[r][c];
+      var inHl = hl && (hl[0] === r || hl[1] === c || (Math.floor(hl[0] / H) === Math.floor(r / H) && Math.floor(hl[1] / W) === Math.floor(c / W)));
+      e.classList.toggle("is-given", kind[r][c] === "given");
+      e.classList.toggle("is-put", kind[r][c] === "put");
+      e.classList.toggle("is-guess", kind[r][c] === "guess");
+      e.classList.toggle("is-hl", !!inHl && !(hl[0] === r && hl[1] === c));
+      e.classList.toggle("is-cur", !!hl && hl[0] === r && hl[1] === c);
+      e.classList.toggle("is-dead", !!hl && hl[0] === r && hl[1] === c && opt.type === "dead");
+      e.classList.toggle("is-erased", !!(opt.erased && opt.erased.indexOf(sdName(r, c)) >= 0));
+      e.classList.toggle("is-sel", !!(opt.sel && opt.sel[0] === r && opt.sel[1] === c));
+      if (v) { e.innerHTML = '<span class="sd-v">' + v + "</span>"; }
+      else if (opt.showCands && cands && cands[r][c]) {
+        var s = '<span class="sd-cands sd-c' + N + '">';
+        for (var d = 1; d <= N; d++) s += "<i>" + (cands[r][c].indexOf(d) >= 0 ? d : "") + "</i>";
+        e.innerHTML = s + "</span>";
+      } else if (opt.erased && opt.erased.indexOf(sdName(r, c)) >= 0) { e.innerHTML = '<span class="sd-x">×</span>'; }
+      else e.innerHTML = "";
+    }
+  }
+
+  function sdStepper(root, P, H, W, o) {
+    o = o || {};
+    var frames = sdFrames(P, H, W), fi = 0, show = o.cands !== false;
+    var btn = o.btnClass || "calc-btn";
+    root.innerHTML = '<div class="sd-ctrl"><button class="' + btn + '" data-a="prev">← Zpět</button><button class="' + btn + '" data-a="next">Krok →</button>' +
+      '<button class="' + btn + '" data-a="end">Do konce</button><button class="' + btn + '" data-a="reset">Znovu</button>' +
+      '<button class="' + btn + ' sd-tog" data-a="cands">Kandidáti</button><span class="sd-count"></span></div>' +
+      '<div class="sd-body"><div class="sd-left"></div><div class="sd-side"><p class="sd-msg" aria-live="polite"></p>' +
+      '<div class="sd-tree"><span class="sd-tree-lab">' + (o.treeLabel || "průběh") + '</span><div class="sd-rows"></div></div></div></div>';
+    var B = sdBoard(root.querySelector(".sd-left"), H, W);
+    function draw() {
+      var f = frames[fi];
+      sdPaint(B, f.g, f.kind, f.cands, { cell: f.cell, type: f.type, showCands: show, erased: f.extra && f.extra.erased });
+      root.querySelector(".sd-msg").innerHTML = f.msg;
+      root.querySelector(".sd-count").textContent = "krok " + fi + " z " + (frames.length - 1);
+      root.querySelector('[data-a="prev"]').disabled = fi === 0;
+      root.querySelector('[data-a="next"]').disabled = root.querySelector('[data-a="end"]').disabled = fi === frames.length - 1;
+      root.querySelector(".sd-tog").classList.toggle("is-active", show);
+      var rowsHtml = f.rows.map(function (rw) {
+        var head = rw.label === "start" ? "" : '<span class="sd-node sd-guessnode">' + rw.label + "</span>";
+        return '<div class="sd-row is-' + rw.state + '">' + head + rw.items.map(function (it) { return '<span class="sd-node' + (it.bad ? " sd-bad" : "") + '">' + it.t + "</span>"; }).join("") +
+          (rw.state === "ok" ? '<span class="sd-node sd-ok">✓ vyřešeno</span>' : "") + "</div>";
+      }).join("");
+      root.querySelector(".sd-rows").innerHTML = rowsHtml || '<span class="sd-empty">zatím nic</span>';
+    }
+    root.addEventListener("click", function (e) {
+      var a = e.target.closest("[data-a]"); if (!a) return;
+      var k = a.getAttribute("data-a");
+      if (k === "prev" && fi > 0) fi--;
+      if (k === "next" && fi < frames.length - 1) fi++;
+      if (k === "end") fi = frames.length - 1;
+      if (k === "reset") fi = 0;
+      if (k === "cands") show = !show;
+      draw();
+    });
+    draw();
+    return { frames: frames, draw: draw, minHeight: function () {
+      var m = root.querySelector(".sd-msg"), keep = fi, mx = 0; m.style.minHeight = "0px";
+      for (var i = 0; i < frames.length; i++) { fi = i; draw(); mx = Math.max(mx, m.offsetHeight); }
+      fi = keep; draw(); m.style.minHeight = mx + "px";
+    } };
+  }
+
+  /* mřížka, ve které jde kliknout na políčko a zobrazit jeho kandidáty */
+  function sdExplorer(root, P, H, W, panel, o) {
+    o = o || {};
+    var B = sdBoard(root, H, W), N = H * W, sel = null, show = false;
+    var kind = P.map(function (x) { return x.map(function (v) { return v ? "given" : ""; }); });
+    function cands() { return P.map(function (row, r) { return row.map(function (v, c) { return v ? null : sdCands(P, r, c, H, W); }); }); }
+    function draw() {
+      sdPaint(B, P, kind, cands(), { cell: sel, showCands: show, sel: sel });
+      if (!sel) { panel.innerHTML = o.intro || ""; return; }
+      var r = sel[0], c = sel[1], name = sdName(r, c);
+      if (P[r][c]) { panel.innerHTML = '<span class="meta">políčko ' + name + "</span><h3>Zadané číslo " + P[r][c] + "</h3><p>Klikni na prázdné políčko.</p>"; return; }
+      var u = sdUsed(P, r, c, H, W), k = sdCands(P, r, c, H, W);
+      panel.innerHTML = '<span class="meta">políčko ' + name + "</span><h3>" + (k.length === 1 ? "Jediná možnost: " + k[0] : k.length ? "Možnosti: " + k.join(", ") : "Žádná možnost") + "</h3>" +
+        "<p>Řádek " + (r + 1) + ": " + sdList(u.row) + "<br>Sloupec " + SD_COLS[c] + ": " + sdList(u.col) + "<br>Čtverec: " + sdList(u.box) + "</p>" +
+        (k.length === 1 ? "<p><b>Sem patří " + k[0] + ".</b> Všechno ostatní už je v řádku, sloupci nebo čtverci.</p>" : "");
+    }
+    B.cells.forEach(function (row, r) { row.forEach(function (e, c) {
+      e.setAttribute("role", "button"); e.tabIndex = 0; e.setAttribute("aria-label", "políčko " + sdName(r, c));
+      var go = function () { sel = [r, c]; draw(); };
+      e.addEventListener("click", go);
+      e.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); go(); } });
+    }); });
+    draw();
+    return { toggle: function () { show = !show; draw(); return show; } };
+  }
+
+  var EX1 = [[0,6,1,3,0,4],[3,0,0,6,1,0],[4,1,6,0,3,0],[0,0,3,0,4,6],[0,0,4,2,0,1],[1,0,0,4,0,3]];
+  var EX2 = [[0,0,2,3,6,5],[5,6,3,1,4,2],[0,0,0,4,0,6],[0,0,0,0,0,1],[0,3,0,0,0,4],[0,2,0,0,1,3]];
+  [["f1", EX1], ["f2", EX2]].forEach(function (x) {
+    var B = sdBoard(document.getElementById(x[0]), 2, 3);
+    sdPaint(B, x[1], x[1].map(function (r) { return r.map(function (v) { return v ? "given" : ""; }); }), null, {});
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

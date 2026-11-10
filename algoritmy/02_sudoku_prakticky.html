@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sudoku krok za krokem</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Ručně</li>
+    <li><a href="#pravidla">Pravidla a značení</a></li>
+    <li><a href="#postup">Postup</a></li>
+    <li><a href="#priklad1">Příklad 1: jediné možnosti</a></li>
+    <li><a href="#priklad2">Příklad 2: pokus a návrat</a></li>
+    <li class="grp">V Pythonu</li>
+    <li><a href="#mrizka">1. Mřížka</a></li>
+    <li><a href="#kandidati">2. Kandidáti</a></li>
+    <li><a href="#policko">3. Políčko s nejméně možnostmi</a></li>
+    <li><a href="#res">4. Řešení s návratem</a></li>
+    <li><a href="#program">Celý program</a></li>
+    <li><a href="#devet">Sudoku 9 × 9</a></li>
+    <li class="grp">Procvičení</li>
+    <li><a href="#vyzkousej">Vyzkoušej</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Algoritmy · Praktická ukázka</p>
+  <h1>Sudoku krok za krokem <span class="t">ručně i v Pythonu</span></h1>
+  <p class="lead">Dvě sudoku 6 × 6. První vyřešíš tak, že vždy najdeš políčko, kam jde napsat jen jedna číslice. U druhého taková políčka nejsou: musíš zkusit hádat, dojdeš ke sporu a vrátíš se. Pak stejný postup naprogramuješ v Pythonu a necháš ho vyřešit i velké sudoku 9 × 9.</p>
+  <div class="must">
+    <h2>Po ukázce bys měl umět</h2>
+    <ul>
+      <li>určit kandidáty prázdného políčka</li>
+      <li>vyřešit sudoku pomocí jediných možností</li>
+      <li>zvolit, kde hádat, a poznat spor</li>
+      <li>správně se vrátit: co smazat a co zkusit dál</li>
+      <li>napsat rekurzivní backtracking v Pythonu</li>
+      <li>vysvětlit, proč pomáhá políčko s nejméně možnostmi</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Ručně</p>
+
+<section id="pravidla">
+<h2>Pravidla a značení</h2>
+<p>Sudoku 6 × 6 má šest řádků, šest sloupců a šest čtverců 2 × 3 (oddělené silnější čarou). Do prázdných políček doplň číslice 1 až 6 tak, aby v každém <strong>řádku</strong>, <strong>sloupci</strong> i <strong>čtverci</strong> byla každá číslice právě jednou.</p>
+<p>Políčka označujeme jako buňky v tabulkovém procesoru: <strong>sloupec písmenem A až F, řádek číslem 1 až 6</strong>. Políčko <code>D3</code> je ve sloupci D a ve třetím řádku.</p>
+<p><dfn>Kandidáti</dfn> políčka jsou číslice, které v něm ještě můžou být: nejsou v jeho řádku, sloupci ani čtverci.</p>
+</section>
+
+<section id="postup">
+<h2>Postup</h2>
+<ol class="plan">
+  <li><b>Kandidáti.</b> U prázdného políčka se podívej do jeho řádku, sloupce a čtverce. Co tam není, je kandidát.</li>
+  <li><b>Jediná možnost.</b> Najdi políčko, které má jen jednoho kandidáta, a napiš ho. Je to jisté.</li>
+  <li><b>Pokus.</b> Když takové políčko není, vyber políčko s nejméně kandidáty (nejlépe se dvěma) a jednoho zkus. Na papíře ho napiš jinou barvou nebo zakroužkuj, ať víš, odkud jsi začal hádat. Všechno, co napíšeš potom, je taky nejisté.</li>
+  <li><b>Spor a návrat.</b> Když narazíš na políčko, do kterého nejde napsat nic, pokus byl špatně. Smaž všechno od pokusu (včetně něj) a zkus další kandidáta.</li>
+</ol>
+<p>Přesně tímhle postupem jede i program v Pythonu níže. Krokovače na této stránce ukazují, co dělá on.</p>
+</section>
+
+<section id="priklad1">
+<h2>Příklad 1: vždy se najde jediná možnost</h2>
+<p>Zkus ho nejdřív vyřešit sám na papíře, nebo si klikáním na políčka zjisti jejich kandidáty. Na začátku je jen jedno políčko s jedinou možností, najdeš ho?</p>
+<div class="sd-explore"><div id="x1"></div><div class="sd-panel" id="x1p"></div></div>
+<h3>Krok za krokem</h3>
+<div class="sd-step" id="s1"></div>
+<p class="sd-legend"><span class="lg-given">zadané</span><span class="lg-put">doplněné s jistotou</span><span class="lg-guess">pokus</span><span class="lg-dead">spor</span></p>
+<details class="q"><summary>Celý postup v tabulce</summary><div class="a">
+<p>U každého kroku: co už je v řádku, sloupci a čtverci políčka a co zbývá.</p>
+<div class="tbl"><table>
+<thead><tr><th>krok</th><th>políčko</th><th>v řádku</th><th>ve sloupci</th><th>ve čtverci</th><th>zbývá</th><th>píšeme</th></tr></thead><tbody>
+<tr><td class="num">1</td><td><b>D3</b></td><td>1, 3, 4, 6</td><td>2, 3, 4, 6</td><td>3, 4, 6</td><td>5</td><td><b>5</b></td></tr>
+<tr><td class="num">2</td><td><b>F3</b></td><td>1, 3, 4, 5, 6</td><td>1, 3, 4, 6</td><td>3, 4, 5, 6</td><td>2</td><td><b>2</b></td></tr>
+<tr><td class="num">3</td><td><b>F2</b></td><td>1, 3, 6</td><td>1, 2, 3, 4, 6</td><td>1, 3, 4, 6</td><td>5</td><td><b>5</b></td></tr>
+<tr><td class="num">4</td><td><b>E1</b></td><td>1, 3, 4, 6</td><td>1, 3, 4</td><td>1, 3, 4, 5, 6</td><td>2</td><td><b>2</b></td></tr>
+<tr><td class="num">5</td><td><b>A1</b></td><td>1, 2, 3, 4, 6</td><td>1, 3, 4</td><td>1, 3, 6</td><td>5</td><td><b>5</b></td></tr>
+<tr><td class="num">6</td><td><b>C2</b></td><td>1, 3, 5, 6</td><td>1, 3, 4, 6</td><td>1, 3, 5, 6</td><td>2</td><td><b>2</b></td></tr>
+<tr><td class="num">7</td><td><b>B2</b></td><td>1, 2, 3, 5, 6</td><td>1, 6</td><td>1, 2, 3, 5, 6</td><td>4</td><td><b>4</b></td></tr>
+<tr><td class="num">8</td><td><b>A4</b></td><td>3, 4, 6</td><td>1, 3, 4, 5</td><td>1, 3, 4, 6</td><td>2</td><td><b>2</b></td></tr>
+<tr><td class="num">9</td><td><b>B4</b></td><td>2, 3, 4, 6</td><td>1, 4, 6</td><td>1, 2, 3, 4, 6</td><td>5</td><td><b>5</b></td></tr>
+<tr><td class="num">10</td><td><b>D4</b></td><td>2, 3, 4, 5, 6</td><td>2, 3, 4, 5, 6</td><td>2, 3, 4, 5, 6</td><td>1</td><td><b>1</b></td></tr>
+<tr><td class="num">11</td><td><b>A5</b></td><td>1, 2, 4</td><td>1, 2, 3, 4, 5</td><td>1, 4</td><td>6</td><td><b>6</b></td></tr>
+<tr><td class="num">12</td><td><b>B5</b></td><td>1, 2, 4, 6</td><td>1, 4, 5, 6</td><td>1, 4, 6</td><td>3</td><td><b>3</b></td></tr>
+<tr><td class="num">13</td><td><b>E5</b></td><td>1, 2, 3, 4, 6</td><td>1, 2, 3, 4</td><td>1, 2, 3, 4</td><td>5</td><td><b>5</b></td></tr>
+<tr><td class="num">14</td><td><b>B6</b></td><td>1, 3, 4</td><td>1, 3, 4, 5, 6</td><td>1, 3, 4, 6</td><td>2</td><td><b>2</b></td></tr>
+<tr><td class="num">15</td><td><b>C6</b></td><td>1, 2, 3, 4</td><td>1, 2, 3, 4, 6</td><td>1, 2, 3, 4, 6</td><td>5</td><td><b>5</b></td></tr>
+<tr><td class="num">16</td><td><b>E6</b></td><td>1, 2, 3, 4, 5</td><td>1, 2, 3, 4, 5</td><td>1, 2, 3, 4, 5</td><td>6</td><td><b>6</b></td></tr>
+</tbody></table></div>
+</div></details>
+<p>Každé napsané číslo „odemkne“ další políčko. Například po <code>D3 = 5</code> chybí v řádku 3 už jen 2, takže <code>F3 = 2</code>. Hádat nebylo potřeba ani jednou.</p>
+</section>
+
+<section id="priklad2">
+<h2>Příklad 2: pokus, spor a návrat</h2>
+<p>Zkus i tady najít políčko s jedinou možností.</p>
+<div class="sd-explore"><div id="x2"></div><div class="sd-panel" id="x2p"></div></div>
+<details class="q"><summary>Kandidáti všech prázdných políček na začátku</summary><div class="a">
+<div class="tbl"><table><thead><tr><th>políčko</th><th>kandidáti</th></tr></thead><tbody>
+<tr><td><b>A1</b></td><td>1, 4</td></tr>
+<tr><td><b>B1</b></td><td>1, 4</td></tr>
+<tr><td><b>A3</b></td><td>1, 2, 3</td></tr>
+<tr><td><b>B3</b></td><td>1, 5</td></tr>
+<tr><td><b>C3</b></td><td>1, 5</td></tr>
+<tr><td><b>E3</b></td><td>2, 3, 5</td></tr>
+<tr><td><b>A4</b></td><td>2, 3, 4, 6</td></tr>
+<tr><td><b>B4</b></td><td>4, 5</td></tr>
+<tr><td><b>C4</b></td><td>4, 5, 6</td></tr>
+<tr><td><b>D4</b></td><td>2, 5</td></tr>
+<tr><td><b>E4</b></td><td>2, 3, 5</td></tr>
+<tr><td><b>A5</b></td><td>1, 6</td></tr>
+<tr><td><b>C5</b></td><td>1, 5, 6</td></tr>
+<tr><td><b>D5</b></td><td>2, 5, 6</td></tr>
+<tr><td><b>E5</b></td><td>2, 5</td></tr>
+<tr><td><b>A6</b></td><td>4, 6</td></tr>
+<tr><td><b>C6</b></td><td>4, 5, 6</td></tr>
+<tr><td><b>D6</b></td><td>5, 6</td></tr>
+</tbody></table></div>
+<p>Žádné políčko nemá jediného kandidáta. Nejméně (dva) mají <code>A1</code>, <code>B1</code>, <code>B3</code>, <code>C3</code> a další. Bereme první z nich, <code>A1</code>: může tam být 1, nebo 4.</p>
+</div></details>
+<div class="note warn"><b class="lbl">Ani lidský trik tu nepomůže</b><p>Zkušený řešitel hledá i opačně: „kam v tomhle řádku může jít trojka?“ Pokud jen na jedno místo, napíše ji tam. V tomto zadání ale každá číslice může v každém řádku, sloupci i čtverci aspoň na dvě místa. Bez hádání to nejde.</p></div>
+<h3>Krok za krokem</h3>
+<div class="sd-step" id="s2"></div>
+<p class="sd-legend"><span class="lg-given">zadané</span><span class="lg-put">doplněné s jistotou</span><span class="lg-guess">pokus</span><span class="lg-dead">spor</span></p>
+<h3>Co se stalo</h3>
+<ol>
+  <li><strong>Pokus <code>A1 = 1</code>.</strong> Pak už jde všechno jen s jedinou možností: <code>B1 = 4</code> (zbývá v prvním řádku), <code>B4 = 5</code> a <code>B3 = 1</code>.</li>
+  <li><strong>Spor v <code>C3</code>.</strong> Řádek 3 už obsahuje 1, 4 a 6, sloupec C obsahuje 2 a 3, čtverec obsahuje 1 a 5. Zabraných je všech šest číslic, do <code>C3</code> nejde nic.</li>
+  <li><strong>Návrat.</strong> Všechno od pokusu (<code>B3</code>, <code>B4</code>, <code>B1</code> a <code>A1</code>) smažeme. Jediné nejisté místo byl pokus, takže <code>A1 = 1</code> je špatně.</li>
+  <li><strong><code>A1 = 4</code>.</strong> Je to zbývající možnost, takže musí platit. Odtud už zase stačí jediné možnosti a za 17 dalších kroků je sudoku vyřešené.</li>
+</ol>
+<svg class="sd-tree-svg" viewBox="0 0 1000 230" role="img" aria-label="Strom prohledávání příkladu 2: větev A1 = 1 končí sporem v C3, větev A1 = 4 vede k řešení">
+<path class="sd-t-edge " d="M96 115 C 126 115, 99.5 115, 129.5 115"/>
+<path class="sd-t-edge is-bad" d="M210.5 115 C 240.5 115, 234 50, 264 50"/>
+<path class="sd-t-edge is-bad" d="M336 50 C 366 50, 354 50, 384 50"/>
+<path class="sd-t-edge is-bad" d="M456 50 C 486 50, 454 50, 484 50"/>
+<path class="sd-t-edge is-bad" d="M556 50 C 586 50, 554 50, 584 50"/>
+<path class="sd-t-edge is-bad" d="M656 50 C 686 50, 661 50, 691 50"/>
+<path class="sd-t-edge is-ok" d="M210.5 115 C 240.5 115, 234 180, 264 180"/>
+<path class="sd-t-edge is-ok" d="M336 180 C 366 180, 354 180, 384 180"/>
+<path class="sd-t-edge is-ok" d="M456 180 C 486 180, 454 180, 484 180"/>
+<path class="sd-t-edge is-ok" d="M556 180 C 586 180, 554 180, 584 180"/>
+<path class="sd-t-edge is-ok" d="M656 180 C 686 180, 635 180, 665 180"/>
+<path class="sd-t-edge is-ok" d="M775 180 C 805 180, 760 180, 790 180"/>
+<g class="sd-t-node "><rect x="24" y="100" width="72" height="30" rx="9"/><text x="60" y="120" text-anchor="middle">zadání</text></g>
+<g class="sd-t-node is-guess"><rect x="129.5" y="100" width="81" height="30" rx="9"/><text x="170" y="120" text-anchor="middle">A1: 1/4</text></g>
+<g class="sd-t-node is-guess"><rect x="264" y="35" width="72" height="30" rx="9"/><text x="300" y="55" text-anchor="middle">A1 = 1</text></g>
+<g class="sd-t-node "><rect x="384" y="35" width="72" height="30" rx="9"/><text x="420" y="55" text-anchor="middle">B1 = 4</text></g>
+<g class="sd-t-node "><rect x="484" y="35" width="72" height="30" rx="9"/><text x="520" y="55" text-anchor="middle">B4 = 5</text></g>
+<g class="sd-t-node "><rect x="584" y="35" width="72" height="30" rx="9"/><text x="620" y="55" text-anchor="middle">B3 = 1</text></g>
+<g class="sd-t-node is-bad"><rect x="691" y="35" width="58" height="30" rx="9"/><text x="720" y="55" text-anchor="middle">C3 ✗</text></g>
+<g class="sd-t-node is-guess"><rect x="264" y="165" width="72" height="30" rx="9"/><text x="300" y="185" text-anchor="middle">A1 = 4</text></g>
+<g class="sd-t-node "><rect x="384" y="165" width="72" height="30" rx="9"/><text x="420" y="185" text-anchor="middle">B1 = 1</text></g>
+<g class="sd-t-node "><rect x="484" y="165" width="72" height="30" rx="9"/><text x="520" y="185" text-anchor="middle">B3 = 5</text></g>
+<g class="sd-t-node "><rect x="584" y="165" width="72" height="30" rx="9"/><text x="620" y="185" text-anchor="middle">C3 = 1</text></g>
+<g class="sd-t-node "><rect x="665" y="165" width="110" height="30" rx="9"/><text x="720" y="185" text-anchor="middle">… 14 dalších</text></g>
+<g class="sd-t-node is-ok"><rect x="790" y="165" width="100" height="30" rx="9"/><text x="840" y="185" text-anchor="middle">✓ vyřešeno</text></g>
+<text class="sd-t-lab" x="300" y="22" text-anchor="middle">1. pokus</text><text class="sd-t-lab" x="300" y="222" text-anchor="middle">2. pokus</text>
+<text class="sd-t-lab" x="720" y="22" text-anchor="middle">spor → návrat k volbě</text>
+</svg>
+<details class="q"><summary>Celý postup v tabulce</summary><div class="a">
+<div class="tbl"><table>
+<thead><tr><th>krok</th><th>políčko</th><th>v řádku</th><th>ve sloupci</th><th>ve čtverci</th><th>zbývá</th><th>píšeme</th></tr></thead><tbody>
+<tr class="sd-tr-guess"><td class="num">1</td><td><b>A1</b></td><td>2, 3, 5, 6</td><td>5</td><td>2, 3, 5, 6</td><td>1, 4</td><td><b>1</b> (pokus)</td></tr>
+<tr><td class="num">2</td><td><b>B1</b></td><td>1, 2, 3, 5, 6</td><td>2, 3, 6</td><td>1, 2, 3, 5, 6</td><td>4</td><td><b>4</b></td></tr>
+<tr><td class="num">3</td><td><b>B4</b></td><td>1</td><td>2, 3, 4, 6</td><td>–</td><td>5</td><td><b>5</b></td></tr>
+<tr><td class="num">4</td><td><b>B3</b></td><td>4, 6</td><td>2, 3, 4, 5, 6</td><td>5</td><td>1</td><td><b>1</b></td></tr>
+<tr class="sd-tr-dead"><td></td><td><b>C3</b></td><td>1, 4, 6</td><td>2, 3</td><td>1, 5</td><td><b>nic</b></td><td>spor</td></tr>
+<tr class="sd-tr-undo"><td></td><td colspan="6"><b>Návrat:</b> mažeme vše od pokusu a v A1 zkusíme další možnost.</td></tr>
+<tr class="sd-tr-guess"><td class="num">5</td><td><b>A1</b></td><td>2, 3, 5, 6</td><td>5</td><td>2, 3, 5, 6</td><td>1, 4</td><td><b>4</b> (zbývající možnost)</td></tr>
+<tr><td class="num">6</td><td><b>B1</b></td><td>2, 3, 4, 5, 6</td><td>2, 3, 6</td><td>2, 3, 4, 5, 6</td><td>1</td><td><b>1</b></td></tr>
+<tr><td class="num">7</td><td><b>B3</b></td><td>4, 6</td><td>1, 2, 3, 6</td><td>–</td><td>5</td><td><b>5</b></td></tr>
+<tr><td class="num">8</td><td><b>C3</b></td><td>4, 5, 6</td><td>2, 3</td><td>5</td><td>1</td><td><b>1</b></td></tr>
+<tr><td class="num">9</td><td><b>B4</b></td><td>1</td><td>1, 2, 3, 5, 6</td><td>1, 5</td><td>4</td><td><b>4</b></td></tr>
+<tr><td class="num">10</td><td><b>C4</b></td><td>1, 4</td><td>1, 2, 3</td><td>1, 4, 5</td><td>6</td><td><b>6</b></td></tr>
+<tr><td class="num">11</td><td><b>C5</b></td><td>3, 4</td><td>1, 2, 3, 6</td><td>2, 3</td><td>5</td><td><b>5</b></td></tr>
+<tr><td class="num">12</td><td><b>E5</b></td><td>3, 4, 5</td><td>1, 4, 6</td><td>1, 3, 4</td><td>2</td><td><b>2</b></td></tr>
+<tr><td class="num">13</td><td><b>E3</b></td><td>1, 4, 5, 6</td><td>1, 2, 4, 6</td><td>1, 4, 6</td><td>3</td><td><b>3</b></td></tr>
+<tr><td class="num">14</td><td><b>A3</b></td><td>1, 3, 4, 5, 6</td><td>4, 5</td><td>1, 4, 5, 6</td><td>2</td><td><b>2</b></td></tr>
+<tr><td class="num">15</td><td><b>A4</b></td><td>1, 4, 6</td><td>2, 4, 5</td><td>1, 2, 4, 5, 6</td><td>3</td><td><b>3</b></td></tr>
+<tr><td class="num">16</td><td><b>E4</b></td><td>1, 3, 4, 6</td><td>1, 2, 3, 4, 6</td><td>1, 3, 4, 6</td><td>5</td><td><b>5</b></td></tr>
+<tr><td class="num">17</td><td><b>D4</b></td><td>1, 3, 4, 5, 6</td><td>1, 3, 4</td><td>1, 3, 4, 5, 6</td><td>2</td><td><b>2</b></td></tr>
+<tr><td class="num">18</td><td><b>D5</b></td><td>2, 3, 4, 5</td><td>1, 2, 3, 4</td><td>1, 2, 3, 4</td><td>6</td><td><b>6</b></td></tr>
+<tr><td class="num">19</td><td><b>A5</b></td><td>2, 3, 4, 5, 6</td><td>2, 3, 4, 5</td><td>2, 3, 5</td><td>1</td><td><b>1</b></td></tr>
+<tr><td class="num">20</td><td><b>A6</b></td><td>1, 2, 3</td><td>1, 2, 3, 4, 5</td><td>1, 2, 3, 5</td><td>6</td><td><b>6</b></td></tr>
+<tr><td class="num">21</td><td><b>C6</b></td><td>1, 2, 3, 6</td><td>1, 2, 3, 5, 6</td><td>1, 2, 3, 5, 6</td><td>4</td><td><b>4</b></td></tr>
+<tr><td class="num">22</td><td><b>D6</b></td><td>1, 2, 3, 4, 6</td><td>1, 2, 3, 4, 6</td><td>1, 2, 3, 4, 6</td><td>5</td><td><b>5</b></td></tr>
+</tbody></table></div>
+</div></details>
+</section>
+
+<p class="part">V Pythonu</p>
+
+<section id="mrizka">
+<h2>1. Mřížka</h2>
+<p>Mřížku uložíme jako <strong>seznam řádků</strong>, každý řádek je seznam čísel. Prázdné políčko je <code>0</code>. Políčko v řádku <code>r</code> a sloupci <code>s</code> je <code>mrizka[r][s]</code>, oba indexy počítáme od nuly.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">VYSKA, SIRKA = 2, 3          # rozměry jednoho čtverce: 2 × 3
+N = VYSKA * SIRKA            # velikost mřížky: 6 × 6, číslice 1 až 6
+
+ZADANI = [                   # 0 znamená prázdné políčko
+    [0, 0, 2, 3, 6, 5],
+    [5, 6, 3, 1, 4, 2],
+    [0, 0, 0, 4, 0, 6],
+    [0, 0, 0, 0, 0, 1],
+    [0, 3, 0, 0, 0, 4],
+    [0, 2, 0, 0, 1, 3],
+]
+
+print(ZADANI[0][2])          # řádek 1, sloupec C: vypíše 2</code></pre>
+<p>Rozměry čtverce máme v konstantách. Když je změníš na <code>3, 3</code>, program bude řešit klasické sudoku 9 × 9.</p>
+</section>
+
+<section id="kandidati">
+<h2>2. Kandidáti</h2>
+<p>Funkce <code>kandidati</code> posbírá do množiny všechno, co je v řádku, sloupci a čtverci políčka, a vrátí číslice, které tam nejsou.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def kandidati(mrizka, r, s):
+    """Číslice, které jde napsat do políčka (r, s) podle pravidel."""
+    pouzite = set(mrizka[r])                            # řádek
+    pouzite |= {mrizka[i][s] for i in range(N)}         # sloupec
+    r0 = r // VYSKA * VYSKA                             # levý horní roh čtverce
+    s0 = s // SIRKA * SIRKA
+    for i in range(r0, r0 + VYSKA):                     # čtverec
+        for j in range(s0, s0 + SIRKA):
+            pouzite.add(mrizka[i][j])
+    return [c for c in range(1, N + 1) if c not in pouzite]</code></pre>
+<p>Kde začíná čtverec? Celočíselným dělením a vynásobením zaokrouhlíme index dolů na násobek velikosti čtverce. Políčko v řádku <code>r = 3</code> (řádek 4) leží ve čtverci, který začíná řádkem <code>3 // 2 * 2 = 2</code> (řádek 3). Sloupec <code>s = 4</code> (E) leží ve čtverci od sloupce <code>4 // 3 * 3 = 3</code> (D).</p>
+<pre><code>&gt;&gt;&gt; kandidati(ZADANI, 0, 0)      # políčko A1
+[1, 4]</code></pre>
+</section>
+
+<section id="policko">
+<h2>3. Políčko s nejméně možnostmi</h2>
+<p>Projdeme všechna prázdná políčka a zapamatujeme si to s nejkratším seznamem kandidátů. Když je víc stejně dobrých, vyhraje první (shora, zleva). Funkce vrátí trojici <code>(r, s, kandidáti)</code>, nebo <code>None</code>, když už prázdné políčko není.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def najdi_policko(mrizka):
+    """Prázdné políčko s nejméně možnostmi, nebo None, když je vše vyplněné."""
+    nejlepsi = None
+    for r in range(N):
+        for s in range(N):
+            if mrizka[r][s] == 0:
+                moznosti = kandidati(mrizka, r, s)
+                if nejlepsi is None or len(moznosti) &lt; len(nejlepsi[2]):
+                    nejlepsi = (r, s, moznosti)
+    return nejlepsi</code></pre>
+<p>Políčko s jediným kandidátem vyhraje vždy, pokud existuje. Pokud ne, vybere se políčko s nejméně možnostmi, a tam se hádá. Je to stejný postup, jaký používáš ručně.</p>
+</section>
+
+<section id="res">
+<h2>4. Řešení s návratem</h2>
+<p>Funkce <code>res</code> vyplní jedno políčko a pak zavolá sama sebe na zbytek mřížky. Takové funkci se říká <dfn>rekurzivní</dfn>. Vrací <code>True</code>, když se podaří mřížku dovyplnit, a <code>False</code> při sporu.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def res(mrizka):
+    """Doplní mřížku. Vrátí True, když se to povede, jinak False."""
+    policko = najdi_policko(mrizka)
+    if policko is None:
+        return True                       # vše vyplněné: vyřešeno
+    r, s, moznosti = policko
+    if not moznosti:
+        return False                      # spor: do políčka nejde nic
+    for cislo in moznosti:
+        mrizka[r][s] = cislo              # zkusíme číslici
+        if res(mrizka):                   # a řešíme zbytek
+            return True
+        mrizka[r][s] = 0                  # nevyšlo to: smažeme a zkusíme další
+    return False                          # žádná číslice nevyšla</code></pre>
+<p>Tři situace:</p>
+<ul>
+  <li><strong>Žádné prázdné políčko:</strong> hotovo, vracíme <code>True</code> a to „probublá“ všemi vnořenými voláními až nahoru.</li>
+  <li><strong>Prázdné políčko bez kandidátů:</strong> spor, vracíme <code>False</code>. Volající funkce smaže svoje políčko a zkusí další číslici.</li>
+  <li><strong>Jinak</strong> zkoušíme kandidáty jednoho po druhém. U jediné možnosti cyklus proběhne jednou. Když nevyjde žádná, vracíme <code>False</code> o úroveň výš, tedy ještě dál zpátky.</li>
+</ul>
+<div class="note tip"><b class="lbl">Kde je zásobník?</b><p>U džbánů měl prohledávání do hloubky zásobník. Tady ho nevidíš, ale je tam: každé rozpracované volání <code>res</code> čeká, až se vnořené vrátí. Python si je ukládá do <strong>zásobníku volání</strong>. Návrat v backtrackingu je obyčejný návrat z funkce.</p></div>
+</section>
+
+<section id="program">
+<h2>Celý program</h2>
+<p>Ve finální verzi program navíc vypisuje každý krok, počítá napsané číslice a políčka označuje písmenem a číslem. Ulož ho jako <code>sudoku.py</code> a spusť příkazem <code>python sudoku.py</code>.</p>
+<div class="codehead"><span>sudoku.py</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python"># Řešení sudoku prohledáváním s návratem (backtracking)
+
+VYSKA, SIRKA = 2, 3          # rozměry jednoho čtverce: 2 × 3
+N = VYSKA * SIRKA            # velikost mřížky: 6 × 6, číslice 1 až 6
+SLOUPCE = "ABCDEFGHI"        # sloupce označujeme písmeny, řádky čísly
+
+ZADANI = [                   # 0 znamená prázdné políčko
+    [0, 0, 2, 3, 6, 5],
+    [5, 6, 3, 1, 4, 2],
+    [0, 0, 0, 4, 0, 6],
+    [0, 0, 0, 0, 0, 1],
+    [0, 3, 0, 0, 0, 4],
+    [0, 2, 0, 0, 1, 3],
+]
+
+VYPISOVAT = True             # False = jen výsledek, bez jednotlivých kroků
+kroku = 0                    # kolikrát jsme napsali číslici
+
+
+def zprava(text):
+    if VYPISOVAT:
+        print(text)
+
+
+def nazev(r, s):
+    """Políčko v řádku r a sloupci s jako text, např. C4."""
+    return SLOUPCE[s] + str(r + 1)
+
+
+def kandidati(mrizka, r, s):
+    """Číslice, které jde napsat do políčka (r, s) podle pravidel."""
+    pouzite = set(mrizka[r])                            # řádek
+    pouzite |= {mrizka[i][s] for i in range(N)}         # sloupec
+    r0 = r // VYSKA * VYSKA                             # levý horní roh čtverce
+    s0 = s // SIRKA * SIRKA
+    for i in range(r0, r0 + VYSKA):                     # čtverec
+        for j in range(s0, s0 + SIRKA):
+            pouzite.add(mrizka[i][j])
+    return [c for c in range(1, N + 1) if c not in pouzite]
+
+
+def najdi_policko(mrizka):
+    """Prázdné políčko s nejméně možnostmi, nebo None, když je vše vyplněné."""
+    nejlepsi = None
+    for r in range(N):
+        for s in range(N):
+            if mrizka[r][s] == 0:
+                moznosti = kandidati(mrizka, r, s)
+                if nejlepsi is None or len(moznosti) &lt; len(nejlepsi[2]):
+                    nejlepsi = (r, s, moznosti)
+    return nejlepsi
+
+
+def res(mrizka):
+    """Doplní mřížku. Vrátí True, když se to povede, jinak False."""
+    global kroku
+    policko = najdi_policko(mrizka)
+    if policko is None:
+        return True                       # vše vyplněné: vyřešeno
+    r, s, moznosti = policko
+    if not moznosti:
+        zprava(f"   slepá ulička: do {nazev(r, s)} nejde napsat nic")
+        return False
+    if len(moznosti) &gt; 1:
+        zprava(f"   volba v {nazev(r, s)}: možnosti {moznosti}")
+    for cislo in moznosti:
+        kroku += 1
+        mrizka[r][s] = cislo
+        zprava(f"{kroku:3}. {nazev(r, s)} = {cislo}"
+               + ("" if len(moznosti) == 1 else f"   (zkouším {cislo} z {moznosti})"))
+        if res(mrizka):
+            return True
+        mrizka[r][s] = 0                  # nevyšlo to: smažeme a zkusíme dál
+        zprava(f"   zpět: mažu {nazev(r, s)}")
+    return False
+
+
+def vypis(mrizka):
+    print("   " + " ".join(SLOUPCE[:N]))
+    for r in range(N):
+        print(f"{r + 1:2} " + " ".join(str(c) if c else "." for c in mrizka[r]))
+
+
+mrizka = [radek[:] for radek in ZADANI]   # kopie, zadání zůstane beze změny
+vypis(mrizka)
+print()
+if res(mrizka):
+    print()
+    vypis(mrizka)
+    print("Napsaných číslic:", kroku)
+else:
+    print("Sudoku nemá řešení.")</code></pre>
+<p>Výstup pro příklad 2:</p>
+<pre><code>   A B C D E F
+ 1 . . 2 3 6 5
+ 2 5 6 3 1 4 2
+ 3 . . . 4 . 6
+ 4 . . . . . 1
+ 5 . 3 . . . 4
+ 6 . 2 . . 1 3
+
+   volba v A1: možnosti [1, 4]
+  1. A1 = 1   (zkouším 1 z [1, 4])
+  2. B1 = 4
+  3. B4 = 5
+  4. B3 = 1
+   slepá ulička: do C3 nejde napsat nic
+   zpět: mažu B3
+   zpět: mažu B4
+   zpět: mažu B1
+   zpět: mažu A1
+  5. A1 = 4   (zkouším 4 z [1, 4])
+  6. B1 = 1
+  7. B3 = 5
+  8. C3 = 1
+  9. B4 = 4
+ 10. C4 = 6
+ 11. C5 = 5
+ 12. E5 = 2
+ 13. E3 = 3
+ 14. A3 = 2
+ 15. A4 = 3
+ 16. E4 = 5
+ 17. D4 = 2
+ 18. D5 = 6
+ 19. A5 = 1
+ 20. A6 = 6
+ 21. C6 = 4
+ 22. D6 = 5
+
+   A B C D E F
+ 1 4 1 2 3 6 5
+ 2 5 6 3 1 4 2
+ 3 2 5 1 4 3 6
+ 4 3 4 6 2 5 1
+ 5 1 3 5 6 2 4
+ 6 6 2 4 5 1 3
+Napsaných číslic: 22</code></pre>
+<p>Je to přesně ten postup, který ukazuje krokovač výše. Pro příklad 1 nahraď <code>ZADANI</code> tímhle:</p>
+<div class="codehead"><span>Příklad 1</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">ZADANI = [
+    [0, 6, 1, 3, 0, 4],
+    [3, 0, 0, 6, 1, 0],
+    [4, 1, 6, 0, 3, 0],
+    [0, 0, 3, 0, 4, 6],
+    [0, 0, 4, 2, 0, 1],
+    [1, 0, 0, 4, 0, 3],
+]</code></pre>
+</section>
+
+<section id="devet">
+<h2>Sudoku 9 × 9</h2>
+<p>Nastav <code>VYSKA, SIRKA = 3, 3</code>, nahraď zadání tímhle sudoku s 23 zadanými čísly a nastav <code>VYPISOVAT = False</code>, ať se nevypisuje každý krok.</p>
+<div class="codehead"><span>Sudoku 9 × 9</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">VYSKA, SIRKA = 3, 3
+ZADANI = [
+    [0, 0, 0, 8, 0, 7, 4, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 3],
+    [0, 0, 0, 3, 5, 0, 0, 9, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [4, 6, 0, 0, 0, 0, 7, 0, 0],
+    [0, 1, 5, 0, 0, 0, 3, 0, 6],
+    [0, 0, 9, 4, 0, 0, 0, 0, 0],
+    [5, 0, 0, 0, 8, 0, 0, 6, 0],
+    [8, 0, 0, 7, 0, 0, 0, 1, 2],
+]</code></pre>
+<p>Program ho vyřeší okamžitě a napíše přitom <strong>147 číslic</strong>. Hádat musí třináctkrát.</p>
+<pre><code>   A B C D E F G H I
+ 1 . . . 8 . 7 4 . .
+ 2 . . . . . . . . 3
+ 3 . . . 3 5 . . 9 .
+ 4 . . . . . . . . .
+ 5 4 6 . . . . 7 . .
+ 6 . 1 5 . . . 3 . 6
+ 7 . . 9 4 . . . . .
+ 8 5 . . . 8 . . 6 .
+ 9 8 . . 7 . . . 1 2
+
+
+   A B C D E F G H I
+ 1 3 9 6 8 2 7 4 5 1
+ 2 2 5 8 1 9 4 6 7 3
+ 3 1 4 7 3 5 6 2 9 8
+ 4 9 8 3 6 7 2 1 4 5
+ 5 4 6 2 5 3 1 7 8 9
+ 6 7 1 5 9 4 8 3 2 6
+ 7 6 2 9 4 1 5 8 3 7
+ 8 5 7 1 2 8 3 9 6 4
+ 9 8 3 4 7 6 9 5 1 2
+Napsaných číslic: 147</code></pre>
+<p>Teď si vyzkoušej, co dělá výběr políčka. V <code>najdi_policko</code> nahraď podmínku tak, aby funkce vrátila hned <strong>první</strong> prázdné políčko, které najde (shora, zleva):</p>
+<div class="codehead"><span>Naivní výběr políčka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">            if mrizka[r][s] == 0:
+                moznosti = kandidati(mrizka, r, s)
+                return (r, s, moznosti)       # první prázdné políčko</code></pre>
+<p>Program pak napíše <strong>2 091 289 číslic</strong>, asi 14 000× víc, a na běžném počítači mu to trvá několik sekund (u nás 8). Hádá totiž i tam, kde by stačilo vybrat políčko s jedinou možností, a chybu odhalí až mnohem později.</p>
+</section>
+
+<p class="part">Procvičení</p>
+
+<section id="vyzkousej">
+<h2>Vyzkoušej</h2>
+<details class="q"><summary>1. Spusť program pro příklad 1. Kolik číslic napíše a kolikrát musí hádat?</summary><div class="a"><p>16 číslic, tedy přesně tolik, kolik je prázdných políček, a ani jednou nehádá. Ve výpisu není žádný řádek „volba“ ani „zpět“.</p></div></details>
+<details class="q"><summary>2. V příkladu 2 změň <code>for cislo in moznosti:</code> na <code>for cislo in reversed(moznosti):</code>. Co se stane?</summary><div class="a"><p>Program zkouší kandidáty od největšího, takže v <code>A1</code> zkusí nejdřív 4. To je správně, ke sporu nedojde a napíše jen 18 číslic místo 22. Měl štěstí. U jiného sudoku by mu obrácené pořadí naopak uškodilo.</p></div></details>
+<details class="q"><summary>3. Použij u příkladu 2 naivní výběr políčka (první prázdné). Kolik číslic program napíše?</summary><div class="a"><p>48 místo 22. I u malého sudoku je rozdíl vidět, u 9 × 9 je obrovský.</p></div></details>
+<details class="q"><summary>4. Přidej do zadání příkladu 2 číslici 1 do políčka A1 (to byla špatná volba). Co program vypíše?</summary><div class="a"><p>„Sudoku nemá řešení.“ Po třech napsaných číslicích (<code>B1 = 4</code>, <code>B4 = 5</code>, <code>B3 = 1</code>) narazí na spor v <code>C3</code> a nemá kam se vrátit, protože nikde nehádal. Pravidla přitom zadání neporušuje: v řádku, sloupci ani čtverci se nic neopakuje. Že řešení nemá, se ukáže až hledáním.</p></div></details>
+<details class="q"><summary>5. Smaž ze zadání příkladu 2 číslici v políčku C1 (dvojku nahraď nulou). Kolik má sudoku řešení?</summary><div class="a">
+<p>Sedm. Program to nepozná, protože skončí u prvního řešení. Na spočítání všech řešení potřebuješ funkci, která se po nalezení řešení nezastaví:</p>
+<div class="codehead"><span>Počet řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">def pocet_reseni(mrizka):
+    policko = najdi_policko(mrizka)
+    if policko is None:
+        return 1                          # jedno vyplnění, jedno řešení
+    r, s, moznosti = policko
+    pocet = 0
+    for cislo in moznosti:
+        mrizka[r][s] = cislo
+        pocet += pocet_reseni(mrizka)     # sečteme řešení všech větví
+        mrizka[r][s] = 0
+    return pocet
+
+print(pocet_reseni([radek[:] for radek in ZADANI]))</code></pre>
+<p>Pořádné sudoku má právě jedno řešení. Tvůrci sudoku to kontrolují přesně takhle.</p>
+</div></details>
+<details class="q"><summary>6. Kde v programu je „návrat“ z ručního postupu?</summary><div class="a"><p>Řádek <code>mrizka[r][s] = 0</code>. Když vnořené volání vrátí <code>False</code>, políčko se smaže. Protože se to stane v každém vnořeném volání postupně, smaže se všechno od pokusu, stejně jako když na papíře gumuješ vše od zakroužkovaného čísla.</p></div></details>
+</section>
+
+<p class="foot">Praktická ukázka k materiálu Sudoku a návrat. <a href="02_sudoku.html">Prezentace</a> · <a href="02_sudoku_studijni_text.html">Studijní text</a></p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
+    });
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+
+  /* ===== sudoku: výpočet kroků (stejný postup jako program v Pythonu) a krokovač ===== */
+  var SD_COLS = "ABCDEFGHI";
+  function sdName(r, c) { return SD_COLS[c] + (r + 1); }
+  function sdList(a) { return a.length ? a.join(", ") : "nic"; }
+  function sdUsed(g, r, c, H, W) {
+    var N = H * W, row = [], col = [], box = [], i, j;
+    for (i = 0; i < N; i++) { if (g[r][i]) row.push(g[r][i]); if (g[i][c]) col.push(g[i][c]); }
+    var r0 = Math.floor(r / H) * H, c0 = Math.floor(c / W) * W;
+    for (i = r0; i < r0 + H; i++) for (j = c0; j < c0 + W; j++) if (g[i][j]) box.push(g[i][j]);
+    var srt = function (a) { return a.slice().sort(function (x, y) { return x - y; }); };
+    return { row: srt(row), col: srt(col), box: srt(box) };
+  }
+  function sdCands(g, r, c, H, W) {
+    var u = sdUsed(g, r, c, H, W), all = u.row.concat(u.col, u.box), out = [];
+    for (var d = 1; d <= H * W; d++) if (all.indexOf(d) < 0) out.push(d);
+    return out;
+  }
+  function sdPick(g, H, W) {
+    var N = H * W, best = null;
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) if (!g[r][c]) {
+      var k = sdCands(g, r, c, H, W);
+      if (!best || k.length < best.k.length) best = { r: r, c: c, k: k };
+    }
+    return best;
+  }
+  function sdWhy(g, r, c, H, W) {
+    var u = sdUsed(g, r, c, H, W);
+    return "V řádku " + (r + 1) + " je " + sdList(u.row) + ", ve sloupci " + SD_COLS[c] + " je " + sdList(u.col) + " a ve čtverci je " + sdList(u.box) + ".";
+  }
+
+  function sdFrames(P, H, W) {
+    var N = H * W, g = P.map(function (x) { return x.slice(); });
+    var kind = P.map(function (x) { return x.map(function (v) { return v ? "given" : ""; }); });
+    var frames = [], rows = [], cur = -1, pending = [], written = 0, erased = 0;
+    function cands() {
+      return g.map(function (row, r) { return row.map(function (v, c) { return v ? null : sdCands(g, r, c, H, W); }); });
+    }
+    function snap(type, msg, cell, extra) {
+      frames.push({ type: type, msg: msg, cell: cell || null, g: g.map(function (x) { return x.slice(); }),
+        kind: kind.map(function (x) { return x.slice(); }), cands: cands(),
+        rows: JSON.parse(JSON.stringify(rows)), extra: extra || null });
+    }
+    var start = sdPick(g, H, W);
+    snap("start", start && start.k.length === 1
+      ? "Zadání. Hledáme prázdné políčko, do kterého jde napsat jen jedna číslice."
+      : "Zadání. Zkus najít políčko, do kterého jde napsat jen jedna číslice.");
+    function rec() {
+      var p = sdPick(g, H, W);
+      if (!p) {
+        if (cur >= 0) rows[cur].state = "ok";
+        snap("solved", "<b>Hotovo, sudoku je vyřešené.</b> Napsali jsme " + written + " číslic" + (erased ? ", z toho " + erased + " jsme museli smazat." : " a nic jsme nemuseli mazat."));
+        return true;
+      }
+      var name = sdName(p.r, p.c);
+      if (!p.k.length) {
+        if (cur >= 0) rows[cur].state = "bad";
+        rows[cur].items.push({ t: name + " ✗", bad: true });
+        snap("dead", "<b>Spor! Do " + name + " nejde napsat nic.</b> " + sdWhy(g, p.r, p.c, H, W) + " Zabraných je všech " + N + " číslic. Někde jsme se museli splést.", [p.r, p.c]);
+        return false;
+      }
+      if (p.k.length > 1) {
+        snap("choice", "<b>Žádné políčko nemá jedinou možnost.</b> Nejméně možností má " + name + ": " + p.k.join(" nebo ") + ". " + sdWhy(g, p.r, p.c, H, W) + " Musíme si vybrat. Zkusíme nejdřív " + p.k[0] + " a zapamatujeme si, že je to jen pokus.", [p.r, p.c]);
+      }
+      for (var i = 0; i < p.k.length; i++) {
+        var d = p.k[i], why = sdWhy(g, p.r, p.c, H, W);
+        if (p.k.length > 1) { rows.push({ label: name + " = " + d, items: [], state: "run" }); cur = rows.length - 1; }
+        else if (cur < 0) { rows.push({ label: "start", items: [], state: "run" }); cur = 0; }
+        g[p.r][p.c] = d; kind[p.r][p.c] = p.k.length > 1 ? "guess" : "put"; written++;
+        if (p.k.length > 1) {
+          snap("guess", "<b>Pokus: " + name + " = " + d + ".</b> Nevíme, jestli je to správně. Pokud dojdeme ke sporu, vrátíme se sem a zkusíme " + p.k[i + 1 < p.k.length ? i + 1 : i] + ".", [p.r, p.c]);
+          if (i === p.k.length - 1) frames[frames.length - 1].msg = "<b>Zkusíme " + name + " = " + d + ".</b> Je to poslední možnost, takže musí být správná.";
+        } else {
+          rows[cur].items.push({ t: name + " = " + d });
+          snap("put", "<b>" + name + " = " + d + "</b>, jediná možnost. " + why + " Zbývá jen " + d + ".", [p.r, p.c]);
+        }
+        if (rec()) return true;
+        g[p.r][p.c] = 0; kind[p.r][p.c] = ""; erased++;
+        pending.push(name);
+        if (p.k.length > 1) {
+          rows[cur].state = "bad";
+          var nxt = p.k[i + 1];
+          snap("undo", "<b>Návrat.</b> Mažeme všechno, co jsme napsali od pokusu: " + pending.join(", ") + ". " + (nxt !== undefined ? "V " + name + " teď zkusíme druhou možnost, " + nxt + "." : "Ani jedna možnost nevyšla."), [p.r, p.c], { erased: pending.slice() });
+          pending = [];
+        }
+      }
+      return false;
+    }
+    rec();
+    return frames;
+  }
+
+  function sdBoard(host, H, W) {
+    var N = H * W, cells = [];
+    var b = document.createElement("div"); b.className = "sd-board sd-n" + N;
+    b.appendChild(document.createElement("span"));
+    for (var c = 0; c < N; c++) { var h = document.createElement("span"); h.className = "sd-lab"; h.textContent = SD_COLS[c]; b.appendChild(h); }
+    for (var r = 0; r < N; r++) {
+      var l = document.createElement("span"); l.className = "sd-lab"; l.textContent = r + 1; b.appendChild(l);
+      cells.push([]);
+      for (c = 0; c < N; c++) {
+        var e = document.createElement("div");
+        e.className = "sd-cell" + ((c + 1) % W === 0 && c < N - 1 ? " sd-br" : "") + ((r + 1) % H === 0 && r < N - 1 ? " sd-bb" : "");
+        b.appendChild(e); cells[r].push(e);
+      }
+    }
+    host.appendChild(b);
+    return { el: b, cells: cells, N: N, H: H, W: W };
+  }
+  function sdPaint(B, g, kind, cands, opt) {
+    opt = opt || {};
+    var N = B.N, hl = opt.cell, H = B.H, W = B.W;
+    for (var r = 0; r < N; r++) for (var c = 0; c < N; c++) {
+      var e = B.cells[r][c], v = g[r][c];
+      var inHl = hl && (hl[0] === r || hl[1] === c || (Math.floor(hl[0] / H) === Math.floor(r / H) && Math.floor(hl[1] / W) === Math.floor(c / W)));
+      e.classList.toggle("is-given", kind[r][c] === "given");
+      e.classList.toggle("is-put", kind[r][c] === "put");
+      e.classList.toggle("is-guess", kind[r][c] === "guess");
+      e.classList.toggle("is-hl", !!inHl && !(hl[0] === r && hl[1] === c));
+      e.classList.toggle("is-cur", !!hl && hl[0] === r && hl[1] === c);
+      e.classList.toggle("is-dead", !!hl && hl[0] === r && hl[1] === c && opt.type === "dead");
+      e.classList.toggle("is-erased", !!(opt.erased && opt.erased.indexOf(sdName(r, c)) >= 0));
+      e.classList.toggle("is-sel", !!(opt.sel && opt.sel[0] === r && opt.sel[1] === c));
+      if (v) { e.innerHTML = '<span class="sd-v">' + v + "</span>"; }
+      else if (opt.showCands && cands && cands[r][c]) {
+        var s = '<span class="sd-cands sd-c' + N + '">';
+        for (var d = 1; d <= N; d++) s += "<i>" + (cands[r][c].indexOf(d) >= 0 ? d : "") + "</i>";
+        e.innerHTML = s + "</span>";
+      } else if (opt.erased && opt.erased.indexOf(sdName(r, c)) >= 0) { e.innerHTML = '<span class="sd-x">×</span>'; }
+      else e.innerHTML = "";
+    }
+  }
+
+  function sdStepper(root, P, H, W, o) {
+    o = o || {};
+    var frames = sdFrames(P, H, W), fi = 0, show = o.cands !== false;
+    var btn = o.btnClass || "calc-btn";
+    root.innerHTML = '<div class="sd-ctrl"><button class="' + btn + '" data-a="prev">← Zpět</button><button class="' + btn + '" data-a="next">Krok →</button>' +
+      '<button class="' + btn + '" data-a="end">Do konce</button><button class="' + btn + '" data-a="reset">Znovu</button>' +
+      '<button class="' + btn + ' sd-tog" data-a="cands">Kandidáti</button><span class="sd-count"></span></div>' +
+      '<div class="sd-body"><div class="sd-left"></div><div class="sd-side"><p class="sd-msg" aria-live="polite"></p>' +
+      '<div class="sd-tree"><span class="sd-tree-lab">' + (o.treeLabel || "průběh") + '</span><div class="sd-rows"></div></div></div></div>';
+    var B = sdBoard(root.querySelector(".sd-left"), H, W);
+    function draw() {
+      var f = frames[fi];
+      sdPaint(B, f.g, f.kind, f.cands, { cell: f.cell, type: f.type, showCands: show, erased: f.extra && f.extra.erased });
+      root.querySelector(".sd-msg").innerHTML = f.msg;
+      root.querySelector(".sd-count").textContent = "krok " + fi + " z " + (frames.length - 1);
+      root.querySelector('[data-a="prev"]').disabled = fi === 0;
+      root.querySelector('[data-a="next"]').disabled = root.querySelector('[data-a="end"]').disabled = fi === frames.length - 1;
+      root.querySelector(".sd-tog").classList.toggle("is-active", show);
+      var rowsHtml = f.rows.map(function (rw) {
+        var head = rw.label === "start" ? "" : '<span class="sd-node sd-guessnode">' + rw.label + "</span>";
+        return '<div class="sd-row is-' + rw.state + '">' + head + rw.items.map(function (it) { return '<span class="sd-node' + (it.bad ? " sd-bad" : "") + '">' + it.t + "</span>"; }).join("") +
+          (rw.state === "ok" ? '<span class="sd-node sd-ok">✓ vyřešeno</span>' : "") + "</div>";
+      }).join("");
+      root.querySelector(".sd-rows").innerHTML = rowsHtml || '<span class="sd-empty">zatím nic</span>';
+    }
+    root.addEventListener("click", function (e) {
+      var a = e.target.closest("[data-a]"); if (!a) return;
+      var k = a.getAttribute("data-a");
+      if (k === "prev" && fi > 0) fi--;
+      if (k === "next" && fi < frames.length - 1) fi++;
+      if (k === "end") fi = frames.length - 1;
+      if (k === "reset") fi = 0;
+      if (k === "cands") show = !show;
+      draw();
+    });
+    draw();
+    return { frames: frames, draw: draw, minHeight: function () {
+      var m = root.querySelector(".sd-msg"), keep = fi, mx = 0; m.style.minHeight = "0px";
+      for (var i = 0; i < frames.length; i++) { fi = i; draw(); mx = Math.max(mx, m.offsetHeight); }
+      fi = keep; draw(); m.style.minHeight = mx + "px";
+    } };
+  }
+
+  /* mřížka, ve které jde kliknout na políčko a zobrazit jeho kandidáty */
+  function sdExplorer(root, P, H, W, panel, o) {
+    o = o || {};
+    var B = sdBoard(root, H, W), N = H * W, sel = null, show = false;
+    var kind = P.map(function (x) { return x.map(function (v) { return v ? "given" : ""; }); });
+    function cands() { return P.map(function (row, r) { return row.map(function (v, c) { return v ? null : sdCands(P, r, c, H, W); }); }); }
+    function draw() {
+      sdPaint(B, P, kind, cands(), { cell: sel, showCands: show, sel: sel });
+      if (!sel) { panel.innerHTML = o.intro || ""; return; }
+      var r = sel[0], c = sel[1], name = sdName(r, c);
+      if (P[r][c]) { panel.innerHTML = '<span class="meta">políčko ' + name + "</span><h3>Zadané číslo " + P[r][c] + "</h3><p>Klikni na prázdné políčko.</p>"; return; }
+      var u = sdUsed(P, r, c, H, W), k = sdCands(P, r, c, H, W);
+      panel.innerHTML = '<span class="meta">políčko ' + name + "</span><h3>" + (k.length === 1 ? "Jediná možnost: " + k[0] : k.length ? "Možnosti: " + k.join(", ") : "Žádná možnost") + "</h3>" +
+        "<p>Řádek " + (r + 1) + ": " + sdList(u.row) + "<br>Sloupec " + SD_COLS[c] + ": " + sdList(u.col) + "<br>Čtverec: " + sdList(u.box) + "</p>" +
+        (k.length === 1 ? "<p><b>Sem patří " + k[0] + ".</b> Všechno ostatní už je v řádku, sloupci nebo čtverci.</p>" : "");
+    }
+    B.cells.forEach(function (row, r) { row.forEach(function (e, c) {
+      e.setAttribute("role", "button"); e.tabIndex = 0; e.setAttribute("aria-label", "políčko " + sdName(r, c));
+      var go = function () { sel = [r, c]; draw(); };
+      e.addEventListener("click", go);
+      e.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); go(); } });
+    }); });
+    draw();
+    return { toggle: function () { show = !show; draw(); return show; } };
+  }
+
+
+  var EX1 = [[0,6,1,3,0,4],[3,0,0,6,1,0],[4,1,6,0,3,0],[0,0,3,0,4,6],[0,0,4,2,0,1],[1,0,0,4,0,3]];
+  var EX2 = [[0,0,2,3,6,5],[5,6,3,1,4,2],[0,0,0,4,0,6],[0,0,0,0,0,1],[0,3,0,0,0,4],[0,2,0,0,1,3]];
+  var $ = function (id) { return document.getElementById(id); };
+  sdExplorer($("x1"), EX1, 2, 3, $("x1p"), { intro: '<span class="meta">příklad 1</span><h3>Klikni na prázdné políčko</h3><p>Ukáže se, co je v jeho řádku, sloupci a čtverci, a co zbývá.</p>' });
+  sdExplorer($("x2"), EX2, 2, 3, $("x2p"), { intro: '<span class="meta">příklad 2</span><h3>Klikni na prázdné políčko</h3><p>Najdeš nějaké s jedinou možností?</p>' });
+  var s1 = sdStepper($("s1"), EX1, 2, 3, { btnClass: "bw-btn", treeLabel: "napsáno" });
+  var s2 = sdStepper($("s2"), EX2, 2, 3, { btnClass: "bw-btn", treeLabel: "pokusy" });
+  s1.minHeight(); s2.minHeight();
+  var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { s1.minHeight(); s2.minHeight(); }, 200); });
+})();
+</script>
+</body>
+</html>
