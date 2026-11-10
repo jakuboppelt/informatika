@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Soukromí a sledování</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide" data-index="0">
+      <div class="slide-inner">
+        <div class="eyebrow">Bezpečnost · 6. materiál</div>
+        <h1>Soukromí a sledování na internetu</h1>
+        <p class="lede">Kdo tě sleduje, jak to funguje, co se o tobě dá zjistit i bez přihlášení a co s tím můžeš udělat. S živou ukázkou otisku tvého prohlížeče.</p>
+      </div>
+    </section>
+
+    <section class="slide pause-slide" data-index="1"><div class="slide-inner">
+      <div class="qmark">?</div>
+      <h2>Co o tobě internet ví, když se nikam nepřihlásíš a nic nenapíšeš?</h2>
+      <p class="lede">Jen otevřeš web. Nic nevyplňuješ, žádný účet. Co se z toho dá zjistit?</p>
+    </div></section>
+
+    <section class="slide" data-index="2"><div class="slide-inner">
+      <div class="eyebrow">Kdo sleduje</div>
+      <h2 class="slide-title">Čtyři místa, kde se o tobě sbírají data</h2>
+      <p class="lede">Každé z nich vidí něco jiného. Vyber jedno.</p>
+      <div class="cards4" id="whoCards"></div>
+      <div class="panel" id="whoPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="3"><div class="slide-inner">
+      <div class="eyebrow">Cookies</div>
+      <h2 class="slide-title">Jak tě cookie pozná napříč weby</h2>
+      <p class="lede">Cookie je malý soubor s textem, který si web uloží v tvém prohlížeči. Sama o sobě je užitečná: pamatuje si přihlášení nebo košík. Problém je cookie od třetí strany. Projdi si příklad.</p>
+      <div class="chain" id="ckChain"></div>
+      <div class="panel" id="ckPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="3b"><div class="slide-inner">
+      <div class="eyebrow">Stav na konci roku 2026</div>
+      <h2 class="slide-title">Cookies třetích stran nezmizely</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Prohlížeč</th><th>Výchozí chování</th><th>Od kdy</th></tr></thead>
+          <tbody>
+            <tr><td><b>Safari</b></td><td class="ok">Cookies třetích stran blokuje.</td><td>2020</td></tr>
+            <tr><td><b>Firefox</b></td><td class="ok">Každý web má vlastní oddělenou sadu cookies (Total Cookie Protection).</td><td>2022</td></tr>
+            <tr><td><b>Chrome, běžné okno</b></td><td class="ko">Povoluje. Vypnout jdou v nastavení.</td><td>beze změny</td></tr>
+            <tr><td><b>Chrome, anonymní okno</b></td><td class="ok">Blokuje.</td><td>2020</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Google sliboval konec cookies třetích stran v Chrome od roku 2020. V červenci 2024 plán opustil, v dubnu 2025 zrušil i chystanou výzvu k volbě a v říjnu 2025 ukončil náhradní technologie Privacy Sandbox. Chrome přitom používá většina lidí, takže sledování přes cookies funguje dál.</p>
+    </div></section>
+
+    <section class="slide" data-index="4"><div class="slide-inner">
+      <div class="eyebrow">Cookie lišty</div>
+      <h2 class="slide-title">Lišta nabízí souhlas, ne vždy skutečnou volbu</h2>
+      <div class="compare-grid">
+        <div class="compare-col is-bad">
+          <div class="compare-head">Triky, které na liště uvidíš</div>
+          <div class="compare-body"><ul class="summary-list">
+            <li>Velké barevné tlačítko „Přijmout vše“ a drobný šedý odkaz „Nastavení“.</li>
+            <li>Odmítnutí je schované na třetí obrazovce.</li>
+            <li>Předem zaškrtnuté „oprávněné zájmy“ u desítek firem.</li>
+            <li>Text typu „Vaše soukromí je pro nás důležité“ těsně před sběrem dat.</li>
+          </ul></div>
+        </div>
+        <div class="compare-col is-good">
+          <div class="compare-head">Jak to má vypadat</div>
+          <div class="compare-body"><ul class="summary-list">
+            <li>„Přijmout vše“ a „Odmítnout vše“ jsou stejně dostupné.</li>
+            <li>Nic kromě technicky nezbytných cookies není předem zaškrtnuté.</li>
+            <li>Souhlas můžeš později odvolat.</li>
+            <li>Bez souhlasu web funguje dál, jen bez sledování.</li>
+          </ul></div>
+        </div>
+      </div>
+      <p class="note">V ČR platí od 1. ledna 2022, že cookies mimo technicky nezbytné potřebují tvůj souhlas. EU chystá změnu (digitální omnibus): odmítnutí jedním kliknutím, zákaz ptát se znovu dřív než za několik měsíců a méně lišt u obyčejného měření návštěvnosti. Rada EU schválila svou pozici 21. října 2026, Evropský parlament zatím ne, takže dnes platí stará pravidla.</p>
+    </div></section>
+
+    <section class="slide" data-index="5"><div class="slide-inner">
+      <div class="eyebrow">Skripty a pixely</div>
+      <h2 class="slide-title">Cizí kód na každé stránce</h2>
+      <p class="lede">Většina webů není jen jeden server. Stránka načítá písma, analytiku, reklamy, tlačítka sociálních sítí, videa a mapy z cizích domén. Každé takové volání říká cizí firmě, že jsi tady.</p>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Co</th><th>Jak funguje</th><th>Co o tobě prozradí</th></tr></thead>
+          <tbody>
+            <tr><td><b>Sledovací pixel</b></td><td>Neviditelný obrázek 1×1 nebo skript, který se načte z cizího serveru.</td><td>Že jsi otevřel stránku nebo e-mail, kdy a z jakého zařízení.</td></tr>
+            <tr><td><b>Analytický skript</b></td><td>Měří kliknutí, scrollování a čas na stránce.</td><td>Co čteš, kam klikáš, odkud jsi přišel.</td></tr>
+            <tr><td><b>Reklamní skript</b></td><td>Pošle reklamní síti tvé číslo (ID) a stránku, kde jsi.</td><td>Profil zájmů napříč weby.</td></tr>
+            <tr><td><b>Tlačítko sítě</b></td><td>Načte se od sociální sítě už při zobrazení stránky.</td><td>Že jsi tu byl, i když jsi na tlačítko neklikl.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div></section>
+
+    <section class="slide" data-index="6"><div class="slide-inner">
+      <div class="eyebrow">Zkus to sám</div>
+      <h2 class="slide-title">Zjisti, kam se tvůj prohlížeč připojuje</h2>
+      <p class="lede">Nejlépe na webu s reklamami, třeba zpravodajském. Projdi čtyři kroky.</p>
+      <div class="cards4" id="devCards"></div>
+      <div class="panel" id="devPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="7"><div class="slide-inner">
+      <div class="eyebrow">Otisk prohlížeče</div>
+      <h2 class="slide-title">Sledování bez cookies</h2>
+      <p class="lede">Cookies můžeš smazat. Vlastnosti tvého prohlížeče a zařízení ne. Web si je přečte, spočítá z nich otisk (hash) a podle něj tě pozná.</p>
+      <div class="chain" id="fpChain"></div>
+      <div class="panel" id="fpPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="8"><div class="slide-inner">
+      <div class="eyebrow">Naživo</div>
+      <h2 class="slide-title">Tvůj otisk právě teď</h2>
+      <p class="lede">Tohle všechno si o tobě přečte každý web bez ptaní. Zkus změnit velikost okna nebo zoom a otisk se změní. Nic se neodesílá, počítá se u tebe.</p>
+      <div class="fpgrid" id="fpGrid"></div>
+      <div class="panel p-hash"><div class="hexline" id="fpHash"></div><p class="note" id="fpNote"></p></div>
+    </div></section>
+
+    <section class="slide" data-index="9"><div class="slide-inner">
+      <div class="eyebrow">Reklamní aukce</div>
+      <h2 class="slide-title">Reklama se draží, než se stránka načte</h2>
+      <p class="lede">Když otevřeš stránku s reklamou, často proběhne aukce o to, kdo ti reklamu ukáže. Trvá to zlomek sekundy.</p>
+      <div class="chain" id="rtbChain"></div>
+      <div class="panel" id="rtbPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="10"><div class="slide-inner">
+      <div class="eyebrow">Skládání profilu</div>
+      <h2 class="slide-title">Z drobností vznikne obrázek</h2>
+      <p class="lede">Klikej na běžné situace. Dole vidíš, co z nich může někdo usoudit. Je to ilustrace principu, skutečné profily jsou složitější.</p>
+      <div class="checks" id="profChecks"></div>
+      <div class="panel" id="profOut"></div>
+    </div></section>
+
+    <section class="slide" data-index="11"><div class="slide-inner">
+      <div class="eyebrow">Telefon</div>
+      <h2 class="slide-title">Co aplikace chtějí a co opravdu potřebují</h2>
+      <p class="lede">Telefon je nejosobnější zařízení, které máš. Vyber oprávnění.</p>
+      <div class="cards4 cards5" id="permCards"></div>
+      <div class="panel" id="permPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="12"><div class="slide-inner">
+      <div class="eyebrow">Případy z praxe</div>
+      <h2 class="slide-title">Když se data dostanou jinam</h2>
+      <div class="cards4 cards3" id="caseCards"></div>
+      <div class="panel" id="casePanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="13"><div class="slide-inner">
+      <div class="eyebrow">Mýtus</div>
+      <h2 class="slide-title">Anonymní okno tě neskrývá</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Kdo</th><th>Vidí tvou aktivitu v anonymním okně?</th></tr></thead>
+          <tbody>
+            <tr><td><b>Ostatní uživatelé tohoto zařízení</b></td><td class="ok">Ne, historie a cookies se po zavření smažou.</td></tr>
+            <tr><td><b>Web, který navštívíš</b></td><td class="ko">Ano, vidí návštěvu a vlastnosti tvého prohlížeče.</td></tr>
+            <tr><td><b>Škola, zaměstnavatel, správce Wi-Fi</b></td><td class="ko">Ano, vidí, na které servery se připojuješ.</td></tr>
+            <tr><td><b>Poskytovatel připojení</b></td><td class="ko">Ano, stejně jako v běžném okně.</td></tr>
+            <tr><td><b>Služba, do které se přihlásíš</b></td><td class="ko">Ano, po přihlášení tě pozná podle účtu.</td></tr>
+            <tr><td><b>Otisk prohlížeče</b></td><td class="ko">Funguje stejně, vlastnosti zařízení se nezmění.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Google se v roce 2024 v americké hromadné žalobě dohodl, že smaže miliardy záznamů o prohlížení, které sbíral i v anonymním režimu Chrome. Chrome v anonymním okně sám upozorňuje, že aktivita může být vidět webům, škole nebo zaměstnavateli i poskytovateli připojení.</p>
+    </div></section>
+
+    <section class="slide" data-index="14"><div class="slide-inner">
+      <div class="eyebrow">VPN a Tor</div>
+      <h2 class="slide-title">Co skryjí a co neskryjí</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th></th><th>VPN</th><th>Tor Browser</th></tr></thead>
+          <tbody>
+            <tr><td><b>Jak funguje</b></td><td>Provoz jde šifrovaně přes server poskytovatele VPN.</td><td>Provoz jde šifrovaně přes tři uzly sítě Tor.</td></tr>
+            <tr><td><b>Skryje</b></td><td class="ok">Tvou IP adresu před webem a obsah provozu před Wi-Fi a operátorem.</td><td class="ok">IP adresu před webem a navíc sjednotí otisk prohlížeče.</td></tr>
+            <tr><td><b>Neskryje</b></td><td class="ko">Přihlášení, cookies a otisk. Poskytovatel VPN vidí všechno, co dřív viděl operátor.</td><td class="ko">Co sám o sobě napíšeš nebo kde se přihlásíš.</td></tr>
+            <tr><td><b>Nevýhoda</b></td><td>Musíš věřit poskytovateli. Zadarmo často platíš daty.</td><td>Pomalejší a řada webů ho blokuje.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">VPN se hodí na veřejné Wi-Fi a proti sledování operátorem. Proti reklamním sítím sama nestačí.</p>
+    </div></section>
+
+    <section class="slide" data-index="15"><div class="slide-inner">
+      <div class="eyebrow">Co funguje</div>
+      <h2 class="slide-title">Tři úrovně obrany</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Úroveň</th><th>Co uděláš</th><th>Co tím získáš</th></tr></thead>
+          <tbody>
+            <tr><td><b>1 · Za 5 minut</b></td><td>Zapneš ochranu proti sledování v prohlížeči, na lištách volíš „Odmítnout vše“, projdeš oprávnění aplikací.</td><td>Menší část sledování a méně dat, která telefon sdílí.</td></tr>
+            <tr><td><b>2 · Za hodinu</b></td><td>Rozšíření pro blokování obsahu (např. uBlock Origin), vypnutí reklamního ID, kontrola historie aktivit v účtech Google a Apple.</td><td>Mnohem méně reklamních skriptů a profilu.</td></tr>
+            <tr><td><b>3 · Dlouhodobě</b></td><td>Méně sdílíš, používáš různé e-maily nebo aliasy a služby, které sbírají méně dat.</td><td>Hůř se z tvých stop skládá jeden profil.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Nejde o dokonalou anonymitu, ta je nereálná. Jde o to, aby tě nesledovalo všechno a všude.</p>
+    </div></section>
+
+    <section class="slide" data-index="16"><div class="slide-inner">
+      <div class="eyebrow">GDPR</div>
+      <h2 class="slide-title">Máš právo vědět, co o tobě mají</h2>
+      <p class="lede">Nařízení GDPR platí v celé EU od 25. května 2018. V ČR u služeb informační společnosti může dítě samo souhlasit se zpracováním údajů od 15 let, mladší potřebuje souhlas rodiče. Vyber právo.</p>
+      <div class="cards4 cards5" id="gdprCards"></div>
+      <div class="panel" id="gdprPanel"></div>
+    </div></section>
+
+    <section class="slide" data-index="17"><div class="slide-inner">
+      <div class="eyebrow">Zkus doma</div>
+      <h2 class="slide-title">Žádost o přístup k údajům</h2>
+      <p class="lede">Firma musí odpovědět zpravidla do jednoho měsíce. Pošli ji e-mailem na kontakt pro ochranu osobních údajů, který najdeš v zásadách ochrany soukromí služby.</p>
+      <div class="codebox">
+        <button class="copy" type="button" data-for="gdprText">Kopírovat</button>
+        <pre class="code wrap" id="gdprText">Věc: Žádost o přístup k osobním údajům podle čl. 15 GDPR
+
+Dobrý den,
+
+žádám o informaci, zda zpracováváte mé osobní údaje, a pokud ano, o jejich kopii a o tyto informace: účely zpracování, kategorie údajů, příjemci, doba uložení, zdroj údajů a zda dochází k automatizovanému rozhodování nebo profilování.
+
+Můj účet / e-mail / telefon: [doplň]
+
+Odpověď prosím zašlete na tento e-mail.
+
+S pozdravem
+[jméno]</pre>
+      </div>
+      <p class="note">Pokud ti ještě není 15, požádej o pomoc rodiče. Firma si může ověřit, že jsi to opravdu ty.</p>
+    </div></section>
+
+    <section class="slide" data-index="18"><div class="slide-inner">
+      <div class="eyebrow">Udělej hned</div>
+      <h2 class="slide-title">Osm kroků k menšímu sledování</h2>
+      <p class="note">Odškrtávej, co máš hotové. <span id="chkCount">Hotovo 0 z 8</span></p>
+      <div class="chk-track"><div class="chk-bar" id="chkBar"></div></div>
+      <div class="checks" id="checks"></div>
+    </div></section>
+
+    <section class="slide pause-slide" data-index="19"><div class="slide-inner">
+      <div class="eyebrow">Pravidlo na zapamatování</div>
+      <div class="rule3">
+        <div><b>Sdílej méně</b><span>Co nezveřejníš a nedáš aplikaci, to nemůže uniknout.</span></div>
+        <div><b>Blokuj</b><span>Ochrana proti sledování v prohlížeči a rozšíření proti reklamním skriptům.</span></div>
+        <div><b>Kontroluj</b><span>Občas projdi oprávnění aplikací a historii aktivit v účtech.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="20"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Sledují tě <b>weby, aplikace, sítě i platformy</b>, každé vidí něco jiného.</li>
+        <li><b>Cookie třetí strany</b> spojuje tvé návštěvy napříč weby pomocí čísla, jméno nepotřebuje.</li>
+        <li><b>Otisk prohlížeče</b> funguje i bez cookies. Smazání cookies ho neodstraní.</li>
+        <li><b>Anonymní okno</b> skrývá historii před lidmi u zařízení, ne před webem, školou ani poskytovatelem.</li>
+        <li><b>VPN</b> přesune důvěru z operátora na poskytovatele VPN, reklamním sítím nestačí.</li>
+        <li>Podle <b>GDPR</b> můžeš žádat o kopii údajů, opravu i výmaz. Zkus to.</li>
+      </ul>
+    </div></section>
+
+    <section class="slide summary-slide" data-index="21"><div class="slide-inner">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud jsou fakta a kde číst dál</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Nástroje a právo</h3><ul class="src-list">
+          <li><a href="https://coveryourtracks.eff.org" target="_blank" rel="noopener">EFF Cover Your Tracks: test otisku prohlížeče</a></li>
+          <li><a href="https://themarkup.org/blacklight" target="_blank" rel="noopener">Blacklight (The Markup): jaké sledovače web používá</a></li>
+          <li><a href="https://www.lupa.cz/clanky/od-1-ledna-se-zmeni-pravidla-pro-cookies-pripravte-si-listy-radi-pravnicka/" target="_blank" rel="noopener">Lupa.cz: pravidla pro cookies od 1. 1. 2022</a></li>
+          <li><a href="https://uoou.gov.cz" target="_blank" rel="noopener">ÚOOÚ: Úřad pro ochranu osobních údajů</a></li>
+          <li><a href="https://ct24.ceskatelevize.cz/ekonomika/2425909-na-facebook-do-15-let-jen-se-souhlasem-rodicu-vlada-schvalila-navrh-zakona-o" target="_blank" rel="noopener">ČT24: věková hranice 15 let (zákon o zpracování osobních údajů)</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Případy</h3><ul class="src-list">
+          <li><a href="https://www.theregister.com/2018/01/29/strava_heatmap_military_base_locations/" target="_blank" rel="noopener">The Register: Strava heatmap a vojenské základny</a></li>
+          <li><a href="https://www.nbcnews.com/tech/tech-news/facebook-data-harvesting-scandal-widens-87-million-people-n862771" target="_blank" rel="noopener">NBC News: Cambridge Analytica, 87 milionů lidí</a></li>
+          <li><a href="https://www.dataprotection.ie/en/news-media/latest-news/irish-data-protection-commission-fines-tiktok-eu530-million-and-orders-corrective-measures-following" target="_blank" rel="noopener">Irská DPC: pokuta TikTok 530 milionů eur</a></li>
+          <li><a href="https://thehackernews.com/2024/04/google-to-delete-billions-of-browsing.html" target="_blank" rel="noopener">The Hacker News: Google a anonymní režim, 2024</a></li>
+          <li><a href="https://www.theregister.com/2025/04/22/google_privacy_sandbox/" target="_blank" rel="noopener">The Register: Google nechává cookies třetích stran v Chrome</a></li>
+          <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener">Nápověda Chrome: cookies třetích stran</a></li>
+          <li><a href="https://www.gdpr.cz/zkraceni-lhuty-pro-opetovne-vyzadani-souhlasu-s-cookies-digital-omnibus-miri-do-dalsi-faze-jednani" target="_blank" rel="noopener">GDPR.cz: digitální omnibus a cookies (říjen 2026)</a></li>
+        </ul></div>
+      </div>
+    </div></section>
+
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 23</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var fits=[];
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=document.getElementById("dots"),counterEl=document.getElementById("counter");
+  var prevBtn=document.getElementById("prevBtn"),nextBtn=document.getElementById("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=document.createElement("button");d.className="dot"+(i===0?" is-active":"");
+    d.setAttribute("aria-label","Snímek "+(i+1));d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+    runFits();
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    var t=e.target&&e.target.tagName;
+    if(t==="INPUT"||t==="TEXTAREA")return;
+    if(e.key==="ArrowRight")goTo(current+1);
+    if(e.key==="ArrowLeft")goTo(current-1);
+  });
+
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+  function picker(btnHost,items,mk,panel,showFn){
+    var btns=[],act=0;
+    items.forEach(function(it,i){
+      var b=mk(it,i);b.addEventListener("click",function(){
+        btns.forEach(function(x){x.classList.remove("is-active");});b.classList.add("is-active");act=i;showFn(it,i);
+      });btnHost.appendChild(b);btns.push(b);
+    });
+    btns[0].classList.add("is-active");showFn(items[0],0);
+    fits.push({slide:btnHost.closest(".slide"),fn:function(){
+      panel.style.minHeight="0px";var m=0;
+      items.forEach(function(it,i){showFn(it,i);m=Math.max(m,panel.offsetHeight);});
+      panel.style.minHeight=m+"px";showFn(items[act],act);
+    }});
+  }
+  function runFits(){fits.forEach(function(f){if(!f.slide.hidden)f.fn();});}
+  window.addEventListener("resize",runFits);
+  function panelHtml(p,title,text,extra){p.innerHTML="<h3>"+title+"</h3><p>"+text+"</p>"+(extra||"");}
+  function quote(q){return '<div class="quote">'+esc(q)+"</div>";}
+
+  /* ---- pomocné funkce pro hash ---- */
+  var HAS=!!(window.crypto&&window.crypto.subtle);
+  var NOHASH="Tento prohlížeč neumí počítat hash (je potřeba https nebo localhost).";
+  function toHex(buf){return Array.prototype.map.call(new Uint8Array(buf),function(b){return ("0"+b.toString(16)).slice(-2);}).join("");}
+  function utf8(s){return new TextEncoder().encode(s);}
+  function digest(alg,data){
+    if(!HAS)return Promise.resolve(null);
+    return crypto.subtle.digest(alg,data).then(toHex);
+  }
+  function hexBits(h){var out=[];for(var i=0;i<h.length;i++){var n=parseInt(h.charAt(i),16);for(var b=3;b>=0;b--)out.push((n>>b)&1);}return out;}
+
+  /* ---- 2: kdo sleduje ---- */
+  var who=[
+    {n:"Weby a reklamy",s:"cookies, skripty",d:"Weby si pamatují, co jsi dělal (cookies, skripty, pixely). Reklamní a analytické firmy z toho skládají obrázek o tobě napříč weby.",q:"Jedna stránka, desítky cizích domén"},
+    {n:"Aplikace",s:"telefon",d:"Aplikace vidí to, co jim povolíš (poloha, kontakty, fotky), a posílají i údaje, kterých si nevšimneš: typ zařízení, reklamní ID a kdy aplikaci používáš.",q:"Poloha, kontakty, reklamní ID"},
+    {n:"Síť",s:"Wi-Fi, operátor",d:"Provozovatel Wi-Fi, škola nebo operátor obvykle vidí, na jaké servery se připojuješ, i když je obsah šifrovaný (HTTPS). Neuvidí, co přesně děláš na stránce.",q:"Vidí názvy serverů, ne obsah"},
+    {n:"Platformy",s:"Google, Meta, …",d:"Velké služby znají, co hledáš, na co se díváš, kde jsi a s kým komunikuješ, a to napříč svými službami, pokud jsi přihlášen.",q:"Jeden účet, mnoho služeb"}
+  ];
+  picker($("whoCards"),who,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("whoPanel"),function(c){panelHtml($("whoPanel"),c.n,c.d,quote(c.q));});
+
+  /* ---- 3: cookie ---- */
+  var ck=[
+    {n:"1 Web A",s:"s reklamou",t:"Navštívíš web A",d:"Na stránce je vložená reklama nebo skript od reklamní sítě X. Prohlížeč se kvůli tomu připojí i k serveru sítě X."},
+    {n:"2 Cookie",s:"číslo",t:"Síť X uloží cookie",d:"Síť X nastaví cookie třetí strany, například id=48213977. Je to náhodné číslo, žádné jméno."},
+    {n:"3 Web B",s:"stejná síť",t:"Navštívíš web B",d:"Web B používá stejnou reklamní síť. Prohlížeč s požadavkem pošle i cookie s číslem 48213977."},
+    {n:"4 Profil",s:"spojení",t:"Síť X tě pozná",d:"Síť X vidí, že číslo 48213977 bylo na webu A i na webu B, a přidává k němu, co jsi tam četl nebo kupoval. Jméno nepotřebuje, číslo stačí."},
+    {n:"5 Obrana",s:"prohlížeče",t:"Co s tím dělají prohlížeče",d:"Safari cookies třetích stran blokuje. Firefox dává každému webu vlastní oddělenou sadu cookies, takže se nedají spojit napříč weby. Chrome je v běžném okně povoluje, blokuje je jen v anonymním okně. Podrobnosti jsou na dalším snímku."}
+  ];
+  picker($("ckChain"),ck,function(c){return el("button","",esc(c.n)+"<span>"+c.s+"</span>");},$("ckPanel"),function(c){panelHtml($("ckPanel"),c.t,c.d);});
+
+  /* ---- 6: vývojářské nástroje ---- */
+  var dev=[
+    {n:"1 Otevři web",s:"s reklamami",d:"Otevři zpravodajský web nebo e-shop v běžném okně prohlížeče. Nic nerozklikávej.",q:"např. libovolný zpravodajský web"},
+    {n:"2 Síť",s:"F12",d:"Stiskni F12 (nebo Ctrl+Shift+I) a otevři záložku Síť (Network). Je to přehled všeho, co prohlížeč stáhl.",q:"F12 → Síť / Network"},
+    {n:"3 Načti znovu",s:"F5",d:"Obnov stránku klávesou F5 a sleduj, jak se seznam plní. Mohou to být stovky požadavků.",q:"F5, potom počkej několik sekund"},
+    {n:"4 Domény",s:"cizí servery",d:"Seřaď požadavky podle sloupce Doména (Domain). Spočítej, kolik domén není ten web, který sis otevřel. Zbytek jsou obrázky, písma, analytika a reklamy.",q:"Kolik cizích domén jsi napočítal?"}
+  ];
+  picker($("devCards"),dev,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("devPanel"),function(c){panelHtml($("devPanel"),c.n,c.d,quote(c.q));});
+
+  /* ---- 7: otisk, vysvětlení ---- */
+  var fp=[
+    {n:"1 Vlastnosti",s:"čte web",t:"Web čte vlastnosti",d:"Prohlížeč o sobě sdělí hodně: typ a verzi, jazyk, časové pásmo, rozlišení obrazovky, počet jader, fonty a dokonce to, jak jeho grafika vykreslí neviditelný obrázek."},
+    {n:"2 Otisk",s:"hash",t:"Z hodnot vznikne otisk",d:"Všechny hodnoty se slepí a spočítá se z nich hash, tedy stejná myšlenka jako u hash funkcí. Výsledek je krátké číslo, které označuje právě tvé zařízení."},
+    {n:"3 Rozpoznání",s:"bez cookies",t:"Podle otisku tě pozná",d:"Když se otisk shoduje s dřívějším, web ví, že jsi to ty, i když jsi smazal cookies nebo jsi v anonymním okně."},
+    {n:"4 Kolik stačí",s:"33 bitů",t:"Na rozlišení lidí stačí 33 bitů",d:"Lidí na Zemi je zhruba 8 miliard a 2^33 je přibližně 8,6 miliardy. Pokud tvoje vlastnosti dohromady nesou 33 bitů informace, jsi jediný. Nástroj EFF Cover Your Tracks (dříve Panopticlick, od roku 2010) ukazuje, jak výjimečný je tvůj prohlížeč."}
+  ];
+  picker($("fpChain"),fp,function(c){return el("button","",esc(c.n)+"<span>"+c.s+"</span>");},$("fpPanel"),function(c){panelHtml($("fpPanel"),c.t,c.d);});
+
+  /* ---- 8: otisk naživo ---- */
+  function canvasFp(){
+    try{var c=document.createElement("canvas");c.width=240;c.height=40;var x=c.getContext("2d");
+      x.textBaseline="top";x.font="16px Arial";x.fillStyle="#f60";x.fillRect(110,2,60,20);
+      x.fillStyle="#069";x.fillText("Soukromí ŽĎČ 😀",4,8);return c.toDataURL();}catch(e){return "n/a";}
+  }
+  function fpValues(){
+    var n=navigator,tz="";try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone;}catch(e){}
+    return [
+      ["Prohlížeč a systém",(n.userAgent||"").replace(/^Mozilla\/5\.0 /,"")],
+      ["Jazyky",(n.languages&&n.languages.join(", "))||n.language||""],
+      ["Časové pásmo",tz],
+      ["Obrazovka",screen.width+"×"+screen.height+", hustota "+(window.devicePixelRatio||1)],
+      ["Okno prohlížeče",innerWidth+"×"+innerHeight],
+      ["Barevná hloubka",String(screen.colorDepth)],
+      ["Jádra procesoru",String(n.hardwareConcurrency||"neuvedeno")],
+      ["Paměť (GB)",String(n.deviceMemory||"neuvedeno")],
+      ["Dotykové body",String(n.maxTouchPoints||0)],
+      ["Do Not Track",String(n.doNotTrack||"neuvedeno")]
+    ];
+  }
+  function fpUpdate(){
+    var v=fpValues(),host=$("fpGrid");host.innerHTML="";
+    v.forEach(function(r){host.appendChild(el("div","fpc",'<span class="blabel">'+esc(r[0])+'</span><span class="fpv">'+esc(r[1])+"</span>"));});
+    var cv=canvasFp(),raw=v.map(function(r){return r[1];}).join("|")+"|"+cv;
+    digest("SHA-256",utf8(raw)).then(function(h){
+      if(h===null){$("fpHash").textContent=NOHASH;return;}
+      $("fpHash").innerHTML="Otisk (SHA-256): <span class=\"d\">"+h+"</span>";
+      $("fpNote").textContent="Do otisku vstupuje "+(v.length+1)+" hodnot včetně vykreslení neviditelného obrázku (canvas). Skutečné skripty jich používají mnohem víc.";
+    });
+  }
+  window.addEventListener("resize",fpUpdate);fpUpdate();
+
+  /* ---- 9: reklamní aukce ---- */
+  var rtb=[
+    {n:"1 Otevřeš",s:"stránku",t:"Otevřeš stránku",d:"Stránka má místo pro reklamu. Prohlížeč pošle požadavek na reklamní server."},
+    {n:"2 Nabídka",s:"data o tobě",t:"Server rozešle nabídku",d:"Reklamní server pošle mnoha firmám zprávu: tohle zařízení právě otevřelo tuto stránku. K ní přidá číslo (ID), přibližnou polohu a zájmy."},
+    {n:"3 Aukce",s:"zlomek sekundy",t:"Firmy nabízejí cenu",d:"Každý inzerent odpoví, kolik by zaplatil za to, aby reklamu viděl právě ten, kdo má tyto vlastnosti. Čím lépe tě zná, tím víc nabídne."},
+    {n:"4 Výsledek",s:"reklama",t:"Vyhrává nejvyšší nabídka",d:"Vítězná reklama se zobrazí. Ostatní firmy, které prohrály, ale dostaly informaci, že jsi stránku otevřel."}
+  ];
+  picker($("rtbChain"),rtb,function(c){return el("button","",esc(c.n)+"<span>"+c.s+"</span>");},$("rtbPanel"),function(c){panelHtml($("rtbPanel"),c.t,c.d);});
+
+  /* ---- 10: skládání profilu ---- */
+  var prof=[
+    ["Hledal(a) jsem „nejlevnější tenisky“","zájem o sportovní oblečení, cenově citlivý"],
+    ["Čtu články o fotbale","zájem o fotbal, pravděpodobně sleduje zápasy"],
+    ["Dívám se na videa o hubnutí","zájem o dietu a postavu (citlivé téma)"],
+    ["Telefon je v noci doma a od 8 do 15 hodin ve škole","bydliště, škola a režim dne, věk zhruba 15 až 19 let"],
+    ["Navštívil(a) jsem web lékárny","možný zdravotní problém nebo zájem o zdraví"],
+    ["Mám nejnovější telefon","vyšší útrata, zajímavý cíl pro dražší reklamy"],
+    ["Nakupuju po půlnoci","nepravidelný spánek, ochota k impulzivním nákupům"]
+  ],profOn={};
+  function profRender(){
+    var keys=Object.keys(profOn);
+    if(!keys.length){$("profOut").innerHTML="<h3>Odvozený profil</h3><p>Zatím nic. Klikni na situace nahoře.</p>";return;}
+    var li=keys.map(function(k){return "<li>"+esc(prof[k][1])+"</li>";}).join("");
+    $("profOut").innerHTML="<h3>Odvozený profil z "+keys.length+" "+(keys.length===1?"údaje":keys.length<5?"údajů":"údajů")+"</h3><ul class=\"summary-list\">"+li+"</ul>";
+  }
+  prof.forEach(function(p,i){
+    var b=el("button","chk","<b>"+esc(p[0])+"</b>");
+    b.addEventListener("click",function(){if(profOn[i])delete profOn[i];else profOn[i]=1;b.classList.toggle("is-done",!!profOn[i]);profRender();});
+    $("profChecks").appendChild(b);
+  });
+  profRender();
+
+  /* ---- 11: oprávnění ---- */
+  var perm=[
+    {n:"Poloha",s:"kde jsi",d:"Aplikace s polohou ví, kde bydlíš, kde chodíš do školy a kdy jsi doma. Navigace ji potřebuje, hra nebo svítilna ne. Nastav „jen při používání“ nebo „přibližná poloha“.",q:"Nastavení → Soukromí → Poloha"},
+    {n:"Mikrofon a kamera",s:"zvuk a obraz",d:"Povol jen aplikacím, které je opravdu používají (hovory, video). Systém ukazuje indikátor, když mikrofon nebo kamera běží. Všímej si ho.",q:"Zelená nebo oranžová tečka = zapnuto"},
+    {n:"Kontakty",s:"tvoji lidé",d:"Aplikace, které si nahrají kontakty, znají i lidi, kteří se nikdy nepřihlásili. Takhle sociální sítě navrhují „možné známé“ a skládají mapu vztahů.",q:"Kontakty jen tam, kde je opravdu potřeba"},
+    {n:"Fotky a soubory",s:"galerie",d:"Moderní telefony umí povolit jen vybrané fotky místo celé galerie. Fotky obsahují metadata (EXIF) s časem a někdy polohou.",q:"Zvol „vybrané fotky“, ne „všechny“"},
+    {n:"Reklamní ID",s:"číslo zařízení",d:"Telefon má identifikátor pro reklamu, který aplikace sdílí s reklamními sítěmi. Na iPhonu se aplikace musí zeptat, na Androidu ho najdeš v nastavení a můžeš ho smazat nebo vypnout personalizaci.",q:"Nastavení → Soukromí → Reklamy"}
+  ];
+  picker($("permCards"),perm,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("permPanel"),function(c){panelHtml($("permPanel"),c.n,c.d,quote(c.q));});
+
+  /* ---- 12: případy ---- */
+  var cases=[
+    {n:"Strava 2018",s:"mapa běhání",d:"Aplikace pro sportovce zveřejnila v listopadu 2017 mapu všech tras uživatelů. V lednu 2018 si lidé všimli, že na ní vidět vojenské základny a trasy vojáků, třeba na odlehlých místech, kde jinak nikdo neběhá. Soukromé zóny šlo zapnout, ale ve výchozím nastavení byly vypnuté.",q:"Soukromí se výchozím nastavením často neřeší samo"},
+    {n:"Cambridge Analytica",s:"87 milionů",d:"Kvíz na Facebooku sebral data lidí, kteří ho použili, i údaje o jejich přátelích. Facebook v roce 2018 přiznal, že se tak ke Cambridge Analytica mohla dostat data až 87 milionů lidí. Firma je použila pro cílení politické reklamy.",q:"Souhlas jednoho člověka vydal data dalších lidí"},
+    {n:"Pokuty",s:"GDPR v praxi",d:"Za porušení GDPR hrozí pokuta až 20 milionů eur nebo 4 % světového obratu. Irský úřad uložil v květnu 2023 firmě Meta rekordních 1,2 miliardy eur za předávání dat do USA. V květnu 2025 dostal TikTok pokutu 530 milionů eur za předávání dat evropských uživatelů do Číny.",q:"Zákon se vymáhá, ale pomalu"}
+  ];
+  picker($("caseCards"),cases,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("casePanel"),function(c){panelHtml($("casePanel"),c.n,c.d,quote(c.q));});
+
+  /* ---- 16: GDPR ---- */
+  var gd=[
+    {n:"Přístup",s:"čl. 15",d:"Firma musí potvrdit, zda o tobě data zpracovává, a dát ti jejich kopii spolu s informací, k čemu je používá, komu je předává a jak dlouho je drží.",q:"„Co o mně máte?“"},
+    {n:"Oprava",s:"čl. 16",d:"Jsou-li údaje nepřesné, můžeš požadovat opravu.",q:"„Opravte moje údaje.“"},
+    {n:"Výmaz",s:"čl. 17",d:"Můžeš požadovat smazání údajů, například když už je firma nepotřebuje nebo odvoláš souhlas. Má to výjimky, třeba zákonnou povinnost uchovávat doklady.",q:"„Smažte mě.“"},
+    {n:"Přenositelnost",s:"čl. 20",d:"U údajů, které jsi poskytl, můžeš chtít kopii v běžném strojově čitelném formátu a převést ji ke konkurenci. Mnoho služeb má tlačítko „Stáhnout moje data“.",q:"Nastavení → Stáhnout moje data"},
+    {n:"Námitka a stížnost",s:"čl. 21 a 77",d:"Můžeš vznést námitku proti zpracování, třeba pro přímý marketing. Když firma neodpoví nebo odmítne neoprávněně, můžeš podat stížnost u Úřadu pro ochranu osobních údajů (uoou.gov.cz).",q:"Stížnost u ÚOOÚ je zdarma"}
+  ];
+  picker($("gdprCards"),gd,function(c){return el("button","tcard","<b>"+c.n+"</b><span>"+c.s+"</span>");},$("gdprPanel"),function(c){panelHtml($("gdprPanel"),c.n,c.d,quote(c.q));});
+
+  /* ---- 18: kontrola ---- */
+  var checks=[
+    ["Ochrana v prohlížeči","Zapni ochranu proti sledování (Firefox, Safari, Brave nebo nastavení Chrome)."],
+    ["Odmítnout cookies","Na lištách zkus volit „Odmítnout vše“. Často to jde."],
+    ["Oprávnění aplikací","V telefonu projdi polohu, mikrofon, kontakty a fotky."],
+    ["Reklamní ID","Vypni personalizaci reklam nebo smaž reklamní ID."],
+    ["Historie aktivit","Projdi myactivity.google.com nebo nastavení aktivit ve svém účtu."],
+    ["Blokování reklam","Nainstaluj rozšíření uBlock Origin do počítače."],
+    ["Cover Your Tracks","Spusť test na coveryourtracks.eff.org a porovnej prohlížeče."],
+    ["Žádost o data","Pošli jedné službě žádost o přístup k údajům (šablona výše)."]
+  ];
+  var done={};
+  checks.forEach(function(c,i){
+    var b=el("button","chk","<b>"+c[0]+"</b><span>"+c[1]+"</span>");
+    b.addEventListener("click",function(){
+      if(done[i])delete done[i];else done[i]=1;
+      b.classList.toggle("is-done",!!done[i]);
+      var n=Object.keys(done).length;
+      $("chkCount").textContent="Hotovo "+n+" z "+checks.length+(n===checks.length?". Máš o sledování lepší přehled než většina lidí.":"");
+      $("chkBar").style.width=(n/checks.length*100)+"%";
+    });
+    $("checks").appendChild(b);
+  });
+
+  /* ---- kopírování kódu ---- */
+  Array.prototype.forEach.call(document.querySelectorAll("button.copy"),function(b){
+    b.addEventListener("click",function(){
+      var src=document.getElementById(b.dataset["for"]);if(!src)return;
+      var text=src.textContent;
+      function ok(){b.textContent="Zkopírováno";setTimeout(function(){b.textContent="Kopírovat";},1600);}
+      function fallback(){
+        var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+        document.body.appendChild(ta);ta.select();
+        try{if(document.execCommand("copy"))ok();}catch(e){}
+        document.body.removeChild(ta);
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,fallback);}else{fallback();}
+    });
+  });
+
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>

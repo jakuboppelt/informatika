@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nejkratší cesta – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Úvod</li>
+    <li><a href="#uloha">Úloha nejkratší cesty</a></li>
+    <li><a href="#graf">Vážený graf</a></li>
+    <li><a href="#bfs">Proč nestačí do šířky</a></li>
+    <li class="grp">Dijkstrův algoritmus</li>
+    <li><a href="#dijkstra">Myšlenka a pseudokód</a></li>
+    <li><a href="#dij-priklad">Průběh na příkladu</a></li>
+    <li><a href="#proc">Proč funguje a kdy ne</a></li>
+    <li class="grp">A*</li>
+    <li><a href="#heuristika">Heuristika</a></li>
+    <li><a href="#astar">Algoritmus A*</a></li>
+    <li><a href="#astar-priklad">Průběh na příkladu</a></li>
+    <li><a href="#hladove">Hladové hledání</a></li>
+    <li class="grp">Souvislosti</li>
+    <li><a href="#mrizka">Srovnání na mřížce</a></li>
+    <li><a href="#historie">Historie a použití</a></li>
+    <li><a href="#python">Program v Pythonu</a></li>
+    <li class="grp">Procvičení</li>
+    <li><a href="#osnova">Jak odpovídat</a></li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Algoritmy · Studijní text</p>
+  <h1>Nejkratší cesta <span class="t">Dijkstra · A* · heuristika</span></h1>
+  <p class="lead">Jak najít nejkratší cestu v grafu, ve kterém mají hrany různou cenu. Dijkstrův algoritmus prochází místa podle vzdálenosti od startu, A* navíc odhaduje, kolik zbývá do cíle, a díky tomu prozkoumá mnohem méně. Navazuje na prohledávání do šířky z materiálu Stavový prostor. Malá čísla u textu odkazují na zdroje na konci.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit, co je vážený graf a cena cesty</li>
+      <li>ukázat, proč prohledávání do šířky nemusí najít nejkratší cestu</li>
+      <li>popsat Dijkstrův algoritmus a krokovat ho na příkladu</li>
+      <li>vysvětlit roli prioritní fronty</li>
+      <li>vysvětlit, proč Dijkstra nefunguje se zápornými cenami</li>
+      <li>popsat heuristiku a podmínku, že nesmí přeceňovat</li>
+      <li>popsat A* (f = g + h) a porovnat ho s Dijkstrou</li>
+      <li>vysvětlit, proč hladové hledání nezaručuje nejkratší cestu</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Úvod</p>
+
+<section id="uloha">
+<h2>Úloha nejkratší cesty</h2>
+<p>Navigace, plánovač jízdenek, postavička v počítačové hře i router na internetu řeší stejnou úlohu: najít mezi dvěma body cestu s nejmenší cenou. Cenou může být vzdálenost, čas, peníze nebo zpoždění v síti.</p>
+<p>V materiálu Stavový prostor jsme cestu hledali prohledáváním do šířky. To najde cestu s <strong>nejmenším počtem kroků</strong>. U džbánů to stačilo, protože každý tah „stál“ stejně. Na silnicích ale každý úsek měří jinak, a cesta s nejméně úseky může být delší.</p>
+</section>
+
+<section id="graf">
+<h2>Vážený graf</h2>
+<p><dfn>Vážený graf</dfn> je graf, ve kterém má každá hrana číslo, <dfn>cenu</dfn> neboli váhu. <dfn>Cena cesty</dfn> je součet cen jejích hran. <dfn>Nejkratší cesta</dfn> je cesta s nejmenší cenou.</p>
+<figure class="nc-fig">
+  <svg class="ng-svg" id="fig1" role="img" aria-label="Vzorový graf: osm míst, jedenáct silnic s délkami v kilometrech"></svg>
+  <figcaption>Vzorový graf, se kterým pracuje celý text. Místa S (start) až Z (cíl), čísla jsou délky silnic v kilometrech. Zvýrazněná je nejkratší cesta.</figcaption>
+</figure>
+<div class="tbl"><table>
+<thead><tr><th>cesta</th><th>počet úseků</th><th>délka</th></tr></thead>
+<tbody>
+<tr><td><code>S → A → Z</code></td><td class="num">2</td><td class="num">11 + 13 = 24 km</td></tr>
+<tr><td><code>S → B → A → Z</code></td><td class="num">3</td><td class="num">4 + 9 + 13 = 26 km</td></tr>
+<tr><td><code>S → B → C → D → Z</code></td><td class="num">4</td><td class="num">4 + 5 + 4 + 5 = <strong>18 km</strong></td></tr>
+</tbody></table></div>
+<p>Graf je <strong>neorientovaný</strong>: po každé silnici se dá jet oběma směry. U orientovaného grafu (jednosměrky) by se postup nezměnil, jen by hrana vedla jedním směrem.</p>
+</section>
+
+<section id="bfs">
+<h2>Proč nestačí prohledávání do šířky</h2>
+<p>Prohledávání do šířky prochází graf po vrstvách podle <em>počtu hran</em> od startu. Ze S objeví A, B a E (vzdálenost 1), z A pak hned Z (vzdálenost 2). Najde tedy <code>S → A → Z</code> za 24 km, i když existuje cesta za 18 km.</p>
+<p>Prohledávání do šířky najde nejkratší cestu jen tehdy, když mají všechny hrany stejnou cenu. Pak je počet hran úměrný ceně. Ve váženém grafu potřebujeme algoritmus, který místo hran počítá kilometry.</p>
+</section>
+
+<p class="part">Dijkstrův algoritmus</p>
+
+<section id="dijkstra">
+<h2>Myšlenka a pseudokód</h2>
+<p>Představ si, že ze startu vyteče voda a po všech silnicích teče stejnou rychlostí. Do každého místa doteče nejdřív po nejkratší cestě. <dfn>Dijkstrův algoritmus</dfn> tohle napodobuje: místa <strong>uzavírá v pořadí podle vzdálenosti od startu</strong>.</p>
+<p>U každého místa si pamatuje <strong>nejlepší dosud známou vzdálenost</strong> (na začátku ∞) a <strong>předchůdce</strong>, odkud do něj vede. Místa čekající na zpracování drží v <dfn>prioritní frontě</dfn>: na rozdíl od obyčejné fronty z ní nebere nejstarší záznam, ale ten s <strong>nejmenší prioritou</strong>, tady s nejmenší vzdáleností.</p>
+<pre><code>vzdálenost[start] ← 0, u ostatních míst ∞
+vlož start do prioritní fronty
+dokud fronta není prázdná:
+    u ← vyjmi z fronty místo s nejmenší vzdáleností
+    pokud je u už uzavřené: pokračuj dalším
+    uzavři u
+    pokud u je cíl: konec
+    pro každého souseda v místa u:
+        nová ← vzdálenost[u] + cena(u, v)
+        pokud nová &lt; vzdálenost[v]:          (relaxace hrany)
+            vzdálenost[v] ← nová
+            předchůdce[v] ← u
+            vlož v do fronty s prioritou nová</code></pre>
+<p>Kroku, při kterém zjistíme, že přes u vede do v kratší cesta, a vzdálenost v přepíšeme, se říká <dfn>relaxace</dfn> hrany. Cestu nakonec složíme pozpátku po předchůdcích, stejně jako u prohledávání do šířky.</p>
+</section>
+
+<section id="dij-priklad">
+<h2>Průběh na příkladu</h2>
+<p>Hledáme cestu ze S do Z. Sousedy zkoumáme v abecedním pořadí.</p>
+<div class="tbl"><table>
+<thead><tr><th>uzavírám</th><th>vzdálenost</th><th>co se změní u sousedů</th></tr></thead>
+<tbody>
+<tr><td><b>S</b></td><td class="num">0</td><td>A = 11, B = 4, E = 6</td></tr>
+<tr><td><b>B</b></td><td class="num">4</td><td>A: 4 + 9 = 13 ≥ 11, beze změny; C = 9; F = 10</td></tr>
+<tr><td><b>E</b></td><td class="num">6</td><td>F: 6 + 4 = 10, není menší, beze změny</td></tr>
+<tr><td><b>C</b></td><td class="num">9</td><td>D = 13; F: 9 + 9 = 18 ≥ 10, beze změny</td></tr>
+<tr><td><b>F</b></td><td class="num">10</td><td>všichni sousedé uzavření</td></tr>
+<tr><td><b>A</b></td><td class="num">11</td><td>Z = 11 + 13 = 24</td></tr>
+<tr><td><b>D</b></td><td class="num">13</td><td>Z: 13 + 5 = 18 &lt; 24, <b>přepisujeme na 18</b>, předchůdce D</td></tr>
+<tr><td><b>Z</b></td><td class="num">18</td><td>cíl, konec</td></tr>
+</tbody></table></div>
+<p>Cesta pozpátku: Z ← D ← C ← B ← S, tedy <code>S → B → C → D → Z</code>, 18 km. Všimni si, že Z mělo nejdřív vzdálenost 24 a pak se zlepšilo. Dokud místo není uzavřené, jeho vzdálenost je jen nejlepší dosud známá.</p>
+<h3>Krokování</h3>
+<div class="ng-step" id="dStep"></div>
+</section>
+
+<section id="proc">
+<h2>Proč funguje a kdy ne</h2>
+<p><strong>Proč je vzdálenost uzavřeného místa konečná.</strong> Když z fronty vyjmeme místo u se vzdáleností d, všechna místa ve frontě mají vzdálenost aspoň d. Jakákoli jiná cesta do u by musela některým z nich projít, a protože ceny hran jsou <strong>nezáporné</strong>, nemůže tím být kratší než d. Proto smíme u uzavřít a už se k němu nevracet.</p>
+<div class="note warn"><b class="lbl">Záporné ceny</b><p>Kdyby měla nějaká hrana zápornou cenu, mohla by vést k už uzavřenému místu kratší cesta a algoritmus by vrátil špatný výsledek. Pro grafy se zápornými cenami se používají jiné algoritmy, například Bellmanův–Fordův.<sup class="ref"><a href="#z1">1</a></sup></p></div>
+<p><strong>Co algoritmus spočítá navíc.</strong> Kdybychom se v cíli nezastavili, Dijkstra spočítá nejkratší vzdálenosti ze startu do <em>všech</em> míst. Šipky k předchůdcům tvoří <dfn>strom nejkratších cest</dfn>.</p>
+<p><strong>Slabina.</strong> Dijkstra neví, kde leží cíl. Šíří se všemi směry stejně, takže prozkoumá i místa ležící opačným směrem. Ve vzorovém grafu uzavře E a F, které jsou od cíle daleko. Na prázdné mřížce prozkoumá 264 políček, než dojde k cíli vzdálenému 20 kroků.</p>
+</section>
+
+<p class="part">A*</p>
+
+<section id="heuristika">
+<h2>Heuristika</h2>
+<p><dfn>Heuristika</dfn> h(n) je odhad, kolik zbývá z místa n do cíle. Musí se dát spočítat rychle, bez hledání. Typické volby:</p>
+<ul>
+  <li><strong>vzdálenost vzdušnou čarou</strong> na mapě: silnice nikdy nevede kratší cestou než přímka;</li>
+  <li><strong>manhattanská vzdálenost</strong> na mřížce, kde se chodí jen vodorovně a svisle: |x₁ − x₂| + |y₁ − y₂|. Jmenuje se podle pravoúhlých ulic Manhattanu, kde také nejde jít šikmo přes bloky.</li>
+</ul>
+<p>Heuristika je <dfn>přípustná</dfn> (anglicky <i>admissible</i>), když <strong>nikdy nepřeceňuje</strong>: odhad je vždy nejvýš tak velký jako skutečná nejkratší vzdálenost do cíle.<sup class="ref"><a href="#z2">2</a></sup> Vzdušná čára i manhattanská vzdálenost na mřížce s cenou kroku aspoň 1 přípustné jsou.</p>
+<div class="tbl"><table>
+<thead><tr><th>místo</th><th>S</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>Z</th></tr></thead>
+<tbody>
+<tr><td>h: vzdušnou čarou do Z</td><td class="num">14</td><td class="num">9</td><td class="num">11</td><td class="num">8</td><td class="num">4</td><td class="num">17</td><td class="num">15</td><td class="num">0</td></tr>
+<tr><td>skutečně po silnicích</td><td class="num">18</td><td class="num">13</td><td class="num">14</td><td class="num">9</td><td class="num">5</td><td class="num">24</td><td class="num">18</td><td class="num">0</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="astar">
+<h2>Algoritmus A*</h2>
+<p><dfn>A*</dfn> (čti „á hvězdička“, anglicky „A star“) je Dijkstrův algoritmus s jedinou změnou: priorita v prioritní frontě není vzdálenost od startu, ale</p>
+<p class="nc-formula"><code>f(n) = g(n) + h(n)</code></p>
+<ul>
+  <li><strong>g(n)</strong> je skutečná dosud nalezená vzdálenost ze startu do n (u Dijkstry „vzdálenost“),</li>
+  <li><strong>h(n)</strong> je odhad zbytku do cíle,</li>
+  <li><strong>f(n)</strong> je tedy odhad délky celé cesty ze startu do cíle vedoucí přes n.</li>
+</ul>
+<p>A* dává přednost místům, přes která vede nejslibnější cesta. Místa ležící opačným směrem mají velké h a na řadu přijdou pozdě, nebo vůbec.</p>
+<p>Platí:<sup class="ref"><a href="#z2">2</a></sup></p>
+<ul>
+  <li>Když je h <strong>přípustná</strong>, najde A* vždy nejkratší cestu, stejně jako Dijkstra.</li>
+  <li>Když je h všude 0, je A* <strong>přesně Dijkstrův algoritmus</strong>.</li>
+  <li>Čím přesnější (ale pořád nepřeceňující) odhad, tím méně míst A* prozkoumá.</li>
+</ul>
+</section>
+
+<section id="astar-priklad">
+<h2>Průběh na příkladu</h2>
+<div class="tbl"><table>
+<thead><tr><th>uzavírám</th><th>g + h = f</th><th>fronta po kroku (místo: f)</th></tr></thead>
+<tbody>
+<tr><td><b>S</b></td><td class="num">0 + 14 = 14</td><td>B: 15, A: 20, E: 23</td></tr>
+<tr><td><b>B</b></td><td class="num">4 + 11 = 15</td><td>C: 17, A: 20, E: 23, F: 25</td></tr>
+<tr><td><b>C</b></td><td class="num">9 + 8 = 17</td><td>D: 17, A: 20, E: 23, F: 25</td></tr>
+<tr><td><b>D</b></td><td class="num">13 + 4 = 17</td><td>Z: 18, A: 20, E: 23, F: 25</td></tr>
+<tr><td><b>Z</b></td><td class="num">18 + 0 = 18</td><td>cíl, konec</td></tr>
+</tbody></table></div>
+<p>A* uzavřel jen 5 míst, Dijkstra všech 8, a cesta je stejná: <code>S → B → C → D → Z</code>, 18 km. Místa E a F se dostala do fronty, ale s velkým f, a na řadu už nepřišla. Pozor: A* nezastaví, když cíl poprvé <em>uvidí</em>, ale až když ho z fronty <em>vyjme</em>. Teprve pak je jisté, že kratší cesta neexistuje.</p>
+<h3>Krokování</h3>
+<div class="ng-step" id="aStep"></div>
+</section>
+
+<section id="hladove">
+<h2>Hladové hledání</h2>
+<p><dfn>Hladové hledání</dfn> (anglicky <i>greedy best-first search</i>) jde ještě dál: bere z fronty místo s nejmenším <strong>h</strong> a ujetou vzdálenost g úplně ignoruje. Žene se přímo k cíli a obvykle prozkoumá ještě méně míst než A*. Nejkratší cestu ale nezaručuje: na mřížce s bažinou jde přímo přes ni (cena 40 místo 32) a v bludišti najde cestu o 8 kroků delší než ostatní.</p>
+<p>Podobně dopadne A* s heuristikou, která <strong>přeceňuje</strong>: dává odhadu přílišnou váhu proti skutečné vzdálenosti a může přehlédnout lepší cestu.</p>
+</section>
+
+<p class="part">Souvislosti</p>
+
+<section id="mrizka">
+<h2>Srovnání na mřížce</h2>
+<p>Mřížka 27 × 13 políček, chodí se vodorovně a svisle, běžné políčko stojí 1, bažina 5. Tabulka ukazuje, kolik políček algoritmus prozkoumal a jakou cenu měla nalezená cesta. Vyzkoušej si to v pískovišti v <a href="03_nejkratsi_cesta.html">prezentaci</a>.</p>
+<div class="tbl"><table>
+<thead><tr><th>mapa</th><th>do šířky</th><th>Dijkstra</th><th>A*</th><th>hladové</th></tr></thead>
+<tbody>
+<tr><td>prázdná</td><td>264 · 20</td><td>264 · 20</td><td>21 · 20</td><td>21 · 20</td></tr>
+<tr><td>zeď</td><td>280 · 28</td><td>280 · 28</td><td>114 · 28</td><td>54 · 28</td></tr>
+<tr><td>bažina</td><td>262 · <b>40</b></td><td>317 · 32</td><td>136 · 32</td><td>21 · <b>40</b></td></tr>
+<tr><td>bludiště</td><td>125 · 82</td><td>125 · 82</td><td>111 · 82</td><td>104 · <b>90</b></td></tr>
+</tbody></table></div>
+<p class="tiny">V každé buňce: prozkoumaná políčka · cena nalezené cesty. Tučně jsou ceny horší než nejkratší možná.</p>
+<ul>
+  <li>Bez bažiny stojí všechny kroky stejně, takže do šířky a Dijkstra dělají totéž.</li>
+  <li>V bažině do šířky nalezne cestu s nejméně kroky, ale ta vede bažinou. Dijkstra a A* ji obejdou.</li>
+  <li>V bludišti A* moc neušetří: chodby vedou často opačným směrem, než ukazuje odhad.</li>
+</ul>
+<div class="tbl"><table>
+<thead><tr><th>algoritmus</th><th>z fronty bere</th><th>nejkratší cesta</th></tr></thead>
+<tbody>
+<tr><td>do šířky</td><td>nejstarší záznam (obyčejná fronta)</td><td>jen při stejných cenách kroků</td></tr>
+<tr><td>Dijkstra</td><td>nejmenší g</td><td>ano (nezáporné ceny)</td></tr>
+<tr><td>A*</td><td>nejmenší g + h</td><td>ano, když h nepřeceňuje</td></tr>
+<tr><td>hladové</td><td>nejmenší h</td><td>ne</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="historie">
+<h2>Historie a použití</h2>
+<p><strong>Edsger W. Dijkstra</strong> (1930–2002), nizozemský informatik, algoritmus vymyslel v roce 1956 v Amsterdamu. Potřeboval předvést nový počítač ARMAC na úloze, které rozumí i laici: nejkratší cesta mezi 64 nizozemskými městy. Podle jeho vzpomínek algoritmus navrhl asi za dvacet minut, když si se snoubenkou při nákupech sedl na kavárenskou terasu. Bez papíru a tužky, což ho prý donutilo k jednoduchosti. Publikoval ho v roce 1959.<sup class="ref"><a href="#z1">1</a></sup></p>
+<p><strong>A*</strong> publikovali v roce 1968 Peter Hart, Nils Nilsson a Bertram Raphael ze Stanford Research Institute. Vznikl pro projekt <strong>Shakey</strong>, mobilního robota, který si měl sám plánovat, jak se dostat k cíli.<sup class="ref"><a href="#z2">2</a></sup></p>
+<ul>
+  <li><strong>Navigace</strong> používají vylepšené verze Dijkstrova algoritmu a A*. Velkou část práce si spočítají předem, aby dotaz na trasu přes celou zemi trval milisekundy.</li>
+  <li><strong>Počítačové hry</strong>: A* je nejběžnější způsob, jak postavičky hledají cestu mezi překážkami.<sup class="ref"><a href="#z2">2</a></sup></li>
+  <li><strong>Internet</strong>: směrovací protokoly OSPF a IS-IS počítají nejkratší cesty mezi routery Dijkstrovým algoritmem.<sup class="ref"><a href="#z1">1</a></sup></li>
+  <li><strong>Roboti</strong> ve skladech a autonomní vozidla plánují trasu podobnými algoritmy.</li>
+</ul>
+</section>
+
+<section id="python">
+<h2>Program v Pythonu</h2>
+<p>Pro zájemce: Dijkstrův algoritmus i A* v jedné funkci. Graf je slovník, u každého místa seznam sousedů s délkou silnice. Prioritní frontu zajistí modul <code>heapq</code>: <code>heappush</code> vloží dvojici <code>(priorita, místo)</code> a <code>heappop</code> vždy vyjme tu s nejmenší prioritou. Ulož program do souboru a spusť ho u sebe.</p>
+<div class="codehead"><span>cesta.py</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">import heapq
+
+# Silniční síť: u každého místa seznam (soused, délka silnice v km)
+GRAF = {
+    "S": [("A", 11), ("B", 4), ("E", 6)],
+    "A": [("B", 9), ("S", 11), ("Z", 13)],
+    "B": [("A", 9), ("C", 5), ("F", 6), ("S", 4)],
+    "C": [("B", 5), ("D", 4), ("F", 9)],
+    "D": [("C", 4), ("Z", 5)],
+    "E": [("F", 4), ("S", 6)],
+    "F": [("B", 6), ("C", 9), ("E", 4)],
+    "Z": [("A", 13), ("D", 5)],
+}
+
+# Odhad vzdušnou čarou do cíle Z (zaokrouhlený dolů, nikdy nepřeceňuje)
+ODHAD = {"S": 14, "A": 9, "B": 11, "C": 8, "D": 4, "E": 17, "F": 15, "Z": 0}
+
+
+def hledej(start, cil, odhad=None):
+    """Dijkstrův algoritmus, nebo A*, když dostane odhad."""
+    vzdalenost = {start: 0}
+    predchudce = {start: None}
+    fronta = [(0, start)]             # prioritní fronta: (priorita, místo)
+    uzavrene = []
+    while fronta:
+        _, misto = heapq.heappop(fronta)          # nejmenší priorita
+        if misto in uzavrene:
+            continue                  # starý záznam, místo už je hotové
+        uzavrene.append(misto)
+        if misto == cil:
+            break
+        for soused, delka in GRAF[misto]:
+            nova = vzdalenost[misto] + delka
+            if soused not in vzdalenost or nova &lt; vzdalenost[soused]:
+                vzdalenost[soused] = nova
+                predchudce[soused] = misto
+                priorita = nova + (odhad[soused] if odhad else 0)
+                heapq.heappush(fronta, (priorita, soused))
+    cesta = []
+    misto = cil
+    while misto is not None:          # cesta pozpátku po předchůdcích
+        cesta.append(misto)
+        misto = predchudce[misto]
+    cesta.reverse()
+    return cesta, vzdalenost[cil], uzavrene
+
+
+for nazev, odhad in [("Dijkstra", None), ("A*", ODHAD)]:
+    cesta, km, uzavrene = hledej("S", "Z", odhad)
+    print(nazev)
+    print("  pořadí uzavření:", " ".join(uzavrene))
+    print("  cesta:", " → ".join(cesta), f"({km} km)")</code></pre>
+<p>Výstup:</p>
+<pre><code>Dijkstra
+  pořadí uzavření: S B E C F A D Z
+  cesta: S → B → C → D → Z (18 km)
+A*
+  pořadí uzavření: S B C D Z
+  cesta: S → B → C → D → Z (18 km)</code></pre>
+<p>Rozdíl mezi oběma algoritmy je v jediném řádku: <code>priorita = nova + odhad[soused]</code>. Bez odhadu je priorita jen vzdálenost od startu.</p>
+<div class="note tip"><b class="lbl">Proč <code>if misto in uzavrene: continue</code></b><p><code>heapq</code> neumí změnit prioritu prvku, který už ve frontě je. Když najdeme kratší cestu, vložíme místo znovu s novou prioritou. Starý, horší záznam ve frontě zůstane, a až na něj přijde řada, přeskočíme ho. U Z se to stane: ve frontě zůstane záznam (24, Z).</p></div>
+<details class="q"><summary>Vyzkoušej: přidej silnici S–D dlouhou 12 km. Co se změní?</summary><div class="a"><p>Přidej <code>("D", 12)</code> k S a <code>("S", 12)</code> k D. Nejkratší cesta bude <code>S → D → Z</code>, 17 km. Oba algoritmy ji najdou. A* přitom uzavře 5 míst (S, B, D, C, Z), Dijkstra všech 8.</p></div></details>
+<details class="q"><summary>Vyzkoušej: nastav odhad u B na 30 (přeceňuje). Co udělá A*?</summary><div class="a"><p>B dostane prioritu 4 + 30 = 34, dostane se na řadu až po Z a A* vrátí cestu <code>S → A → Z</code> za 24 km. Uzavře přitom S, A, E a Z. S přeceňující heuristikou A* nejkratší cestu najít nemusí.</p></div></details>
+</section>
+
+<p class="part">Procvičení</p>
+
+<section id="osnova">
+<h2>Jak odpovídat u maturity</h2>
+<ol class="plan">
+  <li><b>Úloha:</b> vážený graf, cena cesty, příklady použití.</li>
+  <li><b>Proč nestačí do šířky:</b> nejméně hran ≠ nejmenší cena, příklad.</li>
+  <li><b>Dijkstra:</b> prioritní fronta, uzavírání podle vzdálenosti, relaxace, předchůdci.</li>
+  <li><b>Proč funguje:</b> nezáporné ceny; proč nefunguje se zápornými.</li>
+  <li><b>Heuristika:</b> vzdušná čára, manhattanská vzdálenost, přípustnost.</li>
+  <li><b>A*:</b> f = g + h, vztah k Dijkstrovi (h = 0), méně prozkoumaných míst.</li>
+  <li><b>Hladové hledání:</b> jen h, rychlé, ale ne vždy nejkratší.</li>
+  <li><b>Historie a použití:</b> Dijkstra 1956, A* 1968 a robot Shakey, navigace, hry, OSPF.</li>
+</ol>
+</section>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Proč prohledávání do šířky nenajde ve váženém grafu vždy nejkratší cestu?</summary><div class="a"><p>Počítá počet hran, ne jejich ceny. Cesta s nejméně hranami může mít větší součet cen, jako S → A → Z (24 km) proti S → B → C → D → Z (18 km).</p></div></details>
+<details class="q"><summary>Čím se liší prioritní fronta od obyčejné?</summary><div class="a"><p>Obyčejná fronta vydává prvky v pořadí, v jakém přišly. Prioritní fronta vydá vždy prvek s nejmenší prioritou, bez ohledu na to, kdy byl vložen.</p></div></details>
+<details class="q"><summary>Co je relaxace hrany?</summary><div class="a"><p>Zjistíme, zda cesta do v přes u (vzdálenost u + cena hrany) je kratší než dosud známá vzdálenost v. Pokud ano, vzdálenost a předchůdce v přepíšeme.</p></div></details>
+<details class="q"><summary>Proč Dijkstrův algoritmus nefunguje se zápornými cenami?</summary><div class="a"><p>Spoléhá na to, že prodloužením cesty se cena nezmenší. Se zápornou hranou by mohla vést do už uzavřeného místa kratší cesta, kterou algoritmus nezohlední.</p></div></details>
+<details class="q"><summary>Co znamená f = g + h?</summary><div class="a"><p>g je skutečná vzdálenost od startu, h odhad zbývající vzdálenosti do cíle, f odhad délky celé cesty přes dané místo. A* vybírá z fronty místo s nejmenším f.</p></div></details>
+<details class="q"><summary>Kdy je heuristika přípustná a proč na tom záleží?</summary><div class="a"><p>Když nikdy nepřeceňuje skutečnou vzdálenost do cíle. Jen pak A* zaručeně najde nejkratší cestu.</p></div></details>
+<details class="q"><summary>Jak se A* chová, když je h všude 0?</summary><div class="a"><p>Přesně jako Dijkstrův algoritmus, protože f = g.</p></div></details>
+<details class="q"><summary>Proč A* prozkoumá méně míst než Dijkstra?</summary><div class="a"><p>Místa vzdálená od cíle mají velké h, a tedy velké f. Na řadu přijdou pozdě nebo vůbec. Dijkstra zpracuje všechna místa bližší než cíl, ať leží kterýmkoli směrem.</p></div></details>
+<details class="q"><summary>V čem se mýlí hladové hledání?</summary><div class="a"><p>Sleduje jen odhad h a ignoruje, kolik už ujelo. Může tak zvolit cestu, která vypadá slibně, ale je drahá, třeba přes bažinu.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Vážený graf</dt><dd>graf, ve kterém má každá hrana cenu (váhu)</dd>
+  <dt>Cena cesty</dt><dd>součet cen hran, ze kterých se cesta skládá</dd>
+  <dt>Prioritní fronta</dt><dd>datová struktura, která vždy vydá prvek s nejmenší prioritou</dd>
+  <dt>Relaxace hrany</dt><dd>zlepšení dosud známé vzdálenosti místa cestou přes souseda</dd>
+  <dt>Uzavřené místo</dt><dd>místo, jehož nejkratší vzdálenost od startu je už jistá</dd>
+  <dt>Strom nejkratších cest</dt><dd>šipky k předchůdcům, které vedou po nejkratších cestách ke startu</dd>
+  <dt>Heuristika</dt><dd>rychlý odhad vzdálenosti do cíle</dd>
+  <dt>Přípustná heuristika</dt><dd>heuristika, která nikdy nepřeceňuje</dd>
+  <dt>Manhattanská vzdálenost</dt><dd>|x₁ − x₂| + |y₁ − y₂|, vzdálenost při chůzi jen vodorovně a svisle</dd>
+  <dt>A*</dt><dd>hledání nejkratší cesty s prioritou f = g + h</dd>
+  <dt>Hladové hledání</dt><dd>hledání s prioritou jen podle odhadu h</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v listopadu 2026. Vzorový graf a počty prozkoumaných políček jsou spočítané programem.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Wikipedia: Dijkstra's algorithm</a></li>
+  <li id="z2"><a href="https://en.wikipedia.org/wiki/A*_search_algorithm">Wikipedia: A* search algorithm</a></li>
+  <li id="z3">E. W. Dijkstra: <i>A note on two problems in connexion with graphs</i>. Numerische Mathematik 1, 1959</li>
+  <li id="z4">P. Hart, N. Nilsson, B. Raphael: <i>A Formal Basis for the Heuristic Determination of Minimum Cost Paths</i>. IEEE Transactions on Systems Science and Cybernetics, 1968</li>
+  <li id="z5"><a href="https://www.redblobgames.com/pathfinding/a-star/introduction.html">Red Blob Games: Introduction to the A* Algorithm</a> (interaktivní výklad)</li>
+  <li id="z6">S. Russell, P. Norvig: <i>Artificial Intelligence: A Modern Approach</i>, 4. vydání, kapitola 3</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k materiálu Nejkratší cesta. Pískoviště, kde si algoritmy vyzkoušíš na mřížce, najdeš v <a href="03_nejkratsi_cesta.html">prezentaci</a>.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
+    });
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+
+  /* ===== nejkratší cesta: vzorový graf (shodný s programem v Pythonu) ===== */
+  var NG_POS = { S: [0, 4], A: [5, 9], B: [3, 2], C: [7, 1], D: [10, 3], E: [-3, 0], F: [0, -1], Z: [14, 5] };
+  var NG_EDGES = [["S", "A", 11], ["A", "Z", 13], ["B", "A", 9], ["S", "B", 4], ["B", "C", 5], ["C", "D", 4], ["D", "Z", 5], ["S", "E", 6], ["E", "F", 4], ["F", "B", 6], ["F", "C", 9]];
+  var NG_H = { S: 14, A: 9, B: 11, C: 8, D: 4, E: 17, F: 15, Z: 0 };
+  var NG_ADJ = {};
+  NG_EDGES.forEach(function (e) {
+    (NG_ADJ[e[0]] = NG_ADJ[e[0]] || []).push([e[1], e[2]]);
+    (NG_ADJ[e[1]] = NG_ADJ[e[1]] || []).push([e[0], e[2]]);
+  });
+  Object.keys(NG_ADJ).forEach(function (k) { NG_ADJ[k].sort(function (a, b) { return a[0] < b[0] ? -1 : 1; }); });
+  var NG_SVGNS = "http://www.w3.org/2000/svg";
+  function ngSv(tag, a, t) { var e = document.createElementNS(NG_SVGNS, tag); for (var k in a) e.setAttribute(k, a[k]); if (t != null) e.textContent = t; return e; }
+  function ngXY(n) { var p = NG_POS[n]; return [70 + (p[0] + 3) * 50, 40 + (9 - p[1]) * 26]; }
+  function ngKey(a, b) { return a < b ? a + b : b + a; }
+
+  /* nakreslí graf do <svg>, vrátí odkazy na uzly a hrany */
+  function ngDraw(svg, o) {
+    o = o || {};
+    svg.setAttribute("viewBox", "0 0 1000 330");
+    var R = { nodes: {}, edges: {}, dl: {}, hl: {} };
+    NG_EDGES.forEach(function (e) {
+      var p = ngXY(e[0]), q = ngXY(e[1]);
+      var ln = ngSv("line", { "class": "ng-edge", x1: p[0], y1: p[1], x2: q[0], y2: q[1] }); svg.appendChild(ln);
+      R.edges[ngKey(e[0], e[1])] = ln;
+    });
+    NG_EDGES.forEach(function (e) {
+      var p = ngXY(e[0]), q = ngXY(e[1]);
+      svg.appendChild(ngSv("text", { "class": "ng-w", x: (p[0] + q[0]) / 2, y: (p[1] + q[1]) / 2 + 5, "text-anchor": "middle" }, e[2]));
+    });
+    Object.keys(NG_POS).forEach(function (n) {
+      var p = ngXY(n), g = ngSv("g", { "class": "ng-node" + (n === "S" ? " is-start" : "") + (n === "Z" ? " is-goal" : "") });
+      g.appendChild(ngSv("circle", { cx: p[0], cy: p[1], r: 21 }));
+      g.appendChild(ngSv("text", { "class": "ng-name", x: p[0], y: p[1] + 6, "text-anchor": "middle" }, n));
+      var dl = ngSv("text", { "class": "ng-d", x: p[0], y: p[1] + 42, "text-anchor": "middle" }, "");
+      g.appendChild(dl); R.dl[n] = dl;
+      if (o.h) { var hl = ngSv("text", { "class": "ng-h", x: p[0], y: p[1] - 29, "text-anchor": "middle" }, "h = " + NG_H[n]); g.appendChild(hl); R.hl[n] = hl; }
+      svg.appendChild(g); R.nodes[n] = g;
+    });
+    return R;
+  }
+
+  /* kroky Dijkstrova algoritmu (astar = false) nebo A* (astar = true) */
+  function ngFrames(astar) {
+    var dist = { S: 0 }, pred = { S: null }, closed = [], pq = [{ n: "S", p: astar ? NG_H.S : 0 }], F = [];
+    function pri(n) { return dist[n] + (astar ? NG_H[n] : 0); }
+    function priTxt(n) { return astar ? dist[n] + " + " + NG_H[n] + " = " + pri(n) : String(dist[n]); }
+    function snap(msg, cur, extra) {
+      F.push({ msg: msg, cur: cur || null, dist: JSON.parse(JSON.stringify(dist)), pred: JSON.parse(JSON.stringify(pred)), closed: closed.slice(),
+        pq: pq.slice().sort(function (a, b) { return a.p - b.p || (a.n < b.n ? -1 : 1); }).map(function (x) { return { n: x.n, t: astar ? dist[x.n] + "+" + NG_H[x.n] + "=" + x.p : String(x.p) }; }),
+        path: (extra && extra.path) || [], look: (extra && extra.look) || [] });
+    }
+    snap(astar
+      ? "Start S má cestu 0 km. Do fronty ho dáme s prioritou <b>f = g + h</b> = 0 + 14 = 14: kolik už jsme ujeli plus odhad vzdušnou čarou do cíle."
+      : "Start S má vzdálenost 0, u ostatních míst vzdálenost zatím neznáme (∞). Do prioritní fronty dáme S.", null);
+    while (pq.length) {
+      pq.sort(function (a, b) { return a.p - b.p || (a.n < b.n ? -1 : 1); });
+      var it = pq.shift(), u = it.n;
+      if (closed.indexOf(u) >= 0) continue;
+      closed.push(u);
+      if (u === "Z") {
+        var path = [], x = "Z"; while (x) { path.unshift(x); x = pred[x]; }
+        snap("Z fronty bereme <b>Z</b> s " + (astar ? "f = " + priTxt("Z") : "vzdáleností " + dist.Z) + ". Je to cíl, <b>hotovo</b>. Nejkratší cesta má " + dist.Z + " km. Najdeme ji pozpátku podle předchůdců: " + path.join(" → ") + ".", "Z", { path: path });
+        snap("<b>Výsledek: " + path.join(" → ") + ", " + dist.Z + " km.</b> Uzavřeli jsme " + closed.length + " z 8 míst" + (astar ? ". Dijkstra jich uzavře všech 8. Místa E a F leží daleko od cíle, mají velké h, a A* se k nim vůbec nedostal." : ". Dijkstra prozkoumal všechno, co bylo blíž než cíl, i místa E a F, která leží opačným směrem."), null, { path: path });
+        return F;
+      }
+      snap("Z fronty bereme místo s nejmenší " + (astar ? "hodnotou f: <b>" + u + "</b> (" + priTxt(u) + ")" : "vzdáleností: <b>" + u + "</b> (" + dist[u] + " km)") + ". " + (astar ? "" : "Kratší cesta do " + u + " už existovat nemůže, každá jiná vede přes místo, které je dál. ") + u + " <b>uzavíráme</b>.", u);
+      var parts = [], look = [];
+      NG_ADJ[u].forEach(function (e) {
+        var v = e[0], w = e[1];
+        if (closed.indexOf(v) >= 0) return;
+        var nd = dist[u] + w; look.push(v);
+        if (dist[v] === undefined || nd < dist[v]) {
+          var old = dist[v];
+          dist[v] = nd; pred[v] = u;
+          pq = pq.filter(function (q) { return q.n !== v; }); pq.push({ n: v, p: pri(v) });
+          parts.push("<b>" + v + "</b>: " + dist[u] + " + " + w + " = " + nd + (old === undefined ? " (dosud ∞)" : " &lt; " + old + ", <b>lepší, přepisujeme</b>"));
+        } else {
+          parts.push(v + ": " + dist[u] + " + " + w + " = " + nd + " ≥ " + dist[v] + ", nic neměníme");
+        }
+      });
+      snap(parts.length ? "Sousedé " + u + ": " + parts.join("; ") + "." : "Všichni sousedé " + u + " už jsou uzavření.", u, { look: look });
+    }
+    return F;
+  }
+
+  function ngStepper(root, astar, btnClass) {
+    var F = ngFrames(astar), fi = 0, b = btnClass || "calc-btn";
+    root.innerHTML = '<div class="ng-ctrl"><button class="' + b + '" data-k="prev">← Zpět</button><button class="' + b + '" data-k="next">Krok →</button><button class="' + b + '" data-k="reset">Znovu</button><span class="ng-count"></span></div>' +
+      '<svg class="ng-svg" role="img" aria-label="' + (astar ? "Algoritmus A* krok za krokem" : "Dijkstrův algoritmus krok za krokem") + '"></svg>' +
+      '<div class="ng-under"><p class="ng-msg" aria-live="polite"></p><div class="ng-pq"><span class="ng-pq-lab">prioritní fronta</span><div class="ng-pq-items"></div></div></div>';
+    var R = ngDraw(root.querySelector("svg"), { h: astar });
+    function draw() {
+      var f = F[fi];
+      Object.keys(R.nodes).forEach(function (n) {
+        var c = R.nodes[n].classList;
+        c.toggle("is-closed", f.closed.indexOf(n) >= 0);
+        c.toggle("is-cur", n === f.cur);
+        c.toggle("is-open", f.dist[n] !== undefined && f.closed.indexOf(n) < 0);
+        c.toggle("is-path", f.path.indexOf(n) >= 0);
+        c.toggle("is-look", f.look.indexOf(n) >= 0);
+        R.dl[n].textContent = f.dist[n] === undefined ? "∞" : f.dist[n] + " km";
+      });
+      Object.keys(R.edges).forEach(function (k) { R.edges[k].classList.remove("is-tree", "is-path"); });
+      Object.keys(f.pred).forEach(function (n) { if (f.pred[n]) R.edges[ngKey(n, f.pred[n])].classList.add("is-tree"); });
+      for (var i = 0; i < f.path.length - 1; i++) R.edges[ngKey(f.path[i], f.path[i + 1])].classList.add("is-path");
+      root.querySelector(".ng-msg").innerHTML = f.msg;
+      root.querySelector(".ng-pq-items").innerHTML = f.pq.length ? f.pq.map(function (q, i) { return '<span class="ng-q' + (i === 0 ? " is-first" : "") + '">' + q.n + " · " + q.t + "</span>"; }).join("") : '<span class="ng-empty">prázdná</span>';
+      root.querySelector(".ng-count").textContent = "krok " + fi + " z " + (F.length - 1);
+      root.querySelector('[data-k="prev"]').disabled = fi === 0;
+      root.querySelector('[data-k="next"]').disabled = fi === F.length - 1;
+    }
+    root.addEventListener("click", function (e) {
+      var a = e.target.closest("[data-k]"); if (!a) return;
+      var k = a.getAttribute("data-k");
+      if (k === "prev" && fi > 0) fi--; if (k === "next" && fi < F.length - 1) fi++; if (k === "reset") fi = 0;
+      draw();
+    });
+    draw();
+    return { minHeight: function () {
+      var m = root.querySelector(".ng-msg"), keep = fi, mx = 0; m.style.minHeight = "0px";
+      for (var i = 0; i < F.length; i++) { fi = i; draw(); mx = Math.max(mx, m.offsetHeight); }
+      fi = keep; draw(); m.style.minHeight = mx + "px";
+    } };
+  }
+
+  /* ===== mřížka: BFS, Dijkstra, A*, hladové hledání ===== */
+  var NC_C = 27, NC_R = 13;
+  function ncPreset(name) {
+    var g = [], y, x;
+    for (y = 0; y < NC_R; y++) { g.push([]); for (x = 0; x < NC_C; x++) g[y].push(0); }
+    var s = [3, 6], t = [23, 6];
+    if (name === "zed") { for (y = 0; y < 11; y++) g[y][13] = 1; s = [4, 6]; t = [22, 6]; }
+    if (name === "bazina") { for (y = 3; y < 13; y++) for (x = 11; x < 16; x++) g[y][x] = 2; s = [3, 8]; t = [23, 8]; }
+    if (name === "bludiste") {
+      for (y = 0; y < NC_R; y++) for (x = 0; x < NC_C; x++) g[y][x] = 1;
+      var seed = 7; function rnd() { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+      var st = [[1, 1]]; g[1][1] = 0;
+      while (st.length) {
+        var c = st[st.length - 1], opts = [];
+        [[0, -2], [2, 0], [0, 2], [-2, 0]].forEach(function (d) { var nx = c[0] + d[0], ny = c[1] + d[1]; if (nx > 0 && nx < NC_C - 1 && ny > 0 && ny < NC_R - 1 && g[ny][nx] === 1) opts.push([nx, ny]); });
+        if (!opts.length) { st.pop(); continue; }
+        var n = opts[Math.floor(rnd() * opts.length)];
+        g[(c[1] + n[1]) / 2][(c[0] + n[0]) / 2] = 0; g[n[1]][n[0]] = 0; st.push(n);
+      }
+      for (var k = 0; k < 14; k++) { var rx = 1 + Math.floor(rnd() * (NC_C - 2)), ry = 1 + Math.floor(rnd() * (NC_R - 2)); if ((rx + ry) % 2 === 1) g[ry][rx] = 0; }
+      s = [1, 1]; t = [NC_C - 2, NC_R - 2];
+    }
+    return { g: g, s: s, t: t };
+  }
+  function ncRun(M, alg) {
+    var g = M.g, s = M.s, t = M.t, key = function (p) { return p[0] + "," + p[1]; };
+    var h = function (p) { return Math.abs(p[0] - t[0]) + Math.abs(p[1] - t[1]); };
+    var cost = function (p) { return g[p[1]][p[0]] === 2 ? 5 : 1; };
+    var nb = function (p) {
+      var out = [];
+      [[0, -1], [1, 0], [0, 1], [-1, 0]].forEach(function (d) { var x = p[0] + d[0], y = p[1] + d[1]; if (x >= 0 && x < NC_C && y >= 0 && y < NC_R && g[y][x] !== 1) out.push([x, y]); });
+      return out;
+    };
+    var ev = [], dist = {}, pred = {}, closed = {}, cnt = 0, found = false;
+    dist[key(s)] = 0; pred[key(s)] = null;
+    if (alg === "bfs") {
+      var q = [s], seen = {}; seen[key(s)] = 1; ev.push(["o", key(s)]);
+      while (q.length) {
+        var u = q.shift(), ku = key(u); closed[ku] = 1; ev.push(["c", ku]);
+        if (ku === key(t)) { found = true; break; }
+        nb(u).forEach(function (v) { var kv = key(v); if (!seen[kv]) { seen[kv] = 1; pred[kv] = ku; dist[kv] = dist[ku] + cost(v); q.push(v); ev.push(["o", kv]); } });
+      }
+    } else {
+      var heap = [];
+      var lt = function (a, b) { return a[0] - b[0] || a[1] - b[1] || a[2] - b[2]; };
+      var push = function (it) { heap.push(it); var i = heap.length - 1; while (i > 0) { var p = (i - 1) >> 1; if (lt(heap[i], heap[p]) < 0) { var tmp = heap[i]; heap[i] = heap[p]; heap[p] = tmp; i = p; } else break; } };
+      var pop = function () { var top = heap[0], last = heap.pop(); if (heap.length) { heap[0] = last; var i = 0; for (;;) { var l = 2 * i + 1, r = l + 1, m = i; if (l < heap.length && lt(heap[l], heap[m]) < 0) m = l; if (r < heap.length && lt(heap[r], heap[m]) < 0) m = r; if (m === i) break; var tmp = heap[i]; heap[i] = heap[m]; heap[m] = tmp; i = m; } } return top; };
+      push([0, 0, cnt++, s]); ev.push(["o", key(s)]);
+      while (heap.length) {
+        var it = pop(), uu = it[3], k = key(uu);
+        if (closed[k]) continue;
+        closed[k] = 1; ev.push(["c", k]);
+        if (k === key(t)) { found = true; break; }
+        nb(uu).forEach(function (v) {
+          var kv = key(v), nd = dist[k] + cost(v);
+          if (alg === "greedy") { if (dist[kv] !== undefined) return; dist[kv] = nd; pred[kv] = k; push([h(v), h(v), cnt++, v]); ev.push(["o", kv]); return; }
+          if (dist[kv] === undefined || nd < dist[kv]) {
+            dist[kv] = nd; pred[kv] = k;
+            push([nd + (alg === "astar" ? h(v) : 0), alg === "astar" ? h(v) : 0, cnt++, v]); ev.push(["o", kv]);
+          }
+        });
+      }
+    }
+    var path = [];
+    if (found) { var x = key(t); while (x) { path.unshift(x); x = pred[x]; } }
+    var pc = 0; path.slice(1).forEach(function (k) { var p = k.split(",").map(Number); pc += cost(p); });
+    return { ev: ev, path: path, found: found, steps: Math.max(0, path.length - 1), cost: pc, closed: Object.keys(closed).length };
+  }
+
+  /* kreslení mřížky a interaktivní pískoviště */
+  function ncGrid(host, M, o) {
+    o = o || {};
+    host.innerHTML = "";
+    var wrap = document.createElement("div"); wrap.className = "nc-grid"; host.appendChild(wrap);
+    var cells = {};
+    for (var y = 0; y < NC_R; y++) for (var x = 0; x < NC_C; x++) {
+      var c = document.createElement("div"); c.className = "nc-cell"; c.dataset.x = x; c.dataset.y = y;
+      wrap.appendChild(c); cells[x + "," + y] = c;
+    }
+    function paintMap() {
+      for (var y = 0; y < NC_R; y++) for (var x = 0; x < NC_C; x++) {
+        var c = cells[x + "," + y], v = M.g[y][x];
+        c.className = "nc-cell" + (v === 1 ? " is-wall" : v === 2 ? " is-swamp" : "") + (x === M.s[0] && y === M.s[1] ? " is-s" : "") + (x === M.t[0] && y === M.t[1] ? " is-t" : "");
+        c.textContent = x === M.s[0] && y === M.s[1] ? "S" : x === M.t[0] && y === M.t[1] ? "C" : "";
+      }
+    }
+    paintMap();
+    return { el: wrap, cells: cells, paintMap: paintMap };
+  }
+  function ncShow(G, res, upto) {
+    G.paintMap();
+    var n = upto === undefined ? res.ev.length : upto;
+    for (var i = 0; i < n; i++) { var e = res.ev[i], c = G.cells[e[1]]; if (e[0] === "o") c.classList.add("is-open"); else { c.classList.remove("is-open"); c.classList.add("is-closed"); } }
+    if (n >= res.ev.length) res.path.forEach(function (k) { G.cells[k].classList.add("is-path"); });
+  }
+
+
+  var R = ngDraw(document.getElementById("fig1")), best = ["S", "B", "C", "D", "Z"];
+  Object.keys(R.dl).forEach(function (n) { R.dl[n].textContent = ""; R.nodes[n].classList.toggle("is-path", best.indexOf(n) >= 0); });
+  for (var i = 0; i < best.length - 1; i++) R.edges[ngKey(best[i], best[i + 1])].classList.add("is-path");
+  var d = ngStepper(document.getElementById("dStep"), false, "bw-btn"), a = ngStepper(document.getElementById("aStep"), true, "bw-btn");
+  d.minHeight(); a.minHeight();
+  var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { d.minHeight(); a.minHeight(); }, 200); });
+})();
+</script>
+</body>
+</html>

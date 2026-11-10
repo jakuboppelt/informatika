@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soukromí a sledování – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Základ</li>
+    <li><a href="#soukromi">Co je soukromí</a></li>
+    <li><a href="#kdo">Kdo o tobě sbírá data</a></li>
+    <li class="grp">Sledování na webu</li>
+    <li><a href="#cookies">Cookies</a></li>
+    <li><a href="#listy">Cookie lišty a zákon</a></li>
+    <li><a href="#skripty">Skripty a pixely</a></li>
+    <li><a href="#otisk">Otisk prohlížeče</a></li>
+    <li><a href="#aukce">Reklamní aukce a profil</a></li>
+    <li class="grp">Telefon</li>
+    <li><a href="#telefon">Oprávnění aplikací</a></li>
+    <li><a href="#metadata">Metadata a poloha</a></li>
+    <li class="grp">Obrana</li>
+    <li><a href="#inkognito">Anonymní okno</a></li>
+    <li><a href="#vpn">VPN a Tor</a></li>
+    <li><a href="#obrana">Co opravdu funguje</a></li>
+    <li class="grp">Právo a případy</li>
+    <li><a href="#gdpr">GDPR a tvoje práva</a></li>
+    <li><a href="#pripady">Případy z praxe</a></li>
+    <li class="grp">Prakticky</li>
+    <li><a href="#kod">Ukázky kódu</a></li>
+    <li><a href="#ukoly">Úkoly</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#otazky">Otázky</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Informace · Bezpečnost · Studijní text</p>
+  <h1>Soukromí a sledování <span class="t">na internetu</span></h1>
+  <p class="lead">Kdo a jak sleduje, co děláš na webu a v telefonu: cookies, skripty třetích stran, otisk prohlížeče a reklamní aukce. Co skutečně chrání (a co jen vypadá, že chrání) a jaká práva ti dává GDPR.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vyjmenovat, kdo o uživateli sbírá data, a co kdo z toho vidí</li>
+      <li>vysvětlit, jak cookie třetí strany sleduje člověka napříč weby</li>
+      <li>popsat otisk prohlížeče a proč smazání cookies nestačí</li>
+      <li>vysvětlit, jak funguje reklamní aukce a co z drobných údajů vznikne</li>
+      <li>posoudit oprávnění, která chce aplikace v telefonu</li>
+      <li>říct, co anonymní okno, VPN a Tor dělají a co ne</li>
+      <li>uplatnit právo na přístup k údajům podle GDPR</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Základ</p>
+
+<section id="soukromi">
+<h2>Co je soukromí</h2>
+<p><dfn>Soukromí</dfn> není to, že nemáš co skrývat. Je to možnost sám rozhodnout, kdo se co o tobě dozví a k čemu to použije. Informace, které jednotlivě nic neznamenají (kde ses ve čtvrtek ráno nacházel, co sis hledal, jaký máš telefon), se po složení dohromady stávají obrázkem o tvém životě: kde bydlíš, kam chodíš do školy, co tě zajímá, zda jsi zdravý a kolik máš peněz.</p>
+<p>Většina služeb je „zdarma“, protože se platí daty. Reklamu, která se ti zobrazí, někdo zaplatil, a platí tím víc, čím přesněji ví, komu ji ukazuje. O tomhle principu je i prezentace o sociálních sítích, tady ho rozebereme technicky.</p>
+<div class="note mat"><b class="lbl">Hlavní myšlenka</b><p>Sledování většinou nehledá <strong>tebe jako jméno</strong>. Stačí mu číslo, které tě označuje, a to, co k němu za dobu nasbírá. Jméno se doplní, jakmile se jednou někde přihlásíš.</p></div>
+</section>
+
+<section id="kdo">
+<h2>Kdo o tobě sbírá data</h2>
+<div class="tbl"><table>
+<thead><tr><th>Kdo</th><th>Co vidí</th><th>Čím to zjišťuje</th></tr></thead>
+<tbody>
+<tr><td><strong>Weby a reklamní sítě</strong></td><td>co navštěvuješ, čteš, hledáš a kupuješ, napříč weby</td><td>cookies, skripty, pixely, otisk prohlížeče</td></tr>
+<tr><td><strong>Aplikace v telefonu</strong></td><td>co jim povolíš, a navíc typ zařízení, reklamní ID a čas používání</td><td>oprávnění, knihovny třetích stran v aplikaci</td></tr>
+<tr><td><strong>Síť</strong> (škola, Wi-Fi, operátor)</td><td>názvy serverů, na které se připojuješ, a objem dat</td><td>vlastní provoz sítě (obsah chrání HTTPS)</td></tr>
+<tr><td><strong>Platformy a účty</strong> (Google, Meta, Apple, TikTok)</td><td>hledání, videa, poloha, komunikace a kontakty napříč službami</td><td>tvůj přihlášený účet</td></tr>
+</tbody></table></div>
+<p>Z pohledu sledování se nejvíc liší to, jestli jsi přihlášený. Přihlášení spojí všechno, co děláš, s jedním účtem. Bez přihlášení se data spojují aspoň číslem v cookie nebo otiskem prohlížeče.</p>
+</section>
+
+<p class="part">Sledování na webu</p>
+
+<section id="cookies">
+<h2>Cookies</h2>
+<p><dfn>Cookie</dfn> je malý textový soubor, který si web uloží v tvém prohlížeči. Při každém dalším požadavku na stejný server ho prohlížeč pošle zpět. Díky tomu si web pamatuje přihlášení, jazyk nebo obsah košíku. Server ho nastavuje hlavičkou <code>Set-Cookie</code>.</p>
+<div class="tbl"><table>
+<thead><tr><th>Druh</th><th>Kdo ho nastavuje</th><th>K čemu slouží</th></tr></thead>
+<tbody>
+<tr><td><strong>Cookie první strany</strong></td><td>web, který máš otevřený</td><td>přihlášení, košík, nastavení (často nezbytné)</td></tr>
+<tr><td><strong>Cookie třetí strany</strong></td><td>jiná doména, jejíž kód je na stránce vložený</td><td>sledování napříč weby, reklama</td></tr>
+</tbody></table></div>
+<h3>Jak cookie třetí strany sleduje</h3>
+<ol class="plan">
+  <li>Navštívíš web A, na kterém je vložená reklama nebo skript reklamní sítě X.</li>
+  <li>Prohlížeč se připojí i k serveru sítě X, který u tebe uloží cookie třeba <code>id=48213977</code>. Je to náhodné číslo, ne jméno.</li>
+  <li>Navštívíš web B, který také používá síť X. Prohlížeč pošle síti X stejné číslo.</li>
+  <li>Síť X ví, že číslo 48213977 bylo na webu A i na webu B, a k němu přidává, co jsi tam dělal.</li>
+</ol>
+<p>Prohlížeče se brání různě.</p>
+<div class="tbl"><table>
+<thead><tr><th>Prohlížeč</th><th>Výchozí chování ke cookies třetích stran</th><th>Od kdy</th></tr></thead>
+<tbody>
+<tr><td><strong>Safari</strong></td><td>blokuje je (Intelligent Tracking Prevention)</td><td>2020</td></tr>
+<tr><td><strong>Firefox</strong></td><td>každý web má vlastní oddělenou sadu cookies (<i>Total Cookie Protection</i>), takže se cookie z webu A na webu B nepoužije<sup class="ref"><a href="#z11">11</a></sup></td><td>2022</td></tr>
+<tr><td><strong>Chrome, běžné okno</strong></td><td>povoluje; vypnout jdou v nastavení<sup class="ref"><a href="#z7">7</a></sup></td><td>beze změny</td></tr>
+<tr><td><strong>Chrome, anonymní okno</strong></td><td>blokuje<sup class="ref"><a href="#z10">10</a></sup></td><td>2020</td></tr>
+</tbody></table></div>
+<h3>Proč cookies třetích stran v Chrome zůstaly</h3>
+<p>Google od roku 2020 sliboval, že cookies třetích stran v Chrome ukončí a nahradí je sadou technologií <i>Privacy Sandbox</i>. Termín několikrát odložil a nakonec od záměru ustoupil:</p>
+<ol class="plan">
+  <li><b>Červenec 2024:</b> Google oznámil, že cookies třetích stran nezruší a místo toho dá uživatelům výzvu k volbě.</li>
+  <li><b>Duben 2025:</b> zrušil i tuto výzvu. Volba zůstala jen v nastavení prohlížeče.<sup class="ref"><a href="#z7">7</a></sup></li>
+  <li><b>Říjen 2025:</b> ukončil hlavní technologie Privacy Sandbox (Topics, Protected Audience, Attribution Reporting), protože je trh nepřijal.<sup class="ref"><a href="#z12">12</a></sup></li>
+</ol>
+<p>Stav na konci roku 2026: Chrome, který používá většina lidí, cookies třetích stran v běžném okně dál povoluje a žádný termín jejich konce neexistuje. Vypneš je v Nastavení → Soukromí a zabezpečení → Cookies třetích stran.</p>
+<div class="note warn"><b class="lbl">Pozor</b><p>Cookie sama o sobě není škodlivá. Rozdíl dělá <strong>kdo ji nastavil</strong> a <strong>k čemu se používá</strong>. Smazání cookies sledování omezí jen dočasně.</p></div>
+</section>
+
+<section id="listy">
+<h2>Cookie lišty a zákon</h2>
+<p>V ČR platí od 1. ledna 2022 podle zákona o elektronických komunikacích, že cookies kromě technicky nezbytných smí web ukládat jen s tvým souhlasem. K cookies se vztahuje i GDPR, pokud se z nich dá odvodit, kdo jsi.<sup class="ref"><a href="#z1">1</a></sup></p>
+<p>Souhlas musí být svobodný, takže odmítnout má jít stejně snadno jako přijmout. Právníci a Úřad pro ochranu osobních údajů (ÚOOÚ) proto problematizují lišty, které mají jen velké tlačítko „Přijmout vše“ a odmítnutí schovávají. Takové triky se souhrnně nazývají <dfn>dark patterns</dfn> (temné vzory). Jak přesně má lišta vypadat, se vyvíjí podle praxe úřadu a soudů.</p>
+<div class="tbl"><table>
+<thead><tr><th>Trik</th><th>Jak vypadá</th></tr></thead>
+<tbody>
+<tr><td><strong>Nerovná tlačítka</strong></td><td>velké zelené „Přijmout vše“ a drobný šedý odkaz „Nastavení“</td></tr>
+<tr><td><strong>Schované odmítnutí</strong></td><td>odmítnutí je až na druhé nebo třetí obrazovce</td></tr>
+<tr><td><strong>Předzaškrtnuté volby</strong></td><td>desítky „partnerů“ a „oprávněných zájmů“ jsou zapnuté předem</td></tr>
+<tr><td><strong>Měkký tón</strong></td><td>„Vaše soukromí je pro nás důležité“ těsně před sběrem dat</td></tr>
+</tbody></table></div>
+<h3>Co se chystá: digitální omnibus</h3>
+<p>Evropská komise navrhla balíček <dfn>digitální omnibus</dfn>, který má pravidla zjednodušit a omezit počet lišt. Rada EU k němu 21. října 2026 schválila svou vyjednávací pozici.<sup class="ref"><a href="#z13">13</a></sup> Hlavní body týkající se cookies:</p>
+<ul>
+  <li>odmítnutí musí jít <strong>jedním kliknutím</strong></li>
+  <li>po odmítnutí se web nesmí ptát znovu na stejný účel dřív než za <strong>čtyři měsíce</strong> (Komise navrhovala šest)</li>
+  <li>souhlas nebude potřeba pro další účely, například pro anonymní souhrnné měření návštěvnosti samotným provozovatelem nebo pro bezpečnost</li>
+  <li>návrh Komise počítá i s tím, že si preference nastavíš jednou v prohlížeči a weby je budou muset respektovat<sup class="ref"><a href="#z14">14</a></sup></li>
+</ul>
+<div class="note warn"><b class="lbl">Pozor</b><p>Nic z toho zatím <strong>není platné právo</strong>. Evropský parlament svou pozici ještě nepřijal a konečný text se může změnit. Instituce chtějí jednání dokončit do konce roku 2027 a státy pak budou mít čas na převedení do svých zákonů. Do té doby platí dnešní pravidla.</p></div>
+<div class="note tip"><b class="lbl">Tip</b><p>Volba „Odmítnout vše“ je legitimní a web by měl dál fungovat. Pokud nefunguje, je to signál, že lišta nedodržuje pravidla.</p></div>
+</section>
+
+<section id="skripty">
+<h2>Skripty a pixely třetích stran</h2>
+<p>Moderní web není jeden server. Stránka načítá písma, analytiku, reklamu, tlačítka sociálních sítí, mapy a videa z cizích domén. Každé takové načtení říká cizí firmě, že jsi tady, z jaké stránky přicházíš a s jakým prohlížečem.</p>
+<div class="tbl"><table>
+<thead><tr><th>Co</th><th>Jak funguje</th><th>Co prozradí</th></tr></thead>
+<tbody>
+<tr><td><strong>Sledovací pixel</strong></td><td>neviditelný obrázek 1×1 nebo skript z cizího serveru</td><td>že jsi otevřel stránku nebo e-mail, kdy a odkud</td></tr>
+<tr><td><strong>Analytický skript</strong></td><td>měří kliknutí, scrollování a dobu na stránce</td><td>co čteš a kam klikáš</td></tr>
+<tr><td><strong>Reklamní skript</strong></td><td>pošle reklamní síti tvé ID a stránku</td><td>zájmy napříč weby</td></tr>
+<tr><td><strong>Tlačítko sítě</strong></td><td>načte se od sociální sítě při zobrazení stránky</td><td>že jsi tu byl, i když jsi neklikl</td></tr>
+</tbody></table></div>
+<p>Sleduje se i e-mail. Newsletter může obsahovat pixel, který při otevření zprávy sdělí odesílateli, že jsi ji otevřel, a kdy.</p>
+<p>Co všechno se na stránce načítá, uvidíš sám. Otevři vývojářské nástroje (F12) a záložku Síť (Network). Úloha je mezi úkoly níže. Podobný přehled ukazuje nástroj <a href="https://themarkup.org/blacklight">Blacklight</a> od redakce The Markup, který zadanou stránku otestuje a vypíše, jaké sledovače na ní našel.<sup class="ref"><a href="#z3">3</a></sup></p>
+</section>
+
+<section id="otisk">
+<h2>Otisk prohlížeče</h2>
+<p>Cookies můžeš smazat. Vlastnosti prohlížeče a zařízení ne. <dfn>Otisk prohlížeče</dfn> (<i>browser fingerprint</i>) je údaj, který z těchto vlastností vznikne a podle kterého tě web pozná i bez cookies.</p>
+<h3>Z čeho se skládá</h3>
+<ul>
+  <li>typ a verze prohlížeče a systému (<i>user agent</i>)</li>
+  <li>jazyky, časové pásmo, rozlišení a hustota obrazovky</li>
+  <li>počet jader procesoru, velikost paměti, dotykový displej</li>
+  <li>nainstalované fonty</li>
+  <li><strong>canvas a WebGL</strong>: neviditelný obrázek, který každá kombinace grafiky, ovladačů a systému vykreslí o něco jinak</li>
+</ul>
+<p>Hodnoty se spojí a spočítá se z nich hash (stejná myšlenka jako ve studijním textu o hash funkcích). Dva různé počítače obvykle dají dva různé otisky, jeden počítač dává stále stejný.</p>
+<h3>Kolik informace stačí</h3>
+<p>Každá hodnota přináší informaci. Čím méně lidí ji sdílí, tím víc. Měří se v <dfn>bitech</dfn>: hodnota, kterou má jen 1 z 1 024 lidí, nese 10 bitů, protože 2<sup>10</sup> = 1 024. Obecně je informace −log<sub>2</sub>(podíl lidí s touto hodnotou). Na Zemi žije asi 8 miliard lidí, 2<sup>33</sup> je zhruba 8,6 miliardy. Když tvé vlastnosti dohromady nesou kolem 33 bitů, jsi mezi všemi lidmi jediný.</p>
+<div class="note warn"><b class="lbl">Pozor</b><p>Součet bitů platí jen u vlastností, které na sobě nezávisí. Časové pásmo Europe/Prague a čeština spolu souvisí, takže nenesou dvakrát tolik. Skutečný odhad je proto opatrnější. Princip je ale stejný: na jednoznačné poznání stačí překvapivě málo vlastností.</p></div>
+<p>Organizace EFF provozuje od roku 2010 test <a href="https://coveryourtracks.eff.org">Cover Your Tracks</a> (dříve Panopticlick), který ukáže, jak jedinečný je tvůj prohlížeč a zda ho blokátory chrání.<sup class="ref"><a href="#z2">2</a></sup></p>
+<h3>Jak se bránit</h3>
+<ul>
+  <li><strong>Tor Browser</strong> se snaží, aby všichni uživatelé vypadali stejně.</li>
+  <li>Některé prohlížeče (například Brave) výsledky měření mírně zašumí, aby se otisk nedal stabilně spočítat.</li>
+  <li>Obecné pravidlo: čím neobvyklejší nastavení a víc rozšíření, tím jedinečnější otisk. Dokonalá ochrana neexistuje.</li>
+</ul>
+</section>
+
+<section id="aukce">
+<h2>Reklamní aukce a skládání profilu</h2>
+<p>Když otevřeš stránku s reklamou, často proběhne aukce <i>real-time bidding</i> (RTB), která se vyřídí dřív, než se stránka načte.</p>
+<ol class="plan">
+  <li>Stránka má místo pro reklamu a pošle požadavek reklamnímu serveru.</li>
+  <li>Server rozešle mnoha firmám nabídku: toto zařízení právě otevřelo tuto stránku. K tomu přidá číslo (ID), přibližnou polohu a zájmy.</li>
+  <li>Inzerenti odpoví, kolik by za zobrazení zaplatili. Čím lépe tě zná, tím víc nabídne.</li>
+  <li>Vítězná reklama se zobrazí. Ostatní firmy dostaly informaci, že jsi stránku otevřel, i když neutratily nic.</li>
+</ol>
+<h3>Z drobností vznikne profil</h3>
+<p>Z běžných situací se dají odvozovat informace, které jsi nikdy nesdělil. Je to jen ilustrace, skutečné profily jsou složitější a často chybné, ale princip funguje.</p>
+<div class="tbl"><table>
+<thead><tr><th>Co se o tobě ví</th><th>Co se z toho odvodí</th></tr></thead>
+<tbody>
+<tr><td>hledání „nejlevnější tenisky“</td><td>zájem o sport, cenová citlivost</td></tr>
+<tr><td>telefon je v noci doma a od 8 do 15 ve škole</td><td>bydliště, škola, režim dne, přibližný věk</td></tr>
+<tr><td>návštěva webu lékárny</td><td>možný zdravotní problém</td></tr>
+<tr><td>nákupy po půlnoci</td><td>nepravidelný spánek, impulzivní nákupy</td></tr>
+</tbody></table></div>
+<div class="note warn"><b class="lbl">Pozor</b><p>Zdraví, náboženství nebo politické názory patří podle GDPR mezi zvláštní kategorie údajů s vyšší ochranou. Přesto se o nich dá hodně odvodit z nevinných údajů.</p></div>
+</section>
+
+<p class="part">Telefon</p>
+
+<section id="telefon">
+<h2>Oprávnění aplikací</h2>
+<p>Telefon je nejosobnější zařízení, které máš. Aplikace smí jen to, co jí povolíš, ale mnoho lidí povolí všechno bez čtení.</p>
+<div class="tbl"><table>
+<thead><tr><th>Oprávnění</th><th>Co s ním aplikace ví</th><th>Rozumné nastavení</th></tr></thead>
+<tbody>
+<tr><td><strong>Poloha</strong></td><td>kde bydlíš, kam chodíš a kdy jsi doma</td><td>„jen při používání“, případně přibližná poloha; navigace ji potřebuje, hra ne</td></tr>
+<tr><td><strong>Mikrofon a kamera</strong></td><td>zvuk a obraz kolem tebe</td><td>jen aplikacím pro hovory a video; všímej si indikátoru</td></tr>
+<tr><td><strong>Kontakty</strong></td><td>tvoji lidé, i ti, kdo aplikaci nepoužívají</td><td>jen tam, kde je to nutné</td></tr>
+<tr><td><strong>Fotky a soubory</strong></td><td>galerie včetně metadat</td><td>povolit „vybrané fotky“, ne celou galerii</td></tr>
+<tr><td><strong>Reklamní ID</strong></td><td>číslo, které ti přiřadil systém pro reklamu</td><td>na iPhonu se aplikace musí zeptat; na Androidu ho najdeš v nastavení a můžeš ho smazat</td></tr>
+</tbody></table></div>
+<p>Pravidlo: <strong>aplikace má dostat jen oprávnění, která potřebuje ke své hlavní funkci</strong>. Svítilna nepotřebuje kontakty a kalkulačka polohu. Pokud aplikace bez oprávnění nefunguje a nedává to smysl, hledej jinou.</p>
+</section>
+
+<section id="metadata">
+<h2>Metadata a poloha</h2>
+<p><dfn>Metadata</dfn> jsou „data o datech“: o fotce čas a místo pořízení a typ telefonu (EXIF), o dokumentu jméno autora a program, o hovoru kdo komu volal a jak dlouho. Obsah se často chrání, metadata se přehlédnou, přitom skládají nejpřesnější obraz o životě.</p>
+<p>Polohu aplikace určují z GPS, ale také z Wi-Fi sítí a mobilních vysílačů v okolí, takže funguje i uvnitř budov. Systém má tabulky, které k Wi-Fi sítím přiřazují polohu. Vypnutí GPS proto nemusí znamenat, že se poloha nedá zjistit.</p>
+<p>Mnoho sociálních sítí z fotek před zveřejněním EXIF odstraní, ale odesíláš-li fotku jako soubor nebo e-mailem, metadata zůstanou. Před sdílením si je můžeš prohlédnout ve vlastnostech souboru nebo v nastavení fotoaparátu vypnout ukládání polohy.</p>
+</section>
+
+<p class="part">Obrana</p>
+
+<section id="inkognito">
+<h2>Anonymní okno</h2>
+<p>Anonymní (soukromé) okno po zavření smaže historii, cookies a vyplněné formuláře <strong>v tomto zařízení</strong>. Zbytek světa se nic nedozví o tom, že jsi ho použil, neskrývá ale nic.</p>
+<div class="tbl"><table>
+<thead><tr><th>Kdo</th><th>Vidí tvou aktivitu v anonymním okně?</th></tr></thead>
+<tbody>
+<tr><td>ostatní uživatelé tohoto zařízení</td><td>ne, historie se smaže</td></tr>
+<tr><td>web, který navštívíš</td><td>ano, vidí návštěvu i vlastnosti prohlížeče</td></tr>
+<tr><td>škola, zaměstnavatel, správce Wi-Fi</td><td>ano, vidí názvy serverů</td></tr>
+<tr><td>poskytovatel připojení</td><td>ano</td></tr>
+<tr><td>služba, do které se přihlásíš</td><td>ano, poznají tě podle účtu</td></tr>
+<tr><td>otisk prohlížeče</td><td>funguje stejně, vlastnosti zařízení se nemění</td></tr>
+</tbody></table></div>
+<p>Jedna z hromadných žalob v USA tvrdila, že Google sbíral data o prohlížení i v anonymním režimu Chrome. V roce 2024 se Google dohodl, že smaže miliardy takových záznamů.<sup class="ref"><a href="#z5">5</a></sup> Proto Chrome v anonymním okně sám upozorňuje, že aktivita může být vidět webům, škole nebo zaměstnavateli i poskytovateli připojení.</p>
+</section>
+
+<section id="vpn">
+<h2>VPN a Tor</h2>
+<p><dfn>VPN</dfn> vytvoří šifrovaný tunel mezi tvým zařízením a serverem poskytovatele VPN. Web vidí IP adresu serveru VPN, ne tvou. Wi-Fi a operátor vidí jen to, že jsi připojený k VPN.</p>
+<p><dfn>Tor</dfn> pošle provoz přes tři uzly sítě. První uzel zná tvou adresu, ale ne cíl, poslední zná cíl, ale ne tebe. Tor Browser navíc sjednocuje vlastnosti prohlížeče, aby se uživatelé podobali.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>VPN</th><th>Tor Browser</th></tr></thead>
+<tbody>
+<tr><td><strong>Skryje</strong></td><td>IP adresu před webem, obsah provozu před Wi-Fi a operátorem</td><td>IP adresu před webem, sjednotí otisk</td></tr>
+<tr><td><strong>Neskryje</strong></td><td>přihlášení, cookies, otisk; poskytovatel VPN vidí to, co dřív vídal operátor</td><td>co sám napíšeš nebo kde se přihlásíš</td></tr>
+<tr><td><strong>Nevýhoda</strong></td><td>musíš věřit poskytovateli; zdarma se často platí daty</td><td>pomalejší, některé weby ho blokují</td></tr>
+</tbody></table></div>
+<div class="note warn"><b class="lbl">Pozor</b><p>VPN <strong>nepřidá anonymitu</strong>, přesune důvěru z operátora na poskytovatele VPN. Hodí se na veřejné Wi-Fi a při sledování operátorem. Proti reklamním sítím a otisku sama nestačí.</p></div>
+</section>
+
+<section id="obrana">
+<h2>Co opravdu funguje</h2>
+<div class="tbl"><table>
+<thead><tr><th>Úroveň</th><th>Co uděláš</th><th>Co tím získáš</th></tr></thead>
+<tbody>
+<tr><td><strong>1 · Za 5 minut</strong></td><td>zapneš ochranu proti sledování v prohlížeči, na lištách volíš „Odmítnout vše“, projdeš oprávnění aplikací</td><td>menší část sledování a méně sdílených dat</td></tr>
+<tr><td><strong>2 · Za hodinu</strong></td><td>rozšíření pro blokování obsahu (uBlock Origin, plná verze ve Firefoxu), vypnutí reklamního ID, kontrola historie aktivit v účtech Google a Apple</td><td>mnohem méně reklamních skriptů a menší profil</td></tr>
+<tr><td><strong>3 · Dlouhodobě</strong></td><td>méně sdílíš, používáš různé e-maily nebo aliasy a služby, které sbírají méně dat</td><td>hůř se z tvých stop skládá jeden profil</td></tr>
+</tbody></table></div>
+<p>Cílem není dokonalá anonymita, ta je nereálná. Cílem je <strong>nebýt sledován všude a vším</strong>.</p>
+<div class="note tip"><b class="lbl">Pravidlo</b><p><strong>Sdílej méně</strong> (co nezveřejníš, nemůže uniknout). <strong>Blokuj</strong> (ochrana v prohlížeči a rozšíření). <strong>Kontroluj</strong> (občas projdi oprávnění a historii aktivit).</p></div>
+</section>
+
+<p class="part">Právo a případy</p>
+
+<section id="gdpr">
+<h2>GDPR a tvoje práva</h2>
+<p><dfn>GDPR</dfn> (obecné nařízení o ochraně osobních údajů) platí v celé EU od 25. května 2018. Firmě, která s osobními údaji pracuje, ukládá povinnosti a tobě dává práva. Za porušení hrozí pokuta až 20 milionů eur nebo 4 % světového ročního obratu, podle toho, co je vyšší.</p>
+<div class="tbl"><table>
+<thead><tr><th>Právo</th><th>Článek</th><th>Co znamená</th></tr></thead>
+<tbody>
+<tr><td><strong>Přístup</strong></td><td>15</td><td>firma potvrdí, zda o tobě zpracovává data, a dá ti jejich kopii a informace o účelu, příjemcích a době uložení</td></tr>
+<tr><td><strong>Oprava</strong></td><td>16</td><td>nepřesné údaje musí opravit</td></tr>
+<tr><td><strong>Výmaz</strong></td><td>17</td><td>můžeš žádat o smazání, třeba po odvolání souhlasu (s výjimkami, například zákonná povinnost uchovávat doklady)</td></tr>
+<tr><td><strong>Přenositelnost</strong></td><td>20</td><td>data, která jsi poskytl, dostaneš v běžném strojově čitelném formátu</td></tr>
+<tr><td><strong>Námitka</strong></td><td>21</td><td>můžeš vznést námitku, třeba proti přímému marketingu</td></tr>
+<tr><td><strong>Stížnost</strong></td><td>77</td><td>můžeš se obrátit na dozorový úřad; v ČR je to ÚOOÚ</td></tr>
+</tbody></table></div>
+<p>Firma má na odpověď zpravidla <strong>jeden měsíc</strong>. Souhlas musí jít odvolat stejně snadno, jako jsi ho dal.</p>
+<h3>Věk dítěte</h3>
+<p>U služeb informační společnosti (sociální sítě, aplikace) může dítě samo souhlasit se zpracováním osobních údajů <strong>od 15 let</strong>. Mladší potřebuje souhlas rodiče. GDPR dovoluje členským státům určit věk mezi 13 a 16 lety, ČR zvolila 15.<sup class="ref"><a href="#z6">6</a></sup> Pravidlo nebrání dítěti službu používat, ukládá ale povinnosti provozovateli.</p>
+<h3>Žádost o přístup k údajům</h3>
+<p>Stačí e-mail na kontakt pro ochranu osobních údajů, který najdeš v zásadách ochrany soukromí služby. Mladší 15 let potřebují pomoc rodiče. Šablona:</p>
+<div class="codehead"><span>Text e-mailu</span><button class="copy" type="button" data-for="sab">Kopírovat</button></div>
+<pre><code id="sab">Věc: Žádost o přístup k osobním údajům podle čl. 15 GDPR
+
+Dobrý den,
+
+žádám o informaci, zda zpracováváte mé osobní údaje, a pokud ano, o jejich kopii a o tyto informace: účely zpracování, kategorie údajů, příjemci, doba uložení, zdroj údajů a zda dochází k automatizovanému rozhodování nebo profilování.
+
+Můj účet / e-mail / telefon: [doplň]
+
+Odpověď prosím zašlete na tento e-mail.
+
+S pozdravem
+[jméno]</code></pre>
+<p>Firma si může před odpovědí ověřit, že žádost posílá skutečný držitel účtu.</p>
+</section>
+
+<section id="pripady">
+<h2>Případy z praxe</h2>
+<h3>Strava a vojenské základny (2018)</h3>
+<p>Aplikace Strava pro sportovce zveřejnila v listopadu 2017 mapu všech tras svých uživatelů. V lednu 2018 si lidé všimli, že mapa ukazuje trasy v okolí vojenských základen, kde jinak nikdo neběhá, a také pohyb vojáků. Strava uvedla, že mapa vynechává údaje uživatelů, kteří si je nastavili jako soukromé, soukromé zóny ale byly ve výchozím nastavení vypnuté.<sup class="ref"><a href="#z4">4</a></sup></p>
+<div class="note mat"><b class="lbl">Poučení</b><p>Výchozí nastavení služby většinou nechrání soukromí. Každý jednotlivý uživatel pouze sdílel svůj výlet, mapa vznikla složením.</p></div>
+<h3>Cambridge Analytica (2018)</h3>
+<p>Kvíz na Facebooku sebral data lidí, kteří ho použili, a také údaje jejich přátel. Facebook v dubnu 2018 oznámil, že se tak ke Cambridge Analytica mohla dostat data až 87 milionů lidí, převážně v USA. Firma údaje využívala k cílení politické reklamy.<sup class="ref"><a href="#z8">8</a></sup></p>
+<div class="note mat"><b class="lbl">Poučení</b><p>Souhlas jednoho uživatele vydal data i dalších lidí, kteří o ničem nevěděli.</p></div>
+<h3>Pokuty podle GDPR</h3>
+<p>Irský dozorový úřad uložil v květnu 2023 firmě Meta rekordní pokutu 1,2 miliardy eur za předávání dat evropských uživatelů do USA. V květnu 2025 dostal TikTok pokutu 530 milionů eur za předávání dat evropských uživatelů do Číny.<sup class="ref"><a href="#z9">9</a></sup> Zákon se tedy vymáhá, i když pomalu.</p>
+</section>
+
+<p class="part">Prakticky</p>
+
+<section id="kod">
+<h2>Ukázky kódu</h2>
+<h3>Co o sobě prozradí prohlížeč</h3>
+<p>Otevři libovolnou stránku, stiskni F12, přepni na záložku Konzole a vlož kód. Uvidíš hodnoty, které si přečte každý web.</p>
+<div class="codehead"><span>JavaScript (konzole prohlížeče)</span><button class="copy" type="button" data-for="j1">Kopírovat</button></div>
+<pre><code id="j1" class="language-javascript">console.table({
+  jazyk: navigator.language,
+  casovePasmo: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  obrazovka: screen.width + "x" + screen.height,
+  okno: innerWidth + "x" + innerHeight,
+  hustota: devicePixelRatio,
+  jadra: navigator.hardwareConcurrency,
+  platforma: navigator.platform
+});</code></pre>
+<h3>Kolik bitů informace nesou vlastnosti</h3>
+<p>Program počítá informaci v bitech podle vzorce výše. Podíly jsou vymyšlené, skutečné jsou jiné.</p>
+<div class="codehead"><span>Python</span><button class="copy" type="button" data-for="p1">Kopírovat</button></div>
+<pre><code id="p1" class="language-python">import math
+
+def bity(podil):
+    """Kolik bitů informace přináší hodnota, kterou má podíl lidí."""
+    return -math.log2(podil)
+
+# Vymyšlené podíly pro ukázku: jaká část lidí má stejnou hodnotu jako ty
+vlastnosti = {
+    "časové pásmo Europe/Prague": 0.002,
+    "jazyk cs-CZ": 0.002,
+    "rozlišení 1920×1080": 0.25,
+    "8 jader procesoru": 0.20,
+    "konkrétní verze prohlížeče": 0.05,
+    "vykreslení canvas (grafika)": 0.02,
+}
+
+celkem = 0
+for nazev, podil in vlastnosti.items():
+    b = bity(podil)
+    celkem += b
+    print(f"{nazev:32} {b:5.1f} bitů")
+
+print(f"Součet: {celkem:.1f} bitů")
+print(f"K rozlišení 8 miliard lidí stačí asi {math.log2(8_000_000_000):.1f} bitů")</code></pre>
+</section>
+
+<section id="ukoly">
+<h2>Úkoly</h2>
+<ol class="plan">
+  <li><b>Cizí domény:</b> otevři zpravodajský web, v F12 vyber záložku Síť, obnov stránku a spočítej, kolik domén není ten web samotný. Zapiš tři nejčastější.</li>
+  <li><b>Otisk:</b> otevři <a href="https://coveryourtracks.eff.org">coveryourtracks.eff.org</a> ve dvou prohlížečích a porovnej výsledky. Který tě chrání lépe?</li>
+  <li><b>Oprávnění:</b> projdi v telefonu polohu, mikrofon, kontakty a fotky. Odeber aspoň tři oprávnění, která aplikace nepotřebuje.</li>
+  <li><b>Historie aktivit:</b> otevři nastavení aktivit ve svém účtu (u Google myactivity.google.com) a zjisti, co se ukládá. Vypni, co nechceš.</li>
+  <li><b>Lišty:</b> na třech webech zkus zvolit „Odmítnout vše“. Kolik kliknutí to stálo a kolik by stálo přijetí?</li>
+  <li><b>Bity:</b> v Pythonu změň podíly lidí v ukázce a zjisti, které dvě vlastnosti nejvíc přispívají k rozpoznatelnosti.</li>
+  <li><b>Žádost o data:</b> pošli službě, kterou používáš, žádost o přístup k údajům podle šablony. Za jak dlouho přišla odpověď a co v ní bylo?</li>
+</ol>
+</section>
+
+<p class="part">Opakování</p>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Kdo všechno o tobě sbírá data a čím se liší, co vidí?</summary><div class="a"><p>Weby a reklamní sítě (cookies, skripty, otisk), aplikace (oprávnění a knihovny třetích stran), síť (názvy serverů) a platformy s přihlášeným účtem (hledání, poloha, komunikace napříč službami).</p></div></details>
+<details class="q"><summary>Jak funguje cookie třetí strany?</summary><div class="a"><p>Reklamní síť uloží u tebe číslo. Když navštívíš jiný web se stejnou sítí, prohlížeč číslo pošle zpět, takže síť ví, že jde o stejného člověka, a spojí jeho návštěvy do jednoho profilu.</p></div></details>
+<details class="q"><summary>Jak se ke cookies třetích stran staví Safari, Firefox a Chrome na konci roku 2026?</summary><div class="a"><p>Safari je blokuje, Firefox dává každému webu oddělenou sadu cookies. Chrome je v běžném okně povoluje (Google jejich zrušení v letech 2024 a 2025 vzdal) a blokuje je jen v anonymním okně.</p></div></details>
+<details class="q"><summary>Co má změnit digitální omnibus a platí už?</summary><div class="a"><p>Odmítnutí jedním kliknutím, zákaz ptát se znovu dřív než za několik měsíců a méně lišt u prostého měření návštěvnosti. Zatím neplatí, Rada EU má pozici z 21. 10. 2026, Parlament ne.</p></div></details>
+<details class="q"><summary>Co je otisk prohlížeče a proč nestačí smazat cookies?</summary><div class="a"><p>Je to hash z vlastností prohlížeče a zařízení (jazyk, rozlišení, grafika, fonty). Cookies se dají smazat, vlastnosti ne, takže tě web pozná znovu.</p></div></details>
+<details class="q"><summary>Proč na rozlišení lidí stačí zhruba 33 bitů?</summary><div class="a"><p>2<sup>33</sup> je přibližně 8,6 miliardy, což je víc, než kolik lidí žije na Zemi. Když vlastnosti dohromady nesou 33 bitů informace, jsou jedinečné.</p></div></details>
+<details class="q"><summary>Jak funguje reklamní aukce (RTB)?</summary><div class="a"><p>Při otevření stránky se inzerentům rozešle nabídka s ID, polohou a zájmy. Odpovědí cenou a vítězná reklama se zobrazí. Informace o tobě dostanou i ti, kdo prohráli.</p></div></details>
+<details class="q"><summary>Co dělá anonymní okno a co ne?</summary><div class="a"><p>Smaže historii a cookies v zařízení po zavření. Neskrývá aktivitu před webem, školou, zaměstnavatelem ani poskytovatelem připojení a po přihlášení tě poznají podle účtu.</p></div></details>
+<details class="q"><summary>Co dělá VPN a proč nezaručuje anonymitu?</summary><div class="a"><p>Skryje IP adresu před webem a provoz před Wi-Fi a operátorem. Poskytovatel VPN ale vidí to, co dřív operátor, a cookies s otiskem fungují dál.</p></div></details>
+<details class="q"><summary>Jaká oprávnění v telefonu je rozumné omezit a proč?</summary><div class="a"><p>Polohu (jen při používání nebo přibližně), kontakty, fotky (jen vybrané) a mikrofon s kamerou (jen pro hovory). Aplikace má dostat jen oprávnění nutná pro hlavní funkci.</p></div></details>
+<details class="q"><summary>Jaká práva ti dává GDPR?</summary><div class="a"><p>Přístup, opravu, výmaz, přenositelnost, námitku a stížnost u dozorového úřadu. Firma odpovídá zpravidla do jednoho měsíce.</p></div></details>
+<details class="q"><summary>Od kolika let může dítě v ČR samo souhlasit se zpracováním údajů?</summary><div class="a"><p>Od 15 let. Mladší potřebuje souhlas rodiče, u služeb informační společnosti, například sociálních sítí.</p></div></details>
+<details class="q"><summary>Poučení ze Stravy a Cambridge Analytica?</summary><div class="a"><p>Strava: z nevinných sdílených tras vznikla mapa, která prozradila vojenské základny, a soukromí bylo ve výchozím nastavení vypnuté. Cambridge Analytica: souhlas jednoho člověka vydal i data jeho přátel.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Soukromí</dt><dd>možnost sám rozhodnout, kdo se co o tobě dozví</dd>
+  <dt>Cookie</dt><dd>malý soubor, který si web uloží v prohlížeči</dd>
+  <dt>Cookie třetí strany</dt><dd>cookie od jiné domény, než je web, který máš otevřený; slouží ke sledování napříč weby</dd>
+  <dt>Sledovací pixel</dt><dd>neviditelný obrázek nebo skript, který oznámí cizímu serveru, že jsi stránku nebo e-mail otevřel</dd>
+  <dt>Otisk prohlížeče</dt><dd>identifikátor spočítaný z vlastností prohlížeče a zařízení</dd>
+  <dt>Canvas</dt><dd>prvek stránky, jehož vykreslení se u každého zařízení mírně liší a používá se pro otisk</dd>
+  <dt>Dark patterns</dt><dd>klamavé prvky rozhraní, které tě navádějí k souhlasu</dd>
+  <dt>Total Cookie Protection</dt><dd>ochrana ve Firefoxu, která každému webu dává oddělenou sadu cookies</dd>
+  <dt>Privacy Sandbox</dt><dd>zrušený pokus Googlu nahradit cookies třetích stran v Chrome</dd>
+  <dt>Digitální omnibus</dt><dd>návrh EU na zjednodušení pravidel, mimo jiné pro cookies; zatím neplatí</dd>
+  <dt>RTB</dt><dd>aukce reklamy v reálném čase při načtení stránky</dd>
+  <dt>Reklamní ID</dt><dd>číslo, které systém telefonu přiděluje pro cílení reklamy</dd>
+  <dt>Metadata</dt><dd>data o datech, například čas a poloha pořízení fotky</dd>
+  <dt>VPN</dt><dd>šifrovaný tunel k serveru poskytovatele, který skryje IP adresu před webem</dd>
+  <dt>Tor</dt><dd>síť uzlů, která provoz vede přes tři body, aby nikdo neznal zároveň zdroj i cíl</dd>
+  <dt>GDPR</dt><dd>nařízení EU o ochraně osobních údajů, platí od 25. 5. 2018</dd>
+  <dt>ÚOOÚ</dt><dd>Úřad pro ochranu osobních údajů, český dozorový úřad</dd>
+  <dt>Bit informace</dt><dd>míra překvapivosti hodnoty; hodnota sdílená jedním z 2<sup>n</sup> lidí nese n bitů</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v listopadu 2026.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://www.lupa.cz/clanky/od-1-ledna-se-zmeni-pravidla-pro-cookies-pripravte-si-listy-radi-pravnicka/">Lupa.cz: Od 1. ledna se změní pravidla pro cookies</a> · <a href="https://uoou.gov.cz">ÚOOÚ</a></li>
+  <li id="z2"><a href="https://coveryourtracks.eff.org/about">EFF: About Cover Your Tracks</a></li>
+  <li id="z3"><a href="https://themarkup.org/blacklight">The Markup: Blacklight</a></li>
+  <li id="z4"><a href="https://www.theregister.com/2018/01/29/strava_heatmap_military_base_locations/">The Register: Strava heatmap a vojenské základny</a></li>
+  <li id="z5"><a href="https://thehackernews.com/2024/04/google-to-delete-billions-of-browsing.html">The Hacker News: Google smaže záznamy z anonymního režimu (2024)</a></li>
+  <li id="z6"><a href="https://ct24.ceskatelevize.cz/ekonomika/2425909-na-facebook-do-15-let-jen-se-souhlasem-rodicu-vlada-schvalila-navrh-zakona-o">ČT24: věková hranice 15 let</a> · zákon č. 110/2019 Sb. o zpracování osobních údajů</li>
+  <li id="z7"><a href="https://www.theregister.com/2025/04/22/google_privacy_sandbox/">The Register: Google ponechává cookies třetích stran v Chrome</a></li>
+  <li id="z8"><a href="https://www.nbcnews.com/tech/tech-news/facebook-data-harvesting-scandal-widens-87-million-people-n862771">NBC News: Cambridge Analytica, 87 milionů lidí</a></li>
+  <li id="z9"><a href="https://www.dataprotection.ie/en/news-media/latest-news/irish-data-protection-commission-fines-tiktok-eu530-million-and-orders-corrective-measures-following">Irská DPC: pokuta TikTok 530 milionů eur</a></li>
+  <li id="z10"><a href="https://support.google.com/chrome/answer/95647">Nápověda Chrome: Delete, allow, and manage cookies in Chrome</a></li>
+  <li id="z11"><a href="https://blog.mozilla.org/en/products/firefox/firefox-rolls-out-total-cookie-protection-by-default-to-all-users/">Mozilla: Firefox rolls out Total Cookie Protection by default</a></li>
+  <li id="z12"><a href="https://usercentrics.com/knowledge-hub/what-is-google-privacy-sandbox/">Usercentrics: Google Privacy Sandbox officially shuts down</a></li>
+  <li id="z13"><a href="https://www.gdpr.cz/zkraceni-lhuty-pro-opetovne-vyzadani-souhlasu-s-cookies-digital-omnibus-miri-do-dalsi-faze-jednani">GDPR.cz: Digital Omnibus míří do další fáze jednání (27. 10. 2026)</a></li>
+  <li id="z14"><a href="https://www.pwc.com/cz/cs/blog/pravo/digitalni-omnibus-konec-cookies-list-dil-3.html">PwC: Digitální omnibus, konec cookies lišt? (5. 3. 2026)</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k prezentaci <a href="06_soukromi_a_sledovani.html">Soukromí a sledování</a>. Související materiály: <a href="02_socialni_site.html">Sociální sítě</a>, <a href="04_hesla_a_ucty.html">Hesla a zabezpečení účtů</a>, <a href="05_hash_funkce_studijni_text.html">Hash funkce (studijní text)</a>.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+  Array.prototype.forEach.call(document.querySelectorAll('button.copy'), function (b) {
+    b.addEventListener('click', function () {
+      var src = document.getElementById(b.getAttribute('data-for')); if (!src) return;
+      var text = src.textContent;
+      function ok() { b.textContent = 'Zkopírováno'; setTimeout(function () { b.textContent = 'Kopírovat'; }, 1600); }
+      function fb() {
+        var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { if (document.execCommand('copy')) ok(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(ok, fb); } else { fb(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
