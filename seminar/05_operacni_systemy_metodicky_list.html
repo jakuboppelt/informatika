@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Operační systémy</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-ukoly-v-ms-dos">Aktivita: úkoly v MS-DOS</a></li>
+    <li><a href="#aktivita-casova-osa-windows">Aktivita: časová osa Windows</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 5 · Metodický list pro učitele</p>
+  <h1>Operační systémy <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině vysvětlí funkce operačního systému, popíšou vývoj od MS-DOS po dnešní Windows a srovnají Windows, Linux a macOS. Hodinu vedeš podle <a href="05_operacni_systemy_prezentace.html">prezentace</a>, studenti mají <a href="05_operacni_systemy.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>definuje operační systém a vysvětlí jeho funkce,</li>
+  <li>popíše stavbu systému (jádro, ovladače, shell),</li>
+  <li>charakterizuje MS-DOS a vysvětlí, čím se liší od moderních systémů,</li>
+  <li>popíše dvě vývojové řady Windows,</li>
+  <li>charakterizuje Linux a macOS a srovná je s Windows.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Žáci jsou běžnými uživateli alespoň jednoho systému.</li>
+  <li>Prezentace „05 – Operační systémy“, studijní text.</li>
+  <li>Emulátor DOSBox nebo online emulátor MS-DOS, počítač či virtuální stroj s Linuxem, Správce úloh ve Windows.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace</td><td>Ptá se: „Co všechno by nefungovalo, kdyby počítač neměl operační systém?“</td><td>Sepisují nápady, ze kterých vzniknou funkce OS.</td></tr>
+<tr><td>10–25</td><td>Funkce a stavba</td><td>Projde snímky, ve Správci úloh ukáže procesy, paměť a služby.</td><td>Přiřazují, co vidí ve Správci úloh, k funkcím OS.</td></tr>
+<tr><td>25–45</td><td>MS-DOS prakticky</td><td>Spustí emulátor, ukáže základní příkazy.</td><td>Plní úkoly v příkazovém řádku, hledají omezení systému.</td></tr>
+<tr><td>45–60</td><td>Vývoj Windows</td><td>Rozdá kartičky s verzemi a událostmi.</td><td>Skládají časovou osu se dvěma řadami, které se spojí v XP.</td></tr>
+<tr><td>60–78</td><td>Linux a macOS</td><td>Krátce ukáže terminál Linuxu, vysvětlí otevřený kód a distribuce.</td><td>Ve skupinách vyplňují srovnávací tabulku tří systémů.</td></tr>
+<tr><td>78–90</td><td>Maturitní výstup a shrnutí</td><td>Vylosuje žáka na tříminutový výstup, zadá výstupní lístek.</td><td>Hodnotí výstup podle kritérií, odpovídají písemně.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-ukoly-v-ms-dos">
+<h2>Aktivita: úkoly v MS-DOS</h2>
+<ol>
+  <li>Vypište obsah složky (<code>dir</code>).</li>
+  <li>Vytvořte složku <code>SKOLA</code> (<code>md SKOLA</code>) a přejděte do ní (<code>cd SKOLA</code>).</li>
+  <li>Zkuste vytvořit soubor s názvem delším než osm znaků. Co se stane?</li>
+  <li>Zkuste spustit dva programy současně. Jde to?</li>
+</ol>
+<p>Závěr, ke kterému mají žáci dojít: systém je jednoúlohový, textový a názvy souborů mají tvar 8.3.</p>
+</section>
+
+<section id="aktivita-casova-osa-windows">
+<h2>Aktivita: časová osa Windows</h2>
+<p>Kartičky: Windows 1.0, 3.1, 95, 98, NT 3.1, 2000, XP, Vista, 7, 8, 10, 11 a kartičky s událostmi (nabídka Start, NTFS, spojení řad, dlaždice, TPM). Skupiny je řadí do dvou rovnoběžných řad. Kontrolní otázka: proč je Windows XP zlomová verze?</p>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>„Operační systém je to, co vidím na ploše.“</td><td>Plocha je jen rozhraní. Ukázat server bez grafiky.</td></tr>
+<tr><td>„Práce v příkazovém řádku Windows je MS-DOS.“</td><td>Příkazový řádek je program v moderních Windows, MS-DOS byl samostatný systém.</td></tr>
+<tr><td>„Linux je jeden systém.“</td><td>Linux je jádro, systémem je distribuce.</td></tr>
+<tr><td>„Android nemá s Linuxem nic společného.“</td><td>Android používá jádro Linuxu.</td></tr>
+<tr><td>„macOS je úplně jiný svět než Linux.“</td><td>Oba vycházejí z UNIXu, terminál se chová podobně.</td></tr>
+<tr><td>Zaměňování pořadí verzí Windows.</td><td>Pomůcka: dvě řady, které se spojí v XP.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Uveďte tři funkce operačního systému.</li>
+  <li>Čím se MS-DOS liší od Windows 11? Uveďte dva rozdíly.</li>
+  <li>Proč na serverech převažuje Linux?</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> definice a funkce OS, stavba a typy jader, historie od dávkového zpracování přes UNIX k osobním počítačům, charakteristika MS-DOS, obě řady Windows s klíčovými verzemi, Linux (Torvalds, GPL, distribuce, využití), macOS (unixový základ, přechody procesorů), srovnání podle více hledisek.</li>
+  <li><strong>Na dostatečnou:</strong> žák ví, k čemu OS slouží, jmenuje hlavní systémy, ví, že MS-DOS byl textový, a uvede základní rozdíl mezi Windows a Linuxem.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Co je ovladač? Co je multitasking? Jaký souborový systém používá váš počítač? Co znamená open source?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 5 „Operační systémy“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

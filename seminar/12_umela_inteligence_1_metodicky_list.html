@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Umělá inteligence 1: jak funguje</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-mapa-vyznamu">Aktivita: Mapa významů</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 12 · Metodický list pro učitele</p>
+  <h1>Umělá inteligence 1: jak funguje <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině vysvětlí vztah umělé inteligence a strojového učení, rozliší teoretické druhy AI a typy strojového učení a popíší, jak velký jazykový model pomocí tokenů, vektorů a předpovídání dalšího tokenu vytváří odpověď chatbota a proč se při tom může mýlit. Hodinu vedeš podle <a href="12_umela_inteligence_1.html">prezentace</a>, studenti mají <a href="12_umela_inteligence_1_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>vysvětlí rozdíl mezi klasickým programem a strojovým učením,</li>
+  <li>rozliší úzkou AI, obecnou AI a superinteligenci a zařadí dnešní systémy,</li>
+  <li>porovná učení s učitelem, bez učitele a zpětnovazební učení a ke každému uvede příklad,</li>
+  <li>popíše neuronovou síť, váhy a rozdíl mezi trénováním a inferencí,</li>
+  <li>vysvětlí pojmy token, embedding a vektorový prostor a na příkladu ukáže, co znamená blízkost významu,</li>
+  <li>popíše krok za krokem, jak chatbot generuje odpověď, a zdůvodní, proč halucinuje.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Žáci mají zkušenost s některým chatbotem a znají pojem vektor nebo souřadnice bodu z matematiky.</li>
+  <li>Projektor s prezentací „12 – Umělá inteligence 1: jak funguje“; studijní text „12 – Umělá inteligence 1: jak funguje: studijní text“ k domácímu opakování.</li>
+  <li>Sady kartiček se slovy pro aktivitu (asi 16 slov na skupinu), velký arch papíru a fix do každé skupiny; počítač není nutný.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace</td><td>Napíše na tabuli začátek věty „Hlavní město Francie je …“ a pak „Včera jsem si koupil …“. Ptá se, jak si jsou žáci pokračováním jistí a proč.</td><td>Doplňují věty, porovnávají, kde se shodnou a kde ne. Docházejí k tomu, že pokračování lze odhadovat s různou jistotou.</td></tr>
+<tr><td>10–25</td><td>Výklad: AI a strojové učení</td><td>Vysvětlí AI, strojové učení a hluboké učení, srovná klasický program s učením z dat, představí ANI, AGI, ASI.</td><td>Třídí příklady z běžného života (navigace, filtr spamu, chatbot, kalkulačka) na „pravidla napsal člověk“ a „naučeno z dat“.</td></tr>
+<tr><td>25–40</td><td>Výklad: typy učení a neuronová síť</td><td>Projde tři typy učení, neuron, vrstvy a váhy, trénování a inferenci.</td><td>Ke každé ze šesti krátkých situací určí typ učení a rozhodnutí zdůvodní sousedovi.</td></tr>
+<tr><td>40–50</td><td>Výklad: tokeny a vektory</td><td>Vysvětlí token, embedding a vektorový prostor jako „mapu významů“.</td><td>Odhadují, na kolik tokenů se rozpadne krátké a dlouhé české slovo, a proč.</td></tr>
+<tr><td>50–70</td><td>Aktivita: Mapa významů</td><td>Zadá práci ve skupinách, obchází, ptá se na důvody umístění slov.</td><td>Rozmisťují kartičky se slovy na arch podle významu a porovnávají mapy mezi skupinami.</td></tr>
+<tr><td>70–83</td><td>Výklad: transformer a chatbot</td><td>Vysvětlí pozornost na příkladu slova „koruna“, postup generování odpovědi, kontextové okno, systémový prompt a halucinace.</td><td>Hrají „lidský jazykový model“: řadou po jednom slově skládají větu a sledují, jak vznikne plynulý, ale nepravdivý text.</td></tr>
+<tr><td>83–90</td><td>Shrnutí a výstupní lístek</td><td>Shrne řetězec token – vektor – pozornost – pravděpodobnost – další token, zadá výstupní lístek.</td><td>Samostatně písemně odpoví na tři otázky.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-mapa-vyznamu">
+<h2>Aktivita: Mapa významů</h2>
+<p><strong>Zadání.</strong> Skupina tří až čtyř žáků dostane asi 16 kartiček se slovy z několika oblastí (například pes, kočka, štěně, král, královna, princ, muž, žena, auto, vlak, kolo, radost, smutek, koruna, strom, banka) a arch papíru. Úkolem je rozmístit kartičky tak, aby slova s podobným významem ležela blízko sebe a nepodobná daleko od sebe.</p>
+<p><strong>Postup.</strong></p>
+<ol>
+  <li>Rozmístění (asi 8 minut): skupina kartičky rozloží a o sporných slovech diskutuje. Učitel záměrně zařadil víceznačná slova („koruna“, „banka“, „kolo“) – skupina musí rozhodnout, kam je dát.</li>
+  <li>Směry (asi 5 minut): skupina hledá na své mapě dvojice se stejným vztahem (muž–žena, král–královna, pes–štěně) a zkusí, zda jsou šipky mezi nimi podobně dlouhé a míří podobným směrem.</li>
+  <li>Porovnání (asi 7 minut): skupiny si prohlédnou mapy ostatních. Společně odpovídají: V čem se mapy shodují? Stačily dva rozměry papíru? Kam patří „koruna“?</li>
+</ol>
+<p><strong>Závěr, ke kterému mají žáci dojít.</strong> Význam lze vyjádřit polohou: blízkost znamená podobnost a směr může nést vztah. Dva rozměry nestačí – slovo je podobné jiným slovům z mnoha hledisek současně, proto modely používají stovky až tisíce rozměrů. Víceznačné slovo nemá jedno správné místo, dokud neznáme větu; přesně to řeší mechanismus pozornosti, který polohu slova upraví podle kontextu. A na rozdíl od žáků nikdo modelu slova ručně nerozmisťoval – polohy vznikly při trénování z velkého množství textu.</p>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>Chatbot hledá odpověď v databázi nebo na internetu.</td><td>Připomenout, že model má jen váhy a skládá pravděpodobný text; vyhledávání je přídavný nástroj, který může a nemusí být připojen.</td></tr>
+<tr><td>Model rozumí a ví, co je pravda.</td><td>Vrátit se ke hře na lidský jazykový model: plynulá věta vznikla, aniž kdokoli ověřoval fakta.</td></tr>
+<tr><td>AI a strojové učení jsou totéž.</td><td>Nakreslit vnořené množiny: AI, v ní strojové učení, v něm hluboké učení a jazykové modely.</td></tr>
+<tr><td>Model se učí z každé konverzace a pamatuje si mě.</td><td>Oddělit trénování a inferenci: váhy se při používání nemění, „paměť“ je jen text znovu vložený do kontextového okna.</td></tr>
+<tr><td>AGI už existuje, protože chatbot umí odpovědět na cokoli.</td><td>Zeptat se, co by systém musel zvládat samostatně; zdůraznit, že na definici ani na zařazení dnešních modelů není shoda.</td></tr>
+<tr><td>Token je totéž co slovo.</td><td>Ukázat dlouhé české slovo rozdělené na několik částí; délka textu i kontextové okno se počítají v tokenech.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Čím se liší učení s učitelem od učení bez učitele? Uveďte ke každému jeden příklad.</li>
+  <li>Co vyjadřuje to, že dva vektory leží ve vektorovém prostoru blízko sebe?</li>
+  <li>Vysvětlete dvěma větami, proč může chatbot uvést neexistující zdroj.</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> Žák vymezí AI, strojové učení a hluboké učení a jejich vztah, srovná učení z dat s klasickým programem, vysvětlí ANI, AGI a ASI včetně toho, že existuje jen první. Popíše tři typy strojového učení s příklady, neuronovou síť, váhy, trénování a inferenci. U jazykového modelu souvisle vyloží řetězec token – embedding – vektorový prostor – pozornost – pravděpodobnost dalšího tokenu, vysvětlí kontextové okno a systémový prompt a z principu fungování odvodí, proč vznikají halucinace a proč je nutné výstupy ověřovat.</li>
+  <li><strong>Na dostatečnou:</strong> Žák řekne, že strojové učení se učí z dat místo ručně psaných pravidel, vyjmenuje tři typy učení a alespoň k jednomu uvede příklad, ví, že dnešní AI je úzká, a s dopomocí popíše, že chatbot předpovídá další část textu a může si vymýšlet.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Proč dostanete na stejnou otázku pokaždé trochu jinou odpověď? Co se stane, když je konverzace delší než kontextové okno? Proč model nezná nejnovější události? K čemu je systémový prompt a kdo ho píše? Jak byste ověřili tvrzení, které vám chatbot napsal? Proč se modelu říká „velký“?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 12 „Umělá inteligence 1: jak funguje“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

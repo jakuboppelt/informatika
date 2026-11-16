@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Počítačová grafika</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#ulohy-na-vypocet">Úlohy na výpočet</a></li>
+    <li><a href="#aktivita-komprese-na-papire">Aktivita: komprese na papíře</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 9 · Metodický list pro učitele</p>
+  <h1>Počítačová grafika <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině porovnají rastrovou a vektorovou grafiku, zvolí vhodný formát a software a vysvětlí ztrátovou a bezztrátovou kompresi. Hodinu vedeš podle <a href="09_pocitacova_grafika.html">prezentace</a>, studenti mají <a href="09_pocitacova_grafika_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>vysvětlí princip rastrové a vektorové grafiky, jejich výhody a nevýhody,</li>
+  <li>vypočítá velikost nekomprimovaného rastrového obrázku,</li>
+  <li>rozliší barevné modely RGB a CMYK,</li>
+  <li>zvolí pro danou situaci formát a software,</li>
+  <li>vysvětlí rozdíl mezi ztrátovou a bezztrátovou kompresí a ručně provede RLE.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Prezentace „09 – Počítačová grafika“, studijní text.</li>
+  <li>Existující materiály ze semináře: „Cvičení: obrázky“, „Ztrátová a bezztrátová komprese“, „Logo dvakrát“.</li>
+  <li>Rastrový a vektorový editor (např. Photopea a Inkscape nebo Boxy SVG), čtverečkovaný papír.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace: zvětši to</td><td>Promítne totéž logo jako PNG a SVG a obě verze zvětší na 1600 %.</td><td>Popisují, co vidí, a hádají proč.</td></tr>
+<tr><td>10–25</td><td>Rastr a vektor</td><td>Vysvětlí oba principy, ukáže zdrojový kód SVG.</td><td>Vyplňují srovnávací tabulku.</td></tr>
+<tr><td>25–40</td><td>Výpočty a barvy</td><td>Odvodí vzorec velikosti obrázku, ukáže RGB a CMYK.</td><td>Počítají tři úlohy, míchají barvy v editoru.</td></tr>
+<tr><td>40–55</td><td>Formáty a software</td><td>Uloží tutéž fotografii jako BMP, PNG a JPEG v různé kvalitě.</td><td>Porovnávají velikosti souborů a kvalitu, zapisují do tabulky.</td></tr>
+<tr><td>55–75</td><td>Aktivita: komprese na papíře</td><td>Rozdá čtverečkované obrázky.</td><td>Kódují metodou RLE, počítají kompresní poměr.</td></tr>
+<tr><td>75–90</td><td>JPEG a shrnutí</td><td>Ukáže artefakty při kvalitě 5 %, shrne princip. Zadá výstupní lístek.</td><td>Hledají bloky 8 × 8 ve zvětšeném obrázku.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="ulohy-na-vypocet">
+<h2>Úlohy na výpočet</h2>
+<ol>
+  <li>Obrázek 800 × 600 ve 24 bitech: 800 × 600 × 3 = 1 440 000 B ≈ 1,44 MB.</li>
+  <li>Tentýž obrázek v 256 barvách (8 bitů): 480 000 B = 480 kB.</li>
+  <li>Fotografie 4000 × 3000 ve 24 bitech zabírá 36 MB. Soubor JPEG má 4 MB. Jaký je kompresní poměr? (9 : 1)</li>
+</ol>
+</section>
+
+<section id="aktivita-komprese-na-papire">
+<h2>Aktivita: komprese na papíře</h2>
+<p>Dvojice dostane dva obrázky 16 × 16 čtverečků: jednoduchý (srdce na bílém pozadí) a šachovnici.</p>
+<ol>
+  <li>Každý řádek zapíšou metodou RLE (např. <code>5B6C5B</code>).</li>
+  <li>Spočítají, kolik znaků potřebovali, a porovnají s původními 256 hodnotami.</li>
+  <li>Zjistí, že šachovnice se metodou RLE prodlouží.</li>
+</ol>
+<p>Závěr, ke kterému mají dojít: účinnost bezztrátové komprese závisí na datech a žádná metoda nezmenší všechno.</p>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>„Vektorová grafika je vždy lepší, protože se nerozmazává.“</td><td>Zkusit vektorizovat fotografii a porovnat výsledek.</td></tr>
+<tr><td>„DPI je totéž co rozlišení.“</td><td>Rozlišení je počet pixelů, DPI hustota při tisku. Tentýž obrázek lze vytisknout různě velký.</td></tr>
+<tr><td>„PNG je kvalitnější než JPEG, tak ho použiji všude.“</td><td>Fotografie v PNG je několikanásobně větší bez viditelného přínosu.</td></tr>
+<tr><td>„Převodem JPEG na PNG se kvalita vrátí.“</td><td>Ztracená informace je pryč navždy.</td></tr>
+<tr><td>Zaměňování bitů a bajtů ve výpočtu.</td><td>Trvat na zápisu jednotek v každém kroku.</td></tr>
+<tr><td>„Komprese vždy zhorší kvalitu.“</td><td>Bezztrátová komprese vrací přesně původní data.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>V jakém formátu uložíte logo školy, fotografii třídy a snímek obrazovky s textem? Proč?</li>
+  <li>Zakódujte metodou RLE: <code>AAAAAABBBA</code>.</li>
+  <li>Proč se text nekomprimuje ztrátově?</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> principy obou druhů grafiky se srovnáním, rozlišení a barevná hloubka s výpočtem velikosti, barevné modely, formáty s vhodným použitím, software pro oba druhy, obě kategorie komprese s konkrétními metodami (RLE, Huffman, princip JPEG).</li>
+  <li><strong>Na dostatečnou:</strong> žák vysvětlí rozdíl rastru a vektoru, jmenuje formáty a programy a ví, že JPEG je ztrátový a PNG bezztrátový.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Co je alfa kanál? Proč tiskárna používá CMYK? Co jsou artefakty komprese?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 9 „Počítačová grafika“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

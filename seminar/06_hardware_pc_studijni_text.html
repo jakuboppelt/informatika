@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hardware: komponenty PC – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#prehled">Přehled</a></li>
+    <li><a href="#zakladni-deska">Základní deska</a></li>
+    <li><a href="#procesor-cpu">Procesor (CPU)</a></li>
+    <li><a href="#operacni-pamet-ram">Operační paměť (RAM)</a></li>
+    <li><a href="#graficka-karta-gpu">Grafická karta (GPU)</a></li>
+    <li><a href="#uloziste-trvala-pamet">Úložiště (trvalá paměť)</a></li>
+    <li><a href="#zdroj-psu">Zdroj (PSU)</a></li>
+    <li><a href="#chlazeni">Chlazení</a></li>
+    <li><a href="#jednotky">Jednotky</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 6 · Studijní text</p>
+  <h1>Hardware: komponenty PC</h1>
+  <p class="lead">Procesor, operační paměť, grafická karta, úložiště, zdroj a chlazení: popis, parametry a jednotky.</p>
+</header>
+
+<section id="prehled">
+<h2>Přehled</h2>
+<p>Hardware je fyzické vybavení počítače. Osobní počítač tvoří základní deska, procesor, operační paměť, grafická karta, úložiště, zdroj a chlazení, vše ve skříni. Komponenty odpovídají von Neumannově architektuře: procesor (řadič a aritmeticko-logická jednotka), paměť a vstupně-výstupní zařízení propojené sběrnicemi.</p>
+</section>
+
+<section id="zakladni-deska">
+<h2>Základní deska</h2>
+<p>Základní deska (motherboard) propojuje všechny komponenty a rozvádí mezi nimi data a napájení.</p>
+<ul>
+  <li><strong>Patice (socket)</strong> určuje, které procesory lze osadit (např. AM5 pro AMD, LGA 1700 pro Intel).</li>
+  <li><strong>Sloty:</strong> DIMM pro operační paměť, PCI Express pro grafickou kartu a rozšiřující karty, M.2 pro disky SSD.</li>
+  <li><strong>Čipová sada (chipset)</strong> řídí komunikaci s úložišti, porty USB a dalšími zařízeními.</li>
+  <li><strong>Firmware UEFI</strong> (dříve BIOS) po zapnutí otestuje hardware a spustí zavaděč operačního systému.</li>
+  <li><strong>Formáty:</strong> ATX, microATX, mini-ITX.</li>
+</ul>
+</section>
+
+<section id="procesor-cpu">
+<h2>Procesor (CPU)</h2>
+<p>Procesor provádí instrukce programů v cyklu: načtení instrukce z paměti, dekódování, provedení.</p>
+<div class="tbl"><table>
+<thead><tr><th>Parametr</th><th>Význam</th><th>Jednotka</th></tr></thead>
+<tbody>
+<tr><td>Počet jader</td><td>kolik úloh zpracuje skutečně současně</td><td>kusy</td></tr>
+<tr><td>Počet vláken</td><td>kolik úloh se jádrům jeví jako současných (SMT, Hyper-Threading)</td><td>kusy</td></tr>
+<tr><td>Taktovací frekvence</td><td>počet taktů za sekundu</td><td>GHz</td></tr>
+<tr><td>Vyrovnávací paměť (cache)</td><td>rychlá paměť v procesoru, úrovně L1–L3</td><td>kB, MB</td></tr>
+<tr><td>Výrobní proces</td><td>označení generace výroby čipu</td><td>nm</td></tr>
+<tr><td>TDP</td><td>tepelný výkon, který musí chlazení odvést</td><td>W</td></tr>
+</tbody></table></div>
+<ul>
+  <li><strong>Architektury:</strong> x86-64 (Intel, AMD) v počítačích a serverech, ARM (Apple, Qualcomm) v mobilech a stále častěji i v notebocích.</li>
+  <li><strong>Výhody více jader:</strong> lepší výkon ve vícevláknových úlohách (render, kompilace). <strong>Nevýhoda:</strong> program, který využívá jedno vlákno, z nich netěží.</li>
+  <li>Vyšší frekvence znamená vyšší výkon, ale také vyšší spotřebu a teplo.</li>
+</ul>
+</section>
+
+<section id="operacni-pamet-ram">
+<h2>Operační paměť (RAM)</h2>
+<p>RAM (Random Access Memory) uchovává spuštěné programy a data, se kterými procesor právě pracuje.</p>
+<ul>
+  <li>Je <strong>volatilní</strong>: po vypnutí napájení se obsah ztratí.</li>
+  <li>Je řádově rychlejší než úložiště, ale dražší na gigabajt.</li>
+  <li><strong>Parametry:</strong> kapacita (GB), typ (DDR4, DDR5; navzájem nekompatibilní), frekvence (MHz), časování (CL).</li>
+  <li>Dva moduly v režimu dual channel jsou rychlejší než jeden o stejné celkové kapacitě.</li>
+  <li>Při nedostatku RAM systém odkládá data na disk (stránkovací soubor, swap) a výrazně zpomalí.</li>
+</ul>
+<p>Paměť <strong>ROM</strong> je naopak trvalá a slouží hlavně pro firmware.</p>
+</section>
+
+<section id="graficka-karta-gpu">
+<h2>Grafická karta (GPU)</h2>
+<p>Grafická karta počítá obraz a posílá ho na monitor.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Integrovaná</th><th>Dedikovaná</th></tr></thead>
+<tbody>
+<tr><td>Umístění</td><td>součást procesoru</td><td>samostatná karta ve slotu PCI Express</td></tr>
+<tr><td>Paměť</td><td>sdílí RAM</td><td>vlastní VRAM</td></tr>
+<tr><td>Výhody</td><td>nízká cena, spotřeba a hluk</td><td>vysoký výkon</td></tr>
+<tr><td>Nevýhody</td><td>nízký výkon</td><td>cena, spotřeba, teplo, rozměry</td></tr>
+<tr><td>Využití</td><td>kancelář, web, video</td><td>hry, 3D, střih, strojové učení</td></tr>
+</tbody></table></div>
+<ul>
+  <li><strong>Parametry:</strong> výkon grafického čipu, velikost VRAM (GB), spotřeba (W), výstupy (HDMI, DisplayPort).</li>
+  <li><strong>Výrobci čipů:</strong> NVIDIA, AMD, Intel.</li>
+  <li>GPU má tisíce jednoduchých jader, proto se hodí na paralelní výpočty včetně trénování neuronových sítí.</li>
+</ul>
+</section>
+
+<section id="uloziste-trvala-pamet">
+<h2>Úložiště (trvalá paměť)</h2>
+<p>Úložiště uchovává operační systém, programy a soubory i po vypnutí.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>HDD</th><th>SSD</th></tr></thead>
+<tbody>
+<tr><td>Princip</td><td>magnetické plotny, čtecí hlavičky</td><td>flash paměť (NAND)</td></tr>
+<tr><td>Rychlost</td><td>asi 100–200 MB/s</td><td>SATA do 550 MB/s, NVMe tisíce MB/s</td></tr>
+<tr><td>Cena za GB</td><td>nízká</td><td>vyšší</td></tr>
+<tr><td>Odolnost</td><td>citlivý na otřesy</td><td>odolný, bez pohyblivých částí</td></tr>
+<tr><td>Hluk, spotřeba</td><td>slyšitelný, vyšší</td><td>tichý, nižší</td></tr>
+<tr><td>Slabina</td><td>mechanické opotřebení</td><td>omezený počet zápisů (TBW)</td></tr>
+<tr><td>Typické použití</td><td>velké archivy, zálohy</td><td>systémový disk</td></tr>
+</tbody></table></div>
+<p>Rozhraní: SATA (starší, pro HDD i SSD), NVMe přes PCI Express ve formátu M.2 (rychlá SSD). Parametry: kapacita (GB, TB), rychlost čtení a zápisu (MB/s), u HDD otáčky (5400 nebo 7200 ot./min).</p>
+</section>
+
+<section id="zdroj-psu">
+<h2>Zdroj (PSU)</h2>
+<p>Zdroj mění střídavé síťové napětí 230 V na stejnosměrná napětí 12 V, 5 V a 3,3 V.</p>
+<ul>
+  <li><strong>Výkon (W)</strong> musí pokrýt spotřebu všech komponent s rezervou.</li>
+  <li><strong>Účinnost</strong> udává certifikace 80 PLUS (Bronze, Silver, Gold, Platinum, Titanium). Zdroj s účinností 90 % při dodávce 450 W odebírá ze sítě 500 W, zbytek se změní v teplo.</li>
+  <li><strong>Modulární</strong> zdroj má odpojitelné kabely, což zlepšuje proudění vzduchu ve skříni.</li>
+  <li><strong>Ochrany</strong> proti přepětí, zkratu a přetížení. Nekvalitní zdroj může při poruše zničit ostatní komponenty.</li>
+</ul>
+</section>
+
+<section id="chlazeni">
+<h2>Chlazení</h2>
+<p>Komponenty mění téměř veškerou elektrickou energii v teplo. Při přehřátí procesor snižuje výkon (throttling), v krajním případě se počítač vypne.</p>
+<div class="tbl"><table>
+<thead><tr><th>Druh</th><th>Výhody</th><th>Nevýhody</th></tr></thead>
+<tbody>
+<tr><td>Pasivní (jen chladič)</td><td>tiché, bezporuchové</td><td>malý výkon</td></tr>
+<tr><td>Aktivní vzduchové (chladič a ventilátor)</td><td>levné, spolehlivé</td><td>hluk při zátěži, rozměry</td></tr>
+<tr><td>Vodní (AIO nebo vlastní okruh)</td><td>vysoký výkon, nižší hluk</td><td>cena, riziko úniku, údržba</td></tr>
+</tbody></table></div>
+<p>Mezi čip a chladič patří teplovodivá pasta. Skříň potřebuje promyšlené proudění vzduchu: studený vzduch dovnitř vepředu, teplý ven vzadu a nahoře. Prach zhoršuje chlazení.</p>
+</section>
+
+<section id="jednotky">
+<h2>Jednotky</h2>
+<div class="tbl"><table>
+<thead><tr><th>Veličina</th><th>Jednotka</th><th>Použití</th></tr></thead>
+<tbody>
+<tr><td>Množství informace</td><td>bit (b), bajt (B) = 8 bitů</td><td>základ</td></tr>
+<tr><td>Kapacita</td><td>kB, MB, GB, TB</td><td>RAM, VRAM, disky</td></tr>
+<tr><td>Frekvence</td><td>Hz, MHz, GHz</td><td>procesor, RAM, obnovování obrazu</td></tr>
+<tr><td>Přenosová rychlost</td><td>MB/s, Mb/s, Gb/s</td><td>disky, rozhraní</td></tr>
+<tr><td>Výkon, příkon</td><td>W</td><td>zdroj, spotřeba, TDP</td></tr>
+<tr><td>Napětí</td><td>V</td><td>napájecí větve</td></tr>
+<tr><td>Teplota</td><td>°C</td><td>procesor, GPU</td></tr>
+<tr><td>Otáčky</td><td>ot./min (RPM)</td><td>ventilátory, HDD</td></tr>
+<tr><td>Hluk</td><td>dB</td><td>chlazení</td></tr>
+</tbody></table></div>
+<p><strong>Desítkové a dvojkové předpony:</strong> 1 kB = 1000 B, ale 1 KiB = 1024 B. Výrobci disků počítají desítkově, Windows dvojkově, proto se disk 1 TB zobrazí jako asi 931 GB. Pozor také na rozdíl mezi megabitem (Mb) a megabajtem (MB): 100 Mb/s je 12,5 MB/s.</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Vyjmenujte základní komponenty počítače a jejich funkci.</li>
+  <li>Co je patice a chipset?</li>
+  <li>Které parametry určují výkon procesoru?</li>
+  <li>Jaký je rozdíl mezi RAM a úložištěm?</li>
+  <li>Srovnejte integrovanou a dedikovanou grafickou kartu.</li>
+  <li>Srovnejte HDD a SSD. Kdy zvolíte který?</li>
+  <li>Jak spočítáte potřebný výkon zdroje? Co je účinnost?</li>
+  <li>Jaké druhy chlazení znáte a kdy se používají?</li>
+  <li>Proč se disk 1 TB zobrazí jako 931 GB?</li>
+  <li>Navrhněte sestavu pro kancelář a pro hraní her a zdůvodněte rozdíly.</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 6 „Hardware: komponenty PC“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

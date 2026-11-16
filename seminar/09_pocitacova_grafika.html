@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Počítačová grafika</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 9</div>
+      <h1>Počítačová grafika</h1>
+      <p class="lede">Rastrová a vektorová grafika, barevné modely, formáty, software a komprese dat</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Dva způsoby uložení obrazu</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Rastrová grafika</b><span>Obraz je mřížka barevných bodů, pixelů. Každý pixel má uloženou svou barvu. Také bitmapová grafika.</span></div>
+        <div class="tcard" style="cursor:default"><b>Vektorová grafika</b><span>Obraz je popsán matematicky: body, úsečky, křivky a tvary s barvou výplně a obrysu.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Rastrová grafika</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Rozlišení</dt><dd>Počet pixelů na šířku a výšku, například 1920 × 1080.</dd>
+        <dt>Hustota bodů</dt><dd>DPI nebo PPI: kolik bodů připadá na palec. Rozhoduje o kvalitě tisku.</dd>
+        <dt>Barevná hloubka</dt><dd>Počet bitů na pixel. 24 bitů dává přes 16 milionů barev.</dd>
+        <dt>Výhody</dt><dd>Věrně zachytí fotografie, jemné přechody a detaily.</dd>
+        <dt>Nevýhody</dt><dd>Při zvětšení ztrácí kvalitu, soubory jsou velké.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Velikost nekomprimovaného obrázku = šířka × výška × barevná hloubka.</h2>
+      <p class="lede">Full HD ve 24 bitech: 1920 × 1080 × 3 bajty = 6 220 800 bajtů, tedy asi 6,2 MB.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Vektorová grafika</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Princip</dt><dd>Soubor obsahuje předpis: kružnice se středem, poloměrem a barvou.</dd>
+        <dt>Křivky</dt><dd>Bézierovy křivky určené kotevními a řídicími body.</dd>
+        <dt>Výhody</dt><dd>Zvětšení bez ztráty kvality, malé soubory, snadná úprava jednotlivých objektů.</dd>
+        <dt>Nevýhody</dt><dd>Nehodí se pro fotografie. Složité kresby jsou náročné na vykreslení.</dd>
+        <dt>Využití</dt><dd>Loga, ikony, písma, mapy, technické výkresy, ilustrace.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Srovnání</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:26%"><col style="width:37%"><col style="width:37%"></colgroup>
+        <thead><tr><th></th><th>Rastr</th><th>Vektor</th></tr></thead>
+        <tbody>
+          <tr><td>Základní prvek</td><td>pixel</td><td>objekt: křivka, tvar</td></tr>
+          <tr><td>Zvětšování</td><td>ztráta kvality</td><td>bez ztráty</td></tr>
+          <tr><td>Velikost souboru</td><td>roste s rozlišením</td><td>roste se složitostí</td></tr>
+          <tr><td>Vhodné pro</td><td>fotografie, malby</td><td>loga, ikony, výkresy</td></tr>
+          <tr><td>Formáty</td><td>JPEG, PNG, GIF, WebP</td><td>SVG, AI, EPS, PDF</td></tr>
+          <tr><td>Převod</td><td>vektorizace je obtížná</td><td>rasterizace je snadná</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Barevné modely</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>RGB</b><span>Červená, zelená, modrá. Míchání světla, aditivní model. Monitory, web.</span></div>
+        <div class="tcard" style="cursor:default"><b>CMYK</b><span>Azurová, purpurová, žlutá, černá. Míchání barviv, subtraktivní model. Tisk.</span></div>
+        <div class="tcard" style="cursor:default"><b>HSV, HSL</b><span>Odstín, sytost, jas. Přirozenější pro výběr barvy člověkem.</span></div>
+        <div class="tcard" style="cursor:default"><b>Alfa kanál</b><span>Čtvrtá složka určuje průhlednost pixelu. Zápis RGBA.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Rastrové formáty</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:18%"><col style="width:26%"><col style="width:56%"></colgroup>
+        <thead><tr><th>Formát</th><th>Komprese</th><th>Vlastnosti a použití</th></tr></thead>
+        <tbody>
+          <tr><td>BMP</td><td>žádná</td><td>velké soubory, dnes výjimečně</td></tr>
+          <tr><td>JPEG</td><td>ztrátová</td><td>fotografie, bez průhlednosti</td></tr>
+          <tr><td>PNG</td><td>bezztrátová</td><td>průhlednost, snímky obrazovky, grafika s ostrými hranami</td></tr>
+          <tr><td>GIF</td><td>bezztrátová, 256 barev</td><td>jednoduché animace</td></tr>
+          <tr><td>WebP, AVIF</td><td>obojí</td><td>moderní formáty pro web, menší soubory</td></tr>
+          <tr><td>TIFF</td><td>obvykle bezztrátová</td><td>tisk a archivace</td></tr>
+          <tr><td>RAW</td><td>žádná nebo bezztrátová</td><td>surová data ze snímače fotoaparátu</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Software</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:28%"><col style="width:36%"><col style="width:36%"></colgroup>
+        <thead><tr><th>Druh</th><th>Komerční</th><th>Zdarma</th></tr></thead>
+        <tbody>
+          <tr><td>Rastrové editory</td><td>Adobe Photoshop, Affinity Photo</td><td>GIMP, Krita, Photopea</td></tr>
+          <tr><td>Vektorové editory</td><td>Adobe Illustrator, CorelDRAW</td><td>Inkscape</td></tr>
+          <tr><td>Návrh rozhraní</td><td>Figma, Sketch</td><td>Penpot</td></tr>
+          <tr><td>3D grafika</td><td>3ds Max, Maya, Cinema 4D</td><td>Blender</td></tr>
+          <tr><td>Technické kreslení</td><td>AutoCAD, SolidWorks</td><td>FreeCAD</td></tr>
+          <tr><td>Sazba</td><td>Adobe InDesign</td><td>Scribus</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Komprese dat</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Bezztrátová</b><span>Data lze obnovit přesně. Odstraňuje jen nadbytečnost. ZIP, PNG, FLAC. Nutná pro text a programy.</span></div>
+        <div class="tcard" style="cursor:default"><b>Ztrátová</b><span>Část informace se nevratně zahodí, hlavně to, co člověk špatně vnímá. JPEG, MP3, H.264. Mnohem menší soubory.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Bezztrátové metody</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>RLE</dt><dd>Opakující se hodnoty nahradí počtem a hodnotou: AAAABBBCC se zapíše jako 4A3B2C.</dd>
+        <dt>Huffmanovo kódování</dt><dd>Časté symboly dostanou krátký kód, vzácné dlouhý.</dd>
+        <dt>Slovníkové metody</dt><dd>LZ77 a LZW nahrazují opakované úseky odkazem na dřívější výskyt.</dd>
+        <dt>Deflate</dt><dd>Kombinuje LZ77 a Huffmanovo kódování. Používá ho ZIP i PNG.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Jak funguje JPEG</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>1. Barvy</b><span>Převod z RGB na jas a dvě barevné složky. Barva se uloží v nižším rozlišení.</span></div>
+        <div class="tcard" style="cursor:default"><b>2. Bloky</b><span>Obraz se rozdělí na čtverce 8 × 8 pixelů.</span></div>
+        <div class="tcard" style="cursor:default"><b>3. Transformace</b><span>Kosinová transformace převede blok na frekvence.</span></div>
+        <div class="tcard" style="cursor:default"><b>4. Kvantizace</b><span>Jemné detaily se zaokrouhlí nebo zahodí. Zde vzniká ztráta.</span></div>
+        <div class="tcard" style="cursor:default"><b>5. Kódování</b><span>Výsledek se bezztrátově zabalí Huffmanovým kódem.</span></div>
+        <div class="tcard" style="cursor:default"><b>Důsledek</b><span>Při silné kompresi jsou vidět čtverečky a rozmazané hrany.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Čím se liší rastrová a vektorová grafika?</li>
+        <li>Co je rozlišení, DPI a barevná hloubka?</li>
+        <li>Vypočítejte velikost obrázku 800 × 600 ve 24 bitech.</li>
+        <li>K čemu slouží modely RGB a CMYK?</li>
+        <li>Kdy použijete JPEG, kdy PNG a kdy SVG?</li>
+        <li>Jaký software se používá pro rastr a jaký pro vektor?</li>
+        <li>Čím se liší ztrátová a bezztrátová komprese?</li>
+        <li>Vysvětlete princip RLE a uveďte příklad.</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>

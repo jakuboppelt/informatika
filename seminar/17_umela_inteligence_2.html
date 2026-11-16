@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Umělá inteligence 2: využití</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 17</div>
+      <h1>Umělá inteligence 2: využití</h1>
+      <p class="lede">Historie AI, využití jednotlivcem a v průmyslu, technické limity dnešních systémů, etika a právo</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Umělá inteligence je dnes běžný nástroj: užitečný, ale s jasnými technickými limity.</h2>
+      <p class="lede">Kdo zná její historii, využití i slabiny, umí odhadnout, kdy jí věřit a kdy ne.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Stručné připomenutí pojmů</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Umělá inteligence</dt><dd>Obor informatiky, který vytváří systémy řešící úlohy, k nimž člověk potřebuje inteligenci.</dd>
+        <dt>Strojové učení</dt><dd>Systém se pravidla neučí od programátora, ale odvozuje je z velkého množství příkladů.</dd>
+        <dt>Neuronová síť</dt><dd>Model z vrstev propojených umělých neuronů. Hluboké učení používá sítě s mnoha vrstvami.</dd>
+        <dt>Jazykový model</dt><dd>LLM. Předpovídá další část textu podle toho, co se naučil z obrovského množství textů.</dd>
+        <dt>Generativní AI</dt><dd>Vytváří nový obsah: text, obrázky, zvuk, video nebo programový kód.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Historie: od Turinga po Deep Blue</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:16%"><col style="width:36%"><col style="width:48%"></colgroup>
+        <thead><tr><th>Kdy</th><th>Událost</th><th>Význam</th></tr></thead>
+        <tbody>
+          <tr><td>1950</td><td>Turingův test</td><td>otázka, zda stroj může myslet</td></tr>
+          <tr><td>1956</td><td>Dartmouthská konference</td><td>vznik oboru a pojmu umělá inteligence</td></tr>
+          <tr><td>1966</td><td>ELIZA</td><td>první chatbot, napodoboval terapeuta</td></tr>
+          <tr><td>70. a 80. léta</td><td>expertní systémy</td><td>znalosti odborníků zapsané jako pravidla</td></tr>
+          <tr><td>70. a 80. léta</td><td>zimy AI</td><td>zklamaná očekávání, útlum financování</td></tr>
+          <tr><td>1997</td><td>Deep Blue</td><td>počítač porazil mistra světa v šachu</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Historie: éra hlubokého učení</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:14%"><col style="width:34%"><col style="width:52%"></colgroup>
+        <thead><tr><th>Rok</th><th>Událost</th><th>Význam</th></tr></thead>
+        <tbody>
+          <tr><td>2012</td><td>AlexNet</td><td>hluboká síť vyhrála soutěž v rozpoznávání obrazu</td></tr>
+          <tr><td>2016</td><td>AlphaGo</td><td>porazilo špičkového hráče hry go</td></tr>
+          <tr><td>2017</td><td>architektura transformer</td><td>základ dnešních jazykových modelů</td></tr>
+          <tr><td>2022</td><td>ChatGPT</td><td>generativní AI se dostala k široké veřejnosti</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Individuální využití: práce s textem</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Asistenti</b><span>Chatboti a hlasoví asistenti odpovídají na dotazy, shrnují texty a pomáhají plánovat.</span></div>
+        <div class="tcard" style="cursor:default"><b>Psaní a překlad</b><span>Návrhy formulací, kontrola pravopisu a stylu, strojový překlad mezi jazyky.</span></div>
+        <div class="tcard" style="cursor:default"><b>Učení</b><span>Vysvětlení látky jinými slovy, procvičování a zpětná vazba. Výsledek je nutné ověřit.</span></div>
+        <div class="tcard" style="cursor:default"><b>Programování</b><span>Doplňování kódu, hledání chyb, vysvětlení cizího kódu. Odpovědnost nese programátor.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Individuální využití: AI v pozadí</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Obrázky</b><span>Generátory vytvoří obrázek podle textového zadání. Hodí se pro návrhy a ilustrace.</span></div>
+        <div class="tcard" style="cursor:default"><b>Doporučování</b><span>Videa, hudba a zboží se nabízejí podle předchozího chování uživatele.</span></div>
+        <div class="tcard" style="cursor:default"><b>Navigace</b><span>Odhad doby jízdy a volba trasy podle aktuální i předpokládané dopravy.</span></div>
+        <div class="tcard" style="cursor:default"><b>Fotoaparát</b><span>Mobil skládá a vylepšuje snímky, rozpozná scénu a obličej, rozmaže pozadí.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Průmyslové využití</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:24%"><col style="width:44%"><col style="width:32%"></colgroup>
+        <thead><tr><th>Oblast</th><th>Co AI dělá</th><th>Přínos</th></tr></thead>
+        <tbody>
+          <tr><td>Kontrola kvality</td><td>kamera hledá vady výrobků na lince</td><td>rychlost, stálá pozornost</td></tr>
+          <tr><td>Prediktivní údržba</td><td>ze senzorů odhadne blížící se poruchu</td><td>méně odstávek</td></tr>
+          <tr><td>Robotika</td><td>robot se orientuje a uchopuje předměty</td><td>pružnější výroba</td></tr>
+          <tr><td>Logistika</td><td>plánuje trasy, sklady a poptávku</td><td>nižší náklady</td></tr>
+          <tr><td>Zdravotnictví</td><td>hledá nálezy na snímcích</td><td>podpora lékaře</td></tr>
+          <tr><td>Finance</td><td>odhalí neobvyklé transakce</td><td>detekce podvodů</td></tr>
+          <tr><td>Autonomní řízení</td><td>vnímá okolí a řídí vozidlo</td><td>asistence řidiči</td></tr>
+          <tr><td>Zemědělství</td><td>sleduje stav porostu a půdy</td><td>přesné dávkování</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Jazykový model negeneruje pravdu, ale pravděpodobný text.</h2>
+      <p class="lede">Z toho plyne většina jeho limitů: odpověď zní přesvědčivě i tehdy, když je chybná.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Technické limity: obsah odpovědí</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Halucinace</dt><dd>Model sebejistě uvede vymyšlený údaj, citát nebo zdroj. Neví, že neví.</dd>
+        <dt>Trénovací data</dt><dd>Umí jen to, co odpovídá datům. Chyby a mezery v datech přebírá.</dd>
+        <dt>Zkreslení (bias)</dt><dd>Předsudky obsažené v datech se promítnou do výstupů, například při výběru uchazečů.</dd>
+        <dt>Datum tréninku</dt><dd>Znalosti končí dnem uzávěrky dat. Novější události zná jen s připojeným vyhledáváním.</dd>
+        <dt>Kontextové okno</dt><dd>Najednou zpracuje jen omezené množství textu. Co se nevejde, nevidí.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Technické limity: povaha systému</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Nevysvětlitelnost</b><span>Síť je černá skříňka. Z miliard parametrů nelze snadno vyčíst, proč rozhodla právě takto.</span></div>
+        <div class="tcard" style="cursor:default"><b>Náročnost</b><span>Trénink i provoz vyžadují výkonné čipy a datová centra s vysokou spotřebou energie.</span></div>
+        <div class="tcard" style="cursor:default"><b>Počítání a logika</b><span>Model text odhaduje, nepočítá. Ve výpočtech a úsudcích chybuje, pomáhají mu nástroje.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Etika a právo</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Autorská práva</b><span>Spory o trénink na chráněných dílech a o to, komu patří vygenerovaný obsah.</span></div>
+        <div class="tcard" style="cursor:default"><b>Deepfakes</b><span>Věrohodné falešné video, hlas a fotografie. Zneužití k podvodům a dezinformacím.</span></div>
+        <div class="tcard" style="cursor:default"><b>Soukromí</b><span>Zadané údaje mohou opustit zařízení. Citlivá data do veřejných nástrojů nepatří.</span></div>
+        <div class="tcard" style="cursor:default"><b>AI Act</b><span>Nařízení EU z roku 2024. Povinnosti odstupňované podle míry rizika systému.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Jak AI používat rozumně</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Ověřuj</dt><dd>Fakta, čísla a citace zkontroluj v nezávislém zdroji.</dd>
+        <dt>Chraň data</dt><dd>Nezadávej osobní údaje, hesla ani důvěrné dokumenty.</dd>
+        <dt>Přiznej použití</dt><dd>Ve škole i v práci uveď, kde ti AI pomohla, a dodržuj pravidla instituce.</dd>
+        <dt>Rozhoduj sám</dt><dd>AI je pomocník. Za výsledek odpovídá člověk, který ho použije.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Co navrhl Alan Turing v roce 1950?</li>
+        <li>Proč je důležitá Dartmouthská konference?</li>
+        <li>Co byly expertní systémy a zimy AI?</li>
+        <li>Které milníky přineslo hluboké učení po roce 2012?</li>
+        <li>Uveďte příklady individuálního využití AI.</li>
+        <li>Jak se AI využívá v průmyslu a zdravotnictví?</li>
+        <li>Co je halucinace a proč vzniká?</li>
+        <li>Jaké etické a právní otázky AI přináší?</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>

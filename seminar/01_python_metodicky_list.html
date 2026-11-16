@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Programování v Pythonu</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-trideni-funkci">Aktivita: třídění funkcí</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 1 · Metodický list pro učitele</p>
+  <h1>Programování v Pythonu <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině zařadí Python mezi programovací jazyky, vysvětlí stavbu funkce a roztřídí funkce podle druhu. Praktická zkouška se v této hodině neprocvičuje. Hodinu vedeš podle <a href="01_python.html">prezentace</a>, studenti mají <a href="01_python_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>charakterizuje Python (interpretovaný, dynamicky a silně typovaný, multiparadigmatický) a srovná ho s kompilovaným jazykem,</li>
+  <li>popíše části funkce: definici, parametry, tělo, návratovou hodnotu,</li>
+  <li>rozliší parametr a argument, lokální a globální proměnnou,</li>
+  <li>roztřídí funkce na vestavěné, knihovní a uživatelské a uvede další druhy (lambda, rekurzivní, metody),</li>
+  <li>uvede oblasti využití Pythonu, jeho výhody a nevýhody.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Žáci už v Pythonu programovali (proměnné, podmínky, cykly).</li>
+  <li>Prezentace „01 – Programování v Pythonu“, studijní text ke stejné otázce.</li>
+  <li>Počítače s Pythonem 3 nebo online interpret, projektor, lístečky na třídění funkcí.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace</td><td>Zadá otázku: „Podle čeho byste roztřídili programovací jazyky?“ Zapisuje návrhy na tabuli.</td><td>Ve dvojicích navrhují hlediska, uvádějí jazyky, které znají.</td></tr>
+<tr><td>10–25</td><td>Výklad: zařazení Pythonu</td><td>Projde snímky o charakteristice a srovnání s C++. Ukáže chybu <code>"3" + 4</code>.</td><td>Doplňují si tabulku hledisek, odhadují výsledek ukázky.</td></tr>
+<tr><td>25–45</td><td>Výklad: funkce</td><td>Živě píše funkci, mění parametry, výchozí hodnoty, odebere <code>return</code>.</td><td>Předpovídají výstup před spuštěním, pak zkoušejí sami.</td></tr>
+<tr><td>45–60</td><td>Aktivita: třídění funkcí</td><td>Rozdá lístečky s ukázkami funkcí.</td><td>Ve skupinách třídí do kategorií a zdůvodňují.</td></tr>
+<tr><td>60–75</td><td>Rozsah platnosti a předávání</td><td>Ukáže funkci, která mění seznam, a funkci, která „mění“ číslo.</td><td>Vysvětlují rozdíl, formulují pravidlo vlastními slovy.</td></tr>
+<tr><td>75–85</td><td>Maturitní výstup</td><td>Vylosuje dva žáky, každý mluví tři minuty na část otázky.</td><td>Ostatní si značí, co zaznělo a co chybělo.</td></tr>
+<tr><td>85–90</td><td>Shrnutí</td><td>Zadá výstupní lístek.</td><td>Odpovídají písemně na tři otázky.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-trideni-funkci">
+<h2>Aktivita: třídění funkcí</h2>
+<p>Na lístečcích jsou ukázky: <code>len("abc")</code>, <code>print("ahoj")</code>, <code>math.sqrt(9)</code>, <code>def pozdrav(jmeno): ...</code>, <code>lambda x: x + 1</code>, <code>"text".upper()</code>, rekurzivní <code>faktorial(n)</code>, <code>random.randint(1, 6)</code>.</p>
+<p>Skupina každou ukázku zařadí do jedné nebo více kategorií (vestavěná, knihovní, uživatelská, s návratovou hodnotou, bez ní, anonymní, rekurzivní, metoda). Cílem je, aby žáci zjistili, že kategorie nejsou vzájemně výlučné: <code>print</code> je vestavěná a zároveň bez návratové hodnoty.</p>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>„Python není kompilovaný, takže se nepřekládá vůbec.“</td><td>Ukázat složku <code>__pycache__</code> a vysvětlit bajtkód.</td></tr>
+<tr><td>Zaměňování <code>print</code> a <code>return</code>.</td><td>Uložit výsledek funkce bez <code>return</code> do proměnné a vypsat ji: vyjde <code>None</code>.</td></tr>
+<tr><td>„Dynamické typování znamená slabé typování.“</td><td>Ukázat <code>"3" + 4</code> a <code>TypeError</code>.</td></tr>
+<tr><td>Zaměňování parametru a argumentu.</td><td>Trvat na správném termínu při každém ústním popisu kódu.</td></tr>
+<tr><td>„Funkce nemůže změnit nic venku.“</td><td>Ukázka s <code>seznam.append</code> uvnitř funkce.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Napište jednou větou, co znamená, že je Python dynamicky typovaný.</li>
+  <li>Jaký je rozdíl mezi <code>print(x)</code> a <code>return x</code> uvnitř funkce?</li>
+  <li>Uveďte jednu oblast, kde byste Python použili, a jednu, kde ne. Proč?</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> zařazení jazyka podle více hledisek se srovnáním, přesná terminologie funkcí (parametr, argument, návratová hodnota, rozsah platnosti), kategorizace s vlastními příklady, využití s konkrétními knihovnami a vyvážené zhodnocení výhod a nevýhod.</li>
+  <li><strong>Na dostatečnou:</strong> žák ví, že Python je interpretovaný, umí popsat definici funkce a uvede alespoň dvě oblasti využití.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Co je <code>None</code>? Proč se nedoporučují globální proměnné? Proč je Python pomalejší než C++ a jak se to v praxi obchází?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 1 „Programování v Pythonu“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

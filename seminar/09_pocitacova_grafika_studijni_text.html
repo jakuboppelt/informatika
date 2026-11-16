@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Počítačová grafika – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#prehled">Přehled</a></li>
+    <li><a href="#rastrova-grafika">Rastrová grafika</a></li>
+    <li><a href="#vektorova-grafika">Vektorová grafika</a></li>
+    <li><a href="#srovnani">Srovnání</a></li>
+    <li><a href="#barevne-modely">Barevné modely</a></li>
+    <li><a href="#formaty">Formáty</a></li>
+    <li><a href="#software">Software</a></li>
+    <li><a href="#datova-komprese">Datová komprese</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 9 · Studijní text</p>
+  <h1>Počítačová grafika</h1>
+  <p class="lead">Rastrová a vektorová grafika, barevné modely, formáty, software a komprese dat.</p>
+</header>
+
+<section id="prehled">
+<h2>Přehled</h2>
+<p>Počítačová grafika se zabývá tvorbou, úpravou a ukládáním obrazu v počítači. Podle způsobu uložení obrazu ji dělíme na <strong>rastrovou</strong> (bitmapovou) a <strong>vektorovou</strong>. Podle počtu rozměrů na 2D a 3D.</p>
+</section>
+
+<section id="rastrova-grafika">
+<h2>Rastrová grafika</h2>
+<p>Obraz je uložen jako pravoúhlá mřížka bodů, <strong>pixelů</strong>. Každý pixel má uloženou barvu.</p>
+<div class="tbl"><table>
+<thead><tr><th>Pojem</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td>Rozlišení</td><td>počet pixelů na šířku a výšku, např. 1920 × 1080</td></tr>
+<tr><td>DPI / PPI</td><td>počet bodů na palec; pro kvalitní tisk se používá 300 DPI</td></tr>
+<tr><td>Barevná hloubka</td><td>počet bitů na pixel: 1 bit (2 barvy), 8 bitů (256 barev), 24 bitů (16,7 milionu barev, True Color), 32 bitů (24 bitů a alfa kanál)</td></tr>
+</tbody></table></div>
+<p><strong>Velikost nekomprimovaného obrázku</strong> = šířka × výška × barevná hloubka.</p>
+<p>Příklad: 1920 × 1080 pixelů ve 24 bitech = 1920 × 1080 × 3 B = 6 220 800 B ≈ 6,2 MB.</p>
+<ul>
+  <li><strong>Výhody:</strong> věrně zachytí fotografie, jemné barevné přechody a detaily; snadno se pořizuje (fotoaparát, skener).</li>
+  <li><strong>Nevýhody:</strong> při zvětšení ztrácí kvalitu (viditelné pixely, rozmazání), velké soubory, obtížná úprava jednotlivých objektů.</li>
+  <li><strong>Využití:</strong> fotografie, digitální malba, textury, snímky obrazovky.</li>
+</ul>
+</section>
+
+<section id="vektorova-grafika">
+<h2>Vektorová grafika</h2>
+<p>Obraz je popsán matematicky pomocí objektů: bodů, úseček, křivek a tvarů s vlastnostmi (barva výplně, tloušťka obrysu). Křivky se popisují <strong>Bézierovými křivkami</strong> určenými kotevními a řídicími body.</p>
+<p>Příklad zápisu kruhu ve formátu SVG:</p>
+<pre><code class="language-xml">&lt;circle cx="50" cy="50" r="40" fill="red" /&gt;</code></pre>
+<ul>
+  <li><strong>Výhody:</strong> zvětšování bez ztráty kvality, malé soubory u jednoduché grafiky, snadná úprava objektů.</li>
+  <li><strong>Nevýhody:</strong> nehodí se pro fotografie, složité kresby jsou náročné na výpočet.</li>
+  <li><strong>Využití:</strong> loga, ikony, písma (fonty), mapy, technické výkresy, ilustrace, diagramy.</li>
+</ul>
+</section>
+
+<section id="srovnani">
+<h2>Srovnání</h2>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Rastr</th><th>Vektor</th></tr></thead>
+<tbody>
+<tr><td>Základní prvek</td><td>pixel</td><td>objekt (křivka, tvar)</td></tr>
+<tr><td>Zvětšování</td><td>ztráta kvality</td><td>bez ztráty</td></tr>
+<tr><td>Velikost souboru</td><td>závisí na rozlišení a hloubce</td><td>závisí na počtu a složitosti objektů</td></tr>
+<tr><td>Vhodné pro</td><td>fotografie</td><td>loga, ikony, výkresy</td></tr>
+<tr><td>Formáty</td><td>JPEG, PNG, GIF, WebP, TIFF</td><td>SVG, AI, EPS, PDF, CDR</td></tr>
+</tbody></table></div>
+<p>Převod vektoru na rastr se nazývá <strong>rasterizace</strong> a je snadný; provádí se při každém zobrazení na monitoru. Opačný převod, <strong>vektorizace</strong> (trasování), je obtížný a nepřesný.</p>
+</section>
+
+<section id="barevne-modely">
+<h2>Barevné modely</h2>
+<div class="tbl"><table>
+<thead><tr><th>Model</th><th>Složky</th><th>Princip</th><th>Použití</th></tr></thead>
+<tbody>
+<tr><td>RGB</td><td>červená, zelená, modrá</td><td>aditivní: světla se sčítají, všechna dohromady dávají bílou</td><td>monitory, web</td></tr>
+<tr><td>CMYK</td><td>azurová, purpurová, žlutá, černá</td><td>subtraktivní: barviva světlo pohlcují</td><td>tisk</td></tr>
+<tr><td>HSV / HSL</td><td>odstín, sytost, jas</td><td>odpovídá lidskému vnímání</td><td>výběr barvy v editorech</td></tr>
+</tbody></table></div>
+<p>V RGB se barva často zapisuje hexadecimálně: <code>#FF0000</code> je červená (červená složka 255, zelená 0, modrá 0). <strong>Alfa kanál</strong> udává průhlednost.</p>
+</section>
+
+<section id="formaty">
+<h2>Formáty</h2>
+<div class="tbl"><table>
+<thead><tr><th>Formát</th><th>Typ</th><th>Komprese</th><th>Použití</th></tr></thead>
+<tbody>
+<tr><td>BMP</td><td>rastr</td><td>žádná</td><td>historický formát Windows</td></tr>
+<tr><td>JPEG</td><td>rastr</td><td>ztrátová</td><td>fotografie; neumí průhlednost</td></tr>
+<tr><td>PNG</td><td>rastr</td><td>bezztrátová</td><td>grafika s ostrými hranami, průhlednost</td></tr>
+<tr><td>GIF</td><td>rastr</td><td>bezztrátová (LZW), nejvýše 256 barev</td><td>jednoduché animace</td></tr>
+<tr><td>WebP, AVIF</td><td>rastr</td><td>ztrátová i bezztrátová</td><td>web</td></tr>
+<tr><td>TIFF</td><td>rastr</td><td>obvykle bezztrátová</td><td>tisk, archivace</td></tr>
+<tr><td>RAW</td><td>rastr</td><td>žádná nebo bezztrátová</td><td>surová data ze snímače fotoaparátu</td></tr>
+<tr><td>SVG</td><td>vektor</td><td>textový formát (XML)</td><td>web, ikony</td></tr>
+<tr><td>AI, CDR</td><td>vektor</td><td>vlastní formáty programů</td><td>Illustrator, CorelDRAW</td></tr>
+<tr><td>PDF</td><td>vektor i rastr</td><td>různá</td><td>dokumenty, tisk</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="software">
+<h2>Software</h2>
+<div class="tbl"><table>
+<thead><tr><th>Druh</th><th>Komerční</th><th>Zdarma</th></tr></thead>
+<tbody>
+<tr><td>Rastrové editory</td><td>Adobe Photoshop, Affinity Photo</td><td>GIMP, Krita, Paint.NET, Photopea</td></tr>
+<tr><td>Vektorové editory</td><td>Adobe Illustrator, CorelDRAW, Affinity Designer</td><td>Inkscape, Boxy SVG</td></tr>
+<tr><td>Návrh rozhraní</td><td>Figma, Sketch</td><td>Penpot</td></tr>
+<tr><td>3D grafika</td><td>3ds Max, Maya, Cinema 4D</td><td>Blender</td></tr>
+<tr><td>Technické kreslení (CAD)</td><td>AutoCAD, SolidWorks</td><td>FreeCAD</td></tr>
+<tr><td>Sazba (DTP)</td><td>Adobe InDesign</td><td>Scribus</td></tr>
+</tbody></table></div>
+<p>Rastrové editory pracují s vrstvami, výběry, štětci a filtry. Vektorové editory pracují s objekty, uzly křivek, výplní a obrysem.</p>
+</section>
+
+<section id="datova-komprese">
+<h2>Datová komprese</h2>
+<p>Komprese zmenšuje objem dat. <strong>Kompresní poměr</strong> je podíl původní a komprimované velikosti.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Bezztrátová</th><th>Ztrátová</th></tr></thead>
+<tbody>
+<tr><td>Obnova dat</td><td>přesná, bit po bitu</td><td>jen přibližná</td></tr>
+<tr><td>Princip</td><td>odstranění nadbytečnosti (redundance)</td><td>zahození informace, kterou člověk špatně vnímá</td></tr>
+<tr><td>Kompresní poměr</td><td>nižší</td><td>vysoký, nastavitelný</td></tr>
+<tr><td>Použití</td><td>text, programy, databáze, grafika s ostrými hranami</td><td>fotografie, zvuk, video</td></tr>
+<tr><td>Příklady</td><td>ZIP, PNG, GIF, FLAC</td><td>JPEG, MP3, AAC, H.264</td></tr>
+</tbody></table></div>
+<h3>Bezztrátové metody</h3>
+<ul>
+  <li><strong>RLE (Run-Length Encoding):</strong> opakující se hodnoty nahradí dvojicí počet a hodnota. <code>AAAABBBCC</code> → <code>4A3B2C</code>. Účinné u obrázků s velkými jednobarevnými plochami, neúčinné u fotografií.</li>
+  <li><strong>Huffmanovo kódování:</strong> časté symboly dostanou krátký binární kód, vzácné dlouhý.</li>
+  <li><strong>Slovníkové metody (LZ77, LZW):</strong> opakovaný úsek dat se nahradí odkazem na dřívější výskyt.</li>
+  <li><strong>Deflate:</strong> kombinace LZ77 a Huffmanova kódování, používá ho ZIP i PNG.</li>
+</ul>
+<h3>Ztrátová komprese JPEG</h3>
+<ol>
+  <li>Převod barev z RGB na jasovou složku a dvě barevné složky (YCbCr). Oko je citlivější na jas než na barvu, proto se barevné složky uloží v nižším rozlišení (podvzorkování).</li>
+  <li>Rozdělení obrazu na bloky 8 × 8 pixelů.</li>
+  <li>Diskrétní kosinová transformace (DCT) převede každý blok na frekvenční složky.</li>
+  <li><strong>Kvantizace:</strong> vysoké frekvence (jemné detaily) se zaokrouhlí nebo vynulují. Zde vzniká ztráta.</li>
+  <li>Výsledek se bezztrátově zakóduje (Huffmanovo kódování).</li>
+</ol>
+<p>Při silné kompresi vznikají <strong>artefakty</strong>: viditelné čtverečky a „duchové“ kolem hran. Každé nové uložení do JPEG kvalitu dále snižuje.</p>
+<p>U videa se navíc využívá podobnost sousedních snímků (ukládají se jen změny), u zvuku psychoakustický model (MP3 vypouští zvuky, které ucho neslyší).</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Vysvětlete rozdíl mezi rastrovou a vektorovou grafikou.</li>
+  <li>Co je rozlišení, DPI a barevná hloubka?</li>
+  <li>Vypočítejte velikost nekomprimovaného obrázku 800 × 600 ve 24 bitech.</li>
+  <li>Proč se logo firmy vytváří ve vektorech?</li>
+  <li>Jaký je rozdíl mezi RGB a CMYK?</li>
+  <li>Kdy použijete JPEG, PNG, GIF a SVG?</li>
+  <li>Jmenujte rastrové a vektorové editory.</li>
+  <li>Čím se liší ztrátová a bezztrátová komprese?</li>
+  <li>Zakódujte metodou RLE řetězec <code>WWWWWBBWWW</code>.</li>
+  <li>Popište, kde při kompresi JPEG dochází ke ztrátě informace.</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 9 „Počítačová grafika“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

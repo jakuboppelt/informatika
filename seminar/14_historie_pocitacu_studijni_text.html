@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historie počítačů – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#predchudci-pocitacu">Předchůdci počítačů</a></li>
+    <li><a href="#alan-turing">Alan Turing</a></li>
+    <li><a href="#prvni-pocitace">První počítače</a></li>
+    <li><a href="#von-neumannova-architektura">Von Neumannova architektura</a></li>
+    <li><a href="#harvardska-architektura">Harvardská architektura</a></li>
+    <li><a href="#generace-pocitacu">Generace počítačů</a></li>
+    <li><a href="#vyvoj-systemu">Vývoj systémů</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 14 · Studijní text</p>
+  <h1>Historie počítačů</h1>
+  <p class="lead">Od mechanických počítadel přes první počítače a dvě základní architektury k dnešním zařízením.</p>
+</header>
+
+<section id="predchudci-pocitacu">
+<h2>Předchůdci počítačů</h2>
+<p>Počítačům předcházely mechanické pomůcky a stroje, které uměly počítat, ale nebyly volně programovatelné.</p>
+<div class="tbl"><table>
+<thead><tr><th>Kdy</th><th>Kdo nebo co</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td>starověk</td><td>abakus</td><td>kuličkové počítadlo, výpočet provádí člověk</td></tr>
+<tr><td>1642</td><td>Blaise Pascal, Pascalina</td><td>mechanická kalkulačka pro sčítání a odčítání</td></tr>
+<tr><td>17. století</td><td>Gottfried Wilhelm Leibniz</td><td>kalkulátor, který uměl i násobit a dělit; popsal dvojkovou soustavu</td></tr>
+<tr><td>začátek 19. století</td><td>Jacquardův tkalcovský stav</td><td>řízení stroje děrnými štítky</td></tr>
+<tr><td>19. století</td><td>Charles Babbage</td><td>diferenční stroj a návrh analytického stroje</td></tr>
+<tr><td>1843</td><td>Ada Lovelace</td><td>popis postupu výpočtu pro analytický stroj</td></tr>
+<tr><td>1890</td><td>Herman Hollerith</td><td>děrnoštítkový stroj pro sčítání lidu v USA</td></tr>
+</tbody></table></div>
+<p>Babbageův analytický stroj je nejdůležitější z předchůdců. Měl mít „mlýn“ (výpočetní jednotku), „sklad“ (paměť), vstup z děrných štítků a výstup, tedy části, které známe z dnešních počítačů. Nebyl nikdy dokončen. Ada Lovelace k němu sepsala poznámky s postupem výpočtu Bernoulliho čísel, a proto bývá označována za první programátorku. Hollerithovy stroje zrychlily zpracování sčítání lidu a z jeho firmy později vzniklo IBM.</p>
+</section>
+
+<section id="alan-turing">
+<h2>Alan Turing</h2>
+<p>Alan Turing položil teoretické základy informatiky. V roce 1936 popsal abstraktní stroj (Turingův stroj), kterým vymezil, co lze algoritmicky vypočítat. Za druhé světové války se v Bletchley Parku podílel na luštění německé šifry Enigma. V roce 1950 navrhl test, kterým lze posuzovat, zda se stroj chová inteligentně (Turingův test).</p>
+</section>
+
+<section id="prvni-pocitace">
+<h2>První počítače</h2>
+<p>První počítače vznikaly na přelomu 30. a 40. let nezávisle v Německu, Velké Británii a USA, většinou pro vojenské účely.</p>
+<div class="tbl"><table>
+<thead><tr><th>Počítač</th><th>Rok</th><th>Země</th><th>Technika</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td>Z3</td><td>1941</td><td>Německo</td><td>relé</td><td>Konrad Zuse; první funkční programem řízený počítač, dvojkový</td></tr>
+<tr><td>Colossus</td><td>1943–44</td><td>Velká Británie</td><td>elektronky</td><td>luštění německých šifer, dlouho utajovaný</td></tr>
+<tr><td>Harvard Mark I</td><td>1944</td><td>USA</td><td>relé, elektromechanický</td><td>Howard Aiken a IBM; program z děrné pásky</td></tr>
+<tr><td>ENIAC</td><td>1945–46</td><td>USA</td><td>elektronky</td><td>první univerzální elektronický počítač</td></tr>
+<tr><td>EDVAC</td><td>návrh 1945</td><td>USA</td><td>elektronky</td><td>dvojkový, program uložený v paměti</td></tr>
+<tr><td>UNIVAC I</td><td>1951</td><td>USA</td><td>elektronky</td><td>první komerčně prodávaný počítač v USA</td></tr>
+</tbody></table></div>
+<p>ENIAC postavili J. Presper Eckert a John Mauchly na Pensylvánské univerzitě. Dokončen byl v roce 1945 a veřejnosti představen v roce 1946. Obsahoval asi 18 000 elektronek, vážil kolem 30 tun a počítal v desítkové soustavě. Programoval se přepojováním kabelů a nastavováním přepínačů, takže příprava nové úlohy trvala i několik dní. Právě tato nevýhoda vedla k myšlence uložit program do paměti. První počítače, které program uložený v paměti skutečně vykonaly, vznikly v Británii na konci 40. let (Manchester Baby 1948, EDSAC 1949).</p>
+</section>
+
+<section id="von-neumannova-architektura">
+<h2>Von Neumannova architektura</h2>
+<p>Von Neumannova architektura je koncepce počítače, ve které jsou program i data uloženy ve společné paměti. John von Neumann ji popsal v roce 1945 ve zprávě o návrhu počítače EDVAC. Na návrhu se podíleli i Eckert a Mauchly.</p>
+<p>Počítač se podle ní skládá z těchto částí:</p>
+<ul>
+  <li><strong>řadič</strong> – čte instrukce z paměti, dekóduje je a řídí ostatní části,</li>
+  <li><strong>aritmeticko-logická jednotka (ALU)</strong> – provádí aritmetické a logické operace; řadič a ALU dnes tvoří procesor,</li>
+  <li><strong>operační paměť</strong> – společná pro program i data, rozdělená na buňky stejné velikosti, které mají adresy,</li>
+  <li><strong>vstupní a výstupní zařízení</strong> – spojení s okolím.</li>
+</ul>
+<p>Části propojuje <strong>sběrnice</strong>: adresová (kterou buňku chceme), datová (přenášený obsah) a řídicí (čtení, zápis a další signály).</p>
+<p>Hlavní zásady:</p>
+<ol>
+  <li>Program a data jsou ve stejné paměti a ve stejné (dvojkové) podobě. Zda je obsah buňky instrukce, nebo číslo, plyne jen z toho, jak s ním procesor naloží.</li>
+  <li>Instrukce se provádějí postupně za sebou. Pořadí mění jen instrukce skoku. Procesor opakuje cyklus: načíst instrukci, dekódovat, provést.</li>
+  <li>Struktura počítače nezávisí na řešené úloze. Jinou úlohu řeší jiný program, ne jiné zapojení.</li>
+</ol>
+<p><strong>Výhody:</strong> univerzálnost, jednodušší konstrukce, pružné využití paměti. Program lze zpracovávat jako data, díky čemuž existují překladače a programy lze snadno načítat z disku.</p>
+<p><strong>Nevýhody:</strong> instrukce i data procházejí stejnou cestou mezi procesorem a pamětí. Procesor je mnohem rychlejší než paměť a čeká na ni – tomu se říká úzké hrdlo von Neumannovy architektury. Dnešní procesory je zmírňují vyrovnávací pamětí cache. Druhá nevýhoda je bezpečnostní: data mohou být omylem nebo záměrně vykonána jako program.</p>
+</section>
+
+<section id="harvardska-architektura">
+<h2>Harvardská architektura</h2>
+<p>Harvardská architektura má fyzicky oddělenou paměť programu a paměť dat, každou s vlastní sběrnicí. Název pochází od počítače Harvard Mark I, který četl instrukce z děrné pásky, kdežto data uchovával odděleně.</p>
+<p><strong>Výhody:</strong> instrukci a data lze číst současně, což zrychluje běh. Paměti mohou mít různou technologii i šířku slova (program v paměti flash, data v RAM). Program nelze za běhu snadno přepsat, což zvyšuje spolehlivost.</p>
+<p><strong>Nevýhody:</strong> složitější zapojení a pevné rozdělení paměti – volné místo v jedné paměti nelze využít pro druhou.</p>
+<p>Dnes se harvardská architektura používá hlavně v mikrokontrolérech (například AVR v deskách Arduino) a v signálových procesorech. Hranice mezi architekturami není ostrá: běžné procesory v PC a telefonech mají společnou operační paměť, ale uvnitř oddělenou vyrovnávací paměť pro instrukce a pro data.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Von Neumannova</th><th>Harvardská</th></tr></thead>
+<tbody>
+<tr><td>Paměť</td><td>společná pro program i data</td><td>oddělená pro program a pro data</td></tr>
+<tr><td>Sběrnice</td><td>jedna sada</td><td>dvě nezávislé sady</td></tr>
+<tr><td>Přístup k instrukcím a datům</td><td>postupně</td><td>současně</td></tr>
+<tr><td>Konstrukce</td><td>jednodušší</td><td>složitější</td></tr>
+<tr><td>Využití paměti</td><td>pružné</td><td>pevně rozdělené</td></tr>
+<tr><td>Změna programu za běhu</td><td>snadná</td><td>obtížná</td></tr>
+<tr><td>Typické použití</td><td>PC, servery, telefony</td><td>mikrokontroléry, signálové procesory</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="generace-pocitacu">
+<h2>Generace počítačů</h2>
+<p>Generace počítačů se rozlišují podle součástky, ze které byly postaveny. Letopočty jsou orientační a v literatuře se mírně liší.</p>
+<div class="tbl"><table>
+<thead><tr><th>Generace</th><th>Období</th><th>Součástka</th><th>Vlastnosti</th><th>Příklady</th></tr></thead>
+<tbody>
+<tr><td>nultá</td><td>do 1945</td><td>relé</td><td>elektromechanické, pomalé</td><td>Z3, Harvard Mark I</td></tr>
+<tr><td>první</td><td>asi 1945–1955</td><td>elektronky</td><td>velké, poruchové, vysoká spotřeba</td><td>ENIAC, UNIVAC I</td></tr>
+<tr><td>druhá</td><td>asi 1955–1965</td><td>tranzistory</td><td>menší, spolehlivější, první vyšší programovací jazyky</td><td>IBM 1401</td></tr>
+<tr><td>třetí</td><td>asi 1965–1975</td><td>integrované obvody</td><td>více tranzistorů na jednom čipu, operační systémy</td><td>IBM System/360</td></tr>
+<tr><td>čtvrtá</td><td>od 70. let</td><td>mikroprocesor</td><td>celý procesor na jednom čipu, osobní počítače</td><td>Apple II, IBM PC</td></tr>
+</tbody></table></div>
+<p>Klíčové vynálezy: tranzistor (1947, Bellovy laboratoře), integrovaný obvod (1958, Jack Kilby) a mikroprocesor Intel 4004 (1971), první komerčně prodávaný mikroprocesor, čtyřbitový.</p>
+<p>Mikroprocesor umožnil vznik osobních počítačů:</p>
+<ul>
+  <li><strong>Altair 8800</strong> (1975) – stavebnice pro nadšence, kterou začala éra domácích počítačů,</li>
+  <li><strong>Apple II</strong> (1977) – hotový počítač pro domácnosti a školy,</li>
+  <li><strong>IBM PC</strong> (1981) – otevřená architektura, kterou mohli kopírovat další výrobci; z ní vycházejí dnešní počítače PC.</li>
+</ul>
+<p><strong>Moorův zákon</strong> je pozorování Gordona Moora z roku 1965, že počet tranzistorů na čipu se pravidelně zdvojnásobuje – podle pozdějšího upřesnění zhruba každé dva roky. Není to fyzikální zákon, ale trend, který dlouho platil a v posledních letech zpomaluje.</p>
+</section>
+
+<section id="vyvoj-systemu">
+<h2>Vývoj systémů</h2>
+<p>Spolu s hardwarem se měnil i způsob, jakým lidé počítače používají.</p>
+<ul>
+  <li><strong>Bez operačního systému</strong> – první počítače obsluhoval programátor přímo, vždy jednu úlohu.</li>
+  <li><strong>Dávkové zpracování</strong> (50. léta) – úlohy na děrných štítcích se seřadí do dávky a počítač je zpracuje jednu po druhé bez zásahu uživatele.</li>
+  <li><strong>Multiprogramování a sdílení času</strong> (60. léta) – v paměti je více úloh a procesor mezi nimi přepíná. U jednoho sálového počítače pracuje více uživatelů u terminálů.</li>
+  <li><strong>UNIX</strong> (1969, Bellovy laboratoře) – víceúlohový a víceuživatelský systém, vzor pro Linux, macOS i Android.</li>
+  <li><strong>Osobní počítače</strong> (80. léta) – MS-DOS s příkazovým řádkem (1981), grafická rozhraní Macintosh (1984) a Windows (1985). Linux vznikl v roce 1991.</li>
+  <li><strong>Mobilní zařízení a cloud</strong> – od roku 2007 chytré telefony se systémy iOS a Android. Velká část výpočtů a dat se přesouvá do datových center.</li>
+</ul>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Které pomůcky a stroje předcházely prvním počítačům?</li>
+  <li>Čím byl významný Babbageův analytický stroj a jakou roli měla Ada Lovelace?</li>
+  <li>Čím přispěl k rozvoji informatiky Alan Turing?</li>
+  <li>Charakterizujte počítače Z3, Colossus a ENIAC.</li>
+  <li>Proč bylo programování ENIACu nepraktické a k jaké myšlence to vedlo?</li>
+  <li>Z jakých částí se skládá počítač podle von Neumanna a jaké jsou hlavní zásady této koncepce?</li>
+  <li>Co je úzké hrdlo von Neumannovy architektury?</li>
+  <li>Čím se liší harvardská architektura a kde se dnes používá?</li>
+  <li>Podle čeho se rozlišují generace počítačů? Uveďte součástky a příklady.</li>
+  <li>Jak se vyvíjely operační systémy od dávkového zpracování po mobilní zařízení?</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 14 „Historie počítačů“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

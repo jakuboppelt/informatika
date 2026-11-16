@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algoritmizace – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#algoritmus-a-algoritmizace">Algoritmus a algoritmizace</a></li>
+    <li><a href="#vlastnosti-algoritmu">Vlastnosti algoritmu</a></li>
+    <li><a href="#zpusoby-zapisu">Způsoby zápisu</a></li>
+    <li><a href="#bloky-vyvojoveho-diagramu">Bloky vývojového diagramu</a></li>
+    <li><a href="#ridici-struktury">Řídicí struktury</a></li>
+    <li><a href="#prakticky-priklad-eukleiduv-algoritmus">Praktický příklad: Eukleidův algoritmus</a></li>
+    <li><a href="#slozitost-algoritmu">Složitost algoritmu</a></li>
+    <li><a href="#vyuziti">Využití</a></li>
+    <li><a href="#problem-zastaveni-halting-problem">Problém zastavení (halting problem)</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 4 · Studijní text</p>
+  <h1>Algoritmizace</h1>
+  <p class="lead">Vlastnosti algoritmu, způsoby zápisu, bloky vývojového diagramu a problém zastavení.</p>
+</header>
+
+<section id="algoritmus-a-algoritmizace">
+<h2>Algoritmus a algoritmizace</h2>
+<p>Algoritmus je přesný a konečný postup, který pro každý přípustný vstup vede k řešení dané úlohy. Slovo pochází ze jména perského matematika al-Chwárizmího (9. století).</p>
+<p><strong>Algoritmizace</strong> je proces, při kterém problém převádíme na algoritmus: problém analyzujeme, určíme vstupy a výstupy, rozložíme ho na menší části a navrhneme postup. <strong>Program</strong> je zápis algoritmu v konkrétním programovacím jazyce.</p>
+<p>Algoritmus nemusí vykonávat počítač. Algoritmem je i písemné sčítání pod sebou nebo kuchařský recept, pokud je dostatečně přesný.</p>
+</section>
+
+<section id="vlastnosti-algoritmu">
+<h2>Vlastnosti algoritmu</h2>
+<div class="tbl"><table>
+<thead><tr><th>Vlastnost</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td>Konečnost</td><td>Skončí po konečném počtu kroků.</td></tr>
+<tr><td>Jednoznačnost (determinovanost)</td><td>V každém kroku je přesně určeno, co se provede a co následuje.</td></tr>
+<tr><td>Obecnost (hromadnost)</td><td>Řeší celou třídu podobných úloh, ne jeden konkrétní případ.</td></tr>
+<tr><td>Elementárnost</td><td>Skládá se z jednoduchých kroků, které vykonavatel umí provést.</td></tr>
+<tr><td>Vstup a výstup (rezultativnost)</td><td>Má definované vstupní údaje a vždy dá výsledek.</td></tr>
+<tr><td>Správnost</td><td>Pro každý přípustný vstup dá správný výsledek.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="zpusoby-zapisu">
+<h2>Způsoby zápisu</h2>
+<div class="tbl"><table>
+<thead><tr><th>Způsob</th><th>Výhody</th><th>Nevýhody</th></tr></thead>
+<tbody>
+<tr><td>Slovní popis</td><td>srozumitelný každému</td><td>nejednoznačný, zdlouhavý</td></tr>
+<tr><td>Vývojový diagram</td><td>názorný, je vidět tok řízení</td><td>nepřehledný u delších algoritmů</td></tr>
+<tr><td>Pseudokód</td><td>přesný, nezávislý na jazyce</td><td>není jednotně standardizován</td></tr>
+<tr><td>Programovací jazyk</td><td>přímo spustitelný</td><td>vázaný na syntaxi jazyka</td></tr>
+</tbody></table></div>
+<p>Další grafické zápisy jsou struktogramy (Nassi–Shneidermanovy diagramy) a diagramy aktivit jazyka UML.</p>
+</section>
+
+<section id="bloky-vyvojoveho-diagramu">
+<h2>Bloky vývojového diagramu</h2>
+<div class="tbl"><table>
+<thead><tr><th>Značka</th><th>Tvar</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td>Mezní značka</td><td>ovál (zaoblený obdélník)</td><td>začátek a konec algoritmu</td></tr>
+<tr><td>Vstup a výstup</td><td>rovnoběžník (kosodélník)</td><td>načtení dat, vypsání výsledku</td></tr>
+<tr><td>Zpracování</td><td>obdélník</td><td>výpočet, přiřazení hodnoty</td></tr>
+<tr><td>Rozhodování</td><td>kosočtverec</td><td>podmínka se dvěma výstupy: ano (+) a ne (−)</td></tr>
+<tr><td>Podprogram</td><td>obdélník s dvojitými svislými stranami</td><td>volání jiného algoritmu</td></tr>
+<tr><td>Příprava, cyklus</td><td>šestiúhelník</td><td>hlavička cyklu s daným počtem opakování</td></tr>
+<tr><td>Spojka</td><td>kroužek</td><td>navázání přerušené čáry, přechod na jinou stránku</td></tr>
+<tr><td>Spojnice</td><td>čára se šipkou</td><td>pořadí provádění</td></tr>
+</tbody></table></div>
+<p>Pravidla kreslení: diagram má jeden začátek, čte se shora dolů a zleva doprava, z rozhodovacího bloku vedou právě dvě označené větve, čáry se nekříží, pokud to není nutné.</p>
+</section>
+
+<section id="ridici-struktury">
+<h2>Řídicí struktury</h2>
+<p>Každý algoritmus lze složit ze tří základních struktur (věta o strukturovaném programování):</p>
+<ul>
+  <li><strong>Posloupnost (sekvence):</strong> příkazy se provedou jeden po druhém.</li>
+  <li><strong>Větvení (selekce):</strong> podle podmínky se provede jedna z větví. Úplné větvení má obě větve, neúplné jen jednu.</li>
+  <li><strong>Cyklus (iterace):</strong> část se opakuje. Rozlišujeme cyklus s daným počtem opakování, s podmínkou na začátku (nemusí proběhnout ani jednou) a s podmínkou na konci (proběhne alespoň jednou).</li>
+</ul>
+<p>Dalšími pojmy jsou <strong>proměnná</strong> (pojmenované místo pro hodnotu), <strong>podprogram</strong> (funkce) a <strong>rekurze</strong> (algoritmus volá sám sebe na menším vstupu).</p>
+</section>
+
+<section id="prakticky-priklad-eukleiduv-algoritmus">
+<h2>Praktický příklad: Eukleidův algoritmus</h2>
+<p>Úloha: najít největší společný dělitel (NSD) dvou přirozených čísel.</p>
+<p><strong>Slovně:</strong> Dokud druhé číslo není nula, nahraď dvojici (a, b) dvojicí (b, zbytek po dělení a číslem b). Výsledkem je první číslo.</p>
+<p><strong>Pseudokód a Python:</strong></p>
+<pre><code class="language-python">def nsd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a</code></pre>
+<p><strong>Průběh pro 48 a 18:</strong></p>
+<div class="tbl"><table>
+<thead><tr><th>Krok</th><th>a</th><th>b</th><th>a mod b</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>48</td><td>18</td><td>12</td></tr>
+<tr><td>2</td><td>18</td><td>12</td><td>6</td></tr>
+<tr><td>3</td><td>12</td><td>6</td><td>0</td></tr>
+<tr><td>4</td><td>6</td><td>0</td><td>konec, NSD = 6</td></tr>
+</tbody></table></div>
+<p><strong>Ve vývojovém diagramu:</strong> začátek (ovál) → vstup a, b (rovnoběžník) → podmínka b ≠ 0? (kosočtverec). Větev ano: zbytek = a mod b, a = b, b = zbytek (obdélníky) a návrat k podmínce. Větev ne: výstup a (rovnoběžník) → konec (ovál).</p>
+<p><strong>Ověření vlastností:</strong> hodnota b se v každém kroku zmenší a nemůže klesnout pod nulu, takže algoritmus je konečný. Každý krok je jednoznačný a postup funguje pro libovolnou dvojici přirozených čísel.</p>
+</section>
+
+<section id="slozitost-algoritmu">
+<h2>Složitost algoritmu</h2>
+<p>Časová složitost udává, jak počet kroků roste s velikostí vstupu n. Paměťová složitost totéž říká o spotřebě paměti. Zapisuje se notací velké O.</p>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Název</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td>O(1)</td><td>konstantní</td><td>přístup k prvku pole podle indexu</td></tr>
+<tr><td>O(log n)</td><td>logaritmická</td><td>binární vyhledávání</td></tr>
+<tr><td>O(n)</td><td>lineární</td><td>hledání maxima</td></tr>
+<tr><td>O(n log n)</td><td>linearitmická</td><td>řazení slučováním (merge sort)</td></tr>
+<tr><td>O(n²)</td><td>kvadratická</td><td>bublinkové řazení</td></tr>
+<tr><td>O(2ⁿ)</td><td>exponenciální</td><td>zkoušení všech podmnožin</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vyuziti">
+<h2>Využití</h2>
+<p>Algoritmy jsou základem veškerého softwaru: vyhledávání a řazení dat, hledání nejkratší cesty v navigaci, šifrování, komprese dat, doporučování obsahu, strojové učení. Algoritmické myšlení (rozklad problému, hledání vzorů, abstrakce) se uplatní i mimo informatiku.</p>
+</section>
+
+<section id="problem-zastaveni-halting-problem">
+<h2>Problém zastavení (halting problem)</h2>
+<p><strong>Znění:</strong> Existuje algoritmus, který pro libovolný program a jeho vstup rozhodne, zda se program po konečném počtu kroků zastaví, nebo poběží donekonečna?</p>
+<p><strong>Odpověď:</strong> Neexistuje. Dokázal to Alan Turing v roce 1936. Problém zastavení je <strong>algoritmicky nerozhodnutelný</strong>.</p>
+<p><strong>Myšlenka důkazu (sporem):</strong></p>
+<ol>
+  <li>Předpokládejme, že existuje program <code>H(program, vstup)</code>, který vždy správně odpoví „skončí“ nebo „neskončí“.</li>
+  <li>Sestrojíme program <code>D(program)</code>: zeptá se <code>H</code>, zda <code>program</code> spuštěný sám na sobě skončí. Pokud ano, <code>D</code> se zacyklí. Pokud ne, <code>D</code> skončí.</li>
+  <li>Spustíme <code>D(D)</code>. Odpoví-li <code>H</code>, že <code>D(D)</code> skončí, pak se <code>D</code> zacyklí. Odpoví-li, že neskončí, pak <code>D</code> skončí. V obou případech se <code>H</code> mýlí.</li>
+  <li>To je spor s předpokladem, takže <code>H</code> nemůže existovat.</li>
+</ol>
+<pre><code class="language-python">def D(program):
+    if H(program, program) == "skončí":
+        while True:      # zacykli se
+            pass
+    else:
+        return           # skonči</code></pre>
+<p><strong>Důsledky:</strong></p>
+<ul>
+  <li>Existují přesně zadané úlohy, které nevyřeší žádný algoritmus, bez ohledu na výkon počítače.</li>
+  <li>Žádný nástroj neumí u každého programu spolehlivě odhalit nekonečný cyklus ani obecně ověřit, že program dělá, co má.</li>
+  <li>U konkrétního programu se zastavení často dokázat dá (viz Eukleidův algoritmus). Nejde to jedním univerzálním postupem pro všechny programy.</li>
+</ul>
+<p>Nerozhodnutelnost není totéž co vysoká složitost: složitý problém je řešitelný, jen pomalu. Nerozhodnutelný problém obecně řešit nelze vůbec.</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Co je algoritmus? Jak se liší od programu?</li>
+  <li>Vyjmenujte a vysvětlete vlastnosti algoritmu.</li>
+  <li>Jaké jsou způsoby zápisu algoritmu a jejich výhody?</li>
+  <li>Nakreslete a popište značky vývojového diagramu.</li>
+  <li>Jaký je rozdíl mezi cyklem s podmínkou na začátku a na konci?</li>
+  <li>Nakreslete vývojový diagram Eukleidova algoritmu.</li>
+  <li>Co udává časová složitost? Uveďte příklad lineárního a kvadratického algoritmu.</li>
+  <li>Formulujte problém zastavení.</li>
+  <li>Naznačte, proč je problém zastavení nerozhodnutelný.</li>
+  <li>Jaký je rozdíl mezi nerozhodnutelným a výpočetně náročným problémem?</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 4 „Algoritmizace“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

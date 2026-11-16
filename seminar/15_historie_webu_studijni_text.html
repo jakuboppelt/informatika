@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historie a funkce webu – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#internet-a-web">Internet a web</a></li>
+    <li><a href="#prvni-weby">První weby</a></li>
+    <li><a href="#klicove-vyvojove-body">Klíčové vývojové body</a></li>
+    <li><a href="#programovaci-jazyky-pro-web">Programovací jazyky pro web</a></li>
+    <li><a href="#jak-web-funguje">Jak web funguje</a></li>
+    <li><a href="#moderni-vzhled-a-funkce">Moderní vzhled a funkce</a></li>
+    <li><a href="#zpracovani-uzivatelskych-dat">Zpracování uživatelských dat</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 15 · Studijní text</p>
+  <h1>Historie a funkce webu</h1>
+  <p class="lead">Od první stránky v CERNu k webovým aplikacím: jazyky, vývoj, moderní web a zpracování uživatelských dat.</p>
+</header>
+
+<section id="internet-a-web">
+<h2>Internet a web</h2>
+<p>Web není totéž co internet. Internet je celosvětová síť propojených počítačových sítí, která přenáší data pomocí protokolů TCP/IP. Web (World Wide Web, WWW) je jedna ze služeb, které po internetu běží: soustava dokumentů a aplikací propojených hypertextovými odkazy. Vedle webu používá internet i e-mail, přenos souborů nebo videohovory.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Internet</th><th>Web</th></tr></thead>
+<tbody>
+<tr><td>Co to je</td><td>síť sítí, infrastruktura</td><td>služba běžící po internetu</td></tr>
+<tr><td>Vznik</td><td>1969 ARPANET, 1983 přechod na TCP/IP</td><td>1989–1991 v CERNu</td></tr>
+<tr><td>Základní protokoly</td><td>IP, TCP, UDP</td><td>HTTP, HTTPS</td></tr>
+<tr><td>Adresování</td><td>adresa IP</td><td>adresa URL</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="prvni-weby">
+<h2>První weby</h2>
+<p>Web vymyslel britský fyzik a informatik Tim Berners-Lee v evropské laboratoři CERN u Ženevy. V roce 1989 navrhl systém, který měl vědcům usnadnit sdílení dokumentů, v roce 1990 naprogramoval první webový server a první prohlížeč nazvaný WorldWideWeb a v roce 1991 byl web zpřístupněn veřejnosti. První webová stránka na adrese info.cern.ch popisovala samotný projekt: co je web, jak si pořídit prohlížeč a jak spustit vlastní server.</p>
+<p>Web od počátku stojí na třech prvcích:</p>
+<ul>
+  <li><strong>HTML</strong> (HyperText Markup Language) – značkovací jazyk, kterým se zapisuje obsah a struktura stránky.</li>
+  <li><strong>URL</strong> (Uniform Resource Locator) – jednotná adresa, která jednoznačně určuje každý dokument.</li>
+  <li><strong>HTTP</strong> (HyperText Transfer Protocol) – protokol, kterým si prohlížeč vyžádá dokument od serveru.</li>
+</ul>
+<p>Rozhodující bylo, že CERN v roce 1993 uvolnil technologii webu zdarma pro kohokoli. V roce 1994 založil Berners-Lee konsorcium W3C, které dodnes vydává webové standardy.</p>
+<p>První stránky byly čistě textové, s nadpisy, odstavci a odkazy. Neměly téměř žádné formátování a obrázky se otevíraly v samostatném okně.</p>
+</section>
+
+<section id="klicove-vyvojove-body">
+<h2>Klíčové vývojové body</h2>
+<p>Vývoj webu určovaly prohlížeče a to, co uměly zobrazit.</p>
+<div class="tbl"><table>
+<thead><tr><th>Rok</th><th>Událost</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td>1993</td><td>prohlížeč Mosaic</td><td>obrázky přímo v textu, snadné ovládání, web pro širokou veřejnost</td></tr>
+<tr><td>1994</td><td>Netscape Navigator</td><td>první masově rozšířený komerční prohlížeč</td></tr>
+<tr><td>1995</td><td>Internet Explorer, JavaScript, PHP</td><td>začátek války prohlížečů, první dynamické stránky</td></tr>
+<tr><td>1996</td><td>CSS</td><td>oddělení vzhledu od obsahu</td></tr>
+<tr><td>2004</td><td>Firefox</td><td>otevřená alternativa, tlak na dodržování standardů</td></tr>
+<tr><td>kolem 2005</td><td>AJAX, Web 2.0</td><td>stránky se mění bez opětovného načtení</td></tr>
+<tr><td>2007</td><td>iPhone</td><td>začátek éry mobilního webu</td></tr>
+<tr><td>2008</td><td>Google Chrome</td><td>rychlý běh JavaScriptu, později nejpoužívanější prohlížeč</td></tr>
+<tr><td>2014</td><td>standard HTML5</td><td>video, zvuk a grafika bez zásuvných modulů</td></tr>
+</tbody></table></div>
+<p><strong>Válka prohlížečů</strong> je označení pro soupeření Netscapu a Internet Exploreru ve druhé polovině devadesátých let. Microsoft přibalil Internet Explorer zdarma k Windows a Netscape vytlačil. Oba výrobci přidávali vlastní nestandardní funkce, takže stejná stránka vypadala v každém prohlížeči jinak. Po vítězství Internet Exploreru se vývoj na několik let zpomalil; oživil ho až Firefox a po roce 2008 Chrome.</p>
+<p><strong>Web 1.0 a Web 2.0</strong> popisují dvě etapy.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Web 1.0</th><th>Web 2.0</th></tr></thead>
+<tbody>
+<tr><td>Období</td><td>devadesátá léta</td><td>zhruba od roku 2004</td></tr>
+<tr><td>Stránky</td><td>statické soubory HTML</td><td>dynamicky skládané z databáze</td></tr>
+<tr><td>Kdo tvoří obsah</td><td>autor webu</td><td>sami uživatelé</td></tr>
+<tr><td>Role návštěvníka</td><td>čte</td><td>píše, hodnotí, sdílí</td></tr>
+<tr><td>Příklady</td><td>osobní stránky, katalogy odkazů</td><td>Wikipedie, YouTube, blogy, sociální sítě</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="programovaci-jazyky-pro-web">
+<h2>Programovací jazyky pro web</h2>
+<p>Webové technologie se dělí podle toho, kde kód běží: na klientu (v prohlížeči), nebo na serveru.</p>
+<p>Na straně klienta se používá trojice jazyků a každý má jinou úlohu. HTML určuje obsah a strukturu a není programovacím jazykem, protože neobsahuje podmínky ani cykly. CSS určuje vzhled a rozložení. JavaScript je plnohodnotný programovací jazyk, který přidává chování: reaguje na kliknutí, kontroluje formuláře, mění stránku a komunikuje se serverem.</p>
+<pre><code class="language-markup">&lt;button id="tl"&gt;Klikni&lt;/button&gt;
+&lt;p id="vystup" style="color: navy"&gt;&lt;/p&gt;
+&lt;script&gt;
+  document.getElementById("tl").onclick = function () {
+    document.getElementById("vystup").textContent = "Ahoj!";
+  };
+&lt;/script&gt;</code></pre>
+<p>Na straně serveru lze použít téměř jakýkoli jazyk.</p>
+<div class="tbl"><table>
+<thead><tr><th>Jazyk</th><th>Charakteristika</th><th>Příklad použití</th></tr></thead>
+<tbody>
+<tr><td>PHP</td><td>vznikl přímo pro web, snadné nasazení</td><td>WordPress</td></tr>
+<tr><td>Python</td><td>čitelný, silný i mimo web</td><td>frameworky Django a Flask</td></tr>
+<tr><td>Java</td><td>velké podnikové systémy</td><td>framework Spring</td></tr>
+<tr><td>C#</td><td>platforma .NET od Microsoftu</td><td>ASP.NET</td></tr>
+<tr><td>JavaScript</td><td>běží i mimo prohlížeč v prostředí Node.js</td><td>stejný jazyk na klientu i serveru</td></tr>
+</tbody></table></div>
+<p>Data se ukládají do databáze. S relačními databázemi (MySQL, PostgreSQL) se pracuje dotazovacím jazykem <strong>SQL</strong>.</p>
+<p>Rozsáhlé aplikace se nepíší od nuly, ale pomocí frameworků a knihoven. Na klientu jsou to React, Vue nebo Angular, na serveru například Django, Laravel nebo Express.</p>
+</section>
+
+<section id="jak-web-funguje">
+<h2>Jak web funguje</h2>
+<p>Web pracuje v modelu klient–server: klient (prohlížeč) posílá požadavky a server na ně odpovídá. Po zadání adresy proběhne tento postup:</p>
+<ol>
+  <li>Prohlížeč se zeptá systému DNS, jaká adresa IP patří k doménovému jménu.</li>
+  <li>Naváže se serverem spojení, u HTTPS šifrované.</li>
+  <li>Pošle požadavek HTTP, nejčastěji metodou GET (získání dat); formuláře často odesílá metodou POST.</li>
+  <li>Server požadavek zpracuje, případně načte data z databáze, a vrátí odpověď se stavovým kódem (200 v pořádku, 404 nenalezeno, 500 chyba serveru) a obsahem.</li>
+  <li>Prohlížeč zpracuje HTML, stáhne styly, skripty a obrázky a stránku vykreslí.</li>
+</ol>
+<p><strong>Frontend</strong> je část aplikace, která běží v prohlížeči a kterou uživatel vidí. <strong>Backend</strong> běží na serveru: obsahuje aplikační logiku, pracuje s databází a rozhoduje o oprávněních.</p>
+<p>Protokol HTTP je bezstavový – server si mezi dvěma požadavky sám nepamatuje, kdo s ním komunikuje. Proto vznikly cookies a relace.</p>
+</section>
+
+<section id="moderni-vzhled-a-funkce">
+<h2>Moderní vzhled a funkce</h2>
+<p>Dnešní web je především platformou pro aplikace, které se přizpůsobí jakémukoli zařízení.</p>
+<ul>
+  <li><strong>Responzivní design</strong> – jedna stránka mění rozložení podle šířky displeje. Využívá pružné rozvržení a pravidla CSS závislá na velikosti okna (media queries).</li>
+  <li><strong>Webové aplikace</strong> – pošta, mapy, kancelářské nástroje nebo bankovnictví běží přímo v prohlížeči. Stránka se nenačítá znovu celá, JavaScript si na pozadí vyžádá jen potřebná data.</li>
+  <li><strong>API</strong> – rozhraní, přes které si programy vyměňují data, obvykle ve formátu JSON. Díky němu může stejný server obsluhovat web i mobilní aplikaci.</li>
+  <li><strong>HTTPS</strong> – HTTP šifrované protokolem TLS. Zajišťuje, že obsah po cestě nikdo nepřečte ani nezmění, a certifikátem ověřuje totožnost serveru.</li>
+  <li><strong>HTML5 a moderní CSS</strong> – video, zvuk, kreslení, animace a složitá rozvržení bez zásuvných modulů, jako býval Flash.</li>
+</ul>
+</section>
+
+<section id="zpracovani-uzivatelskych-dat">
+<h2>Zpracování uživatelských dat</h2>
+<p>Web získává data dvojím způsobem: uživatel je vyplní sám, nebo je web zaznamená z jeho chování.</p>
+<div class="tbl"><table>
+<thead><tr><th>Mechanismus</th><th>Kde jsou data</th><th>Jak dlouho</th><th>K čemu slouží</th></tr></thead>
+<tbody>
+<tr><td>Formulář</td><td>odešlou se na server</td><td>podle serveru</td><td>registrace, hledání, objednávka</td></tr>
+<tr><td>Cookie</td><td>v prohlížeči, posílá se s každým požadavkem</td><td>do vypršení platnosti</td><td>přihlášení, košík, sledování</td></tr>
+<tr><td>Session (relace)</td><td>na serveru, v cookie je jen identifikátor</td><td>do odhlášení nebo vypršení</td><td>stav přihlášeného uživatele</td></tr>
+<tr><td>localStorage</td><td>v prohlížeči, serveru se neposílá</td><td>dokud se nesmaže</td><td>nastavení, rozpracovaná data</td></tr>
+<tr><td>Databáze</td><td>na serveru</td><td>trvale</td><td>účty, obsah, objednávky</td></tr>
+</tbody></table></div>
+<p>Data z formuláře musí server vždy zkontrolovat sám. Kontrola v prohlížeči slouží pohodlí uživatele, ne bezpečnosti. Hesla se do databáze neukládají čitelně, ale jako otisk (hash).</p>
+<p>Cookies první strany nastavuje navštívený web. <strong>Cookies třetích stran</strong> nastavuje jiná doména, typicky reklamní nebo analytická služba vložená do stránky, a umožňují sledovat uživatele napříč weby. Prohlížeče je proto postupně omezují. <strong>Webová analytika</strong> měří, odkud návštěvníci přišli, co si prohlíželi a kde web opustili.</p>
+<p>Zpracování osobních údajů v Evropské unii upravuje nařízení <strong>GDPR</strong>, účinné od května 2018. Provozovatel smí zpracovávat osobní údaje jen s právním důvodem (například souhlas nebo plnění smlouvy), jen v nezbytném rozsahu a musí je zabezpečit. Uživatel má právo vědět, jaké údaje o něm web má, nechat je opravit, vymazat nebo přenést jinam. Z pravidel pro cookies plyne, že technicky nezbytné cookies souhlas nevyžadují, kdežto analytické a reklamní ano – a odmítnutí musí být stejně snadné jako přijetí.</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Jaký je rozdíl mezi internetem a webem?</li>
+  <li>Kdo, kdy a kde vytvořil web a proč?</li>
+  <li>Co znamenají zkratky HTML, URL a HTTP a k čemu slouží?</li>
+  <li>Které prohlížeče byly pro vývoj webu klíčové a co byla válka prohlížečů?</li>
+  <li>Čím se liší Web 1.0 a Web 2.0?</li>
+  <li>Jakou úlohu mají HTML, CSS a JavaScript?</li>
+  <li>Které jazyky se používají na serveru a k čemu slouží SQL?</li>
+  <li>Popište krok za krokem, co se stane po zadání adresy do prohlížeče.</li>
+  <li>Jak se liší cookie, session a localStorage?</li>
+  <li>Co ukládá GDPR provozovateli webu a jaká práva dává uživateli?</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 15 „Historie a funkce webu“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

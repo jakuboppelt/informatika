@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Umělá inteligence 1: jak funguje – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#umela-inteligence-a-strojove-uceni">Umělá inteligence a strojové učení</a></li>
+    <li><a href="#teoreticke-druhy-umele-inteligence">Teoretické druhy umělé inteligence</a></li>
+    <li><a href="#typy-strojoveho-uceni">Typy strojového učení</a></li>
+    <li><a href="#neuronova-sit">Neuronová síť</a></li>
+    <li><a href="#trenovani-a-inference">Trénování a inference</a></li>
+    <li><a href="#velky-jazykovy-model">Velký jazykový model</a></li>
+    <li><a href="#jak-funguje-chatbot">Jak funguje chatbot</a></li>
+    <li><a href="#proc-chatbot-halucinuje">Proč chatbot halucinuje</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 12 · Studijní text</p>
+  <h1>Umělá inteligence 1: jak funguje</h1>
+  <p class="lead">Strojové učení, druhy umělé inteligence, neuronové sítě a princip velkých jazykových modelů.</p>
+</header>
+
+<section id="umela-inteligence-a-strojove-uceni">
+<h2>Umělá inteligence a strojové učení</h2>
+<p>Umělá inteligence (AI, artificial intelligence) je obor informatiky, který vytváří systémy řešící úlohy, jež dříve vyžadovaly lidský úsudek – rozpoznávání obrazu a řeči, překlad, plánování, vedení rozhovoru. Jednotná definice neexistuje a hranice se posouvá: co bylo kdysi považováno za AI (například hraní šachu), se dnes bere jako běžný program.</p>
+<p><strong>Strojové učení</strong> (ML, machine learning) je část umělé inteligence, ve které pravidla nepíše programátor, ale model si je odvodí z dat. <strong>Hluboké učení</strong> (deep learning) je část strojového učení, která používá neuronové sítě s mnoha vrstvami. Pojmy jsou tedy do sebe vnořené: AI ⊃ strojové učení ⊃ hluboké učení ⊃ velké jazykové modely.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Klasický program</th><th>Strojové učení</th></tr></thead>
+<tbody>
+<tr><td>Kdo určuje pravidla</td><td>programátor</td><td>model je odvodí z dat</td></tr>
+<tr><td>Vstup do vývoje</td><td>pravidla</td><td>data, u učení s učitelem i správné odpovědi</td></tr>
+<tr><td>Výsledek vývoje</td><td>program</td><td>natrénovaný model</td></tr>
+<tr><td>Hodí se pro</td><td>úlohy s přesně popsatelnými pravidly (výpočet daně)</td><td>úlohy, kde pravidla popsat neumíme (kočka na fotografii)</td></tr>
+<tr><td>Chování</td><td>předvídatelné, stejný vstup dá stejný výstup</td><td>pravděpodobnostní, může se mýlit</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="teoreticke-druhy-umele-inteligence">
+<h2>Teoretické druhy umělé inteligence</h2>
+<p>Podle šíře schopností se umělá inteligence teoreticky dělí na tři stupně, z nichž dnes existuje jen první.</p>
+<div class="tbl"><table>
+<thead><tr><th>Druh</th><th>Zkratka</th><th>Co umí</th><th>Stav</th></tr></thead>
+<tbody>
+<tr><td>Úzká (slabá) AI</td><td>ANI – artificial narrow intelligence</td><td>jednu úlohu nebo omezený okruh úloh</td><td>existuje; patří sem všechny dnešní systémy</td></tr>
+<tr><td>Obecná AI</td><td>AGI – artificial general intelligence</td><td>jakoukoli rozumovou úlohu na úrovni člověka, včetně učení se novým věcem</td><td>hypotetická</td></tr>
+<tr><td>Superinteligence</td><td>ASI – artificial superintelligence</td><td>výrazně překonává člověka ve všech oblastech</td><td>hypotetická</td></tr>
+</tbody></table></div>
+<p>Do úzké AI patří doporučování videí, rozpoznávání obličejů, šachové programy i chatboti. Dnešní jazykové modely zvládají velmi široký okruh úloh, a proto se o jejich zařazení vede diskuse; shoda na tom, že jde o AGI, ale neexistuje, a neexistuje ani shoda na přesné definici AGI. Zda a kdy obecná AI vznikne, odborníci odhadují velmi rozdílně.</p>
+</section>
+
+<section id="typy-strojoveho-uceni">
+<h2>Typy strojového učení</h2>
+<p>Typy strojového učení se liší tím, jakou zpětnou vazbu model při učení dostává.</p>
+<div class="tbl"><table>
+<thead><tr><th>Typ</th><th>Co model dostane</th><th>Co se učí</th><th>Příklady</th></tr></thead>
+<tbody>
+<tr><td>Učení s učitelem (supervised)</td><td>data se správnými odpověďmi (popisky)</td><td>předpovídat odpověď pro nová data</td><td>filtr spamu, rozpoznání číslic, odhad ceny bytu</td></tr>
+<tr><td>Učení bez učitele (unsupervised)</td><td>data bez popisků</td><td>najít v datech strukturu</td><td>shlukování zákazníků, hledání neobvyklých transakcí</td></tr>
+<tr><td>Zpětnovazební učení (reinforcement)</td><td>odměny a tresty za akce v prostředí</td><td>strategii, která vede k nejvyšší odměně</td><td>hraní her, řízení robota</td></tr>
+</tbody></table></div>
+<p>U učení s učitelem se rozlišují dvě základní úlohy: <strong>klasifikace</strong> (výstupem je kategorie – spam, nebo ne) a <strong>regrese</strong> (výstupem je číslo – cena). Jazykové modely se trénují postupem, kterému se říká učení s vlastním dohledem (self-supervised): správnou odpovědí je další slovo textu, takže popisky nemusí nikdo vytvářet ručně.</p>
+</section>
+
+<section id="neuronova-sit">
+<h2>Neuronová síť</h2>
+<p>Neuronová síť je matematická funkce složená z mnoha jednoduchých jednotek – umělých neuronů – uspořádaných do vrstev. Mozkem je inspirována jen volně.</p>
+<ul>
+  <li><strong>Neuron</strong> vynásobí každý vstup číslem zvaným váha, výsledky sečte a součet upraví aktivační funkcí.</li>
+  <li><strong>Vrstvy</strong>: vstupní vrstva přijímá data, skryté vrstvy je postupně zpracovávají, výstupní vrstva dává výsledek.</li>
+  <li><strong>Váhy</strong> (parametry) jsou čísla určující sílu spojení mezi neurony. V nich je uloženo vše, co se síť naučila. Velké jazykové modely mají miliardy parametrů.</li>
+</ul>
+<p>Model není databáze: neobsahuje uložené texty, ve kterých by vyhledával, ale jen čísla, která vznikla trénováním.</p>
+</section>
+
+<section id="trenovani-a-inference">
+<h2>Trénování a inference</h2>
+<p>Život modelu má dvě oddělené fáze: při trénování se model učí, při inferenci se už jen používá.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Trénování</th><th>Inference</th></tr></thead>
+<tbody>
+<tr><td>Co se děje</td><td>model se učí z dat</td><td>hotový model zpracovává dotaz</td></tr>
+<tr><td>Váhy</td><td>postupně se upravují</td><td>nemění se</td></tr>
+<tr><td>Náročnost</td><td>velmi vysoká, dlouhý běh na mnoha grafických kartách</td><td>řádově menší na jeden dotaz</td></tr>
+<tr><td>Kdy</td><td>před nasazením</td><td>při každém dotazu uživatele</td></tr>
+</tbody></table></div>
+<p>Trénování probíhá v opakovaném cyklu:</p>
+<ol>
+  <li>model dostane příklad a vydá odhad,</li>
+  <li>odhad se porovná se správnou odpovědí a spočítá se chyba,</li>
+  <li>váhy se nepatrně upraví tak, aby byla chyba příště menší (algoritmus zpětného šíření chyby).</li>
+</ol>
+<p>Z oddělení fází plyne, že se model běžným používáním neučí a jeho znalosti končí datem, ke kterému byla sebrána trénovací data.</p>
+</section>
+
+<section id="velky-jazykovy-model">
+<h2>Velký jazykový model</h2>
+<p>Velký jazykový model (LLM, large language model) je neuronová síť natrénovaná na obrovském množství textu k jediné úloze: předpovědět, jaký token nejspíš následuje po dosavadním textu. Schopnost překládat, shrnovat nebo psát kód vzniká jako vedlejší důsledek – k dobré předpovědi dalšího slova je potřeba zachytit gramatiku, fakta i souvislosti.</p>
+<h3>Tokeny</h3>
+<p>Model nepracuje s písmeny ani se slovy, ale s tokeny. Token je kousek textu: celé slovo, část slova, jednotlivý znak nebo interpunkce. Každý token má své číslo ve slovníku modelu, takže model vidí text jako řadu čísel. Díky dělení na části slov lze poskládat i slovo, které se v trénovacích datech nevyskytlo. Česká slova se kvůli délce a ohýbání obvykle rozpadají na více tokenů než anglická.</p>
+<h3>Embeddingy a vektorový prostor</h3>
+<p>Každému tokenu odpovídá <strong>embedding</strong> – vektor, tedy řada stovek až tisíců čísel. Vektor si lze představit jako souřadnice bodu v prostoru s velmi mnoha rozměry. Poloha bodů není určena ručně, vznikla při trénování, a platí pro ni:</p>
+<ul>
+  <li>tokeny s podobným významem leží blízko sebe („pes“ je blíž ke „kočka“ než k „daň“),</li>
+  <li>některé směry v prostoru odpovídají významovým vztahům; známý příklad je král − muž + žena ≈ královna,</li>
+  <li>blízkost se měří například úhlem mezi vektory (kosinová podobnost).</li>
+</ul>
+<p>Vektorový prostor je tedy způsob, jak význam převést na čísla, se kterými umí počítač počítat. Na stejném principu funguje i vyhledávání podle významu: hledají se texty, jejichž vektory leží blízko vektoru dotazu.</p>
+<h3>Transformer a mechanismus pozornosti</h3>
+<p>Dnešní jazykové modely používají architekturu zvanou transformer, představenou v roce 2017. Její jádro je <strong>mechanismus pozornosti</strong> (attention): při zpracování každého tokenu model vyhodnotí, které jiné tokeny v textu jsou pro něj důležité, a převezme z nich informaci. Vektor slova se tak upraví podle kontextu – ve větě „koruna stromu“ skončí slovo „koruna“ jinde než ve větě „česká koruna posílila“. Tento krok se opakuje v mnoha vrstvách za sebou a na konci model vydá pravděpodobnost pro každý token slovníku.</p>
+</section>
+
+<section id="jak-funguje-chatbot">
+<h2>Jak funguje chatbot</h2>
+<p>Chatbot je aplikace postavená kolem jazykového modelu, která opakovaně nechává model předpovědět další token.</p>
+<ol>
+  <li>Aplikace spojí <strong>systémový prompt</strong>, dosavadní konverzaci a novou zprávu uživatele do jednoho textu a rozdělí ho na tokeny.</li>
+  <li>Model spočítá pravděpodobnosti dalšího tokenu.</li>
+  <li>Jeden token se vybere, zpravidla s určitou mírou náhody. Proto může stejná otázka dostat pokaždé trochu jinou odpověď.</li>
+  <li>Vybraný token se připojí na konec textu a postup se opakuje, dokud model nevydá značku konce odpovědi.</li>
+</ol>
+<p><strong>Systémový prompt</strong> je úvodní pokyn provozovatele, který uživatel obvykle nevidí; určuje roli, tón a pravidla chatbota. <strong>Kontextové okno</strong> je nejvyšší počet tokenů, které model zpracuje najednou. Model sám si mezi dotazy nic nepamatuje – aplikace mu při každé zprávě posílá celou konverzaci znovu. Co se do okna nevejde, to model nevidí.</p>
+</section>
+
+<section id="proc-chatbot-halucinuje">
+<h2>Proč chatbot halucinuje</h2>
+<p>Halucinace je odpověď, která zní věrohodně, ale není pravdivá – například vymyšlený citát, neexistující zdroj nebo chybný letopočet. Plyne přímo z toho, jak model funguje:</p>
+<ul>
+  <li>model skládá pravděpodobné pokračování textu, nevyhledává v databázi ověřených faktů,</li>
+  <li>nemá vestavěnou kontrolu pravdivosti a plynulý text umí vytvořit i tam, kde mu znalost chybí,</li>
+  <li>jeho znalosti končí datem trénovacích dat a mohou být neúplné nebo zkreslené,</li>
+  <li>nepřesná nebo zavádějící otázka chybu usnadní.</li>
+</ul>
+<p>Riziko snižuje připojení vyhledávání nebo vlastních dokumentů, ze kterých model čerpá, a požadavek na uvedení zdrojů. Odstranit je zcela nelze, a proto je nutné důležité údaje ověřovat.</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Jaký je vztah mezi umělou inteligencí, strojovým učením a hlubokým učením?</li>
+  <li>Čím se strojové učení liší od klasického programování?</li>
+  <li>Vysvětlete pojmy ANI, AGI a ASI. Která z nich dnes existuje?</li>
+  <li>Popište tři typy strojového učení a ke každému uveďte příklad.</li>
+  <li>Co je neuronová síť a co jsou její váhy?</li>
+  <li>Jaký je rozdíl mezi trénováním a inferencí?</li>
+  <li>Co je token a proč model nepracuje přímo se slovy?</li>
+  <li>Co je embedding a co vyjadřuje blízkost dvou vektorů ve vektorovém prostoru?</li>
+  <li>K čemu slouží mechanismus pozornosti v architektuře transformer?</li>
+  <li>Popište krok za krokem, jak chatbot vytvoří odpověď, a vysvětlete, proč může halucinovat.</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 12 „Umělá inteligence 1: jak funguje“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

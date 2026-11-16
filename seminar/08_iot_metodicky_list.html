@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Internet of Things</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-navrhni-system">Aktivita: navrhni systém</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 8 · Metodický list pro učitele</p>
+  <h1>Internet of Things <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině vysvětlí princip IoT, uvedou příklady z domácnosti, nositelné elektroniky a průmyslu a zhodnotí výhody, nevýhody a bezpečnostní slabiny. Hodinu vedeš podle <a href="08_iot.html">prezentace</a>, studenti mají <a href="08_iot_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>definuje internet věcí a popíše cestu dat od senzoru k uživateli,</li>
+  <li>rozliší senzor a akční člen,</li>
+  <li>porovná komunikační technologie podle dosahu a spotřeby,</li>
+  <li>uvede příklady z oblasti chytrých doplňků, chytré domácnosti a průmyslu,</li>
+  <li>zhodnotí výhody a nevýhody a vysvětlí bezpečnostní slabiny včetně obrany.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Prezentace „08 – Internet of Things“, studijní text.</li>
+  <li>Ukázkové zařízení: deska ESP32 nebo micro:bit se senzorem teploty, případně chytrá zásuvka či žárovka.</li>
+  <li>Velké papíry a fixy pro návrh systému.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace</td><td>Ptá se: „Kolik zařízení u vás doma je připojeno k internetu?“</td><td>Počítají, porovnávají, třídí na počítače a „věci“.</td></tr>
+<tr><td>10–25</td><td>Princip IoT</td><td>Projde vrstvy řešení, živě ukáže senzor posílající teplotu.</td><td>Kreslí si schéma senzor → jednotka → síť → cloud → aplikace.</td></tr>
+<tr><td>25–40</td><td>Tři oblasti využití</td><td>Projde snímky o doplňcích, domácnosti a průmyslu.</td><td>Doplňují vlastní příklady do tabulky.</td></tr>
+<tr><td>40–65</td><td>Aktivita: navrhni systém</td><td>Zadá skupinám scénáře.</td><td>Navrhují senzory, akční členy, připojení a pravidla.</td></tr>
+<tr><td>65–80</td><td>Bezpečnost</td><td>Vypráví příběh botnetu Mirai, vrátí skupinám jejich návrhy.</td><td>Hledají ve svém návrhu slabiny a navrhují obranu.</td></tr>
+<tr><td>80–90</td><td>Shrnutí</td><td>Zadá výstupní lístek.</td><td>Odpovídají písemně.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-navrhni-system">
+<h2>Aktivita: navrhni systém</h2>
+<p>Scénáře pro skupiny:</p>
+<ul>
+  <li>skleník školní zahrady, který se má sám zalévat a větrat,</li>
+  <li>byt babičky, která žije sama,</li>
+  <li>sklad e-shopu,</li>
+  <li>parkoviště u nákupního centra.</li>
+</ul>
+<p>Skupina na papír nakreslí schéma a vyplní:</p>
+<div class="tbl"><table>
+<thead><tr><th>Co navrhujeme</th><th>Odpověď skupiny</th></tr></thead>
+<tbody>
+<tr><td>Senzory (co měříme)</td><td></td></tr>
+<tr><td>Akční členy (co ovládáme)</td><td></td></tr>
+<tr><td>Připojení a proč právě toto</td><td></td></tr>
+<tr><td>Tři pravidla automatizace</td><td></td></tr>
+<tr><td>Co uvidí uživatel v aplikaci</td><td></td></tr>
+<tr><td>Slabiny a obrana (doplní se ve fázi bezpečnosti)</td><td></td></tr>
+</tbody></table></div>
+<p>Při prezentaci učitel hlídá zdůvodnění volby připojení: skleník daleko od budovy a na baterii mluví pro LoRaWAN, kamera pro Wi-Fi.</p>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>„IoT znamená chytrá domácnost.“</td><td>Domácnost je jen jedna oblast; ukázat průmysl, zemědělství, město.</td></tr>
+<tr><td>„Všechna zařízení IoT používají Wi-Fi.“</td><td>Senzor na baterii by s Wi-Fi vydržel dny, s LoRaWAN roky.</td></tr>
+<tr><td>Zaměňování senzoru a akčního členu.</td><td>Senzor měří, akční člen jedná. Třídění příkladů.</td></tr>
+<tr><td>„Moje žárovka nikoho nezajímá.“</td><td>Útočník nechce žárovku, chce její připojení: botnet, vstup do domácí sítě.</td></tr>
+<tr><td>„Data z hodinek jsou jen moje.“</td><td>Ukládají se u výrobce; ukázat, co vše se dá z polohy a tepu vyčíst.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Popište jednou větou, co je internet věcí.</li>
+  <li>Uveďte jeden příklad z domácnosti a jeden z průmyslu.</li>
+  <li>Jaké dvě věci uděláte po zakoupení chytré kamery?</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> definice, vrstvy řešení, komunikační technologie se srovnáním, příklady ze všech tří oblastí se senzory a přínosem, výhody a nevýhody, konkrétní bezpečnostní slabiny (výchozí hesla, aktualizace, botnet Mirai, soukromí) a obrana.</li>
+  <li><strong>Na dostatečnou:</strong> žák vysvětlí, že jde o zařízení připojená k internetu, uvede příklady z domácnosti a nositelné elektroniky a zmíní bezpečnostní riziko.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Co je mikrokontrolér? Proč hodinky nepoužívají Wi-Fi? Co se stane s chytrým zařízením, když výrobce vypne cloud?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 8 „Internet of Things“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

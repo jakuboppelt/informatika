@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bezpečnost v IT 2: útočník – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#malware-a-jeho-druhy">Malware a jeho druhy</a></li>
+    <li><a href="#jak-se-malware-siri">Jak se malware šíří</a></li>
+    <li><a href="#ransomware">Ransomware</a></li>
+    <li><a href="#socialni-inzenyrstvi">Sociální inženýrství</a></li>
+    <li><a href="#dalsi-typy-utoku-a-motivace-utocniku">Další typy útoků a motivace útočníků</a></li>
+    <li><a href="#eticke-hackovani">Etické hackování</a></li>
+    <li><a href="#caste-cilove-skupiny">Časté cílové skupiny</a></li>
+    <li><a href="#legislativa">Legislativa</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 18 · Studijní text</p>
+  <h1>Bezpečnost v IT 2: útočník</h1>
+  <p class="lead">Škodlivý software, sociální inženýrství, etické hackování, cílové skupiny útoků a legislativa.</p>
+</header>
+
+<section id="malware-a-jeho-druhy">
+<h2>Malware a jeho druhy</h2>
+<p>Malware (z anglického malicious software) je jakýkoli software vytvořený s cílem škodit uživateli nebo systému: krást data, vydírat, sledovat nebo zneužít počítač k dalším útokům. Jednotlivé druhy se liší tím, jak se šíří a co po napadení dělají. V praxi se kombinují, například trojský kůň nainstaluje ransomware.</p>
+<div class="tbl"><table>
+<thead><tr><th>Druh</th><th>Čím se vyznačuje</th><th>Co způsobí</th></tr></thead>
+<tbody>
+<tr><td>Virus</td><td>připojí se k jinému souboru nebo programu a šíří se jeho spuštěním</td><td>poškození dat a programů</td></tr>
+<tr><td>Červ</td><td>šíří se sám po síti, nepotřebuje hostitelský soubor ani zásah uživatele</td><td>rychlá nákaza velkého počtu počítačů</td></tr>
+<tr><td>Trojský kůň</td><td>vydává se za užitečný program, sám se nešíří</td><td>otevře útočníkovi přístup, stáhne další malware</td></tr>
+<tr><td>Ransomware</td><td>zašifruje data nebo zablokuje zařízení</td><td>požaduje výkupné</td></tr>
+<tr><td>Spyware</td><td>skrytě sleduje činnost uživatele</td><td>únik hesel, osobních údajů, historie prohlížení</td></tr>
+<tr><td>Adware</td><td>zobrazuje nevyžádanou reklamu, mění nastavení prohlížeče</td><td>obtěžuje, zpomaluje, sbírá údaje o uživateli</td></tr>
+<tr><td>Keylogger</td><td>zaznamenává stisky kláves</td><td>krádež hesel a obsahu zpráv</td></tr>
+<tr><td>Rootkit</td><td>skrývá se hluboko v systému a maskuje sebe i další malware</td><td>dlouhodobý nepozorovaný přístup útočníka</td></tr>
+<tr><td>Botnet</td><td>síť ovládnutých počítačů („zombie“) řízená na dálku</td><td>rozesílání spamu, útoky DDoS</td></tr>
+</tbody></table></div>
+<p>Základní rozdíl, který se u maturity často zkouší: virus potřebuje hostitele a akci uživatele, červ se šíří sám sítí, trojský kůň se nešíří vůbec a spoléhá na to, že si ho oběť nainstaluje sama.</p>
+<h3>Adware</h3>
+<p>Adware je nejméně nebezpečný druh, ale není neškodný. Dostává se do počítače obvykle jako přibalená součást bezplatných programů. Vedle obtěžování reklamou často sleduje chování uživatele a může ho přesměrovat na podvodné stránky.</p>
+<h3>Keyloggery</h3>
+<p>Keylogger existuje ve dvou podobách, které vyžadují odlišnou obranu.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Softwarový</th><th>Hardwarový</th></tr></thead>
+<tbody>
+<tr><td>Podoba</td><td>program běžící skrytě na pozadí</td><td>malé zařízení mezi klávesnicí a počítačem</td></tr>
+<tr><td>Jak se dostane k oběti</td><td>jako jiný malware (příloha, stažený program)</td><td>útočník ho musí fyzicky připojit</td></tr>
+<tr><td>Odhalení</td><td>antivirus</td><td>antivirus ho nenajde, jen vizuální kontrola</td></tr>
+<tr><td>Obrana</td><td>aktualizace, antivirus, dvoufázové ověření</td><td>kontrola zařízení, opatrnost na veřejných počítačích</td></tr>
+</tbody></table></div>
+<p>Dvoufázové ověření pomáhá proti oběma: samotné odposlechnuté heslo útočníkovi k přihlášení nestačí.</p>
+</section>
+
+<section id="jak-se-malware-siri">
+<h2>Jak se malware šíří</h2>
+<p>Malware se nejčastěji dostane do počítače tak, že ho uživatel sám spustí, protože byl oklamán. Hlavní cesty:</p>
+<ul>
+  <li>přílohy a odkazy v podvodných e-mailech a zprávách,</li>
+  <li>falešné webové stránky, podvodná reklama a stahování z nedůvěryhodných zdrojů,</li>
+  <li>nelegálně šířený software a hry,</li>
+  <li>nakažená výměnná média, například flash disky,</li>
+  <li>zranitelnosti v neaktualizovaném systému a programech – tady může nákaza proběhnout bez přičinění uživatele.</li>
+</ul>
+</section>
+
+<section id="ransomware">
+<h2>Ransomware</h2>
+<p>Ransomware je vyděračský malware, který zašifruje soubory oběti a za jejich zpřístupnění žádá výkupné. Používá silné šifrování, takže bez klíče, který má jen útočník, nelze data prakticky obnovit. Platba se obvykle požaduje v kryptoměně, protože se hůře dohledává. Dnešní skupiny navíc data před zašifrováním zkopírují a hrozí jejich zveřejněním (dvojí vydírání).</p>
+<p>Zaplacení se nedoporučuje: vrácení dat nikdo nezaručí a peníze financují další útoky.</p>
+<p><strong>WannaCry (květen 2017).</strong> Ransomware, který se šířil jako červ. Využil zranitelnost ve sdílení souborů systému Windows, pro kterou už existovala oprava, ale mnoho počítačů ji nemělo nainstalovanou. Během několika dnů zasáhl počítače ve velkém počtu zemí a vážně narušil mimo jiné provoz britských nemocnic. Poučení: aktualizace nejsou formalita.</p>
+<p><strong>Útoky na nemocnice.</strong> Nemocnice jsou častým cílem, protože jejich provoz nesmí stát a pracují s citlivými daty. V Česku ochromil ransomware v prosinci 2019 nemocnici v Benešově a v březnu 2020 zasáhl kybernetický útok Fakultní nemocnici Brno. Následkem bylo odkládání zákroků a týdny obnovy systémů.</p>
+<p><strong>Obrana.</strong> Nejdůležitější jsou pravidelné zálohy uložené odděleně od počítače (odpojený disk, jiné místo), jinak je ransomware zašifruje také. Zálohu je třeba občas vyzkoušet obnovit. Dále pomáhají aktualizace, antivirus, práce bez administrátorských oprávnění a opatrnost u příloh.</p>
+</section>
+
+<section id="socialni-inzenyrstvi">
+<h2>Sociální inženýrství</h2>
+<p>Sociální inženýrství je manipulace s lidmi, jejímž cílem je přimět oběť, aby sama vydala údaje, zaplatila nebo spustila škodlivý program. Útočník neobchází techniku, ale člověka, a proto proti němu samotná technická ochrana nestačí.</p>
+<div class="tbl"><table>
+<thead><tr><th>Technika</th><th>Princip</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td>Phishing</td><td>hromadně rozesílaná podvodná zpráva s odkazem na falešnou stránku</td><td>e-mail „z banky“ s výzvou k přihlášení</td></tr>
+<tr><td>Spear phishing</td><td>zpráva připravená pro konkrétní osobu nebo firmu</td><td>falešný pokyn ředitele účetní, aby zaplatila fakturu</td></tr>
+<tr><td>Vishing</td><td>podvod po telefonu</td><td>falešný bankéř nebo policista žádá převod peněz na „bezpečný účet“</td></tr>
+<tr><td>Smishing</td><td>podvodná SMS nebo zpráva v komunikátoru</td><td>oznámení o nedoručeném balíku s odkazem</td></tr>
+<tr><td>Pretexting</td><td>vymyšlená záminka a role, která vzbudí důvěru</td><td>„technik podpory“ potřebuje heslo</td></tr>
+<tr><td>Baiting</td><td>návnada, která využije zvědavost nebo chamtivost</td><td>pohozený flash disk, lákavý soubor ke stažení</td></tr>
+</tbody></table></div>
+<p>Sociální inženýrství funguje, protože využívá běžné lidské vlastnosti:</p>
+<ul>
+  <li><strong>naléhavost</strong> – časový tlak brání přemýšlení,</li>
+  <li><strong>autoritu</strong> – lidé vyhoví tomu, kdo vystupuje jako nadřízený, banka, úřad nebo policie,</li>
+  <li><strong>emoce</strong> – strach, zvědavost, vidina výhry,</li>
+  <li><strong>důvěru a ochotu pomoci</strong> – věrohodnost dodají údaje, které o sobě lidé sami zveřejní na sociálních sítích.</li>
+</ul>
+<p>Obranou je nejednat ve spěchu, ověřit žádost jinou cestou (zavolat na oficiální číslo), nikomu nesdělovat hesla a kódy a kontrolovat adresu odesílatele i webu.</p>
+</section>
+
+<section id="dalsi-typy-utoku-a-motivace-utocniku">
+<h2>Další typy útoků a motivace útočníků</h2>
+<p>Vedle malwaru a manipulace existují útoky mířící přímo na služby a systémy.</p>
+<div class="tbl"><table>
+<thead><tr><th>Útok</th><th>Princip</th><th>Obrana</th></tr></thead>
+<tbody>
+<tr><td>DDoS</td><td>zahlcení služby požadavky z mnoha počítačů, typicky z botnetu; služba je nedostupná</td><td>filtrování provozu, ochrana u poskytovatele</td></tr>
+<tr><td>Hrubá síla</td><td>zkoušení hesel jednoho po druhém nebo podle slovníku</td><td>dlouhá hesla, omezení počtu pokusů, dvoufázové ověření</td></tr>
+<tr><td>Zneužití zranitelnosti</td><td>využití chyby v programu k získání přístupu</td><td>včasné aktualizace</td></tr>
+</tbody></table></div>
+<p>Motivace útočníků je nejčastěji finanční. Další motivy jsou špionáž (státní i průmyslová), aktivismus (hacktivismus), pomsta, například bývalého zaměstnance, a touha po uznání nebo zábava.</p>
+</section>
+
+<section id="eticke-hackovani">
+<h2>Etické hackování</h2>
+<p>Etické hackování je hledání bezpečnostních slabin se souhlasem vlastníka systému, aby mohly být opraveny dřív, než je najde útočník. Technicky se od útoku neliší; liší se souhlasem, dohodnutým rozsahem a tím, co se s nálezem stane.</p>
+<div class="tbl"><table>
+<thead><tr><th>Typ</th><th>Souhlas vlastníka</th><th>Cíl</th><th>Právní stav</th></tr></thead>
+<tbody>
+<tr><td>White hat</td><td>ano</td><td>zlepšit zabezpečení</td><td>legální</td></tr>
+<tr><td>Grey hat</td><td>ne</td><td>upozornit na chybu, bez zlého úmyslu</td><td>nezákonné, i když v dobré víře</td></tr>
+<tr><td>Black hat</td><td>ne</td><td>vlastní prospěch nebo škoda</td><td>nezákonné</td></tr>
+</tbody></table></div>
+<ul>
+  <li><strong>Penetrační test</strong> – řízený pokus o průnik na základě smlouvy, která určuje rozsah, čas a pravidla. Výstupem je zpráva s nalezenými slabinami a doporučeními.</li>
+  <li><strong>Bug bounty</strong> – program, ve kterém firma veřejně vypíše pravidla a odměny za nahlášené chyby.</li>
+  <li><strong>Odpovědné hlášení</strong> – nálezce oznámí chybu nejdřív provozovateli, dá mu čas na opravu a teprve potom ji případně zveřejní.</li>
+</ul>
+</section>
+
+<section id="caste-cilove-skupiny">
+<h2>Časté cílové skupiny</h2>
+<p>Útočníci si vybírají cíle podle toho, kde je obrana nejslabší nebo kde je oběť nejvíce ochotná zaplatit.</p>
+<div class="tbl"><table>
+<thead><tr><th>Skupina</th><th>Proč je cílem</th><th>Typický útok</th></tr></thead>
+<tbody>
+<tr><td>Senioři</td><td>menší zkušenost s technikou, důvěřivost</td><td>falešný bankéř, podvodné investice, falešné e-shopy</td></tr>
+<tr><td>Děti a dospívající</td><td>neodhadnou rizika, sdílejí osobní údaje</td><td>krádež herních účtů, kybergrooming, vydírání</td></tr>
+<tr><td>Malé firmy</td><td>nemají odborníka ani zálohy</td><td>ransomware, falešné faktury</td></tr>
+<tr><td>Nemocnice</td><td>provoz nesmí stát, citlivá data, starší technika</td><td>ransomware</td></tr>
+<tr><td>Úřady</td><td>údaje občanů, veřejné služby</td><td>ransomware, DDoS</td></tr>
+<tr><td>Školy</td><td>mnoho uživatelů a zařízení, málo prostředků</td><td>phishing, ransomware</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="legislativa">
+<h2>Legislativa</h2>
+<p>V Česku postihuje počítačovou kriminalitu trestní zákoník (zákon č. 40/2009 Sb.), bezpečnost významných organizací upravuje zákon o kybernetické bezpečnosti a nakládání s osobními údaji evropské nařízení GDPR.</p>
+<div class="tbl"><table>
+<thead><tr><th>Předpis</th><th>Čeho se týká</th></tr></thead>
+<tbody>
+<tr><td>§ 230 trestního zákoníku</td><td>neoprávněný přístup k počítačovému systému a nosiči informací – překonání zabezpečení a neoprávněné zásahy do dat</td></tr>
+<tr><td>§ 231 trestního zákoníku</td><td>opatření a přechovávání přístupového zařízení a hesla k počítačovému systému – výroba, držení a šíření nástrojů a hesel určených ke spáchání uvedených činů</td></tr>
+<tr><td>§ 232 trestního zákoníku</td><td>poškození záznamu v počítačovém systému a na nosiči informací a zásah do vybavení počítače z nedbalosti</td></tr>
+<tr><td>Zákon o kybernetické bezpečnosti</td><td>ukládá vybraným organizacím zavádět bezpečnostní opatření a hlásit incidenty; dohled vykonává Národní úřad pro kybernetickou a informační bezpečnost (NÚKIB)</td></tr>
+<tr><td>GDPR</td><td>evropské nařízení o ochraně osobních údajů, účinné od roku 2018; správce musí údaje zabezpečit a únik hlásit dozorovému úřadu, hrozí vysoké pokuty</td></tr>
+<tr><td>NIS2</td><td>evropská směrnice z roku 2022, která rozšiřuje povinnosti v kybernetické bezpečnosti na více odvětví a organizací; do českého práva ji převádí nový zákon o kybernetické bezpečnosti</td></tr>
+</tbody></table></div>
+<p>Z § 230 plyne důležitý závěr pro praxi: trestný je už samotný neoprávněný průnik po překonání zabezpečení, i když útočník nic nepoškodí. Proto etický hacker potřebuje souhlas vlastníka předem.</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Co je malware a podle čeho jeho druhy rozlišujeme?</li>
+  <li>Čím se liší virus, červ a trojský kůň?</li>
+  <li>Co dělá spyware, adware a rootkit? Co je botnet?</li>
+  <li>Jaký je rozdíl mezi softwarovým a hardwarovým keyloggerem a jak se jim bránit?</li>
+  <li>Jak funguje ransomware, proč se nedoporučuje platit a co je nejúčinnější obrana?</li>
+  <li>Co se stalo při útoku WannaCry a jaké z něj plyne poučení?</li>
+  <li>Co je sociální inženýrství? Vysvětlete phishing, spear phishing, vishing, smishing, pretexting a baiting.</li>
+  <li>Proč sociální inženýrství funguje a jak se mu bránit?</li>
+  <li>Čím se liší white hat, grey hat a black hat? Co je penetrační test a bug bounty?</li>
+  <li>Které skupiny jsou častým cílem útoků a které právní předpisy se kybernetické bezpečnosti týkají?</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 18 „Bezpečnost v IT 2: útočník“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

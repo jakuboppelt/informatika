@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Objektově orientované programování a datové struktury – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#co-je-objektove-orientovane-programovani">Co je objektově orientované programování</a></li>
+    <li><a href="#trida-a-objekt">Třída a objekt</a></li>
+    <li><a href="#ctyri-principy-oop">Čtyři principy OOP</a></li>
+    <li><a href="#souvisejici-pojmy">Související pojmy</a></li>
+    <li><a href="#datove-struktury">Datové struktury</a></li>
+    <li><a href="#shrnuti">Shrnutí</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 2 · Studijní text</p>
+  <h1>Objektově orientované programování a datové struktury</h1>
+  <p class="lead">Objekt, třída, dědičnost, polymorfismus a datové struktury pole, zásobník, fronta a spojový seznam.</p>
+</header>
+
+<section id="co-je-objektove-orientovane-programovani">
+<h2>Co je objektově orientované programování</h2>
+<p>Objektově orientované programování (OOP) je způsob psaní programů, kdy se program skládá z <strong>objektů</strong>. Objekt spojuje dohromady data (jeho stav) a funkce, které s nimi pracují (jeho chování). Program pak tvoří objekty, které si navzájem volají metody.</p>
+<p>Alternativou je procedurální programování, kde se program skládá z funkcí a data jsou od nich oddělená. OOP se hodí pro větší programy, protože je rozděluje na samostatné části s jasnou odpovědností. Je v jazycích jako Python, Java, C++ nebo C#.</p>
+</section>
+
+<section id="trida-a-objekt">
+<h2>Třída a objekt</h2>
+<p><strong>Třída</strong> je šablona nebo návrh. Popisuje, jaké atributy a metody budou mít objekty daného druhu. <strong>Objekt</strong> (také instance) je konkrétní výtvor třídy. Z jedné třídy lze vytvořit libovolně mnoho objektů a každý má vlastní hodnoty atributů.</p>
+<ul>
+  <li><strong>Atribut</strong> je proměnná patřící objektu a drží jeho stav, například jméno nebo věk.</li>
+  <li><strong>Metoda</strong> je funkce patřící objektu a popisuje, co objekt umí.</li>
+  <li><strong>Konstruktor</strong> je zvláštní metoda, která se spustí při vytvoření objektu a nastaví počáteční stav. V Pythonu se jmenuje <code>__init__</code>.</li>
+  <li><strong>self</strong> je odkaz na objekt, nad kterým se metoda právě volá. Python ho předává jako první parametr každé metody.</li>
+</ul>
+<pre><code class="language-python">class Zvire:
+    def __init__(self, jmeno):
+        self.jmeno = jmeno
+
+    def ozvi_se(self):
+        print(self.jmeno + " vydává zvuk")
+
+azor = Zvire("Azor")
+micka = Zvire("Micka")
+azor.ozvi_se()</code></pre>
+<p>Objekty <code>azor</code> a <code>micka</code> jsou dvě samostatné instance téže třídy. Změna atributu jednoho druhý neovlivní.</p>
+</section>
+
+<section id="ctyri-principy-oop">
+<h2>Čtyři principy OOP</h2>
+<h3>Zapouzdření</h3>
+<p>Data a metody, které s nimi pracují, jsou pohromadě v objektu. Vnitřní stav se před okolím skrývá a mění se jen přes metody, takže objekt může hlídat, aby zůstal v platném stavu (například věk nikdy nebude záporný). Mnoho jazyků má pro skrytí klíčová slova <code>private</code> a <code>public</code>. Python skrytí jen naznačuje názvem: atribut začínající podtržítkem (<code>_vek</code>) je určený jen pro vnitřní použití třídy.</p>
+<h3>Abstrakce</h3>
+<p>Objekt ukazuje navenek jen to podstatné. Kdo volá metodu, nemusí vědět, jak uvnitř funguje. Řidič používá pedály a volant, nemusí znát stavbu motoru.</p>
+<h3>Dědičnost</h3>
+<p>Třída může <strong>dědit</strong> od jiné třídy. Podtřída (potomek) převezme atributy a metody nadtřídy (předka) a může je rozšířit nebo změnit. Dědičnost vyjadřuje vztah „je“: pes je zvíře. Společný kód se tak píše jednou, v nadtřídě.</p>
+<pre><code class="language-python">class Pes(Zvire):
+    def ozvi_se(self):
+        print(self.jmeno + ": haf")
+
+class Kocka(Zvire):
+    def ozvi_se(self):
+        print(self.jmeno + ": mnau")</code></pre>
+<p>Třída <code>Pes</code> zdědila konstruktor od třídy <code>Zvire</code> a metodu <code>ozvi_se</code> <strong>přepsala</strong> (anglicky overriding): má stejné jméno, ale jiné chování.</p>
+<h3>Polymorfismus</h3>
+<p>Polymorfismus (mnohotvarost) znamená, že stejné volání se chová různě podle toho, jakého typu objekt je.</p>
+<pre><code class="language-python">for z in [Pes("Azor"), Kocka("Micka"), Zvire("Neznámé")]:
+    z.ozvi_se()</code></pre>
+<p>Cyklus volá na každém objektu stejnou metodu, ale pes zaštěká, kočka zamňouká a obecné zvíře vydá obecný zvuk. Kód, který s objekty pracuje, nemusí rozlišovat jejich druh. Díky tomu lze přidat novou podtřídu, aniž by se musel měnit stávající kód.</p>
+</section>
+
+<section id="souvisejici-pojmy">
+<h2>Související pojmy</h2>
+<div class="tbl"><table>
+<thead><tr><th>Pojem</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td>Přepsání metody (overriding)</td><td>podtřída nahradí metodu zděděnou od nadtřídy</td></tr>
+<tr><td>Přetížení (overloading)</td><td>více metod stejného jména s různými parametry; mají ho C++ a Java, Python ne</td></tr>
+<tr><td>Abstraktní třída</td><td>třída, ze které se nevytváří objekty, jen se od ní dědí; předepisuje metody, které musí podtřídy dodat</td></tr>
+<tr><td>Skládání (kompozice)</td><td>objekt obsahuje jiný objekt jako atribut; vztah „má“ (auto má motor)</td></tr>
+<tr><td>Vícenásobná dědičnost</td><td>třída dědí od více nadtříd; Python a C++ ji umí, Java ne</td></tr>
+</tbody></table></div>
+<p>Kdy dědičnost a kdy skládání? Dědičnost se hodí, když opravdu platí „je“. Když platí „má“, je lepší skládání, protože je volnější a lépe se mění.</p>
+</section>
+
+<section id="datove-struktury">
+<h2>Datové struktury</h2>
+<p><strong>Datová struktura</strong> je způsob, jak se data uspořádají v paměti, aby se s nimi dalo efektivně pracovat. Každá struktura je rychlá v něčem jiném. Rychlost se vyjadřuje <strong>složitostí</strong> (zápis O): O(1) znamená, že operace trvá stejně dlouho bez ohledu na množství dat, O(n) že trvá úměrně počtu prvků.</p>
+<div class="tbl"><table>
+<thead><tr><th>Struktura</th><th>Princip</th><th>Typické operace</th><th>Složitost</th></tr></thead>
+<tbody>
+<tr><td>Pole</td><td>souvislý blok paměti, prvky stejného typu, index od 0</td><td>čtení a zápis podle indexu</td><td>O(1); vložení doprostřed O(n)</td></tr>
+<tr><td>Zásobník</td><td>LIFO: poslední dovnitř, první ven</td><td>push, pop, peek</td><td>O(1)</td></tr>
+<tr><td>Fronta</td><td>FIFO: první dovnitř, první ven</td><td>enqueue, dequeue</td><td>O(1)</td></tr>
+<tr><td>Spojový seznam</td><td>uzly s hodnotou a odkazem na další uzel</td><td>vložení a smazání na známém místě</td><td>O(1); hledání O(n)</td></tr>
+</tbody></table></div>
+<h3>Pole</h3>
+<p>Pole je souvislý blok paměti, ve kterém leží prvky stejného typu těsně za sebou. Adresa prvku se vypočte z indexu, proto je čtení i zápis podle indexu okamžité (O(1)). Indexuje se od nuly.</p>
+<p>Nevýhodou je vložení nebo smazání uprostřed: prvky za daným místem se musí posunout, což trvá úměrně jejich počtu (O(n)). V jazycích C a C++ má pole pevnou velikost. Seznam <code>list</code> v Pythonu je <strong>dynamické pole</strong>: při zaplnění se přesune do většího bloku paměti. Přidání na konec je proto v průměru rychlé.</p>
+<h3>Zásobník</h3>
+<p>Zásobník (anglicky stack) funguje principem <strong>LIFO</strong>, last in, first out: poslední vložený prvek se odebere jako první. Představ si hromadu talířů: přidává se i bere shora. Základní operace jsou <code>push</code> (vložit na vrchol), <code>pop</code> (odebrat z vrcholu) a <code>peek</code> (podívat se na vrchol bez odebrání).</p>
+<p>Použití: tlačítko zpět a vrácení změn (undo), <strong>zásobník volání</strong> funkcí v programu, kontrola párových závorek, vyhodnocování výrazů.</p>
+<pre><code class="language-python">zasobnik = []
+zasobnik.append(1)
+zasobnik.append(2)
+print(zasobnik.pop())      # 2</code></pre>
+<h3>Fronta</h3>
+<p>Fronta (anglicky queue) funguje principem <strong>FIFO</strong>, first in, first out: první vložený prvek se odebere jako první, jako řada u pokladny. Základní operace jsou <code>enqueue</code> (zařadit na konec) a <code>dequeue</code> (odebrat ze začátku).</p>
+<p>Použití: tisk dokumentů, fronty úloh a zpráv, procházení grafu do šířky.</p>
+<pre><code class="language-python">from collections import deque
+fronta = deque()
+fronta.append(1)
+fronta.append(2)
+print(fronta.popleft())    # 1</code></pre>
+<p>V Pythonu se pro frontu používá <code>deque</code>. Odebírání prvního prvku ze seznamu přes <code>pop(0)</code> je pomalé, protože se všechny ostatní prvky posouvají (O(n)).</p>
+<h3>Spojový seznam</h3>
+<p>Spojový seznam se skládá z <strong>uzlů</strong>. Každý uzel drží hodnotu a odkaz na další uzel, poslední uzel ukazuje na nic (<code>None</code>). Uzly mohou ležet v paměti kdekoli, spojují je jen odkazy.</p>
+<pre><code class="language-python">class Uzel:
+    def __init__(self, hodnota):
+        self.hodnota = hodnota
+        self.dalsi = None
+
+a = Uzel(1)
+b = Uzel(2)
+c = Uzel(3)
+a.dalsi = b
+b.dalsi = c
+
+u = a
+while u is not None:
+    print(u.hodnota)
+    u = u.dalsi</code></pre>
+<p>Druhy: <strong>jednosměrný</strong> seznam má v uzlu jen odkaz na následníka, <strong>obousměrný</strong> i na předchůdce (jde procházet oběma směry, ale zabere víc paměti), u <strong>kruhového</strong> seznamu poslední uzel ukazuje zpět na první.</p>
+<p><strong>Výhoda:</strong> vložení nebo smazání uzlu na známém místě je rychlé (O(1)), nic se neposouvá, jen se přepojí odkazy. <strong>Nevýhoda:</strong> k n-tému prvku se musí projít všechny předchozí (O(n)) a každý uzel potřebuje paměť navíc na odkaz.</p>
+<h3>Porovnání pole a spojového seznamu</h3>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Pole</th><th>Spojový seznam</th></tr></thead>
+<tbody>
+<tr><td>Přístup k n-tému prvku</td><td>O(1)</td><td>O(n)</td></tr>
+<tr><td>Vložení doprostřed</td><td>O(n), posouvá se</td><td>O(1) na známém místě</td></tr>
+<tr><td>Paměť</td><td>souvislá, bez odkazů</td><td>rozptýlená, odkaz u každého uzlu</td></tr>
+</tbody></table></div>
+<p>Zásobník i frontu lze postavit nad polem i nad spojovým seznamem. Datové struktury jsou tak samy příkladem OOP: každá je třída s daty a metodami.</p>
+</section>
+
+<section id="shrnuti">
+<h2>Shrnutí</h2>
+<p>OOP skládá program z objektů, které mají atributy a metody. Třída je šablona, objekt její instance. Základní principy jsou zapouzdření, abstrakce, dědičnost a polymorfismus. Datové struktury určují uložení dat: pole dává rychlý přístup podle indexu, zásobník pracuje podle LIFO, fronta podle FIFO a spojový seznam dovoluje rychlé vkládání a mazání na známém místě.</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Jaký je rozdíl mezi třídou a objektem?</li>
+  <li>K čemu slouží konstruktor a co znamená <code>self</code>?</li>
+  <li>Vyjmenujte principy OOP a ke každému uveďte příklad.</li>
+  <li>Co je dědičnost a co přepsání metody?</li>
+  <li>Vysvětlete polymorfismus na příkladu.</li>
+  <li>Kdy použít dědičnost a kdy skládání?</li>
+  <li>V čem se liší zásobník a fronta? Uveďte použití každého.</li>
+  <li>Kdy je spojový seznam lepší než pole a kdy horší?</li>
+  <li>Proč je odebírání z čela seznamu v Pythonu pomalé a čím se nahrazuje?</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 2 „Objektově orientované programování a datové struktury“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

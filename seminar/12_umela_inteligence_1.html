@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Umělá inteligence 1: jak funguje</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 12</div>
+      <h1>Umělá inteligence 1: jak funguje</h1>
+      <p class="lede">Strojové učení, druhy umělé inteligence, neuronové sítě a princip velkých jazykových modelů</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Umělá inteligence je obor, který vytváří systémy řešící úlohy, jež dříve vyžadovaly lidský úsudek.</h2>
+      <p class="lede">Strojové učení je její část: pravidla nepíše programátor, model si je odvodí z dat.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Klasický program a strojové učení</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Klasický program</b><span>Programátor napíše pravidla. Počítač podle nich z dat spočítá výsledek. Hodí se tam, kde pravidla umíme přesně popsat, třeba výpočet daně.</span></div>
+        <div class="tcard" style="cursor:default"><b>Strojové učení</b><span>Počítač dostane data a správné výsledky a pravidla si najde sám. Hodí se tam, kde je popsat neumíme, třeba rozpoznání kočky na fotografii.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Teoretické druhy AI</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:28%"><col style="width:44%"><col style="width:28%"></colgroup>
+        <thead><tr><th>Druh</th><th>Co umí</th><th>Stav</th></tr></thead>
+        <tbody>
+          <tr><td>Úzká AI (ANI)</td><td>jednu úlohu nebo omezený okruh úloh</td><td>existuje, vše dnešní</td></tr>
+          <tr><td>Obecná AI (AGI)</td><td>jakoukoli rozumovou úlohu na úrovni člověka</td><td>hypotetická</td></tr>
+          <tr><td>Superinteligence (ASI)</td><td>výrazně překonává člověka ve všech oblastech</td><td>hypotetická</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Typy strojového učení</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>S učitelem</b><span>Data mají správné odpovědi, tedy popisky. Model se učí je předpovídat. Klasifikace, regrese. Filtr spamu.</span></div>
+        <div class="tcard" style="cursor:default"><b>Bez učitele</b><span>Data popisky nemají. Model v nich sám hledá strukturu. Shlukování. Skupiny podobných zákazníků.</span></div>
+        <div class="tcard" style="cursor:default"><b>Zpětnovazební</b><span>Agent zkouší akce v prostředí a dostává odměny nebo tresty. Hraní her, řízení robota.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Neuronová síť</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Neuron</dt><dd>Jednoduchá výpočetní jednotka. Vstupy vynásobí vahami, sečte a výsledek upraví aktivační funkcí.</dd>
+        <dt>Vrstvy</dt><dd>Neurony tvoří vrstvy: vstupní, skryté a výstupní. Hluboké učení používá mnoho skrytých vrstev.</dd>
+        <dt>Váhy</dt><dd>Čísla, která určují sílu spojení mezi neurony. V nich je uloženo vše, co se síť naučila.</dd>
+        <dt>Parametry</dt><dd>Souhrnný název pro váhy. Velké jazykové modely jich mají miliardy.</dd>
+        <dt>Inspirace</dt><dd>Volně inspirováno mozkem, ale jde o matematickou funkci, ne o kopii mozku.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Trénování a inference</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:20%"><col style="width:40%"><col style="width:40%"></colgroup>
+        <thead><tr><th></th><th>Trénování</th><th>Inference</th></tr></thead>
+        <tbody>
+          <tr><td>Co se děje</td><td>model se učí z dat</td><td>hotový model odpovídá</td></tr>
+          <tr><td>Váhy</td><td>postupně se upravují</td><td>už se nemění</td></tr>
+          <tr><td>Postup</td><td>odhad, výpočet chyby, oprava vah</td><td>jeden průchod sítí</td></tr>
+          <tr><td>Náročnost</td><td>velmi vysoká, dlouhý běh na mnoha GPU</td><td>řádově menší na jeden dotaz</td></tr>
+          <tr><td>Kdy</td><td>před nasazením modelu</td><td>při každém dotazu uživatele</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Velký jazykový model předpovídá, jaký token má nejspíš následovat po dosavadním textu.</h2>
+      <p class="lede">Vše ostatní, od překladu po psaní kódu, vzniká opakováním tohoto jediného kroku.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Tokeny</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Token</dt><dd>Kousek textu, se kterým model pracuje: slovo, část slova, znak nebo interpunkce.</dd>
+        <dt>Tokenizace</dt><dd>Rozdělení textu na tokeny. Každý token má své číslo ve slovníku modelu.</dd>
+        <dt>Proč ne slova</dt><dd>Z částí slov lze složit i slovo, které model nikdy neviděl, a slovník zůstane malý.</dd>
+        <dt>Čeština</dt><dd>Dlouhá a ohýbaná slova se obvykle rozpadnou na více tokenů než anglická.</dd>
+        <dt>Důsledek</dt><dd>Model nevidí písmena ani slova, jen řadu čísel. Délka textu se měří v tokenech.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Embedding a vektorový prostor</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Embedding</dt><dd>Každému tokenu odpovídá vektor, tedy řada stovek až tisíců čísel.</dd>
+        <dt>Vektorový prostor</dt><dd>Vektory si lze představit jako body v prostoru s mnoha rozměry.</dd>
+        <dt>Blízkost významu</dt><dd>Tokeny s podobným významem leží blízko sebe: pes a kočka blíž než pes a daň.</dd>
+        <dt>Směry</dt><dd>Některé směry nesou význam. Známý příklad: král – muž + žena vyjde blízko královny.</dd>
+        <dt>Původ</dt><dd>Polohu vektorů nikdo neurčil ručně, vznikla při trénování.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Transformer a pozornost</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Transformer</b><span>Architektura neuronové sítě z roku 2017, na které stojí dnešní jazykové modely.</span></div>
+        <div class="tcard" style="cursor:default"><b>Pozornost</b><span>Každý token zjišťuje, které jiné tokeny v textu jsou pro něj důležité, a bere si z nich informaci.</span></div>
+        <div class="tcard" style="cursor:default"><b>Kontext</b><span>Vektor slova se tak upraví podle okolí. Koruna stromu a koruna jako měna se rozliší.</span></div>
+        <div class="tcard" style="cursor:default"><b>Vrstvy</b><span>Krok se opakuje v mnoha vrstvách. Na konci vznikne pravděpodobnost pro každý další token.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Jak chatbot píše odpověď</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>1. Vstup</dt><dd>Systémový prompt, dosavadní konverzace a nová zpráva se spojí a rozdělí na tokeny.</dd>
+        <dt>2. Výpočet</dt><dd>Model spočítá pravděpodobnost každého možného dalšího tokenu.</dd>
+        <dt>3. Výběr</dt><dd>Vybere se jeden token, obvykle s jistou náhodností. Proto se odpovědi liší.</dd>
+        <dt>4. Opakování</dt><dd>Vybraný token se připojí k textu a vše běží znovu, dokud model odpověď neukončí.</dd>
+        <dt>Paměť</dt><dd>Model si mezi dotazy nic nepamatuje. Aplikace mu pokaždé pošle celou konverzaci.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Kontext a halucinace</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Kontextové okno</b><span>Nejvyšší počet tokenů, které model zpracuje najednou. Co se nevejde, to nevidí.</span></div>
+        <div class="tcard" style="cursor:default"><b>Systémový prompt</b><span>Skrytý úvodní pokyn provozovatele. Určuje roli, tón a pravidla chatbota.</span></div>
+        <div class="tcard" style="cursor:default"><b>Halucinace</b><span>Odpověď zní věrohodně, ale je nepravdivá. Vymyšlený citát, zdroj nebo údaj.</span></div>
+        <div class="tcard" style="cursor:default"><b>Proč vzniká</b><span>Model skládá pravděpodobný text, fakta nevyhledává. Proto je nutné výstupy ověřovat.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Jaký je vztah umělé inteligence a strojového učení?</li>
+        <li>Čím se liší ANI, AGI a ASI? Která z nich existuje?</li>
+        <li>Popište tři typy strojového učení s příklady.</li>
+        <li>Co je neuronová síť a co jsou její váhy?</li>
+        <li>Jaký je rozdíl mezi trénováním a inferencí?</li>
+        <li>Co je token a co embedding?</li>
+        <li>Co znamená blízkost ve vektorovém prostoru?</li>
+        <li>Jak chatbot tvoří odpověď a proč halucinuje?</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>

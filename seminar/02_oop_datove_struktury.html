@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Objektově orientované programování a datové struktury</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 2</div>
+      <h1>Objektově orientované programování a datové struktury</h1>
+      <p class="lede">Objekt, třída, dědičnost, polymorfismus a datové struktury pole, zásobník, fronta a spojový seznam</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Objektově orientované programování skládá program z objektů, které mají data i chování.</h2>
+      <p class="lede">Datové struktury určují, jak se data uspořádají v paměti, aby se dala rychle číst, vkládat a rušit.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Základní pojmy OOP</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Třída</b><span>Šablona nebo návrh. Popisuje, jaká data a jaké metody budou mít objekty.</span></div>
+        <div class="tcard" style="cursor:default"><b>Objekt</b><span>Konkrétní výtvor třídy, také instance. Z jedné třídy jich vznikne libovolně mnoho.</span></div>
+        <div class="tcard" style="cursor:default"><b>Atribut</b><span>Proměnná patřící objektu. Drží jeho stav, třeba jméno nebo věk.</span></div>
+        <div class="tcard" style="cursor:default"><b>Metoda</b><span>Funkce patřící objektu. Popisuje, co objekt umí.</span></div>
+        <div class="tcard" style="cursor:default"><b>Konstruktor</b><span>Metoda, která se spustí při vzniku objektu a nastaví počáteční stav. V Pythonu __init__.</span></div>
+        <div class="tcard" style="cursor:default"><b>self</b><span>Odkaz na objekt, nad kterým se metoda právě volá.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Třída a objekt v Pythonu</h2>
+      <div class="split">
+        <pre class="code"><span class="k">class</span> Zvire:
+    <span class="k">def</span> __init__(<span class="k">self</span>, jmeno):
+        <span class="k">self</span>.jmeno = jmeno
+
+    <span class="k">def</span> ozvi_se(<span class="k">self</span>):
+        <span class="k">print</span>(<span class="k">self</span>.jmeno + <span class="s">" vydává zvuk"</span>)
+
+azor = Zvire(<span class="s">"Azor"</span>)
+micka = Zvire(<span class="s">"Micka"</span>)
+azor.ozvi_se()</pre>
+        <ul class="summary-list">
+        <li>class zavádí třídu, jméno třídy se píše velkým písmenem.</li>
+        <li>__init__ je konstruktor, nastaví atribut jmeno.</li>
+        <li>Zvire("Azor") vytvoří nový objekt, azor a micka jsou dvě samostatné instance.</li>
+        <li>Metodu voláme přes tečku: azor.ozvi_se().</li>
+        </ul>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Čtyři principy OOP</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Zapouzdření</dt><dd>Data a metody jsou pohromadě v objektu. Vnitřek se před okolím skrývá a mění se jen přes metody. V Pythonu se skrytí vyznačuje podtržítkem, _vek.</dd>
+        <dt>Abstrakce</dt><dd>Objekt ukáže jen to podstatné. Kdo volá metodu, nemusí vědět, jak uvnitř funguje.</dd>
+        <dt>Dědičnost</dt><dd>Podtřída převezme atributy a metody nadtřídy a může je rozšířit nebo změnit. Vyjadřuje vztah „je“: pes je zvíře.</dd>
+        <dt>Polymorfismus</dt><dd>Stejné volání se chová podle typu objektu různě. Na zvířeti zavolám ozvi_se() a pes zaštěká, kočka zamňouká.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Dědičnost a polymorfismus</h2>
+      <div class="split">
+        <pre class="code"><span class="k">class</span> Pes(Zvire):
+    <span class="k">def</span> ozvi_se(<span class="k">self</span>):
+        <span class="k">print</span>(<span class="k">self</span>.jmeno + <span class="s">": haf"</span>)
+
+<span class="k">class</span> Kocka(Zvire):
+    <span class="k">def</span> ozvi_se(<span class="k">self</span>):
+        <span class="k">print</span>(<span class="k">self</span>.jmeno + <span class="s">": mnau"</span>)
+
+<span class="k">for</span> z <span class="k">in</span> [Pes(<span class="s">"Azor"</span>), Kocka(<span class="s">"Micka"</span>), Zvire(<span class="s">"Neznámé"</span>)]:
+    z.ozvi_se()</pre>
+        <ul class="summary-list">
+        <li>Pes(Zvire) znamená, že Pes dědí od třídy Zvire, včetně __init__.</li>
+        <li>Metoda ozvi_se se v podtřídách přepisuje (overriding).</li>
+        <li>Cyklus volá stejnou metodu na třech různých objektech.</li>
+        <li>Každý objekt odpoví po svém. To je polymorfismus.</li>
+        </ul>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Související pojmy</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:26%"><col style="width:44%"><col style="width:30%"></colgroup>
+        <thead><tr><th>Pojem</th><th>Význam</th><th>Příklad</th></tr></thead>
+        <tbody>
+          <tr><td>Přepsání metody</td><td>podtřída nahradí metodu zděděnou od nadtřídy</td><td>Pes.ozvi_se</td></tr>
+          <tr><td>Přetížení</td><td>více metod stejného jména s různými parametry. C++ a Java ho mají, Python ne</td><td>metoda secti(int, int) a secti(double, double)</td></tr>
+          <tr><td>Abstraktní třída</td><td>třída, ze které se nevytváří objekty, jen se od ní dědí</td><td>Tvar s metodou obsah</td></tr>
+          <tr><td>Skládání</td><td>objekt obsahuje jiný objekt jako atribut. Vztah „má“, ne „je“</td><td>Auto má Motor</td></tr>
+          <tr><td>Vícenásobná dědičnost</td><td>třída dědí od více nadtříd. Python a C++ ji umí, Java ne</td><td>class C(A, B)</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Datové struktury: přehled</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:18%"><col style="width:32%"><col style="width:30%"><col style="width:20%"></colgroup>
+        <thead><tr><th>Struktura</th><th>Princip</th><th>Typické operace</th><th>Složitost</th></tr></thead>
+        <tbody>
+          <tr><td>Pole</td><td>souvislý blok paměti, prvky stejného typu, index od 0</td><td>čtení a zápis podle indexu</td><td>O(1), vložení doprostřed O(n)</td></tr>
+          <tr><td>Zásobník</td><td>LIFO: poslední dovnitř, první ven</td><td>push (vložit), pop (odebrat), peek</td><td>O(1)</td></tr>
+          <tr><td>Fronta</td><td>FIFO: první dovnitř, první ven</td><td>enqueue (vložit), dequeue (odebrat)</td><td>O(1)</td></tr>
+          <tr><td>Spojový seznam</td><td>uzly s hodnotou a odkazem na další uzel</td><td>vložení a smazání na známém místě</td><td>O(1), hledání O(n)</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Pole</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Uložení</dt><dd>Prvky leží v paměti těsně za sebou. Adresa prvku se vypočte z indexu, proto je čtení okamžité.</dd>
+        <dt>Velikost</dt><dd>V jazyce C++ je pole pevně dané. Seznam list v Pythonu je dynamické pole, které se podle potřeby zvětšuje.</dd>
+        <dt>Vložení doprostřed</dt><dd>Prvky za místem se musí posunout, trvá úměrně počtu prvků: O(n).</dd>
+        <dt>Použití</dt><dd>Tabulky hodnot, obrázek jako pole pixelů, základ pro další struktury.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Zásobník a fronta</h2>
+      <div class="split">
+        <pre class="code">zasobnik = []
+zasobnik.append(<span class="n">1</span>)
+zasobnik.append(<span class="n">2</span>)
+<span class="k">print</span>(zasobnik.pop())      <span class="c"># 2, poslední dovnitř</span>
+
+<span class="k">from</span> collections <span class="k">import</span> deque
+fronta = deque()
+fronta.append(<span class="n">1</span>)
+fronta.append(<span class="n">2</span>)
+<span class="k">print</span>(fronta.popleft())    <span class="c"># 1, první dovnitř</span></pre>
+        <ul class="summary-list">
+        <li>Zásobník jako talíře na hromadě: bereme vždy ten nahoře. LIFO.</li>
+        <li>Seznam v Pythonu stačí: append vloží na konec, pop odebere z konce.</li>
+        <li>Fronta jako řada u pokladny: obsluhujeme toho, kdo čeká nejdéle. FIFO.</li>
+        <li>Pro frontu se používá deque. Odebrání první položky ze seznamu přes pop(0) je pomalé, O(n).</li>
+        </ul>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Spojový seznam</h2>
+      <div class="split">
+        <pre class="code"><span class="k">class</span> Uzel:
+    <span class="k">def</span> __init__(<span class="k">self</span>, hodnota):
+        <span class="k">self</span>.hodnota = hodnota
+        <span class="k">self</span>.dalsi = <span class="k">None</span>
+
+a = Uzel(<span class="n">1</span>)
+b = Uzel(<span class="n">2</span>)
+c = Uzel(<span class="n">3</span>)
+a.dalsi = b
+b.dalsi = c
+
+u = a
+<span class="k">while</span> u <span class="k">is</span> <span class="k">not</span> <span class="k">None</span>:
+    <span class="k">print</span>(u.hodnota)
+    u = u.dalsi</pre>
+        <ul class="summary-list">
+        <li>Uzel drží hodnotu a odkaz na další uzel. Poslední uzel odkazuje na None.</li>
+        <li>Uzly mohou být v paměti kdekoli, spojují je odkazy.</li>
+        <li>Průchod začíná u prvního uzlu a postupuje po odkazech.</li>
+        <li>Seznam ukazuje, že datovou strukturu lze postavit z objektů.</li>
+        </ul>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Spojový seznam: vlastnosti</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Jednosměrný</dt><dd>Každý uzel zná jen následníka. Procházet jde jen dopředu.</dd>
+        <dt>Obousměrný</dt><dd>Uzel zná následníka i předchůdce. Jde procházet oběma směry, ale zabere víc paměti.</dd>
+        <dt>Výhoda</dt><dd>Vložení a smazání uzlu na známém místě je rychlé. Nic se neposouvá, jen se přepojí odkazy.</dd>
+        <dt>Nevýhoda</dt><dd>K n-tému prvku se musí projít všechny předchozí, O(n). Každý uzel navíc zabírá paměť na odkaz.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Kdy kterou strukturu použít</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:24%"><col style="width:76%"></colgroup>
+        <thead><tr><th>Struktura</th><th>Použití v praxi</th></tr></thead>
+        <tbody>
+          <tr><td>Pole</td><td>tabulky hodnot, pixely obrázku, rychlý přístup podle indexu</td></tr>
+          <tr><td>Zásobník</td><td>tlačítko zpět, zásobník volání funkcí, kontrola párových závorek</td></tr>
+          <tr><td>Fronta</td><td>tisk dokumentů, fronty úloh a zpráv, procházení grafu do šířky</td></tr>
+          <tr><td>Spojový seznam</td><td>častá vkládání a mazání uprostřed, základ jiných struktur</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Jaký je rozdíl mezi třídou a objektem?</li>
+        <li>K čemu slouží konstruktor a co znamená self?</li>
+        <li>Vyjmenujte principy OOP a ke každému uveďte příklad.</li>
+        <li>Co je dědičnost a co přepsání metody?</li>
+        <li>Vysvětlete polymorfismus na příkladu se zvířaty.</li>
+        <li>V čem se liší zásobník a fronta? Uveďte použití každého.</li>
+        <li>Kdy je spojový seznam lepší než pole a kdy horší?</li>
+        <li>Jak se liší složitost vložení doprostřed pole a spojového seznamu?</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>

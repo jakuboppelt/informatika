@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Bezpečnost v IT 1: uživatel</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-bezpecnostni-audit-modeloveho-uzivatele">Aktivita: bezpečnostní audit modelového uživatele</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 13 · Metodický list pro učitele</p>
+  <h1>Bezpečnost v IT 1: uživatel <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině dokážou vysvětlit, na čem stojí bezpečnost účtů, dat a zařízení běžného uživatele, a umějí zdůvodnit konkrétní opatření: dlouhá jedinečná hesla ve správci, druhý faktor, šifrování, aktualizace, omezená práva a zálohy. Hodinu vedeš podle <a href="13_bezpecnost_uzivatel.html">prezentace</a>, studenti mají <a href="13_bezpecnost_uzivatel_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>vysvětlí, proč je délka hesla důležitější než složitost, a doloží to výpočtem počtu kombinací,</li>
+  <li>popíše princip manažeru hesel, hašování hesel na straně služby a dvoufázového ověření včetně passkeys,</li>
+  <li>rozliší signaturovou, heuristickou a behaviorální detekci malwaru,</li>
+  <li>porovná symetrické a asymetrické šifrování a uvede jejich použití v HTTPS, šifrování disku a end-to-end komunikaci,</li>
+  <li>zdůvodní princip nejmenších oprávnění, význam aktualizací a pravidlo 3-2-1,</li>
+  <li>rozpozná znaky phishingu a navrhne bezpečnou reakci.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Žáci znají pojmy operační systém, uživatelský účet, soubor, prohlížeč a umějí počítat s mocninami.</li>
+  <li>Prezentace „13 – Bezpečnost v IT 1: uživatel“ a studijní text k otázce 13 (žáci jej dostanou předem nebo po hodině).</li>
+  <li>Projektor, kalkulačky nebo tabulkový procesor, vytištěné nebo promítnuté ukázky zpráv pro aktivitu (připraví učitel, smyšlené, bez funkčních odkazů).</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace</td><td>Ptá se: „Kolik máte účtů a kolik různých hesel?“ Nesbírá konkrétní hesla, jen počty. Uvede tři cíle bezpečnosti.</td><td>Anonymně odhadují, diskutují, co by pro ně znamenala ztráta hlavního e-mailu.</td></tr>
+<tr><td>10–25</td><td>Výklad: hesla</td><td>Vysvětluje délku proti složitosti, heslové fráze, jedinečnost, haš a sůl.</td><td>Počítají počet kombinací pro zadané typy hesel a řadí je podle síly.</td></tr>
+<tr><td>25–40</td><td>Výklad: manažer hesel, 2FA, passkeys</td><td>Představí princip trezoru a hlavního hesla, porovná druhé faktory.</td><td>Zapisují si tabulku faktorů, zjišťují, které jejich služby 2FA nabízejí.</td></tr>
+<tr><td>40–55</td><td>Výklad: antivirus a šifrování</td><td>Vysvětluje tři metody detekce, symetrické a asymetrické šifrování, HTTPS, šifrování disku, end-to-end.</td><td>Ve dvojicích si vysvětlí, proč HTTPS kombinuje oba druhy šifrování.</td></tr>
+<tr><td>55–75</td><td>Aktivita: bezpečnostní audit modelového uživatele</td><td>Zadá popis modelového uživatele a sadu zpráv, obchází skupiny.</td><td>Ve skupinách hledají slabiny, navrhují opatření a třídí zprávy.</td></tr>
+<tr><td>75–85</td><td>Prezentace výsledků a správa systému</td><td>Shrnuje návrhy skupin, doplní aktualizace, práva, firewall, zálohy 3-2-1.</td><td>Prezentují tři nejdůležitější opatření a zdůvodňují pořadí.</td></tr>
+<tr><td>85–90</td><td>Shrnutí a výstupní lístek</td><td>Zopakuje čtyři klíčová opatření, zadá výstupní lístek.</td><td>Písemně odpovídají na tři otázky.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-bezpecnostni-audit-modeloveho-uzivatele">
+<h2>Aktivita: bezpečnostní audit modelového uživatele</h2>
+<p><strong>Zadání.</strong> Skupiny po třech až čtyřech dostanou popis smyšleného uživatele, například: „Petr má jedno osmiznakové heslo pro e-mail, školní systém i e-shopy. Na notebooku pracuje pod účtem správce, aktualizace odkládá. Fotky má jen v telefonu. V kavárně se připojuje k otevřené Wi-Fi a tam také platí kartou. Druhý faktor nepoužívá.“ K tomu dostanou pět krátkých smyšlených zpráv (e-mail od „banky“ s výzvou k okamžitému přihlášení, oznámení školy o změně rozvrhu, SMS od „kurýra“ s doplatkem, skutečně vypadající potvrzení objednávky, zpráva od „spolužáka“ s odkazem).</p>
+<p><strong>Postup.</strong></p>
+<ol>
+  <li>Skupina vypíše všechny slabiny v Petrově chování (5 minut).</li>
+  <li>Ke každé slabině přiřadí opatření a pojem z výkladu, například opakované heslo – manažer hesel a jedinečná hesla (5 minut).</li>
+  <li>Opatření seřadí podle poměru přínosu a pracnosti a vybere tři, kterými by Petr měl začít (5 minut).</li>
+  <li>Zprávy roztřídí na důvěryhodné, podezřelé a nejasné a u každé uvede znaky, podle kterých se rozhodla, a jak by zprávu ověřila (5 minut).</li>
+</ol>
+<p><strong>Závěr, ke kterému mají žáci dojít.</strong> Největší přínos mají opatření, která chrání nejdůležitější účet a odstraňují jedinou společnou slabinu: jedinečné dlouhé heslo a druhý faktor u e-mailu (přes něj se obnovují ostatní účty), manažer hesel, zapnuté aktualizace a záloha fotek. U zpráv žáci zjistí, že spolehlivým znakem není vzhled ani pravopis, ale naléhavost, nečekaný požadavek a doména odkazu, a že bezpečný postup je neklikat a ověřit jinou cestou. Učitel dbá na to, aby aktivita zůstala u rozpoznávání a obrany.</p>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>„Silné heslo musí hlavně obsahovat číslici a speciální znak.“</td><td>Nechat spočítat 95^8 a 26^16. Ukázat, že předvídatelné vzory typu Heslo123! formální pravidla splní, a přesto jsou slabé.</td></tr>
+<tr><td>„Zámek v adresním řádku znamená, že je web bezpečný.“</td><td>Vysvětlit, že HTTPS šifruje spojení a ověřuje doménu, nic neříká o poctivosti provozovatele.</td></tr>
+<tr><td>„Haš je šifrování, dá se dešifrovat.“</td><td>Odlišit: šifrování je obousměrné s klíčem, hašování jednosměrné. Heslo se neobnovuje, jen se ověřuje shoda otisků.</td></tr>
+<tr><td>„Mám antivirus, takže se mi nic nestane.“</td><td>Připomenout meze signatur a to, že phishing antivirus neřeší. Antivirus je jedna z vrstev.</td></tr>
+<tr><td>„Manažer hesel je nebezpečný, všechno je na jednom místě.“</td><td>Porovnat s alternativou: jedno opakované heslo. Trezor je šifrovaný, chráněný hlavním heslem a druhým faktorem.</td></tr>
+<tr><td>„Synchronizace do cloudu je záloha.“</td><td>Synchronizace přenese i smazání nebo zašifrování souboru. Záloha uchovává starší verze a je oddělená.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Které heslo je silnější: osm náhodných znaků ze sady 95 znaků, nebo šestnáct náhodných malých písmen? Zdůvodněte.</li>
+  <li>Proč HTTPS používá asymetrické i symetrické šifrování?</li>
+  <li>Uveďte dvě opatření, která omezí škody, pokud útočník přesto získá vaše heslo.</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> Žák samostatně a souvisle vyloží všechny body zadání. Zdůvodní výpočtem, proč záleží na délce hesla, vysvětlí heslové fráze, jedinečnost, hašování se solí a pomalé hašovací funkce. Popíše princip manažeru hesel a hlavního hesla, porovná druhé faktory a vysvětlí passkeys jako pár klíčů. Rozliší tři metody detekce malwaru a jejich meze. Porovná symetrické a asymetrické šifrování a ukáže jejich kombinaci v TLS, odliší šifrování disku od end-to-end šifrování. Vysvětlí princip nejmenších oprávnění, pravidlo 3-2-1, roli aktualizací a firewallu a na příkladu rozebere phishing.</li>
+  <li><strong>Na dostatečnou:</strong> Žák uvede, že heslo má být dlouhé a pro každou službu jiné a že k tomu slouží manažer hesel. Ví, co je dvoufázové ověření a antivirus. Rozliší, že symetrické šifrování má jeden klíč a asymetrické dva, a ví, že HTTPS šifruje spojení. Zná rozdíl mezi běžným a administrátorským účtem, význam aktualizací a záloh a popíše, co je phishing.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Proč služba nemá ukládat hesla v čitelné podobě? K čemu slouží sůl? Proč je kód v SMS slabší než hardwarový klíč? Co se stane s daty na šifrovaném disku, když zapomenete heslo? Proč nestačí signaturová detekce? Čím se liší záloha od synchronizace? Jak ověříte, že zpráva od banky je pravá?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 13 „Bezpečnost v IT 1: uživatel“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Bezpečnost v IT 2: útočník</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-poznej-podvod">Aktivita: Poznej podvod</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 18 · Metodický list pro učitele</p>
+  <h1>Bezpečnost v IT 2: útočník <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině dokážou rozlišit druhy malwaru, vysvětlit princip ransomwaru a sociálního inženýrství, rozpoznat znaky podvodné zprávy, popsat etické hackování a uvést, které právní předpisy se kybernetické bezpečnosti týkají. Hodinu vedeš podle <a href="18_bezpecnost_utocnik.html">prezentace</a>, studenti mají <a href="18_bezpecnost_utocnik_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>rozliší druhy malwaru podle způsobu šíření a činnosti (virus, červ, trojský kůň, ransomware, spyware, adware, keylogger, rootkit, botnet),</li>
+  <li>vysvětlí princip ransomwaru a zdůvodní, proč jsou hlavní obranou oddělené zálohy a aktualizace,</li>
+  <li>rozpozná techniky sociálního inženýrství a pojmenuje psychologické páky, které využívají,</li>
+  <li>porovná white hat, grey hat a black hat a popíše penetrační test, bug bounty a odpovědné hlášení,</li>
+  <li>určí, které skupiny jsou častým cílem útoků a proč,</li>
+  <li>uvede, co postihují § 230 až § 232 trestního zákoníku a čeho se týká zákon o kybernetické bezpečnosti, GDPR a NIS2.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Žáci znají základy ochrany z předchozí otázky (Bezpečnost v IT 1): hesla, dvoufázové ověření, zálohování, šifrování.</li>
+  <li>Prezentace „18 – Bezpečnost v IT 2: útočník“, projektor, studijní text k otázce pro domácí opakování.</li>
+  <li>Vytištěná sada šesti ukázkových zpráv pro aktivitu (připraví učitel, smyšlené a bez funkčních odkazů), papíry na výstupní lístek.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace</td><td>Ptá se: „Kdo z vás nebo z rodiny dostal podvodnou zprávu nebo telefonát? Jak jste to poznali?“ Zapisuje znaky na tabuli.</td><td>Sdílejí zkušenosti, pojmenovávají první varovné znaky.</td></tr>
+<tr><td>10–25</td><td>Malware</td><td>Vykládá druhy malwaru a cesty šíření. Zdůrazní rozdíl virus – červ – trojský kůň a obě podoby keyloggeru.</td><td>Zapisují tabulku, ke každému druhu doplňují, jak se mu bránit.</td></tr>
+<tr><td>25–40</td><td>Ransomware</td><td>Vysvětlí princip, WannaCry 2017 a útoky na nemocnice. Ptá se: „Co byste jako ředitel nemocnice chtěli mít připravené předem?“</td><td>Navrhují opatření, docházejí k zálohám, aktualizacím a školení.</td></tr>
+<tr><td>40–65</td><td>Aktivita: Poznej podvod</td><td>Rozdá sadu zpráv, vysvětlí zadání, obchází skupiny.</td><td>Ve skupinách třídí zprávy, hledají znaky a určují techniku i psychologickou páku.</td></tr>
+<tr><td>65–75</td><td>Sdílení a sociální inženýrství</td><td>Shrne techniky a důvody, proč fungují. Doplní DDoS, hrubou sílu a motivace útočníků.</td><td>Prezentují výsledky skupin, sestavují společný seznam varovných znaků.</td></tr>
+<tr><td>75–85</td><td>Etické hackování, cíle a právo</td><td>Vyloží typy hackerů, penetrační test, bug bounty, cílové skupiny a legislativu. Zadá krátký případ k posouzení.</td><td>Posuzují případ: žák „jen ze zvědavosti“ pronikne do školního systému a nic nezmění.</td></tr>
+<tr><td>85–90</td><td>Shrnutí a výstupní lístek</td><td>Shrne hodinu třemi větami, zadá výstupní lístek.</td><td>Písemně odpovídají na tři otázky.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-poznej-podvod">
+<h2>Aktivita: Poznej podvod</h2>
+<p>Cílem aktivity je, aby žáci uměli podvodnou zprávu rozpoznat podle konkrétních znaků a pojmenovat, na jakou lidskou vlastnost míří.</p>
+<p><strong>Zadání.</strong> Skupina tří až čtyř žáků dostane šest vytištěných zpráv. Čtyři jsou podvodné, dvě pravé. Sada obsahuje například: e-mail „z banky“ s výzvou k okamžitému přihlášení, SMS o nedoručeném balíku, e-mail „od ředitele“ s žádostí o rychlou platbu, přepis telefonátu falešného bankéře, běžné oznámení školy a skutečné potvrzení objednávky. Ke každé zprávě skupina vyplní:</p>
+<ol>
+  <li>Je zpráva podvodná, nebo pravá?</li>
+  <li>Podle kterých znaků jste to poznali?</li>
+  <li>O jakou techniku jde (phishing, spear phishing, vishing, smishing, pretexting)?</li>
+  <li>Na jakou páku útočník tlačí (naléhavost, autorita, strach, zvědavost, zisk)?</li>
+  <li>Jak by měl příjemce správně reagovat?</li>
+</ol>
+<p><strong>Postup.</strong> Na práci je 15 minut, poté každá skupina představí jednu zprávu a ostatní doplňují. Učitel zapisuje na tabuli společný seznam varovných znaků: časový tlak, nezvyklá adresa odesílatele, odkaz vedoucí jinam, než tvrdí text, žádost o heslo, kód nebo platbu, neosobní oslovení, hrozba nebo příliš výhodná nabídka. Zprávy jsou smyšlené a slouží jen k rozpoznávání; žáci podvodné zprávy sami netvoří.</p>
+<p><strong>Závěr, ke kterému mají žáci dojít.</strong> Podvodnou zprávu často neprozradí pravopis ani vzhled, ale to, co po příjemci chce a jak na něj spěchá. Spolehlivá obrana je postup: nejednat hned, neklikat na odkaz ve zprávě, ověřit žádost jinou cestou a nikdy nikomu nesdělovat hesla a ověřovací kódy. Technická ochrana sama nestačí, protože útok míří na člověka.</p>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>„Virus je každý škodlivý program.“</td><td>Nadřazený pojem je malware. Virus je jeden druh; nechat žáky porovnat virus, červa a trojského koně.</td></tr>
+<tr><td>„Mám antivirus, nic se mi nestane.“</td><td>Antivirus nezastaví podvodný telefonát ani dobrovolně zadané heslo a hardwarový keylogger nenajde.</td></tr>
+<tr><td>„Když zaplatím výkupné, data dostanu zpět.“</td><td>Záruka neexistuje a platba financuje další útoky. Řešením je záloha připravená předem.</td></tr>
+<tr><td>„Záloha na disku trvale připojeném k počítači stačí.“</td><td>Ransomware zašifruje i připojené disky. Záloha musí být oddělená a vyzkoušená.</td></tr>
+<tr><td>„Hacker je vždy zločinec.“</td><td>Rozlišit white hat, grey hat a black hat; rozhoduje souhlas vlastníka.</td></tr>
+<tr><td>„Když do cizího systému jen nahlédnu a nic nezměním, je to v pořádku.“</td><td>Podle § 230 je trestný už neoprávněný přístup po překonání zabezpečení. Dobrý úmysl souhlas nenahrazuje.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Čím se liší červ od trojského koně?</li>
+  <li>Uveďte dvě opatření, která nejvíce omezí škody po útoku ransomwaru.</li>
+  <li>Přišla vám SMS, že vám bude do hodiny zablokován účet, s odkazem na přihlášení. O jakou techniku jde a jak zareagujete?</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> Žák definuje malware a rozliší jeho druhy podle šíření a činnosti včetně obou podob keyloggeru, rootkitu a botnetu. Vysvětlí princip ransomwaru, uvede WannaCry 2017 a útoky na nemocnice a zdůvodní obranu oddělenými zálohami a aktualizacemi. Popíše techniky sociálního inženýrství a vysvětlí, proč fungují. Stručně zmíní DDoS, hrubou sílu, zneužití zranitelností a motivace útočníků. Porovná typy hackerů, vysvětlí penetrační test, bug bounty a odpovědné hlášení. Uvede cílové skupiny s důvody a orientuje se v legislativě: § 230 až § 232 trestního zákoníku, zákon o kybernetické bezpečnosti a NÚKIB, GDPR, NIS2.</li>
+  <li><strong>Na dostatečnou:</strong> Žák vysvětlí, co je malware, jmenuje alespoň čtyři druhy a u dvou popíše, co dělají. Vysvětlí ransomware a phishing, uvede základní obranu (zálohy, aktualizace, opatrnost), rozliší etického hackera od útočníka a ví, že neoprávněný přístup do cizího systému je trestný čin.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Proč se červ šíří rychleji než virus? Jak byste poznali podvodný e-mail? Proč nestačí záloha na disku připojeném k počítači? K čemu útočník použije botnet? Co musí mít etický hacker, než začne testovat? Proč jsou nemocnice častým cílem ransomwaru? Co je NÚKIB a čím se zabývá? Co musí firma udělat, když jí uniknou osobní údaje zákazníků?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 18 „Bezpečnost v IT 2: útočník“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Databáze a základy SQL</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-dotazy-na-papire">Aktivita: Dotazy na papíře</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 11 · Metodický list pro učitele</p>
+  <h1>Databáze a základy SQL <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině vysvětlí, co je databáze a SŘBD, rozliší druhy databází, popíší relační model s klíči a vazbami a přečtou i napíšou jednoduché příkazy jazyka SQL nad dvěma propojenými tabulkami. Hodinu vedeš podle <a href="11_databaze.html">prezentace</a>, studenti mají <a href="11_databaze_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>vysvětlí rozdíl mezi databází, SŘBD a databázovou aplikací,</li>
+  <li>porovná relační databáze s dokumentovými, grafovými, sloupcovými a databázemi klíč–hodnota,</li>
+  <li>popíše tabulku, záznam, atribut, primární a cizí klíč na konkrétním příkladu,</li>
+  <li>určí u zadané situace typ vazby (1 : 1, 1 : N, M : N) a navrhne, jak ji v tabulkách zapsat,</li>
+  <li>zvolí ke sloupci vhodný datový typ a volbu zdůvodní,</li>
+  <li>napíše příkazy SELECT, INSERT, UPDATE, DELETE a jednoduchý JOIN a zařadí je do skupin DDL, DML, DQL.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Žáci znají tabulkový procesor a pojmy řádek, sloupec a datový typ z programování.</li>
+  <li>Projektor s prezentací „11 – Databáze a základy SQL“; studijní text „11 – Databáze a základy SQL: studijní text“ k domácímu opakování.</li>
+  <li>Pracovní list s vytištěnými tabulkami <code>zaci</code> a <code>tridy</code> (asi 8 a 3 řádky), papír a tužka; počítač není nutný.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace</td><td>Ptá se: „Kde všude jste dnes použili databázi?“ Ukáže jednu velkou tabulku žáků, kde se u každého opakuje název třídy i třídní učitel, a nechá hledat problémy.</td><td>Jmenují příklady (e-shop, sociální síť, školní systém). Hledají, co se pokazí při změně třídního učitele.</td></tr>
+<tr><td>10–25</td><td>Výklad: databáze a její druhy</td><td>Vysvětlí databázi a SŘBD, projde přehled druhů databází s příklady použití.</td><td>Ke každému druhu navrhnou jednu aplikaci, kde by se hodil.</td></tr>
+<tr><td>25–40</td><td>Výklad: relační model</td><td>Na tabulkách <code>zaci</code> a <code>tridy</code> zavede záznam, atribut, primární a cizí klíč, vazby a datové typy.</td><td>Na pracovním listu označí klíče a určí typy vazeb u tří situací (žák–třída, třída–třídní učitel, žák–kroužek).</td></tr>
+<tr><td>40–55</td><td>Výklad: SQL</td><td>Ukáže CREATE TABLE, SELECT s WHERE a ORDER BY, INSERT, UPDATE, DELETE a JOIN; zařadí je do DDL, DML, DQL.</td><td>Předpovídají výsledek každého ukázaného dotazu dřív, než ho učitel odhalí.</td></tr>
+<tr><td>55–78</td><td>Aktivita: Dotazy na papíře</td><td>Zadá práci ve dvojicích, obchází, všímá si typických chyb.</td><td>Vyhodnocují a píšou dotazy nad vytištěnými tabulkami, pak si je vymění s jinou dvojicí.</td></tr>
+<tr><td>78–85</td><td>Společná kontrola</td><td>Promítne řešení, rozebere nejčastější chyby, vrátí se k úvodní „jedné velké tabulce“.</td><td>Opravují si řešení, vysvětlují vlastními slovy, proč je rozdělení do dvou tabulek lepší.</td></tr>
+<tr><td>85–90</td><td>Shrnutí a výstupní lístek</td><td>Shrne tři hlavní myšlenky hodiny, zadá výstupní lístek.</td><td>Samostatně písemně odpoví na tři otázky.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-dotazy-na-papire">
+<h2>Aktivita: Dotazy na papíře</h2>
+<p><strong>Zadání.</strong> Dvojice dostane vytištěné tabulky <code>tridy</code> (3 řádky) a <code>zaci</code> (8 řádků, z toho jeden žák bez přiřazené třídy) a pracuje bez počítače. Žáci tak musí přemýšlet jako SŘBD a nemohou výsledek jen zkusmo spustit.</p>
+<p><strong>Postup.</strong></p>
+<ol>
+  <li>Čtení (asi 7 minut): dvojice dostane čtyři hotové dotazy a ke každému zapíše, které řádky a sloupce vrátí. Dotazy stupňují obtížnost: SELECT se sloupci, WHERE s AND, ORDER BY s DESC, JOIN obou tabulek.</li>
+  <li>Psaní (asi 10 minut): dvojice napíše dotazy k pěti slovním zadáním, například „vypiš příjmení žáků narozených v roce 2008“, „přidej nového žáka do 4.B“, „přesuň žáka číslo 8 do jiné třídy“, „smaž žáka číslo 9“, „vypiš jména žáků spolu s názvem jejich třídy“.</li>
+  <li>Výměna (asi 6 minut): dvojice si řešení vymění se sousední dvojicí a „spustí“ je ručně nad tabulkami. Hledají dotazy, které vrátí něco jiného, než zadání chtělo.</li>
+</ol>
+<p><strong>Závěr, ke kterému mají žáci dojít.</strong> Dotaz SELECT data nemění, jen vybírá řádky (WHERE) a sloupce. UPDATE a DELETE bez WHERE zasáhnou celou tabulku. JOIN spojuje řádky podle rovnosti cizího a primárního klíče, a žák bez třídy proto ve výsledku vnitřního spojení chybí. Díky cizímu klíči stačí změnit název třídy na jediném místě.</p>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>Databáze je totéž co tabulka v Excelu.</td><td>Vrátit se k úvodnímu příkladu: kdo ohlídá vazby, současný přístup více lidí a oprávnění? To dělá SŘBD.</td></tr>
+<tr><td>Zaměňování databáze a SŘBD („MySQL je databáze“).</td><td>Přirovnat k dokumentu a textovému editoru: data versus program, který s nimi pracuje.</td></tr>
+<tr><td>Primární klíč může být jméno a příjmení.</td><td>Nechat žáky najít ve třídě nebo škole dva lidi se stejným jménem; klíč musí být jedinečný a neměnný.</td></tr>
+<tr><td>Cizí klíč patří k tabulce na straně 1.</td><td>Zeptat se: „Kolik žáků by se vešlo do jedné buňky u třídy?“ Cizí klíč je vždy na straně N.</td></tr>
+<tr><td>UPDATE nebo DELETE bez WHERE.</td><td>Nechat dotaz ručně „spustit“ na vytištěné tabulce a spočítat, kolik řádků se změnilo.</td></tr>
+<tr><td>NULL je totéž co nula nebo prázdný text.</td><td>Příklad: žák bez známky nemá průměr nula; NULL znamená „nevíme“.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Vysvětlete jednou větou rozdíl mezi primárním a cizím klíčem.</li>
+  <li>Jaký typ vazby je mezi žáky a kroužky a jak se v relační databázi zapíše?</li>
+  <li>Napište dotaz, který vypíše příjmení všech žáků třídy s <code>trida_id</code> 2 seřazená podle abecedy.</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> Žák samostatně definuje databázi a SŘBD, uvede druhy databází s příklady použití a porovná relační a NoSQL přístup. Na vlastním příkladu dvou tabulek vysvětlí záznam, atribut, primární a cizí klíč a všechny tři typy vazeb včetně spojovací tabulky. Zdůvodní volbu datových typů, rozdělí SQL na DDL, DML a DQL a bez chyb napíše SELECT s WHERE a ORDER BY, INSERT, UPDATE, DELETE, CREATE TABLE i JOIN.</li>
+  <li><strong>Na dostatečnou:</strong> Žák řekne, že databáze slouží k ukládání dat v tabulkách, s dopomocí popíše řádek, sloupec a primární klíč, vyjmenuje alespoň tři datové typy a přečte či napíše jednoduchý SELECT s podmínkou; ví, k čemu slouží INSERT, UPDATE a DELETE.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Proč nestačí jedna velká tabulka? Co se stane, když spustíte DELETE bez WHERE? Proč se cena neukládá jako text? Kdy byste místo relační databáze zvolili dokumentovou nebo grafovou? Co vrátí JOIN pro žáka, který nemá přiřazenou třídu? Co je referenční integrita?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 11 „Databáze a základy SQL“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

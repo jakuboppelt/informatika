@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bezpečnost v IT 2: útočník</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 18</div>
+      <h1>Bezpečnost v IT 2: útočník</h1>
+      <p class="lede">Škodlivý software, sociální inženýrství, etické hackování, cílové skupiny útoků a legislativa</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Malware je jakýkoli software vytvořený s cílem škodit uživateli nebo systému.</h2>
+      <p class="lede">Druhy malwaru se liší tím, jak se šíří a co po napadení dělají.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Druhy malwaru</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:20%"><col style="width:44%"><col style="width:36%"></colgroup>
+        <thead><tr><th>Druh</th><th>Čím se vyznačuje</th><th>Co způsobí</th></tr></thead>
+        <tbody>
+          <tr><td>Virus</td><td>připojí se k souboru, šíří se jeho spuštěním</td><td>poškození dat a programů</td></tr>
+          <tr><td>Červ</td><td>šíří se sám po síti bez zásahu uživatele</td><td>rychlá nákaza mnoha počítačů</td></tr>
+          <tr><td>Trojský kůň</td><td>vydává se za užitečný program</td><td>otevře útočníkovi přístup</td></tr>
+          <tr><td>Ransomware</td><td>zašifruje data oběti</td><td>požaduje výkupné</td></tr>
+          <tr><td>Spyware</td><td>skrytě sleduje uživatele</td><td>únik hesel a osobních údajů</td></tr>
+          <tr><td>Adware</td><td>zobrazuje nevyžádanou reklamu</td><td>obtěžuje, sbírá údaje</td></tr>
+          <tr><td>Rootkit</td><td>skrývá se hluboko v systému</td><td>maskuje další malware</td></tr>
+          <tr><td>Botnet</td><td>síť ovládnutých počítačů</td><td>spam a útoky DDoS</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Keylogger</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Softwarový</b><span>Program běžící skrytě na pozadí zaznamenává stisky kláves a odesílá je útočníkovi. Získá tak hesla i obsah zpráv. Odhalí ho antivirus, chrání aktualizace a dvoufázové ověření.</span></div>
+        <div class="tcard" style="cursor:default"><b>Hardwarový</b><span>Malé zařízení zapojené mezi klávesnici a počítač. Antivirus ho nenajde, útočník ale potřebuje fyzický přístup. Obranou je kontrola připojených zařízení, hlavně na veřejných počítačích.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Jak se malware šíří</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>E-mail</dt><dd>Přílohy a odkazy v podvodných zprávách. Nejčastější cesta nákazy.</dd>
+        <dt>Web</dt><dd>Falešné stránky, podvodná reklama a stahování z nedůvěryhodných zdrojů.</dd>
+        <dt>Nelegální software</dt><dd>Pirátské programy, hry a „cracky“ často obsahují trojského koně.</dd>
+        <dt>Výměnná média</dt><dd>Nakažený flash disk nebo jiné zařízení připojené k počítači.</dd>
+        <dt>Zranitelnosti</dt><dd>Chyby v neaktualizovaném systému a programech umožní nákazu bez přičinění uživatele.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Ransomware</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Princip</dt><dd>Zašifruje soubory silnou šifrou. Klíč k odšifrování má jen útočník.</dd>
+        <dt>Výkupné</dt><dd>Žádá platbu, obvykle v kryptoměně. Zaplacení vrácení dat nezaručuje a útoky financuje.</dd>
+        <dt>Dvojí vydírání</dt><dd>Útočníci data předem zkopírují a hrozí jejich zveřejněním.</dd>
+        <dt>WannaCry 2017</dt><dd>Červ využil chybu ve Windows a během dnů zasáhl počítače po celém světě včetně nemocnic.</dd>
+        <dt>Obrana</dt><dd>Pravidelné zálohy uložené odděleně od počítače, aktualizace a opatrnost u příloh.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Sociální inženýrství</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:22%"><col style="width:40%"><col style="width:38%"></colgroup>
+        <thead><tr><th>Technika</th><th>Princip</th><th>Příklad</th></tr></thead>
+        <tbody>
+          <tr><td>Phishing</td><td>hromadný podvodný e-mail</td><td>„banka“ žádá přihlášení</td></tr>
+          <tr><td>Spear phishing</td><td>zpráva cílená na konkrétní osobu</td><td>falešný pokyn ředitele účetní</td></tr>
+          <tr><td>Vishing</td><td>podvodný telefonát</td><td>falešný bankéř nebo policista</td></tr>
+          <tr><td>Smishing</td><td>podvodná SMS nebo zpráva</td><td>nedoručený balík s odkazem</td></tr>
+          <tr><td>Pretexting</td><td>vymyšlená záminka a role</td><td>„technik“ žádá o heslo</td></tr>
+          <tr><td>Baiting</td><td>návnada, která vzbudí zvědavost</td><td>pohozený flash disk</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Proč sociální inženýrství funguje</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Naléhavost</b><span>Časový tlak brání přemýšlení: účet bude zablokován, jednejte ihned.</span></div>
+        <div class="tcard" style="cursor:default"><b>Autorita</b><span>Lidé vyhoví tomu, kdo vystupuje jako nadřízený, banka nebo úřad.</span></div>
+        <div class="tcard" style="cursor:default"><b>Emoce</b><span>Strach, zvědavost a vidina výhry přehluší opatrnost.</span></div>
+        <div class="tcard" style="cursor:default"><b>Důvěra</b><span>Ochota pomoci a znalost osobních údajů ze sociálních sítí dodávají věrohodnost.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Další útoky a motivace</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>DDoS</b><span>Zahlcení služby požadavky z mnoha počítačů. Služba je pro běžné uživatele nedostupná.</span></div>
+        <div class="tcard" style="cursor:default"><b>Hrubá síla</b><span>Zkoušení hesel jednoho po druhém. Brání dlouhá hesla a omezení počtu pokusů.</span></div>
+        <div class="tcard" style="cursor:default"><b>Zranitelnosti</b><span>Zneužití chyby v programu. Obranou jsou včasné aktualizace.</span></div>
+        <div class="tcard" style="cursor:default"><b>Motivace</b><span>Nejčastěji peníze, dále špionáž, aktivismus, pomsta nebo prestiž.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Etické hackování</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>White hat</dt><dd>Etický hacker. Hledá slabiny se souhlasem vlastníka, aby mohly být opraveny.</dd>
+        <dt>Black hat</dt><dd>Útočí bez souhlasu pro vlastní prospěch nebo aby škodil. Jedná nezákonně.</dd>
+        <dt>Grey hat</dt><dd>Proniká bez souhlasu, ale bez zlého úmyslu. I to je nezákonné.</dd>
+        <dt>Penetrační test</dt><dd>Řízený pokus o průnik na základě smlouvy s jasným rozsahem. Výstupem je zpráva.</dd>
+        <dt>Bug bounty</dt><dd>Firma vypíše odměny za nahlášené chyby. Nález se hlásí nejdřív jí a teprve po opravě zveřejní.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Časté cílové skupiny</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:20%"><col style="width:44%"><col style="width:36%"></colgroup>
+        <thead><tr><th>Skupina</th><th>Proč je cílem</th><th>Typický útok</th></tr></thead>
+        <tbody>
+          <tr><td>Senioři</td><td>menší zkušenost, důvěřivost</td><td>falešný bankéř, podvodné investice</td></tr>
+          <tr><td>Děti</td><td>neodhadnou rizika, sdílejí osobní údaje</td><td>krádež herních účtů, kybergrooming</td></tr>
+          <tr><td>Malé firmy</td><td>bez odborníka a bez záloh</td><td>ransomware, falešné faktury</td></tr>
+          <tr><td>Nemocnice</td><td>provoz nesmí stát, citlivá data</td><td>ransomware</td></tr>
+          <tr><td>Úřady</td><td>údaje občanů, veřejné služby</td><td>ransomware, DDoS</td></tr>
+          <tr><td>Školy</td><td>mnoho uživatelů, málo prostředků</td><td>phishing, ransomware</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Legislativa</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:34%"><col style="width:66%"></colgroup>
+        <thead><tr><th>Předpis</th><th>Čeho se týká</th></tr></thead>
+        <tbody>
+          <tr><td>Trestní zákoník § 230</td><td>neoprávněný přístup k počítačovému systému a nosiči informací</td></tr>
+          <tr><td>Trestní zákoník § 231</td><td>opatření a přechovávání přístupového zařízení a hesla</td></tr>
+          <tr><td>Trestní zákoník § 232</td><td>poškození záznamu a zásah do vybavení počítače z nedbalosti</td></tr>
+          <tr><td>Zákon o kybernetické bezpečnosti</td><td>povinnosti důležitých organizací, dohled vykonává NÚKIB</td></tr>
+          <tr><td>GDPR</td><td>ochrana osobních údajů, hlášení úniků, vysoké pokuty</td></tr>
+          <tr><td>Směrnice NIS2</td><td>evropská pravidla kybernetické bezpečnosti pro více odvětví</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Shrnutí obrany</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Zálohy</b><span>Pravidelné, oddělené od počítače a vyzkoušené.</span></div>
+        <div class="tcard" style="cursor:default"><b>Aktualizace</b><span>Systém i programy opravují známé zranitelnosti.</span></div>
+        <div class="tcard" style="cursor:default"><b>Hesla</b><span>Dlouhá, pro každou službu jiná, s dvoufázovým ověřením.</span></div>
+        <div class="tcard" style="cursor:default"><b>Opatrnost</b><span>Neklikat ve spěchu, ověřit odesílatele jinou cestou.</span></div>
+        <div class="tcard" style="cursor:default"><b>Antivirus</b><span>Rozpozná známý malware a podezřelé chování.</span></div>
+        <div class="tcard" style="cursor:default"><b>Vzdělávání</b><span>Poučený uživatel je nejúčinnější ochrana.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Co je malware a jaké druhy znáte?</li>
+        <li>Čím se liší virus, červ a trojský kůň?</li>
+        <li>Jak funguje ransomware a jak se mu bránit?</li>
+        <li>Jaký je rozdíl mezi softwarovým a hardwarovým keyloggerem?</li>
+        <li>Co je sociální inženýrství? Uveďte techniky.</li>
+        <li>Čím se liší white hat, grey hat a black hat?</li>
+        <li>Které skupiny jsou častým cílem útoků a proč?</li>
+        <li>Co postihují § 230 až § 232 trestního zákoníku?</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>

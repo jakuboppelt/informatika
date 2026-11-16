@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Počítačové sítě</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-pruzkum-site">Aktivita: průzkum sítě</a></li>
+    <li><a href="#hra-csma-cd">Hra: CSMA/CD</a></li>
+    <li><a href="#ulohy-na-adresy">Úlohy na adresy</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 10 · Metodický list pro učitele</p>
+  <h1>Počítačové sítě <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině roztřídí sítě, nakreslí topologie, popíšou síťové prvky a vysvětlí adresování IP a přístupové metody. Hodinu vedeš podle <a href="10_pocitacove_site.html">prezentace</a>, studenti mají <a href="10_pocitacove_site_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>rozdělí sítě podle rozlohy a uspořádání,</li>
+  <li>nakreslí a zhodnotí topologie,</li>
+  <li>popíše přenosová média a princip přepojování paketů,</li>
+  <li>vysvětlí funkci switche, routeru a přístupového bodu,</li>
+  <li>popíše adresu IPv4, masku, veřejné a privátní adresy, NAT, DHCP a DNS,</li>
+  <li>vysvětlí přístupové metody a způsoby připojení k internetu.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Prezentace „10 – Počítačové sítě“, studijní text.</li>
+  <li>Počítače s příkazovým řádkem (<code>ipconfig</code>, <code>ping</code>, <code>tracert</code>, <code>nslookup</code>).</li>
+  <li>Kabel UTP, switch, starý router k ukázce; klubíčko provazu a kartičky s rolemi.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace</td><td>Ptá se: „Co všechno se stane, než se vám načte stránka školy?“</td><td>Sepisují kroky, učitel je řadí na tabuli.</td></tr>
+<tr><td>10–25</td><td>Druhy sítí a topologie</td><td>Projde snímky.</td><td>Provazem si ve skupinách „postaví“ sběrnici, hvězdu a kruh a zkoušejí, co způsobí výpadek uzlu.</td></tr>
+<tr><td>25–40</td><td>Přenos a hardware</td><td>Ukáže kabel, switch a router, vysvětlí pakety.</td><td>Přiřazují prvky k funkcím, kreslí schéma domácí sítě.</td></tr>
+<tr><td>40–65</td><td>Aktivita: průzkum sítě</td><td>Zadá pracovní list s příkazy.</td><td>Zjišťují svou adresu IP, masku, bránu, adresu MAC, trasu k serveru.</td></tr>
+<tr><td>65–80</td><td>IP adresy a přístupy</td><td>Vysvětlí masku, privátní rozsahy, NAT; přehraje CSMA/CD jako hru.</td><td>Určují, zda jsou dvě adresy ve stejné síti; hrají „mluv, když je ticho“.</td></tr>
+<tr><td>80–90</td><td>Shrnutí</td><td>Zadá výstupní lístek.</td><td>Odpovídají písemně.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-pruzkum-site">
+<h2>Aktivita: průzkum sítě</h2>
+<div class="tbl"><table>
+<thead><tr><th>Úkol</th><th>Příkaz (Windows)</th><th>Co zjistím</th></tr></thead>
+<tbody>
+<tr><td>Moje adresa</td><td><code>ipconfig /all</code></td><td>adresa IP, maska, výchozí brána, adresa MAC, server DNS</td></tr>
+<tr><td>Je adresa privátní?</td><td>porovnání s rozsahy</td><td>zda jsem za NAT</td></tr>
+<tr><td>Dostupnost</td><td><code>ping seznam.cz</code></td><td>odezva v milisekundách</td></tr>
+<tr><td>Cesta</td><td><code>tracert seznam.cz</code></td><td>přes kolik směrovačů data jdou</td></tr>
+<tr><td>Překlad jména</td><td><code>nslookup seznam.cz</code></td><td>adresa IP serveru</td></tr>
+</tbody></table></div>
+<p>Na závěr žáci porovnají své adresy: co mají v učebně společného (síťová část, brána) a čím se liší.</p>
+</section>
+
+<section id="hra-csma-cd">
+<h2>Hra: CSMA/CD</h2>
+<p>Pět žáků má říct jednu větu, ale smí mluvit jen do ticha. Promluví-li dva naráz, oba zmlknou, každý si hodí kostkou a počká tolik sekund. Třída pozoruje, že s rostoucím počtem mluvčích přibývá kolizí. Odtud vede cesta k vysvětlení, proč switch kolize odstranil.</p>
+</section>
+
+<section id="ulohy-na-adresy">
+<h2>Úlohy na adresy</h2>
+<ol>
+  <li>Jsou adresy <code>192.168.1.20</code> a <code>192.168.2.20</code> s maskou <code>/24</code> ve stejné síti? (Ne.)</li>
+  <li>Kolik zařízení lze adresovat v síti <code>/24</code>? (254.)</li>
+  <li>Která z adres je veřejná: <code>10.5.1.2</code>, <code>172.20.0.1</code>, <code>8.8.8.8</code>, <code>192.168.0.1</code>? (<code>8.8.8.8</code>.)</li>
+</ol>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>„Wi-Fi je internet.“</td><td>Wi-Fi je bezdrátová místní síť; internet může a nemusí být připojen.</td></tr>
+<tr><td>Zaměňování switche a routeru.</td><td>Switch spojuje zařízení v jedné síti, router spojuje sítě.</td></tr>
+<tr><td>„Adresa IP je pevně dána počítači.“</td><td>Adresa IP se mění se sítí, adresa MAC patří kartě.</td></tr>
+<tr><td>Zaměňování Mb/s a MB/s.</td><td>100 Mb/s je 12,5 MB/s.</td></tr>
+<tr><td>„Veřejnou adresu má každý můj počítač.“</td><td>Veřejnou má obvykle jen router, zařízení doma mají privátní.</td></tr>
+<tr><td>„Internet a web je totéž.“</td><td>Web je jedna ze služeb internetu.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Nakreslete topologii hvězda a napište její nevýhodu.</li>
+  <li>K čemu slouží router?</li>
+  <li>Proč doma používáme adresy 192.168.x.x?</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> dělení sítí, topologie s nákresem a hodnocením, média, pakety a vrstvy TCP/IP s protokoly, síťové prvky s rozdíly, IPv4 s maskou a výpočtem, privátní adresy a NAT, DHCP, DNS, IPv6, přístupové metody a způsoby připojení k internetu.</li>
+  <li><strong>Na dostatečnou:</strong> žák rozliší LAN a WAN, nakreslí hvězdu, ví, k čemu je router a jak vypadá adresa IP.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Co je adresa MAC? Co dělá server DNS? Jaký je rozdíl mezi TCP a UDP? Co je výchozí brána?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 10 „Počítačové sítě“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Počítačové sítě – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#co-je-pocitacova-sit">Co je počítačová síť</a></li>
+    <li><a href="#druhy-siti">Druhy sítí</a></li>
+    <li><a href="#topologie">Topologie</a></li>
+    <li><a href="#prenos-dat">Přenos dat</a></li>
+    <li><a href="#sitovy-hardware">Síťový hardware</a></li>
+    <li><a href="#ip-adresy">IP adresy</a></li>
+    <li><a href="#pristupy">Přístupy</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 10 · Studijní text</p>
+  <h1>Počítačové sítě</h1>
+  <p class="lead">Druhy sítí, topologie, přenos dat, síťový hardware, IP adresy a přístupové metody.</p>
+</header>
+
+<section id="co-je-pocitacova-sit">
+<h2>Co je počítačová síť</h2>
+<p>Počítačová síť je propojení dvou nebo více zařízení, která si vyměňují data a sdílejí prostředky: soubory, tiskárny, připojení k internetu, výpočetní výkon. Největší sítí je internet, celosvětová síť propojených sítí.</p>
+</section>
+
+<section id="druhy-siti">
+<h2>Druhy sítí</h2>
+<p><strong>Podle rozlohy:</strong></p>
+<div class="tbl"><table>
+<thead><tr><th>Zkratka</th><th>Název</th><th>Rozsah</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td>PAN</td><td>Personal Area Network</td><td>okolí osoby, metry</td><td>telefon a sluchátka přes Bluetooth</td></tr>
+<tr><td>LAN</td><td>Local Area Network</td><td>byt, škola, firma</td><td>školní síť</td></tr>
+<tr><td>WLAN</td><td>Wireless LAN</td><td>bezdrátová místní síť</td><td>domácí Wi-Fi</td></tr>
+<tr><td>MAN</td><td>Metropolitan Area Network</td><td>město</td><td>městská optická síť</td></tr>
+<tr><td>WAN</td><td>Wide Area Network</td><td>země, kontinenty</td><td>síť operátora, internet</td></tr>
+</tbody></table></div>
+<p><strong>Podle uspořádání:</strong></p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Klient–server</th><th>Peer-to-peer (P2P)</th></tr></thead>
+<tbody>
+<tr><td>Princip</td><td>server poskytuje služby, klienti je využívají</td><td>všechny uzly jsou rovnocenné</td></tr>
+<tr><td>Výhody</td><td>centrální správa, bezpečnost, zálohování</td><td>levné, odolné proti výpadku jednoho uzlu</td></tr>
+<tr><td>Nevýhody</td><td>výpadek serveru zastaví službu, cena</td><td>obtížná správa a zabezpečení</td></tr>
+<tr><td>Příklad</td><td>web, e-mail, školní doména</td><td>BitTorrent, sdílení mezi dvěma počítači</td></tr>
+</tbody></table></div>
+<p>Dále sítě dělíme na drátové a bezdrátové, veřejné a privátní.</p>
+</section>
+
+<section id="topologie">
+<h2>Topologie</h2>
+<p>Topologie popisuje uspořádání uzlů a spojů. Rozlišuje se fyzická (jak vedou kabely) a logická (jak tečou data).</p>
+<div class="tbl"><table>
+<thead><tr><th>Topologie</th><th>Uspořádání</th><th>Výhody</th><th>Nevýhody</th></tr></thead>
+<tbody>
+<tr><td>Sběrnice</td><td>všichni na jednom společném kabelu</td><td>levná, málo kabeláže</td><td>kolize, přerušení kabelu vyřadí síť</td></tr>
+<tr><td>Hvězda</td><td>každý uzel připojen k centrálnímu prvku</td><td>výpadek jednoho uzlu neovlivní ostatní, snadná správa</td><td>závislost na centrálním prvku, více kabelů</td></tr>
+<tr><td>Kruh</td><td>uzly v uzavřeném okruhu, data obíhají jedním směrem</td><td>bez kolizí</td><td>výpadek uzlu přeruší kruh</td></tr>
+<tr><td>Strom</td><td>hvězdy propojené hierarchicky</td><td>snadné rozšiřování</td><td>výpadek vyššího prvku odpojí celou větev</td></tr>
+<tr><td>Mesh</td><td>uzly propojené navzájem, úplně nebo částečně</td><td>vysoká odolnost, více cest</td><td>cena, složitost</td></tr>
+</tbody></table></div>
+<p>Dnešní místní sítě používají hvězdu a strom, páteř internetu je částečný mesh.</p>
+</section>
+
+<section id="prenos-dat">
+<h2>Přenos dat</h2>
+<h3>Přenosová média</h3>
+<div class="tbl"><table>
+<thead><tr><th>Médium</th><th>Vlastnosti</th><th>Použití</th></tr></thead>
+<tbody>
+<tr><td>Kroucená dvojlinka (UTP, STP)</td><td>měděné páry, konektor RJ-45, dosah 100 m, kategorie Cat 5e (1 Gb/s), Cat 6 a vyšší</td><td>místní sítě (Ethernet)</td></tr>
+<tr><td>Koaxiální kabel</td><td>stíněný měděný vodič</td><td>kabelová televize a internet, dříve Ethernet</td></tr>
+<tr><td>Optické vlákno</td><td>světelné impulzy, velké vzdálenosti, vysoké rychlosti, odolné proti rušení</td><td>páteřní sítě, přípojky</td></tr>
+<tr><td>Rádiové vlny</td><td>bez kabelů, sdílené prostředí, rušení, možnost odposlechu</td><td>Wi-Fi (2,4, 5 a 6 GHz), Bluetooth, mobilní sítě</td></tr>
+</tbody></table></div>
+<h3>Pakety a protokoly</h3>
+<p>Internet používá <strong>přepojování paketů</strong>: data se rozdělí na pakety, každý nese adresu odesílatele a příjemce a putuje sítí samostatně. V cíli se pakety složí.</p>
+<p><strong>Protokol</strong> je sada pravidel komunikace.</p>
+<div class="tbl"><table>
+<thead><tr><th>Vrstva TCP/IP</th><th>Úloha</th><th>Protokoly</th></tr></thead>
+<tbody>
+<tr><td>Aplikační</td><td>služby pro aplikace</td><td>HTTP, HTTPS, DNS, SMTP, FTP</td></tr>
+<tr><td>Transportní</td><td>spojení mezi aplikacemi, porty</td><td>TCP (spolehlivý, se spojením), UDP (rychlý, bez záruky)</td></tr>
+<tr><td>Internetová (síťová)</td><td>adresování a směrování</td><td>IP, ICMP</td></tr>
+<tr><td>Síťového rozhraní</td><td>přenos po konkrétním médiu</td><td>Ethernet, Wi-Fi</td></tr>
+</tbody></table></div>
+<p>Referenční model ISO/OSI má sedm vrstev: fyzická, linková, síťová, transportní, relační, prezentační, aplikační.</p>
+<p>Režimy přenosu: simplex (jedním směrem), poloduplex (střídavě), plný duplex (oběma směry současně). Rychlost se udává v bitech za sekundu (Mb/s, Gb/s).</p>
+</section>
+
+<section id="sitovy-hardware">
+<h2>Síťový hardware</h2>
+<div class="tbl"><table>
+<thead><tr><th>Prvek</th><th>Funkce</th><th>Pracuje s</th></tr></thead>
+<tbody>
+<tr><td>Síťová karta (NIC)</td><td>připojuje zařízení k síti</td><td>adresa MAC</td></tr>
+<tr><td>Opakovač (repeater)</td><td>zesiluje signál</td><td>signál</td></tr>
+<tr><td>Rozbočovač (hub)</td><td>posílá data všem portům; zastaralý</td><td>signál</td></tr>
+<tr><td>Přepínač (switch)</td><td>propojuje zařízení v LAN, posílá rámec jen na správný port</td><td>adresy MAC</td></tr>
+<tr><td>Směrovač (router)</td><td>propojuje sítě, hledá cestu paketům</td><td>adresy IP</td></tr>
+<tr><td>Přístupový bod (AP)</td><td>připojuje bezdrátová zařízení</td><td>Wi-Fi</td></tr>
+<tr><td>Modem</td><td>převádí signál mezi sítí poskytovatele a LAN</td><td>DSL, kabel, optika</td></tr>
+<tr><td>Firewall</td><td>filtruje provoz podle pravidel</td><td>adresy IP, porty</td></tr>
+</tbody></table></div>
+<p>Domácí „router“ obvykle spojuje směrovač, přepínač, přístupový bod, firewall a server DHCP v jedné krabičce.</p>
+</section>
+
+<section id="ip-adresy">
+<h2>IP adresy</h2>
+<p><strong>IPv4</strong> má 32 bitů a zapisuje se jako čtyři desítková čísla 0–255 oddělená tečkami, např. <code>192.168.1.10</code>. Celkem existuje asi 4,3 miliardy adres, což nestačí.</p>
+<p><strong>Maska sítě</strong> určuje, která část adresy označuje síť a která zařízení. Maska <code>255.255.255.0</code> (zkráceně <code>/24</code>) znamená, že první tři čísla označují síť a poslední zařízení. Síť <code>192.168.1.0/24</code> má 256 adres, z toho 254 použitelných: první je adresa sítě, poslední (<code>192.168.1.255</code>) všesměrová adresa.</p>
+<div class="tbl"><table>
+<thead><tr><th>Druh</th><th>Vlastnost</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td>Veřejná</td><td>jedinečná v celém internetu</td><td>adresa webového serveru</td></tr>
+<tr><td>Privátní</td><td>jen uvnitř místní sítě, v internetu se nesměruje</td><td><code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code></td></tr>
+<tr><td>Loopback</td><td>zařízení samo</td><td><code>127.0.0.1</code></td></tr>
+</tbody></table></div>
+<ul>
+  <li><strong>NAT</strong> (překlad adres) umožňuje celé domácí síti vystupovat pod jednou veřejnou adresou.</li>
+  <li><strong>DHCP</strong> přiděluje adresy automaticky (dynamická adresa). Ručně nastavená adresa je statická.</li>
+  <li><strong>Výchozí brána</strong> je adresa směrovače, přes který odcházejí data mimo místní síť.</li>
+  <li><strong>DNS</strong> překládá doménová jména na adresy IP.</li>
+  <li><strong>IPv6</strong> má 128 bitů a zapisuje se šestnáctkově v osmi skupinách, např. <code>2001:0db8::1</code>. Poskytuje prakticky neomezený počet adres.</li>
+  <li><strong>Adresa MAC</strong> je fyzická adresa síťové karty (48 bitů, např. <code>00:1A:2B:3C:4D:5E</code>); platí v rámci místní sítě.</li>
+  <li><strong>Port</strong> je číslo služby na zařízení: 80 pro HTTP, 443 pro HTTPS.</li>
+</ul>
+</section>
+
+<section id="pristupy">
+<h2>Přístupy</h2>
+<h3>Přístupové metody ke sdílenému médiu</h3>
+<p>Určují, kdo smí kdy vysílat.</p>
+<div class="tbl"><table>
+<thead><tr><th>Metoda</th><th>Princip</th><th>Použití</th></tr></thead>
+<tbody>
+<tr><td>CSMA/CD</td><td>stanice naslouchá; je-li volno, vysílá; při kolizi přeruší vysílání, počká náhodnou dobu a opakuje</td><td>Ethernet se sdíleným médiem (sběrnice, hub)</td></tr>
+<tr><td>CSMA/CA</td><td>kolizi předchází: před vysíláním čeká náhodnou dobu, příjem se potvrzuje</td><td>Wi-Fi</td></tr>
+<tr><td>Předávání peška (token passing)</td><td>vysílat smí jen stanice, která drží speciální rámec (pešek)</td><td>Token Ring, historické</td></tr>
+</tbody></table></div>
+<p>V dnešním přepínaném Ethernetu s plným duplexem ke kolizím nedochází, protože každé zařízení má vlastní spoj ke switchi.</p>
+<h3>Přístup k internetu</h3>
+<div class="tbl"><table>
+<thead><tr><th>Technologie</th><th>Médium</th><th>Poznámka</th></tr></thead>
+<tbody>
+<tr><td>DSL (ADSL, VDSL)</td><td>telefonní vedení</td><td>rychlost klesá se vzdáleností od ústředny</td></tr>
+<tr><td>Kabelové připojení</td><td>koaxiální kabel</td><td>sdílená kapacita</td></tr>
+<tr><td>Optika (FTTH)</td><td>optické vlákno až do domu</td><td>nejrychlejší a nejstabilnější</td></tr>
+<tr><td>Bezdrátový spoj (WISP)</td><td>rádiový signál</td><td>přímá viditelnost na vysílač</td></tr>
+<tr><td>Mobilní sítě</td><td>LTE, 5G</td><td>závisí na pokrytí</td></tr>
+<tr><td>Satelit</td><td>družice</td><td>dostupný i v odlehlých místech</td></tr>
+</tbody></table></div>
+<p>Připojení zajišťuje poskytovatel (ISP).</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Co je počítačová síť? Jak sítě dělíme podle rozlohy?</li>
+  <li>Srovnejte architekturu klient–server a peer-to-peer.</li>
+  <li>Nakreslete topologie a uveďte jejich výhody a nevýhody.</li>
+  <li>Jaká přenosová média znáte?</li>
+  <li>Co je paket a protokol? Jak se liší TCP a UDP?</li>
+  <li>Čím se liší hub, switch a router?</li>
+  <li>Popište adresu IPv4 a význam masky.</li>
+  <li>Co je NAT, DHCP a DNS?</li>
+  <li>Proč vzniklo IPv6?</li>
+  <li>Vysvětlete CSMA/CD a CSMA/CA.</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 10 „Počítačové sítě“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

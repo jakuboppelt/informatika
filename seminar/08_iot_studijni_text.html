@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internet of Things – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#co-je-internet-veci">Co je internet věcí</a></li>
+    <li><a href="#jak-iot-funguje">Jak IoT funguje</a></li>
+    <li><a href="#chytre-doplnky-wearables">Chytré doplňky (wearables)</a></li>
+    <li><a href="#chytra-domacnost-smart-house">Chytrá domácnost (smart house)</a></li>
+    <li><a href="#prumysl-iiot-a-dalsi-oblasti">Průmysl (IIoT) a další oblasti</a></li>
+    <li><a href="#vyhody-a-nevyhody-souhrnne">Výhody a nevýhody souhrnně</a></li>
+    <li><a href="#slabiny-a-bezpecnost">Slabiny a bezpečnost</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 8 · Studijní text</p>
+  <h1>Internet of Things</h1>
+  <p class="lead">Internet věcí: jak funguje, kde se používá v domácnosti, na těle i v průmyslu a jaké má slabiny.</p>
+</header>
+
+<section id="co-je-internet-veci">
+<h2>Co je internet věcí</h2>
+<p>Internet věcí (Internet of Things, IoT) je síť fyzických zařízení vybavených senzory, softwarem a připojením, která sbírají data, vyměňují si je po síti a reagují na ně, často bez zásahu člověka. Pojem poprvé použil Kevin Ashton v roce 1999 v souvislosti se sledováním zboží pomocí čipů RFID.</p>
+<p>Rozdíl oproti běžnému počítači: zařízení IoT je jednoúčelové, má malý výkon a nízkou spotřebu, často nemá displej ani klávesnici a pracuje samo.</p>
+</section>
+
+<section id="jak-iot-funguje">
+<h2>Jak IoT funguje</h2>
+<div class="tbl"><table>
+<thead><tr><th>Vrstva</th><th>Co dělá</th><th>Příklady</th></tr></thead>
+<tbody>
+<tr><td>Senzory</td><td>měří fyzikální veličiny</td><td>teplota, vlhkost, pohyb, světlo, tep, poloha (GPS)</td></tr>
+<tr><td>Akční členy</td><td>vykonávají akci</td><td>relé, motor, ventil, žárovka, zámek</td></tr>
+<tr><td>Řídicí jednotka</td><td>zpracovává data a řídí zařízení</td><td>mikrokontroléry ESP32, Arduino; jednodeskový počítač Raspberry Pi</td></tr>
+<tr><td>Konektivita</td><td>přenáší data</td><td>Wi-Fi, Bluetooth, Zigbee, LoRaWAN, mobilní sítě</td></tr>
+<tr><td>Brána (hub)</td><td>propojuje zařízení s internetem</td><td>centrální jednotka chytré domácnosti</td></tr>
+<tr><td>Cloud</td><td>ukládá a vyhodnocuje data, spouští pravidla</td><td>služby výrobců, AWS IoT, Azure IoT</td></tr>
+<tr><td>Aplikace</td><td>zobrazuje stav, umožňuje ovládání</td><td>mobilní aplikace, webový přehled</td></tr>
+</tbody></table></div>
+<h3>Komunikační technologie</h3>
+<div class="tbl"><table>
+<thead><tr><th>Technologie</th><th>Dosah</th><th>Spotřeba</th><th>Použití</th></tr></thead>
+<tbody>
+<tr><td>Wi-Fi</td><td>desítky metrů</td><td>vysoká</td><td>kamery, zásuvky, spotřebiče</td></tr>
+<tr><td>Bluetooth Low Energy</td><td>asi 10 m</td><td>nízká</td><td>hodinky, náramky</td></tr>
+<tr><td>Zigbee, Z-Wave, Thread</td><td>desítky metrů, síť mesh</td><td>nízká</td><td>senzory a žárovky v domácnosti</td></tr>
+<tr><td>LoRaWAN</td><td>kilometry</td><td>velmi nízká</td><td>měření ve městě a v zemědělství</td></tr>
+<tr><td>NB-IoT, LTE-M, 5G</td><td>pokrytí operátora</td><td>nízká až střední</td><td>sledování vozidel, průmysl</td></tr>
+<tr><td>RFID, NFC</td><td>centimetry až metry</td><td>žádná (pasivní čip)</td><td>zboží, platby, přístupové karty</td></tr>
+</tbody></table></div>
+<p>V síti <strong>mesh</strong> si zařízení předávají zprávy navzájem, takže síť pokryje celý dům. Pro přenos zpráv se často používá protokol <strong>MQTT</strong>: zařízení publikují zprávy do témat a jiná zařízení je odebírají přes prostředníka (broker).</p>
+</section>
+
+<section id="chytre-doplnky-wearables">
+<h2>Chytré doplňky (wearables)</h2>
+<p>Nositelná elektronika: chytré hodinky, fitness náramky, chytré prsteny, sluchátka, brýle.</p>
+<ul>
+  <li><strong>Senzory:</strong> optický snímač tepu, akcelerometr a gyroskop (kroky, pohyb, pád), GPS, měření okysličení krve, EKG, teploměr.</li>
+  <li><strong>Využití:</strong> sport, sledování spánku a zdraví, bezkontaktní placení, oznámení, navigace, detekce pádu a přivolání pomoci.</li>
+  <li><strong>Výhody:</strong> průběžný přehled o zdraví, motivace k pohybu, pohodlí.</li>
+  <li><strong>Nevýhody a slabiny:</strong> krátká výdrž baterie, omezená přesnost měření (nejde o zdravotnické prostředky), velmi citlivá data o zdraví a poloze, závislost na telefonu a službě výrobce.</li>
+</ul>
+</section>
+
+<section id="chytra-domacnost-smart-house">
+<h2>Chytrá domácnost (smart house)</h2>
+<div class="tbl"><table>
+<thead><tr><th>Oblast</th><th>Zařízení</th></tr></thead>
+<tbody>
+<tr><td>Osvětlení</td><td>chytré žárovky, vypínače, pohybová čidla</td></tr>
+<tr><td>Vytápění a energie</td><td>termostaty, hlavice radiátorů, chytré zásuvky, řízení fotovoltaiky</td></tr>
+<tr><td>Zabezpečení</td><td>kamery, zámky, zvonky, čidla otevření, detektory kouře a vody</td></tr>
+<tr><td>Spotřebiče</td><td>robotické vysavače, pračky, lednice</td></tr>
+<tr><td>Ovládání</td><td>hlasoví asistenti (Amazon Alexa, Google Assistant, Siri), mobilní aplikace</td></tr>
+</tbody></table></div>
+<p>Jádrem je <strong>automatizace</strong>: pravidla typu „když nastane událost, proveď akci“. Příklad: po odchodu posledního člena domácnosti se zhasne, ztlumí topení a zapne alarm.</p>
+<p>Platformy: Google Home, Apple Home, Amazon Alexa, otevřený Home Assistant. Standard <strong>Matter</strong> (od roku 2022) umožňuje spolupráci zařízení různých výrobců.</p>
+<ul>
+  <li><strong>Výhody:</strong> pohodlí, úspora energie, vzdálený dohled, pomoc seniorům a lidem s postižením.</li>
+  <li><strong>Nevýhody:</strong> cena, složitější nastavení, závislost na internetu a cloudu výrobce (po ukončení služby může zařízení přestat fungovat), kamery a mikrofony v soukromí.</li>
+</ul>
+</section>
+
+<section id="prumysl-iiot-a-dalsi-oblasti">
+<h2>Průmysl (IIoT) a další oblasti</h2>
+<div class="tbl"><table>
+<thead><tr><th>Oblast</th><th>Využití</th></tr></thead>
+<tbody>
+<tr><td>Výroba</td><td>senzory na strojích sledují vibrace, teplotu a spotřebu; prediktivní údržba odhalí blížící se poruchu</td></tr>
+<tr><td>Digitální dvojče</td><td>virtuální model stroje nebo linky krmený daty ze senzorů</td></tr>
+<tr><td>Logistika</td><td>sledování zásilek a zásob pomocí RFID a GPS</td></tr>
+<tr><td>Zemědělství</td><td>měření vlhkosti půdy a řízení zavlažování, sledování dobytka</td></tr>
+<tr><td>Energetika</td><td>chytré elektroměry, dálkové odečty, řízení sítě</td></tr>
+<tr><td>Chytré město</td><td>řízení osvětlení a dopravy, obsazenost parkovišť, měření kvality ovzduší</td></tr>
+<tr><td>Zdravotnictví</td><td>vzdálené sledování pacientů</td></tr>
+</tbody></table></div>
+<p>Průmyslový IoT je jedním z pilířů konceptu Průmysl 4.0. V průmyslu se klade důraz na spolehlivost, nízké zpoždění a dlouhou životnost.</p>
+</section>
+
+<section id="vyhody-a-nevyhody-souhrnne">
+<h2>Výhody a nevýhody souhrnně</h2>
+<div class="tbl"><table>
+<thead><tr><th>Výhody</th><th>Nevýhody</th></tr></thead>
+<tbody>
+<tr><td>automatizace rutinních činností</td><td>závislost na připojení a cloudu</td></tr>
+<tr><td>úspora energie a nákladů</td><td>nekompatibilita systémů různých výrobců</td></tr>
+<tr><td>vzdálený dohled a ovládání</td><td>pořizovací cena a údržba</td></tr>
+<tr><td>data pro lepší rozhodování</td><td>krátká podpora, elektronický odpad</td></tr>
+<tr><td>vyšší bezpečnost a pohodlí</td><td>bezpečnostní rizika a ztráta soukromí</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="slabiny-a-bezpecnost">
+<h2>Slabiny a bezpečnost</h2>
+<ul>
+  <li><strong>Výchozí a slabá hesla.</strong> Mnoho zařízení má z výroby stejné přihlašovací údaje.</li>
+  <li><strong>Chybějící aktualizace.</strong> Levná zařízení nedostávají opravy, zranitelnosti v nich zůstávají roky.</li>
+  <li><strong>Botnety.</strong> Malware Mirai v roce 2016 ovládl statisíce kamer a routerů s výchozími hesly a použil je k rozsáhlým útokům DDoS, které vyřadily i velké internetové služby.</li>
+  <li><strong>Nešifrovaná komunikace</strong> umožňuje odposlech.</li>
+  <li><strong>Soukromí.</strong> Zařízení sbírají data o zvycích, zdraví a pohybu; záznamy kamer a hlasových asistentů jsou uloženy u výrobce.</li>
+  <li><strong>Fyzické dopady.</strong> Útočník může odemknout dveře, vypnout topení nebo zastavit výrobu.</li>
+  <li><strong>Velký počet zařízení</strong> zvětšuje plochu pro útok: stačí jedno slabé místo v síti.</li>
+</ul>
+<p><strong>Obrana:</strong> změnit výchozí hesla, pravidelně aktualizovat firmware, připojit zařízení do oddělené sítě, vypnout nepoužívané funkce, kupovat od výrobců s jasnou dobou podpory.</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Definujte internet věcí. Kdo pojem zavedl?</li>
+  <li>Z jakých vrstev se řešení IoT skládá?</li>
+  <li>Jaký je rozdíl mezi senzorem a akčním členem?</li>
+  <li>Srovnejte Wi-Fi, Bluetooth LE a LoRaWAN z hlediska dosahu a spotřeby.</li>
+  <li>Jaké senzory mají chytré hodinky a k čemu slouží?</li>
+  <li>Popište příklad automatizace v chytré domácnosti.</li>
+  <li>Co je prediktivní údržba?</li>
+  <li>Jaké jsou výhody a nevýhody IoT?</li>
+  <li>Co byl botnet Mirai a co ukázal?</li>
+  <li>Jak zabezpečíte chytrá zařízení doma?</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 8 „Internet of Things“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

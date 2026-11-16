@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Algoritmizace</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-eukleiduv-algoritmus">Aktivita: Eukleidův algoritmus</a></li>
+    <li><a href="#jak-vest-dukaz-problemu-zastaveni">Jak vést důkaz problému zastavení</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 4 · Metodický list pro učitele</p>
+  <h1>Algoritmizace <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině definují algoritmus a jeho vlastnosti, nakreslí vývojový diagram jednoduchého algoritmu a vysvětlí, proč je problém zastavení nerozhodnutelný. Hodinu vedeš podle <a href="04_algoritmizace.html">prezentace</a>, studenti mají <a href="04_algoritmizace_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>definuje algoritmus a vysvětlí jeho vlastnosti na příkladu,</li>
+  <li>porovná způsoby zápisu algoritmu,</li>
+  <li>pojmenuje a použije značky vývojového diagramu,</li>
+  <li>zapíše Eukleidův algoritmus diagramem i kódem a odkrokuje ho,</li>
+  <li>formuluje problém zastavení a naznačí důkaz sporem.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Žáci umějí programovat podmínky a cykly.</li>
+  <li>Prezentace „04 – Algoritmizace“, studijní text.</li>
+  <li>Papíry A3 a fixy nebo nástroj na kreslení diagramů (např. draw.io), kartičky s kroky algoritmu.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace: nepřesný návod</td><td>Nechá si nadiktovat postup „jak namazat chleba“ a plní ho doslova.</td><td>Diktují, zjišťují, že postup není jednoznačný ani elementární.</td></tr>
+<tr><td>10–25</td><td>Definice a vlastnosti</td><td>Z aktivity vyvodí vlastnosti algoritmu, projde snímky.</td><td>Ke každé vlastnosti uvádějí, jak ji návod porušil.</td></tr>
+<tr><td>25–40</td><td>Zápis a bloky diagramu</td><td>Představí značky, nakreslí diagram hledání maxima ze tří čísel.</td><td>Pojmenovávají značky, překreslují si diagram.</td></tr>
+<tr><td>40–60</td><td>Aktivita: Eukleidův algoritmus</td><td>Zadá slovní popis, obchází skupiny.</td><td>Ve dvojicích kreslí diagram, krokují pro 48 a 18, pak zapíšou v Pythonu.</td></tr>
+<tr><td>60–80</td><td>Problém zastavení</td><td>Položí otázku „Uměl by antivirus poznat každý nekonečný cyklus?“ Vede důkaz sporem po krocích.</td><td>Hádají odpověď, sledují konstrukci programu D, sami dojdou ke sporu.</td></tr>
+<tr><td>80–90</td><td>Shrnutí a výstupní lístek</td><td>Zadá tři otázky.</td><td>Odpovídají písemně.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-eukleiduv-algoritmus">
+<h2>Aktivita: Eukleidův algoritmus</h2>
+<ol>
+  <li>Dvojice dostane slovní popis: „Dokud druhé číslo není nula, nahraď dvojici (a, b) dvojicí (b, zbytek po dělení a číslem b).“</li>
+  <li>Nakreslí vývojový diagram se správnými značkami.</li>
+  <li>Vyplní tabulku průběhu pro 48 a 18 a pro vlastní dvojici čísel.</li>
+  <li>Zdůvodní, proč algoritmus vždy skončí.</li>
+  <li>Rychlejší dvojice zapíšou algoritmus rekurzivně.</li>
+</ol>
+<p>Kontrola: dvojice si diagramy vymění a hledají chyby ve značkách (nejčastěji obdélník místo rovnoběžníku u vstupu a neoznačené větve podmínky).</p>
+</section>
+
+<section id="jak-vest-dukaz-problemu-zastaveni">
+<h2>Jak vést důkaz problému zastavení</h2>
+<p>Důkaz je pro žáky abstraktní. Osvědčený postup:</p>
+<ol>
+  <li>Začít paradoxem lháře („Tato věta je nepravdivá“) jako zahřátím na sebevztažnost.</li>
+  <li>Připomenout, že program je jen text, takže může být vstupem jiného programu.</li>
+  <li>H kreslit jako černou skříňku se dvěma žárovkami (skončí / neskončí).</li>
+  <li>D postavit kolem H a nechat žáky vyplnit tabulku: „H řekne skončí → D udělá …“, „H řekne neskončí → D udělá …“.</li>
+  <li>Závěr nechat formulovat žáky.</li>
+</ol>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>„Algoritmus je program.“</td><td>Algoritmus je postup, program jeho zápis v jazyce. Tentýž algoritmus lze zapsat v různých jazycích.</td></tr>
+<tr><td>Zaměňování značek pro vstup a zpracování.</td><td>Tahák se značkami nechat na tabuli po celou hodinu.</td></tr>
+<tr><td>„Problém zastavení znamená, že nikdy nepoznáme, jestli program skončí.“</td><td>U konkrétních programů to poznat lze. Neexistuje jeden postup pro všechny.</td></tr>
+<tr><td>„Stačí program spustit a počkat.“</td><td>Když neskončil po hodině, nevíme, zda skončí za další minutu.</td></tr>
+<tr><td>Zaměňování nerozhodnutelnosti a vysoké složitosti.</td><td>Složitý problém je řešitelný pomalu, nerozhodnutelný obecně vůbec.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Kterou vlastnost algoritmu porušuje pokyn „přidej trochu soli“?</li>
+  <li>Jakou značkou se ve vývojovém diagramu kreslí podmínka a kolik má výstupů?</li>
+  <li>Vysvětlete jednou větou, co tvrdí Turingův výsledek o problému zastavení.</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> definice a vlastnosti s příklady, způsoby zápisu, správně nakreslený diagram vlastního příkladu s odkrokováním, řídicí struktury, zmínka o složitosti, přesná formulace problému zastavení, myšlenka důkazu a důsledky pro praxi.</li>
+  <li><strong>Na dostatečnou:</strong> žák definuje algoritmus, uvede tři vlastnosti, popíše základní značky diagramu a ví, že problém zastavení nelze obecně vyřešit.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Je recept algoritmus? Co je rekurze? Jaký algoritmus řazení znáte a jakou má složitost?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 4 „Algoritmizace“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Objektově orientované programování a datové struktury</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-kdo-je-kdo">Aktivita: kdo je kdo</a></li>
+    <li><a href="#aktivita-zivy-zasobnik-a-fronta">Aktivita: živý zásobník a fronta</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 2 · Metodický list pro učitele</p>
+  <h1>Objektově orientované programování a datové struktury <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině vysvětlí pojmy třída, objekt, dědičnost a polymorfismus, napíšou jednoduchou třídu s podtřídou v Pythonu a popíšou pole, zásobník, frontu a spojový seznam včetně toho, kdy se která struktura hodí. Hodinu vedeš podle <a href="02_oop_datove_struktury.html">prezentace</a>, studenti mají <a href="02_oop_datove_struktury_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>vysvětlí rozdíl mezi třídou a objektem a vyjmenuje atribut, metodu a konstruktor,</li>
+  <li>popíše zapouzdření, abstrakci, dědičnost a polymorfismus a ke každému uvede příklad,</li>
+  <li>napíše třídu s konstruktorem, podtřídu a přepsanou metodu,</li>
+  <li>určí, zda mezi dvěma pojmy platí vztah „je“ (dědičnost), nebo „má“ (skládání),</li>
+  <li>popíše pole, zásobník, frontu a spojový seznam, jejich princip a základní operace,</li>
+  <li>porovná struktury podle rychlosti přístupu a vkládání a zvolí vhodnou pro danou úlohu.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Žáci znají v Pythonu proměnné, funkce, seznamy a cykly.</li>
+  <li>Projektor s prezentací, studijní text k domácímu opakování.</li>
+  <li>Karty nebo papír s pojmy, plastové kelímky nebo papírové talíře na ukázku zásobníku, papír a tužka. Počítač s Pythonem je výhodou pro poslední část.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace</td><td>Ptá se: „Čím se liší pes, kočka a zvíře? Co mají společné?“ Na tabuli sbírá společné vlastnosti a schopnosti.</td><td>Navrhují atributy (jméno, věk) a schopnosti (ozvat se, pohybovat se).</td></tr>
+<tr><td>10–25</td><td>Třída, objekt, konstruktor</td><td>Ukáže třídu Zvire, vytvoří dva objekty, vysvětlí self. Odlišuje třídu jako návrh a objekt jako výtvor.</td><td>Opisují třídu, ručně popisují, co se stane po řádku <code>azor = Zvire("Azor")</code>.</td></tr>
+<tr><td>25–40</td><td>Dědičnost a polymorfismus</td><td>Přidá Pes a Kocka, projde cyklus se třemi objekty. Zeptá se, co se vypíše, než kód spustí.</td><td>Předpovídají výstup. Navrhují vlastní podtřídu (Kráva, Pták).</td></tr>
+<tr><td>40–45</td><td>Pauza</td><td></td><td></td></tr>
+<tr><td>45–60</td><td>Pole, zásobník, fronta</td><td>Ukáže zásobník na hromadě kelímků a frontu jako řadu žáků. Zavede LIFO a FIFO.</td><td>Zahrají frontu a zásobník: v jakém pořadí odcházejí? Vymyslí použití.</td></tr>
+<tr><td>60–75</td><td>Spojový seznam</td><td>Nakreslí uzly s šipkami. Ukáže vložení uzlu přepojením odkazů. Porovná s polem.</td><td>Na papíře přepojí odkazy při vložení a smazání uzlu.</td></tr>
+<tr><td>75–90</td><td>Shrnutí a výstupní lístek</td><td>Shrne principy. Rozdá lístky.</td><td>Odpoví písemně na dvě otázky z lístku.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-kdo-je-kdo">
+<h2>Aktivita: kdo je kdo</h2>
+<p>Na tabuli jsou pojmy Zvíře, Pes, Kočka, Motor, Auto, Student, Osoba. Dvojice žáků určí, mezi kterými dvěma platí „je“ (dědičnost) a mezi kterými „má“ (skládání). Správně: pes je zvíře, student je osoba, auto má motor. Diskuse: co když někdo navrhne „motor je auto“?</p>
+</section>
+
+<section id="aktivita-zivy-zasobnik-a-fronta">
+<h2>Aktivita: živý zásobník a fronta</h2>
+<p>Čtyři žáci se postaví do řady. Nejdřív jsou fronta: obsluhuje se od prvního. Pak se zeptáš, v jakém pořadí odejdou, když se z řady stane zásobník, tedy z posledního. Každý dostane kartu s číslem, aby bylo vidět pořadí vkládání a odebírání.</p>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<ul>
+  <li><strong>Třída a objekt splývají.</strong> Žák řekne „třída Azor“. Opravit: třída je šablona, Azor je objekt.</li>
+  <li><strong>Chybějící <code>self</code>.</strong> Žáci zapomenou self v parametrech metody nebo před atributem. Ukázat chybovou hlášku.</li>
+  <li><strong>Dědičnost kvůli sdílení kódu.</strong> Žáci dědí i tam, kde neplatí „je“. Použít otázku „je A také B?“.</li>
+  <li><strong>Záměna zásobníku a fronty.</strong> Pomáhá slovní opora: talíře, pokladna.</li>
+  <li><strong>Spojový seznam je vždy rychlejší.</strong> Není: přístup k n-tému prvku je pomalý. Rychlé je jen vložení na známém místě.</li>
+</ul>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Co vypíše cyklus volající <code>ozvi_se()</code> na objektech Pes a Kocka a jak se tomu říká?</li>
+  <li>Uveď jednu situaci, kde se hodí zásobník, a jednu, kde fronta.</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li>Správně rozlišit třídu a objekt a uvést atribut, metodu a konstruktor.</li>
+  <li>Jmenovat všechny čtyři principy a každý vysvětlit vlastními slovy.</li>
+  <li>Ukázat dědičnost a polymorfismus na vlastním příkladu.</li>
+  <li>U každé datové struktury říct princip, základní operace a použití.</li>
+  <li>Porovnat pole a spojový seznam podle rychlosti přístupu a vkládání.</li>
+</ul>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 2 „Objektově orientované programování a datové struktury“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

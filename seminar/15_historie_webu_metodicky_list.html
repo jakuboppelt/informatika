@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Historie a funkce webu</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#cile-hodiny">Cíle hodiny</a></li>
+    <li><a href="#predpoklady-a-pomucky">Předpoklady a pomůcky</a></li>
+    <li><a href="#prubeh-hodiny">Průběh hodiny</a></li>
+    <li><a href="#aktivita-co-o-mne-web-vi">Aktivita: Co o mně web ví</a></li>
+    <li><a href="#caste-chyby-a-miskoncepce">Časté chyby a miskoncepce</a></li>
+    <li><a href="#vystupni-listek">Výstupní lístek</a></li>
+    <li><a href="#co-ma-zaznit-u-maturity">Co má zaznít u maturity</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 15 · Metodický list pro učitele</p>
+  <h1>Historie a funkce webu <span class="t">90′</span></h1>
+  <p class="lead">Seminář 90 minut pro maturanty. Žáci po hodině dokážou vyložit vznik a vývoj webu, rozlišit technologie na straně klienta a serveru, popsat cestu požadavku od prohlížeče k serveru a vysvětlit, jak web zpracovává data uživatelů. Hodinu vedeš podle <a href="15_historie_webu.html">prezentace</a>, studenti mají <a href="15_historie_webu_studijni_text.html">studijní text</a>.</p>
+</header>
+
+<section id="cile-hodiny">
+<h2>Cíle hodiny</h2>
+<p>Žák:</p>
+<ul>
+  <li>vysvětlí rozdíl mezi internetem a webem,</li>
+  <li>popíše vznik webu v CERNu a zařadí do času klíčové prohlížeče a technologie,</li>
+  <li>porovná Web 1.0 a Web 2.0,</li>
+  <li>rozliší jazyky na straně klienta a serveru a uvede jejich úlohu,</li>
+  <li>popíše průběh načtení stránky od dotazu DNS po vykreslení,</li>
+  <li>porovná cookie, session a localStorage a zdůvodní požadavky GDPR.</li>
+</ul>
+</section>
+
+<section id="predpoklady-a-pomucky">
+<h2>Předpoklady a pomůcky</h2>
+<ul>
+  <li>Žáci znají základy sítí (adresa IP, DNS, model klient–server) z otázky o počítačových sítích.</li>
+  <li>Prezentace „15 – Historie a funkce webu“ a studijní text k otázce.</li>
+  <li>Počítače s prohlížečem (stačí jeden do dvojice), projektor.</li>
+</ul>
+</section>
+
+<section id="prubeh-hodiny">
+<h2>Průběh hodiny</h2>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Učitel</th><th>Žáci</th></tr></thead>
+<tbody>
+<tr><td>0–10</td><td>Aktivace</td><td>Ptá se: „Je web totéž co internet? Co všechno jste dnes na webu udělali?“ Zapisuje odpovědi a třídí je na web a ostatní služby.</td><td>Odpovídají, odhadují rozdíl mezi internetem a webem.</td></tr>
+<tr><td>10–25</td><td>Výklad: vznik a vývoj</td><td>Podle prezentace vykládá CERN, HTML–URL–HTTP, prohlížeče, Web 1.0 a 2.0. Ukáže první web info.cern.ch.</td><td>Zapisují časovou osu, porovnají první web s dnešním.</td></tr>
+<tr><td>25–40</td><td>Výklad: jazyky a fungování</td><td>Vysvětlí klient a server, frontend a backend, jazyky, průběh požadavku a odpovědi HTTP.</td><td>Doplňují tabulku „kde kód běží“, ptají se.</td></tr>
+<tr><td>40–65</td><td>Aktivita žáků</td><td>Zadá aktivitu „Co o mně web ví“, obchází dvojice a pomáhá s nástroji pro vývojáře.</td><td>Ve dvojicích zkoumají zvolený web a vyplňují záznamový list.</td></tr>
+<tr><td>65–78</td><td>Sdílení a výklad dat</td><td>Shrne nálezy dvojic, doplní cookie, session, localStorage, cookies třetích stran a GDPR.</td><td>Prezentují nálezy, porovnávají weby mezi sebou.</td></tr>
+<tr><td>78–90</td><td>Shrnutí a výstupní lístek</td><td>Zopakuje hlavní body pomocí snímku s otázkami, zadá výstupní lístek.</td><td>Odpovídají na otázky, písemně vyplní výstupní lístek.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="aktivita-co-o-mne-web-vi">
+<h2>Aktivita: Co o mně web ví</h2>
+<p><strong>Zadání.</strong> Dvojice si vybere jeden běžný web (zpravodajský server, e-shop, školní web) a pomocí nástrojů pro vývojáře v prohlížeči (klávesa F12) zjistí, jak web komunikuje a co si o návštěvníkovi ukládá.</p>
+<p><strong>Postup.</strong></p>
+<ol>
+  <li>Otevřete web v anonymním okně a nic nepotvrzujte. Na kartě Síť (Network) stránku znovu načtěte. Zapište počet požadavků, stavový kód prvního požadavku a alespoň tři různé typy stažených souborů (HTML, CSS, JavaScript, obrázek).</li>
+  <li>Zjistěte, na kolik různých domén prohlížeč posílal požadavky. Které z nich nepatří navštívenému webu?</li>
+  <li>Na kartě Aplikace (Application), případně Úložiště (Storage), prohlédněte cookies a localStorage. Zapište počet cookies před udělením souhlasu.</li>
+  <li>Přijměte všechny cookies v liště a stránku načtěte znovu. Jak se změnil počet cookies a počet domén?</li>
+  <li>Zhodnoťte cookie lištu: jde odmítnout stejně snadno jako přijmout?</li>
+</ol>
+<p><strong>Závěr, ke kterému mají žáci dojít.</strong> Jedna stránka znamená desítky požadavků HTTP na různé servery. Web je složen z HTML, CSS a JavaScriptu. Část cookies je nezbytná pro fungování, další slouží analytice a reklamě a pocházejí od třetích stran. Po udělení souhlasu jich výrazně přibude. Souhlas má být dobrovolný a odmítnutí stejně snadné jako přijetí – ne každý web to dodržuje.</p>
+<p><strong>Varianta bez počítačů.</strong> Učitel promítne nástroje pro vývojáře na jednom webu a žáci vyplňují záznamový list společně.</p>
+</section>
+
+<section id="caste-chyby-a-miskoncepce">
+<h2>Časté chyby a miskoncepce</h2>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Jak na ni reagovat</th></tr></thead>
+<tbody>
+<tr><td>„Internet a web je totéž.“</td><td>Nechat žáky vyjmenovat služby internetu, které web nejsou (e-mail, hry, videohovory). Internet je síť, web služba.</td></tr>
+<tr><td>„HTML je programovací jazyk.“</td><td>Zeptat se, zda v HTML jde zapsat podmínka nebo cyklus. HTML je značkovací jazyk, programuje se v JavaScriptu.</td></tr>
+<tr><td>„Java a JavaScript jsou jeden jazyk.“</td><td>Zdůraznit, že jde o dva nesouvisející jazyky s podobným názvem.</td></tr>
+<tr><td>„Web vymyslel Bill Gates nebo Google.“</td><td>Vrátit se k časové ose: Tim Berners-Lee, CERN, 1989–1991. Google vznikl až v roce 1998.</td></tr>
+<tr><td>„Cookie je program nebo virus.“</td><td>Ukázat cookie v nástrojích pro vývojáře: je to krátký text, dvojice název a hodnota. Sám nic nespouští.</td></tr>
+<tr><td>„Anonymní režim mě na internetu skryje.“</td><td>Vysvětlit, že pouze neukládá historii a cookies v počítači. Web i poskytovatel připojení návštěvu vidí dál.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="vystupni-listek">
+<h2>Výstupní lístek</h2>
+<ol>
+  <li>Vysvětlete jednou větou rozdíl mezi internetem a webem.</li>
+  <li>Uveďte dva jazyky, které běží v prohlížeči, a dva, které běží na serveru.</li>
+  <li>Proč web potřebuje cookies, když je protokol HTTP bezstavový?</li>
+</ol>
+</section>
+
+<section id="co-ma-zaznit-u-maturity">
+<h2>Co má zaznít u maturity</h2>
+<ul>
+  <li><strong>Na výbornou:</strong> Žák odliší internet od webu, popíše vznik webu (Berners-Lee, CERN, 1989–1991, HTML, URL, HTTP), vývoj prohlížečů včetně války prohlížečů a přechod od Webu 1.0 k Webu 2.0. Rozdělí technologie na klientské a serverové a u každé uvede úlohu, souvisle popíše cestu požadavku (DNS, HTTP, stavové kódy, vykreslení) a pojmy frontend a backend. Charakterizuje moderní web (responzivní design, webové aplikace, API, HTTPS). Porovná cookie, session a localStorage, vysvětlí cookies třetích stran a hlavní zásady GDPR.</li>
+  <li><strong>Na dostatečnou:</strong> Žák ví, že web je služba internetu, zná Tima Bernerse-Leeho a přibližnou dobu vzniku, vyjmenuje HTML, CSS a JavaScript s jejich úlohou, uvede alespoň jeden serverový jazyk, s dopomocí popíše, že prohlížeč posílá požadavek a server odpovídá, a ví, k čemu slouží cookies.</li>
+</ul>
+<p>Doplňující otázky zkoušejícího: Co znamená, že je HTTP bezstavový? Jaký je rozdíl mezi metodami GET a POST? Proč nestačí kontrolovat formulář jen v prohlížeči? Co přináší HTTPS oproti HTTP? Proč je výhodné oddělit obsah (HTML) od vzhledu (CSS)? Co je API a k čemu ho webová aplikace používá?</p>
+</section>
+
+<p class="foot">Metodický list k maturitní otázce 15 „Historie a funkce webu“, seminář 90 minut.</p>
+</main>
+</div>
+
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

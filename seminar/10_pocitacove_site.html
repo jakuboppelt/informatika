@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Počítačové sítě</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 10</div>
+      <h1>Počítačové sítě</h1>
+      <p class="lede">Druhy sítí, topologie, přenos dat, síťový hardware, IP adresy a přístupové metody</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Počítačová síť je propojení zařízení, která si vyměňují data a sdílejí prostředky.</h2>
+      <p class="lede">Sdílí se soubory, tiskárny, připojení k internetu i výpočetní výkon.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Druhy sítí podle rozlohy</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:18%"><col style="width:36%"><col style="width:46%"></colgroup>
+        <thead><tr><th>Zkratka</th><th>Rozsah</th><th>Příklad</th></tr></thead>
+        <tbody>
+          <tr><td>PAN</td><td>osobní, do několika metrů</td><td>telefon a sluchátka přes Bluetooth</td></tr>
+          <tr><td>LAN</td><td>místní: byt, škola, firma</td><td>školní síť, domácí Wi-Fi</td></tr>
+          <tr><td>MAN</td><td>město</td><td>metropolitní optická síť</td></tr>
+          <tr><td>WAN</td><td>země, kontinenty</td><td>síť operátora, internet</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Druhy sítí podle uspořádání</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Klient a server</b><span>Server poskytuje služby, klienti je využívají. Centrální správa, ale výpadek serveru zastaví službu. Web, pošta.</span></div>
+        <div class="tcard" style="cursor:default"><b>Peer-to-peer</b><span>Všechny uzly jsou rovnocenné a sdílejí mezi sebou přímo. Levné a odolné, hůře se spravuje. BitTorrent.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Topologie</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:20%"><col style="width:38%"><col style="width:42%"></colgroup>
+        <thead><tr><th>Topologie</th><th>Uspořádání</th><th>Hodnocení</th></tr></thead>
+        <tbody>
+          <tr><td>Sběrnice</td><td>všichni na jednom kabelu</td><td>levná, ale přerušení kabelu vyřadí celou síť</td></tr>
+          <tr><td>Hvězda</td><td>každý připojen k centrálnímu prvku</td><td>dnešní standard, závisí na centrálním prvku</td></tr>
+          <tr><td>Kruh</td><td>uzly spojené do uzavřeného okruhu</td><td>bez kolizí, výpadek uzlu přeruší kruh</td></tr>
+          <tr><td>Strom</td><td>hvězdy propojené do hierarchie</td><td>snadno se rozšiřuje, větší firemní sítě</td></tr>
+          <tr><td>Mesh</td><td>uzly propojené navzájem</td><td>velmi odolná, drahá, páteř internetu</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Přenosová média</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:26%"><col style="width:42%"><col style="width:32%"></colgroup>
+        <thead><tr><th>Médium</th><th>Vlastnosti</th><th>Použití</th></tr></thead>
+        <tbody>
+          <tr><td>Kroucená dvojlinka</td><td>měděný kabel, konektor RJ-45, do 100 m</td><td>místní sítě</td></tr>
+          <tr><td>Koaxiální kabel</td><td>stíněný měděný vodič</td><td>kabelová televize a internet</td></tr>
+          <tr><td>Optické vlákno</td><td>světelné impulzy, vysoká rychlost, bez rušení</td><td>páteřní sítě, přípojky</td></tr>
+          <tr><td>Rádiové vlny</td><td>bez kabelu, sdílené a rušitelné prostředí</td><td>Wi-Fi, mobilní sítě</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Jak se data přenášejí</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Pakety</dt><dd>Data se rozdělí na malé části. Každý paket nese adresu odesílatele a příjemce.</dd>
+        <dt>Směrování</dt><dd>Pakety putují sítí nezávisle, směrovače vybírají cestu. V cíli se složí.</dd>
+        <dt>Protokoly</dt><dd>Pravidla komunikace. IP adresuje, TCP zaručuje doručení, UDP je rychlé bez záruky.</dd>
+        <dt>Vrstvy</dt><dd>Model TCP/IP má čtyři vrstvy: síťové rozhraní, internetová, transportní, aplikační.</dd>
+        <dt>Rychlost</dt><dd>Udává se v bitech za sekundu: Mb/s, Gb/s.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Síťový hardware</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Síťová karta</b><span>Připojuje zařízení k síti. Má jedinečnou adresu MAC.</span></div>
+        <div class="tcard" style="cursor:default"><b>Přepínač</b><span>Switch. Propojuje zařízení v místní síti, posílá data jen správnému příjemci.</span></div>
+        <div class="tcard" style="cursor:default"><b>Směrovač</b><span>Router. Propojuje různé sítě, typicky domácí síť s internetem.</span></div>
+        <div class="tcard" style="cursor:default"><b>Přístupový bod</b><span>Access point. Připojuje bezdrátová zařízení do sítě.</span></div>
+        <div class="tcard" style="cursor:default"><b>Modem</b><span>Převádí signál mezi sítí poskytovatele a místní sítí.</span></div>
+        <div class="tcard" style="cursor:default"><b>Firewall</b><span>Filtruje provoz podle pravidel a chrání síť před útoky.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">IP adresy</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>IPv4</dt><dd>32 bitů, čtyři čísla 0 až 255 oddělená tečkami, například 192.168.1.10.</dd>
+        <dt>Maska sítě</dt><dd>Určuje, která část adresy označuje síť a která zařízení. Zápis /24.</dd>
+        <dt>Veřejné a privátní</dt><dd>Privátní rozsahy, například 192.168.x.x, se v internetu nesměrují. Překlad zajišťuje NAT.</dd>
+        <dt>IPv6</dt><dd>128 bitů, zápis šestnáctkově. Řeší nedostatek adres IPv4.</dd>
+        <dt>Přidělení</dt><dd>Staticky ručně, nebo dynamicky protokolem DHCP.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Adresy a jména</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Adresa MAC</b><span>Fyzická adresa síťové karty, 48 bitů. Platí v místní síti.</span></div>
+        <div class="tcard" style="cursor:default"><b>Adresa IP</b><span>Logická adresa zařízení v síti. Podle ní se směruje.</span></div>
+        <div class="tcard" style="cursor:default"><b>Port</b><span>Číslo, které určuje službu na zařízení. Web používá 80 a 443.</span></div>
+        <div class="tcard" style="cursor:default"><b>DNS</b><span>Překládá doménová jména na adresy IP.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Přístup ke sdílenému médiu</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:22%"><col style="width:56%"><col style="width:22%"></colgroup>
+        <thead><tr><th>Metoda</th><th>Princip</th><th>Kde</th></tr></thead>
+        <tbody>
+          <tr><td>CSMA/CD</td><td>naslouchej, vysílej, při kolizi počkej náhodnou dobu a opakuj</td><td>starší Ethernet</td></tr>
+          <tr><td>CSMA/CA</td><td>kolizím předcházej: před vysíláním počkej a ohlas se</td><td>Wi-Fi</td></tr>
+          <tr><td>Předávání peška</td><td>vysílat smí jen ten, kdo drží speciální rámec</td><td>Token Ring</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Přístup k internetu</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:26%"><col style="width:34%"><col style="width:40%"></colgroup>
+        <thead><tr><th>Technologie</th><th>Médium</th><th>Poznámka</th></tr></thead>
+        <tbody>
+          <tr><td>DSL</td><td>telefonní vedení</td><td>rychlost klesá se vzdáleností od ústředny</td></tr>
+          <tr><td>Kabelové připojení</td><td>koaxiální kabel</td><td>sdílená kapacita v lokalitě</td></tr>
+          <tr><td>Optika až do domu</td><td>optické vlákno</td><td>nejrychlejší a nejstabilnější</td></tr>
+          <tr><td>Bezdrátový spoj</td><td>rádiový signál</td><td>nutná přímá viditelnost na vysílač</td></tr>
+          <tr><td>Mobilní sítě</td><td>LTE, 5G</td><td>záleží na pokrytí a vytížení</td></tr>
+          <tr><td>Satelit</td><td>družice</td><td>dostupný kdekoli, vyšší cena</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Co je počítačová síť a k čemu slouží?</li>
+        <li>Jak dělíme sítě podle rozlohy?</li>
+        <li>Srovnejte architekturu klient a server s peer-to-peer.</li>
+        <li>Popište topologie a jejich výhody a nevýhody.</li>
+        <li>Jaká přenosová média znáte?</li>
+        <li>Čím se liší switch a router?</li>
+        <li>Jak vypadá adresa IPv4? K čemu je maska a NAT?</li>
+        <li>Jak se liší CSMA/CD a CSMA/CA?</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>

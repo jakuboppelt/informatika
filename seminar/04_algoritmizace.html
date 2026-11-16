@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Algoritmizace</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 4</div>
+      <h1>Algoritmizace</h1>
+      <p class="lede">Vlastnosti algoritmu, způsoby zápisu, bloky vývojového diagramu a problém zastavení</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Algoritmus je přesný a konečný postup, který pro každý přípustný vstup vede k řešení úlohy.</h2>
+      <p class="lede">Algoritmizace je převod problému na takový postup. Program je zápis algoritmu v konkrétním jazyce.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Vlastnosti algoritmu</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Konečnost</b><span>Skončí po konečném počtu kroků.</span></div>
+        <div class="tcard" style="cursor:default"><b>Jednoznačnost</b><span>V každém kroku je přesně určeno, co následuje. Nazývá se i determinovanost.</span></div>
+        <div class="tcard" style="cursor:default"><b>Obecnost</b><span>Řeší celou třídu úloh, ne jeden konkrétní případ. Nazývá se i hromadnost.</span></div>
+        <div class="tcard" style="cursor:default"><b>Elementárnost</b><span>Skládá se z jednoduchých kroků, které vykonavatel umí provést.</span></div>
+        <div class="tcard" style="cursor:default"><b>Vstup a výstup</b><span>Má definované vstupní údaje a vždy dá výsledek.</span></div>
+        <div class="tcard" style="cursor:default"><b>Správnost</b><span>Pro každý přípustný vstup dá správný výsledek.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Způsoby zápisu algoritmu</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Slovní popis</b><span>Kroky v přirozeném jazyce. Srozumitelný, ale snadno nepřesný.</span></div>
+        <div class="tcard" style="cursor:default"><b>Vývojový diagram</b><span>Grafické značky spojené šipkami. Přehledný pro krátké algoritmy.</span></div>
+        <div class="tcard" style="cursor:default"><b>Pseudokód</b><span>Strukturovaný zápis podobný programu, nezávislý na jazyce.</span></div>
+        <div class="tcard" style="cursor:default"><b>Programovací jazyk</b><span>Přesný zápis, který umí vykonat počítač.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Bloky vývojového diagramu</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Začátek a konec</b><span>Mezní značka. Každý diagram má jeden začátek.</span></div>
+        <div class="tcard" style="cursor:default"><b>Vstup a výstup</b><span>Načtení dat nebo vypsání výsledku.</span></div>
+        <div class="tcard" style="cursor:default"><b>Zpracování</b><span>Výpočet nebo přiřazení hodnoty.</span></div>
+        <div class="tcard" style="cursor:default"><b>Rozhodování</b><span>Podmínka se dvěma výstupy: ano a ne.</span></div>
+        <div class="tcard" style="cursor:default"><b>Podprogram</b><span>Volání jiného, samostatně popsaného algoritmu.</span></div>
+        <div class="tcard" style="cursor:default"><b>Příprava, cyklus</b><span>Hlavička cyklu s daným počtem opakování.</span></div>
+        <div class="tcard" style="cursor:default"><b>Spojka</b><span>Navazuje přerušenou čáru nebo jinou stránku.</span></div>
+        <div class="tcard" style="cursor:default"><b>Spojnice</b><span>Šipka určuje pořadí provádění kroků.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Základní řídicí struktury</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Posloupnost</b><span>Příkazy se provedou jeden po druhém v daném pořadí.</span></div>
+        <div class="tcard" style="cursor:default"><b>Větvení</b><span>Podle podmínky se provede jedna, nebo druhá větev. Úplné a neúplné.</span></div>
+        <div class="tcard" style="cursor:default"><b>Cyklus</b><span>Část se opakuje: s daným počtem opakování, s podmínkou na začátku nebo na konci.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Příklad: největší společný dělitel</h2>
+      <div class="split">
+        <pre class="code">funkce NSD(a, b):
+    dokud b != 0:
+        zbytek = a mod b
+        a = b
+        b = zbytek
+    vrať a
+
+NSD(48, 18)
+  48, 18  -&gt;  18, 12
+  18, 12  -&gt;  12, 6
+  12, 6   -&gt;  6, 0
+  výsledek: 6</pre>
+        <ul class="summary-list">
+        <li>Eukleidův algoritmus, jeden z nejstarších známých algoritmů.</li>
+        <li>Vstup: dvě přirozená čísla. Výstup: jejich největší společný dělitel.</li>
+        <li>Konečnost: b se v každém kroku zmenší, až dojde k nule.</li>
+        <li>Obecnost: funguje pro libovolnou dvojici přirozených čísel.</li>
+        </ul>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Složitost algoritmu</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:22%"><col style="width:30%"><col style="width:48%"></colgroup>
+        <thead><tr><th>Zápis</th><th>Název</th><th>Příklad</th></tr></thead>
+        <tbody>
+          <tr><td>O(1)</td><td>konstantní</td><td>přístup k prvku pole podle indexu</td></tr>
+          <tr><td>O(log n)</td><td>logaritmická</td><td>binární vyhledávání v seřazeném poli</td></tr>
+          <tr><td>O(n)</td><td>lineární</td><td>hledání maxima, průchod seznamem</td></tr>
+          <tr><td>O(n log n)</td><td>linearitmická</td><td>řazení slučováním</td></tr>
+          <tr><td>O(n²)</td><td>kvadratická</td><td>bublinkové řazení</td></tr>
+          <tr><td>O(2ⁿ)</td><td>exponenciální</td><td>zkoušení všech podmnožin</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Využití algoritmů</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Vyhledávání</b><span>Lineární a binární vyhledávání, vyhledávače na webu.</span></div>
+        <div class="tcard" style="cursor:default"><b>Řazení</b><span>Seřazení dat podle klíče, základ mnoha dalších úloh.</span></div>
+        <div class="tcard" style="cursor:default"><b>Grafy a cesty</b><span>Nejkratší cesta v navigaci, plánování spojení.</span></div>
+        <div class="tcard" style="cursor:default"><b>Šifrování</b><span>Zabezpečení komunikace a hesel.</span></div>
+        <div class="tcard" style="cursor:default"><b>Komprese</b><span>Zmenšení souborů: ZIP, JPEG, MP3.</span></div>
+        <div class="tcard" style="cursor:default"><b>Umělá inteligence</b><span>Učení modelů z dat, doporučování obsahu.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Problém zastavení: existuje algoritmus, který o každém programu a jeho vstupu rozhodne, zda program skončí?</h2>
+      <p class="lede">Alan Turing v roce 1936 dokázal, že takový algoritmus neexistuje.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Proč problém zastavení nelze vyřešit</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>1. Předpoklad</dt><dd>Dejme tomu, že existuje program H, který o každém programu a vstupu správně řekne: skončí, nebo neskončí.</dd>
+        <dt>2. Protipříklad</dt><dd>Sestrojíme program D, který se zeptá H na sebe sama a udělá opak: má-li skončit, zacyklí se, jinak skončí.</dd>
+        <dt>3. Spor</dt><dd>Spustíme D na sobě samém. Ať H odpoví cokoli, D se zachová opačně. H se tedy mýlí.</dd>
+        <dt>4. Závěr</dt><dd>Program H nemůže existovat. Problém zastavení je algoritmicky nerozhodnutelný.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Co z toho plyne</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Meze počítačů</dt><dd>Existují přesně zadané úlohy, které nevyřeší žádný algoritmus, jakkoli rychlý počítač.</dd>
+        <dt>Praxe</dt><dd>Žádný nástroj neumí u každého programu spolehlivě odhalit nekonečný cyklus.</dd>
+        <dt>Testování</dt><dd>Správnost programu nelze obecně ověřit automaticky, proto se testuje a dokazuje ručně.</dd>
+        <dt>Jednotlivé případy</dt><dd>U konkrétního programu se zastavení často dokázat dá. Nejde to jedním postupem pro všechny.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Definujte algoritmus a vyjmenujte jeho vlastnosti.</li>
+        <li>Jakými způsoby lze algoritmus zapsat?</li>
+        <li>Popište značky vývojového diagramu.</li>
+        <li>Jaké jsou tři základní řídicí struktury?</li>
+        <li>Předveďte Eukleidův algoritmus na číslech 48 a 18.</li>
+        <li>Co vyjadřuje zápis O(n)?</li>
+        <li>Co je problém zastavení a kdo ho vyřešil?</li>
+        <li>Naznačte důkaz, že problém zastavení je nerozhodnutelný.</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>

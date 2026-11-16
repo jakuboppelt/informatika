@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bezpečnost v IT 1: uživatel – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#co-znamena-bezpecnost-z-pohledu-uzivatele">Co znamená bezpečnost z pohledu uživatele</a></li>
+    <li><a href="#princip-bezpecneho-hesla">Princip bezpečného hesla</a></li>
+    <li><a href="#manazer-hesel">Manažer hesel</a></li>
+    <li><a href="#dvoufazove-overeni-a-passkeys">Dvoufázové ověření a passkeys</a></li>
+    <li><a href="#antivirus">Antivirus</a></li>
+    <li><a href="#sifrovani-dat">Šifrování dat</a></li>
+    <li><a href="#sprava-systemu-a-prav">Správa systému a práv</a></li>
+    <li><a href="#bezpecne-chovani-na-internetu">Bezpečné chování na internetu</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 13 · Studijní text</p>
+  <h1>Bezpečnost v IT 1: uživatel</h1>
+  <p class="lead">Hesla, manažer hesel, antivirus, šifrování, správa systému a bezpečné chování na internetu.</p>
+</header>
+
+<section id="co-znamena-bezpecnost-z-pohledu-uzivatele">
+<h2>Co znamená bezpečnost z pohledu uživatele</h2>
+<p>Bezpečnost uživatele znamená chránit své účty, data a zařízení před zneužitím, ztrátou a neoprávněným přístupem. Odborně se mluví o třech cílech: důvěrnost (data čte jen ten, kdo smí), integrita (data nikdo nepozorovaně nezmění) a dostupnost (k datům se dostanu, když je potřebuji). Většina útoků na běžné uživatele nemíří na složité technické chyby, ale na slabá a opakovaná hesla, neaktualizovaný software a lidskou důvěřivost.</p>
+</section>
+
+<section id="princip-bezpecneho-hesla">
+<h2>Princip bezpečného hesla</h2>
+<p>Sílu hesla určuje především jeho délka a nepředvídatelnost. Počet možných hesel je roven velikosti znakové sady umocněné na délku hesla, takže každý další znak počet možností násobí, kdežto rozšíření znakové sady jen zvětšuje základ mocniny.</p>
+<div class="tbl"><table>
+<thead><tr><th>Heslo</th><th>Znaková sada</th><th>Počet kombinací</th></tr></thead>
+<tbody>
+<tr><td>8 malých písmen</td><td>26</td><td>26^8, asi 2 · 10^11</td></tr>
+<tr><td>8 znaků všech druhů</td><td>asi 95</td><td>95^8, asi 7 · 10^15</td></tr>
+<tr><td>16 malých písmen</td><td>26</td><td>26^16, asi 4 · 10^22</td></tr>
+<tr><td>6 náhodných slov ze slovníku 7776 slov</td><td>7776</td><td>7776^6, asi 2 · 10^23</td></tr>
+</tbody></table></div>
+<p>Šestnáct malých písmen je tedy řádově silnější než osm znaků se všemi „složitostmi“. Výpočet ale platí jen pro náhodně volená hesla. Heslo „Heslo123!“ splňuje formální požadavky, a přesto je slabé, protože útočník nejdřív zkouší slovníky, uniklá hesla a obvyklé vzory.</p>
+<ul>
+  <li><strong>Heslová fráze</strong> je heslo složené z několika náhodně vybraných slov. Je dlouhá, a přitom zapamatovatelná. Slova musí být vybrána náhodně, ne jako známý citát nebo text písně.</li>
+  <li><strong>Jedinečnost</strong> znamená jiné heslo pro každou službu. Když unikne databáze jedné služby, útočníci zkoušejí stejné přihlašovací údaje jinde. Opakované heslo tak ohrozí všechny účty najednou.</li>
+  <li><strong>Změna hesla</strong> má smysl při podezření na únik. Vynucená pravidelná změna vede spíš k předvídatelným úpravám starého hesla.</li>
+</ul>
+<h3>Jak hesla ukládá služba</h3>
+<p>Správně navržená služba neukládá hesla, ale jejich haše. Hašovací funkce je jednosměrná: z hesla vypočítá otisk pevné délky, ale z otisku nelze heslo zpětně spočítat. Při přihlášení služba zahašuje zadané heslo a porovná výsledek s uloženým otiskem.</p>
+<p>Ke každému heslu se přidává sůl, tedy náhodná hodnota uložená vedle otisku. Díky ní mají dva uživatelé se stejným heslem různé otisky a útočník nemůže použít předpočítané tabulky. Pro hesla se používají záměrně pomalé funkce (bcrypt, scrypt, Argon2), aby zkoušení kandidátů bylo nákladné. Ani to ale nezachrání krátké nebo běžné heslo. Po úniku databáze útočník zkouší hesla proti otiskům na vlastním počítači a slabá hesla najde rychle.</p>
+</section>
+
+<section id="manazer-hesel">
+<h2>Manažer hesel</h2>
+<p>Manažer hesel je šifrovaný trezor, který si pamatuje hesla za uživatele. Umí hesla náhodně generovat, ukládat, synchronizovat mezi zařízeními a vyplňovat do přihlašovacích formulářů. Teprve s ním je reálné mít desítky dlouhých a jedinečných hesel.</p>
+<ul>
+  <li><strong>Hlavní heslo</strong> odemyká trezor a z něj se odvozuje šifrovací klíč. Je to jediné heslo, které si uživatel musí pamatovat. Má být dlouhé (ideálně heslová fráze), nikde jinde nepoužité a účet manažeru má být chráněn druhým faktorem.</li>
+  <li><strong>Příklady:</strong> Bitwarden, 1Password, KeePassXC (trezor v místním souboru), správci vestavění v prohlížečích a systémech (Správce hesel Google, aplikace Hesla od Applu).</li>
+  <li><strong>Výhoda navíc:</strong> manažer nabídne heslo jen na doméně, ke které patří, takže upozorní na podvodnou stránku.</li>
+  <li><strong>Riziko:</strong> všechna hesla jsou na jednom místě. Proto je klíčové silné hlavní heslo a druhý faktor. Zapomenuté hlavní heslo většinou nelze obnovit.</li>
+</ul>
+</section>
+
+<section id="dvoufazove-overeni-a-passkeys">
+<h2>Dvoufázové ověření a passkeys</h2>
+<p>Dvoufázové (dvoufaktorové) ověření vyžaduje vedle hesla ještě druhý důkaz totožnosti. Faktory se dělí na to, co znám (heslo), co mám (telefon, klíč) a čím jsem (otisk prstu). Ukradené heslo pak útočníkovi samo nestačí.</p>
+<div class="tbl"><table>
+<thead><tr><th>Způsob</th><th>Princip</th><th>Hodnocení</th></tr></thead>
+<tbody>
+<tr><td>Kód v SMS</td><td>jednorázový kód poslaný na telefon</td><td>nejslabší varianta, stále lepší než nic</td></tr>
+<tr><td>Aplikace (TOTP)</td><td>kód vypočtený z času a sdíleného tajemství</td><td>dobrá ochrana</td></tr>
+<tr><td>Hardwarový klíč (FIDO2)</td><td>fyzický klíč do USB nebo přes NFC</td><td>odolný proti phishingu</td></tr>
+<tr><td>Passkey</td><td>pár kryptografických klíčů místo hesla</td><td>odolný proti phishingu</td></tr>
+</tbody></table></div>
+<p>Passkey (přístupový klíč) nahrazuje heslo asymetrickou kryptografií. Zařízení vytvoří pro každou službu pár klíčů: veřejný uloží služba, soukromý zařízení nikdy neopustí a jeho použití se odemyká biometrií nebo PINem. Služba tak neuchovává žádné tajemství, které by mohlo uniknout, a klíč je svázán s konkrétní doménou, takže ho podvodná stránka nezíská.</p>
+</section>
+
+<section id="antivirus">
+<h2>Antivirus</h2>
+<p>Antivirus je program, který vyhledává, blokuje a odstraňuje škodlivý software (malware). Kontroluje soubory při otevření i při plánovaných kontrolách disku a kombinuje několik metod.</p>
+<div class="tbl"><table>
+<thead><tr><th>Metoda</th><th>Jak pracuje</th><th>Slabina</th></tr></thead>
+<tbody>
+<tr><td>Signatury</td><td>porovnává soubory s databází otisků známého malwaru</td><td>nepozná nový, dosud neznámý malware</td></tr>
+<tr><td>Heuristika</td><td>hledá v kódu podezřelé rysy a struktury</td><td>plané poplachy</td></tr>
+<tr><td>Behaviorální analýza</td><td>sleduje chování běžícího programu, např. hromadné šifrování souborů</td><td>zasahuje až za běhu</td></tr>
+</tbody></table></div>
+<p>Microsoft Defender je antivirus vestavěný ve Windows. Je zapnutý automaticky, aktualizuje se se systémem a pro běžného uživatele obvykle stačí. Antivirus není všelék: nenahradí aktualizace ani opatrnost a proti podvodu, při kterém uživatel sám zadá údaje, nepomůže.</p>
+</section>
+
+<section id="sifrovani-dat">
+<h2>Šifrování dat</h2>
+<p>Šifrování převádí čitelná data pomocí klíče do podoby, kterou bez klíče nelze přečíst. Rozlišujeme dva základní druhy.</p>
+<div class="tbl"><table>
+<thead><tr><th></th><th>Symetrické</th><th>Asymetrické</th></tr></thead>
+<tbody>
+<tr><td>Klíče</td><td>jeden společný klíč pro šifrování i dešifrování</td><td>pár: veřejný a soukromý klíč</td></tr>
+<tr><td>Rychlost</td><td>rychlé</td><td>řádově pomalejší</td></tr>
+<tr><td>Hlavní problém</td><td>bezpečné předání klíče</td><td>ověření, komu veřejný klíč patří</td></tr>
+<tr><td>Příklady</td><td>AES, ChaCha20</td><td>RSA, kryptografie eliptických křivek</td></tr>
+<tr><td>Použití</td><td>šifrování dat a disků</td><td>výměna klíčů, elektronický podpis</td></tr>
+</tbody></table></div>
+<p>V praxi se oba druhy kombinují:</p>
+<ul>
+  <li><strong>HTTPS</strong> je protokol HTTP přenášený šifrovaným kanálem TLS. Server se prokáže certifikátem, asymetrickou kryptografií se dohodne klíč relace a samotná data se šifrují symetricky. Certifikát potvrzuje, že komunikujeme s držitelem dané domény, ne že je web důvěryhodný – i podvodná stránka může mít HTTPS.</li>
+  <li><strong>Šifrování disku</strong> chrání data při ztrátě nebo krádeži zařízení. Windows nabízí BitLocker, macOS FileVault, multiplatformní a otevřený je VeraCrypt. Telefony šifrují úložiště standardně. Bez hesla nebo obnovovacího klíče jsou data ztracena i pro majitele.</li>
+  <li><strong>End-to-end šifrování</strong> znamená, že zprávu dešifruje jen odesílatel a příjemce. Provozovatel služby ji přenáší, ale nepřečte. Používá ho například Signal nebo WhatsApp.</li>
+</ul>
+</section>
+
+<section id="sprava-systemu-a-prav">
+<h2>Správa systému a práv</h2>
+<p>Bezpečný systém je aktuální, používá se s omezenými právy a jeho data jsou zálohovaná.</p>
+<ul>
+  <li><strong>Aktualizace</strong> opravují známé zranitelnosti operačního systému, prohlížeče i aplikací. Mají být zapnuté automaticky. Systém, pro který výrobce už aktualizace nevydává, je rizikový.</li>
+  <li><strong>Uživatelský a administrátorský účet.</strong> Administrátor smí instalovat programy a měnit nastavení celého systému, běžný uživatel ne. Pro každodenní práci se používá běžný účet. Windows žádá o potvrzení dialogem Řízení uživatelských účtů (UAC), Linux a macOS příkazem sudo nebo heslem správce.</li>
+  <li><strong>Princip nejmenších oprávnění</strong> říká, že uživatel i program mají mít jen ta práva, která ke své činnosti nutně potřebují. Škodlivý kód pak napáchá jen tolik škody, kolik dovolují práva účtu. Totéž platí pro oprávnění mobilních aplikací a rozšíření prohlížeče.</li>
+  <li><strong>Firewall</strong> filtruje síťový provoz podle pravidel a blokuje nevyžádaná příchozí spojení. Je součástí operačních systémů i domácích routerů.</li>
+  <li><strong>Zálohy</strong> chrání před poruchou disku, ztrátou zařízení i ransomwarem. Pravidlo 3-2-1: tři kopie dat, na dvou různých druzích úložišť, jedna mimo domov (například v cloudu). Zálohu je třeba občas zkusit obnovit.</li>
+</ul>
+</section>
+
+<section id="bezpecne-chovani-na-internetu">
+<h2>Bezpečné chování na internetu</h2>
+<p>Technická opatření nepomohou, pokud uživatel útočníkovi sám vyhoví. Technikám, které místo techniky manipulují člověkem, se říká sociální inženýrství.</p>
+<ul>
+  <li><strong>Phishing</strong> je podvodná zpráva, která se vydává za důvěryhodného odesílatele a láká přihlašovací údaje, platební údaje nebo instalaci programu. Typické znaky: naléhavost, hrozba, nečekaná příloha, odkaz vedoucí na jinou doménu. Obrana: neklikat na odkaz, adresu služby zadat ručně, ověřit zprávu jiným kanálem. Varianty jsou cílený spear phishing, SMS (smishing) a telefonát (vishing).</li>
+  <li><strong>Veřejné Wi-Fi.</strong> Provozovatel sítě i další účastníci mohou sledovat nešifrovaný provoz, případně se síť může za důvěryhodnou jen vydávat. Je třeba trvat na HTTPS a citlivé úkony dělat raději přes mobilní data nebo VPN.</li>
+  <li><strong>Stahování.</strong> Programy stahujeme z webu výrobce nebo z oficiálních obchodů. Nelegální kopie a „cracky“ jsou častým zdrojem malwaru.</li>
+  <li><strong>Sdílení osobních údajů.</strong> Co je jednou zveřejněno, těžko se maže. Adresa, fotografie dokladů a aktuální poloha na sociální sítě nepatří. Zveřejněné údaje usnadňují cílené podvody i odhad hesel a kontrolních otázek.</li>
+</ul>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Proč je délka hesla důležitější než jeho složitost? Ukažte na výpočtu.</li>
+  <li>Co je heslová fráze a jakou podmínku musí splnit, aby byla bezpečná?</li>
+  <li>Proč nemá být stejné heslo použito ve více službách?</li>
+  <li>Jak služba ukládá hesla? Vysvětlete pojmy haš a sůl.</li>
+  <li>Jak funguje manažer hesel a jaká je role hlavního hesla?</li>
+  <li>Jaké způsoby dvoufázového ověření znáte a čím se liší passkey od hesla?</li>
+  <li>Popište tři metody, kterými antivirus rozpoznává malware.</li>
+  <li>Srovnejte symetrické a asymetrické šifrování a vysvětlete, jak se kombinují v HTTPS.</li>
+  <li>Co je princip nejmenších oprávnění a pravidlo 3-2-1?</li>
+  <li>Podle čeho poznáte phishing a jak se zachováte?</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 13 „Bezpečnost v IT 1: uživatel“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

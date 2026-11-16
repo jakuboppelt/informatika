@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Umělá inteligence 2: využití – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#co-je-umela-inteligence">Co je umělá inteligence</a></li>
+    <li><a href="#historie">Historie</a></li>
+    <li><a href="#individualni-vyuziti">Individuální využití</a></li>
+    <li><a href="#prumyslove-vyuziti">Průmyslové využití</a></li>
+    <li><a href="#moderni-technicke-limity">Moderní technické limity</a></li>
+    <li><a href="#etika-a-pravo">Etika a právo</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 17 · Studijní text</p>
+  <h1>Umělá inteligence 2: využití</h1>
+  <p class="lead">Historie AI, využití jednotlivcem a v průmyslu, technické limity dnešních systémů, etika a právo.</p>
+</header>
+
+<section id="co-je-umela-inteligence">
+<h2>Co je umělá inteligence</h2>
+<p>Umělá inteligence (AI) je obor informatiky, který vytváří systémy řešící úlohy, k nimž člověk potřebuje inteligenci: rozpoznávání obrazu a řeči, porozumění textu, plánování nebo rozhodování. Dnešní AI je téměř vždy založena na strojovém učení. Programátor nepíše pravidla ručně, systém si je odvodí z velkého množství příkladů.</p>
+<div class="tbl"><table>
+<thead><tr><th>Pojem</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td>Strojové učení</td><td>systém se učí z dat místo ručně psaných pravidel</td></tr>
+<tr><td>Neuronová síť</td><td>model z vrstev propojených umělých neuronů</td></tr>
+<tr><td>Hluboké učení</td><td>neuronové sítě s mnoha vrstvami</td></tr>
+<tr><td>Velký jazykový model (LLM)</td><td>síť, která předpovídá pokračování textu</td></tr>
+<tr><td>Generativní AI</td><td>systémy vytvářející nový text, obraz, zvuk nebo kód</td></tr>
+</tbody></table></div>
+<p>Jazykový model funguje tak, že k zadanému textu opakovaně vybírá pravděpodobné pokračování. Negeneruje tedy ověřená fakta, ale text, který se podobá tomu, co viděl při tréninku. Podrobnosti o fungování modelů patří do předchozí otázky; zde je tato věta důležitá, protože z ní vyplývá většina technických limitů.</p>
+</section>
+
+<section id="historie">
+<h2>Historie</h2>
+<p>Dějiny AI se střídají mezi obdobími nadšení a zklamání a skutečný průlom přineslo až spojení velkých dat, výkonných grafických čipů a hlubokých neuronových sítí.</p>
+<div class="tbl"><table>
+<thead><tr><th>Kdy</th><th>Událost</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td>1950</td><td>Alan Turing publikuje článek s tzv. imitační hrou (Turingův test)</td><td>Stroj obstojí, pokud ho člověk při písemném rozhovoru nerozezná od člověka.</td></tr>
+<tr><td>1956</td><td>Dartmouthská konference</td><td>Za vznik oboru se považuje letní setkání vědců, pro které John McCarthy použil název „artificial intelligence“.</td></tr>
+<tr><td>1966</td><td>ELIZA (Joseph Weizenbaum)</td><td>První známý chatbot. Napodoboval psychoterapeuta pomocí jednoduchých vzorů v textu, ničemu nerozuměl.</td></tr>
+<tr><td>70. a 80. léta</td><td>Expertní systémy</td><td>Znalosti odborníků zapsané jako pravidla „jestliže – pak“, například v lékařské diagnostice. Pracné na údržbu, neuměly se učit.</td></tr>
+<tr><td>70. a konec 80. let</td><td>Zimy AI</td><td>Sliby se nenaplnily, počítače byly slabé, financování výzkumu se omezilo.</td></tr>
+<tr><td>1997</td><td>Deep Blue</td><td>Počítač firmy IBM porazil v zápase mistra světa v šachu Garriho Kasparova. Spoléhal na hrubý výpočetní výkon, neučil se.</td></tr>
+<tr><td>2012</td><td>AlexNet</td><td>Hluboká neuronová síť s velkým náskokem vyhrála soutěž v rozpoznávání obrázků ImageNet. Začátek éry hlubokého učení.</td></tr>
+<tr><td>2016</td><td>AlphaGo</td><td>Program společnosti DeepMind porazil špičkového hráče go Lee Sedola. Go se dlouho považovalo za příliš složité.</td></tr>
+<tr><td>2017</td><td>Transformer</td><td>Architektura neuronové sítě z článku „Attention Is All You Need“. Stojí na ní dnešní jazykové modely.</td></tr>
+<tr><td>2022</td><td>ChatGPT</td><td>Chatbot firmy OpenAI zpřístupnil generativní AI široké veřejnosti.</td></tr>
+</tbody></table></div>
+<p>Starší systémy (expertní systémy, Deep Blue) pracovaly s pravidly, která napsal člověk. Moderní systémy se učí z dat. To je hlavní zlom v celé historii oboru.</p>
+</section>
+
+<section id="individualni-vyuziti">
+<h2>Individuální využití</h2>
+<p>Jednotlivec používá AI dvojím způsobem: vědomě jako nástroj, kterému zadává úkoly, a nevědomě ve službách, kde AI pracuje v pozadí.</p>
+<p>Vědomé využití:</p>
+<ul>
+  <li><strong>Asistenti a chatboti</strong> – odpovídají na dotazy, shrnují dlouhé texty, pomáhají s plánováním. Patří sem i hlasoví asistenti v telefonu a v chytrých reproduktorech.</li>
+  <li><strong>Psaní a překlad</strong> – návrh osnovy, přeformulování, kontrola pravopisu a stylu, strojový překlad.</li>
+  <li><strong>Učení</strong> – vysvětlení látky jinými slovy, tvorba cvičných otázek, zpětná vazba k řešení. Výklad může obsahovat chyby, proto je nutné ho ověřovat.</li>
+  <li><strong>Programování</strong> – doplňování kódu, hledání chyb, vysvětlení cizího kódu, psaní testů. Za správnost a bezpečnost kódu dál odpovídá programátor.</li>
+  <li><strong>Generování obrázků</strong> – obrázek podle textového zadání, úpravy fotografií, návrhy a ilustrace.</li>
+</ul>
+<p>AI v pozadí:</p>
+<ul>
+  <li><strong>Doporučovací systémy</strong> – videa, hudba a zboží nabízené podle předchozího chování uživatele.</li>
+  <li><strong>Navigace</strong> – odhad doby jízdy a volba trasy podle aktuální dopravy.</li>
+  <li><strong>Fotoaparát v mobilu</strong> – skládání více snímků, noční režim, rozpoznání scény a obličeje, rozmazání pozadí.</li>
+  <li>Dále například filtr nevyžádané pošty, odemykání obličejem nebo převod řeči na text.</li>
+</ul>
+</section>
+
+<section id="prumyslove-vyuziti">
+<h2>Průmyslové využití</h2>
+<p>V průmyslu a službách se AI nasazuje hlavně tam, kde je k dispozici hodně dat a kde se opakuje stejný typ rozhodnutí.</p>
+<div class="tbl"><table>
+<thead><tr><th>Oblast</th><th>Co AI dělá</th><th>Přínos</th><th>Riziko nebo omezení</th></tr></thead>
+<tbody>
+<tr><td>Kontrola kvality</td><td>strojové vidění hledá vady výrobků na lince</td><td>rychlost, stálá pozornost</td><td>potřebuje dost příkladů vad</td></tr>
+<tr><td>Prediktivní údržba</td><td>z dat senzorů (vibrace, teplota) odhaduje blížící se poruchu</td><td>méně neplánovaných odstávek</td><td>falešné poplachy</td></tr>
+<tr><td>Robotika</td><td>roboti se orientují v prostoru a uchopují různé předměty</td><td>pružnější výroba a sklady</td><td>bezpečnost lidí v okolí</td></tr>
+<tr><td>Logistika</td><td>plánování tras, řízení skladů, předpověď poptávky</td><td>nižší náklady</td><td>závislost na kvalitě dat</td></tr>
+<tr><td>Zdravotnictví</td><td>hledání nálezů na rentgenových a jiných snímcích, podpora diagnostiky</td><td>druhý názor, rychlejší třídění</td><td>odpovědnost zůstává na lékaři</td></tr>
+<tr><td>Finance</td><td>detekce neobvyklých transakcí, hodnocení úvěrového rizika</td><td>odhalení podvodů</td><td>zkreslení vůči skupinám lidí</td></tr>
+<tr><td>Autonomní řízení</td><td>vnímání okolí z kamer a senzorů, řízení vozidla</td><td>asistenční systémy, vyšší bezpečnost</td><td>neobvyklé situace, právní odpovědnost</td></tr>
+<tr><td>Zemědělství</td><td>sledování porostu z dronů a družic, přesné dávkování vody a hnojiv</td><td>úspora, menší zátěž prostředí</td><td>cena technologie</td></tr>
+</tbody></table></div>
+<p>Společným rysem je, že AI většinou člověka nenahrazuje úplně, ale připravuje mu podklady pro rozhodnutí. V oblastech, kde jde o zdraví, peníze nebo bezpečnost, má poslední slovo člověk.</p>
+</section>
+
+<section id="moderni-technicke-limity">
+<h2>Moderní technické limity</h2>
+<p>Limity dnešní AI vyplývají z toho, že se model učí statistické souvislosti v datech a nemá vlastní porozumění světu ani způsob, jak si ověřit pravdu.</p>
+<div class="tbl"><table>
+<thead><tr><th>Limit</th><th>V čem spočívá</th><th>Jak se s ním pracuje</th></tr></thead>
+<tbody>
+<tr><td>Halucinace</td><td>model sebejistě uvede vymyšlený údaj, citát nebo zdroj</td><td>ověřování, připojení vyhledávání a zdrojů</td></tr>
+<tr><td>Závislost na trénovacích datech</td><td>umí jen to, co je v datech dobře zastoupeno</td><td>kvalitnější a pestřejší data</td></tr>
+<tr><td>Zkreslení (bias)</td><td>předsudky v datech se přenesou do výstupů</td><td>testování na různých skupinách, lidský dohled</td></tr>
+<tr><td>Znalosti jen do data tréninku</td><td>o novějších událostech model neví</td><td>vyhledávání na internetu, dodání podkladů</td></tr>
+<tr><td>Omezené kontextové okno</td><td>najednou zpracuje jen omezené množství textu</td><td>dělení úlohy, shrnování</td></tr>
+<tr><td>Nevysvětlitelnost</td><td>z parametrů sítě nelze snadno vyčíst důvod rozhodnutí</td><td>výzkum interpretability, člověk v rozhodování</td></tr>
+<tr><td>Výpočetní a energetická náročnost</td><td>trénink i provoz vyžadují výkonné čipy a datová centra</td><td>menší a úspornější modely</td></tr>
+<tr><td>Počítání a logika</td><td>model text odhaduje, nepočítá; chybuje ve výpočtech a delších úsudcích</td><td>napojení na kalkulačku nebo spouštění kódu</td></tr>
+</tbody></table></div>
+<p>Dalším limitem je nestálost výstupu: stejná otázka může při opakování dostat různou odpověď a drobná změna zadání ji může výrazně změnit.</p>
+</section>
+
+<section id="etika-a-pravo">
+<h2>Etika a právo</h2>
+<p>Rozšíření AI přináší otázky, na které technika sama neodpoví.</p>
+<ul>
+  <li><strong>Autorská práva</strong> – modely se trénují i na dílech chráněných autorským právem a vedou se o to spory. Nejasné je také, kdo je autorem vygenerovaného obsahu.</li>
+  <li><strong>Deepfakes</strong> – věrohodně zfalšované video, hlas nebo fotografie. Zneužívají se k podvodům, vydírání a šíření dezinformací.</li>
+  <li><strong>Soukromí</strong> – co uživatel do nástroje zadá, odchází na servery provozovatele. Osobní a důvěrné údaje do veřejných nástrojů nepatří.</li>
+  <li><strong>AI Act</strong> – nařízení Evropské unie přijaté v roce 2024. Rozděluje systémy AI podle míry rizika: některá použití zakazuje, pro vysoce rizikové systémy stanoví přísné povinnosti a u generovaného obsahu vyžaduje průhlednost. Platit začíná postupně.</li>
+</ul>
+<p>Pro školu a práci z toho plyne jednoduché pravidlo: výstup AI ověřit, přiznat její použití a nést za výsledek odpovědnost.</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Co navrhl Alan Turing v roce 1950 a jak jeho test probíhá?</li>
+  <li>Proč se rok 1956 považuje za počátek oboru umělé inteligence?</li>
+  <li>Co byla ELIZA a v čem se liší od dnešních chatbotů?</li>
+  <li>Jak fungovaly expertní systémy a proč přišly zimy AI?</li>
+  <li>Čím se liší přístup Deep Blue od přístupu AlphaGo?</li>
+  <li>Které události let 2012, 2017 a 2022 jsou pro dnešní AI klíčové?</li>
+  <li>Uveďte pět příkladů individuálního využití AI, z toho dva, kde AI pracuje v pozadí.</li>
+  <li>Vyberte tři oblasti průmyslového využití a popište přínos i riziko.</li>
+  <li>Co je halucinace jazykového modelu a proč vzniká? Jmenujte další tři technické limity.</li>
+  <li>Jaké etické a právní otázky AI přináší a co upravuje evropský AI Act?</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 17 „Umělá inteligence 2: využití“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

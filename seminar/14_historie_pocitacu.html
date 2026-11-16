@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Historie počítačů</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 14</div>
+      <h1>Historie počítačů</h1>
+      <p class="lede">Od mechanických počítadel přes první počítače a dvě základní architektury k dnešním zařízením</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Předchůdci počítačů</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Abakus</dt><dd>Kuličkové počítadlo známé od starověku. Pomůcka, počítá s ním člověk.</dd>
+        <dt>Pascalina</dt><dd>1642, Blaise Pascal. Mechanická kalkulačka pro sčítání a odčítání.</dd>
+        <dt>Babbage</dt><dd>19. století. Diferenční stroj a návrh analytického stroje řízeného děrnými štítky.</dd>
+        <dt>Ada Lovelace</dt><dd>1843. Popsala postup výpočtu pro analytický stroj, bývá označována za první programátorku.</dd>
+        <dt>Hollerith</dt><dd>1890. Děrnoštítkový stroj pro sčítání lidu v USA, z jeho firmy později vzniklo IBM.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Alan Turing</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Turingův stroj</b><span>1936. Teoretický model počítače, který vymezuje, co lze algoritmicky vypočítat.</span></div>
+        <div class="tcard" style="cursor:default"><b>Bletchley Park</b><span>Za války se podílel na luštění německé šifry Enigma.</span></div>
+        <div class="tcard" style="cursor:default"><b>Turingův test</b><span>1950. Návrh, jak posoudit, zda se stroj chová inteligentně.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">První počítače</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:18%"><col style="width:12%"><col style="width:16%"><col style="width:54%"></colgroup>
+        <thead><tr><th>Počítač</th><th>Rok</th><th>Země</th><th>Význam</th></tr></thead>
+        <tbody>
+          <tr><td>Z3</td><td>1941</td><td>Německo</td><td>Konrad Zuse, reléový, řízený programem</td></tr>
+          <tr><td>Colossus</td><td>1943–44</td><td>Británie</td><td>elektronkový, luštění německých šifer</td></tr>
+          <tr><td>Harvard Mark I</td><td>1944</td><td>USA</td><td>elektromechanický, Howard Aiken a IBM</td></tr>
+          <tr><td>ENIAC</td><td>1945–46</td><td>USA</td><td>elektronkový, univerzální, desítkový</td></tr>
+          <tr><td>EDVAC</td><td>návrh 1945</td><td>USA</td><td>dvojkový, program uložený v paměti</td></tr>
+          <tr><td>UNIVAC I</td><td>1951</td><td>USA</td><td>první komerčně prodávaný počítač v USA</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">ENIAC</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Vznik</dt><dd>Pensylvánská univerzita, J. Presper Eckert a John Mauchly. Dokončen 1945, představen 1946.</dd>
+        <dt>Technika</dt><dd>Asi 18 000 elektronek, hmotnost kolem 30 tun, příkon přes 100 kW.</dd>
+        <dt>Programování</dt><dd>Přepojováním kabelů a nastavováním přepínačů. Změna úlohy trvala i dny.</dd>
+        <dt>Účel</dt><dd>Původně balistické výpočty pro americkou armádu.</dd>
+        <dt>Poučení</dt><dd>Program má být uložen v paměti stejně jako data. Tak vznikl návrh EDVAC.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Program je uložen v téže paměti jako data a procesor ho vykonává instrukci po instrukci.</h2>
+      <p class="lede">Základní myšlenka von Neumannovy architektury, popsaná roku 1945 ve zprávě o počítači EDVAC.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Von Neumannova architektura</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Řadič</b><span>Čte instrukce z paměti, dekóduje je a řídí ostatní části.</span></div>
+        <div class="tcard" style="cursor:default"><b>ALU</b><span>Aritmeticko-logická jednotka provádí výpočty a logické operace.</span></div>
+        <div class="tcard" style="cursor:default"><b>Paměť</b><span>Společná pro program i data, dělená na adresované buňky.</span></div>
+        <div class="tcard" style="cursor:default"><b>Vstup a výstup</b><span>Zařízení pro komunikaci s okolím: klávesnice, disk, displej.</span></div>
+        <div class="tcard" style="cursor:default"><b>Sběrnice</b><span>Vodiče spojující části: adresová, datová a řídicí.</span></div>
+        <div class="tcard" style="cursor:default"><b>Dvojková soustava</b><span>Instrukce i data jsou uloženy jako čísla ve dvojkové soustavě.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Vlastnosti von Neumannovy koncepce</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Univerzálnost</dt><dd>Změna programu nevyžaduje zásah do hardwaru, stačí nahrát jiný obsah paměti.</dd>
+        <dt>Sekvenční běh</dt><dd>Instrukce se provádějí postupně, pořadí mění jen skoky.</dd>
+        <dt>Program jako data</dt><dd>Program lze načíst, uložit i vytvořit jiným programem, například překladačem.</dd>
+        <dt>Úzké hrdlo</dt><dd>Instrukce i data jdou stejnou cestou. Procesor čeká na pomalejší paměť.</dd>
+        <dt>Riziko</dt><dd>Data lze omylem nebo záměrně vykonat jako kód.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Harvardská architektura</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Princip</dt><dd>Paměť programu a paměť dat jsou fyzicky oddělené a mají vlastní sběrnice.</dd>
+        <dt>Původ názvu</dt><dd>Harvard Mark I četl instrukce z děrné pásky, data držel odděleně.</dd>
+        <dt>Výhody</dt><dd>Instrukci a data lze číst současně. Program nelze za běhu snadno přepsat.</dd>
+        <dt>Nevýhody</dt><dd>Složitější zapojení, volnou paměť jednoho druhu nelze využít pro druhý.</dd>
+        <dt>Dnes</dt><dd>Mikrokontroléry, například AVR v Arduinu, a signálové procesory.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Srovnání architektur</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:22%"><col style="width:39%"><col style="width:39%"></colgroup>
+        <thead><tr><th></th><th>Von Neumannova</th><th>Harvardská</th></tr></thead>
+        <tbody>
+          <tr><td>Paměť</td><td>společná pro program i data</td><td>oddělená pro program a data</td></tr>
+          <tr><td>Sběrnice</td><td>jedna sada</td><td>dvě nezávislé sady</td></tr>
+          <tr><td>Přístup</td><td>instrukce a data postupně</td><td>instrukce a data současně</td></tr>
+          <tr><td>Konstrukce</td><td>jednodušší</td><td>složitější</td></tr>
+          <tr><td>Využití paměti</td><td>pružné</td><td>pevně rozdělené</td></tr>
+          <tr><td>Typické použití</td><td>PC, servery, telefony</td><td>mikrokontroléry, DSP</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Generace počítačů</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:14%"><col style="width:22%"><col style="width:34%"><col style="width:30%"></colgroup>
+        <thead><tr><th>Generace</th><th>Období</th><th>Součástka</th><th>Příklad</th></tr></thead>
+        <tbody>
+          <tr><td>nultá</td><td>do 1945</td><td>relé</td><td>Z3, Harvard Mark I</td></tr>
+          <tr><td>první</td><td>1945–1955</td><td>elektronky</td><td>ENIAC, UNIVAC I</td></tr>
+          <tr><td>druhá</td><td>1955–1965</td><td>tranzistory</td><td>IBM 1401</td></tr>
+          <tr><td>třetí</td><td>1965–1975</td><td>integrované obvody</td><td>IBM System/360</td></tr>
+          <tr><td>čtvrtá</td><td>od 70. let</td><td>mikroprocesor</td><td>Apple II, IBM PC</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Mikroprocesor a osobní počítače</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>1971</dt><dd>Intel 4004: první komerční mikroprocesor, celý procesor na jednom čipu, čtyřbitový.</dd>
+        <dt>1975</dt><dd>Altair 8800: stavebnice, která odstartovala éru domácích počítačů.</dd>
+        <dt>1977</dt><dd>Apple II: hotový počítač pro domácnosti a školy.</dd>
+        <dt>1981</dt><dd>IBM PC: otevřená architektura, základ dnešních počítačů PC.</dd>
+        <dt>Moorův zákon</dt><dd>1965, Gordon Moore: počet tranzistorů na čipu se zdvojnásobuje zhruba každé dva roky.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Vývoj systémů</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Dávky</dt><dd>50. léta. Úlohy na děrných štítcích se zpracovávají jedna po druhé bez zásahu uživatele.</dd>
+        <dt>Sdílení času</dt><dd>60. léta. Multiprogramování, více uživatelů u terminálů jednoho sálového počítače.</dd>
+        <dt>UNIX</dt><dd>1969. Víceúlohový a víceuživatelský systém, vzor pro Linux, macOS i Android.</dd>
+        <dt>Osobní počítače</dt><dd>80. léta. MS-DOS s příkazovým řádkem, pak grafická rozhraní Macintosh a Windows.</dd>
+        <dt>Mobil a cloud</dt><dd>Po roce 2007 chytré telefony s iOS a Androidem, služby běžící v datových centrech.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Kteří vynálezci a stroje předcházeli prvním počítačům?</li>
+        <li>Čím byly významné počítače Z3, Colossus a ENIAC?</li>
+        <li>Jakým přínosem byl Alan Turing?</li>
+        <li>Z jakých částí se skládá von Neumannova architektura?</li>
+        <li>Co je úzké hrdlo von Neumannovy architektury?</li>
+        <li>Čím se liší harvardská architektura a kde se používá?</li>
+        <li>Charakterizujte generace počítačů podle součástek.</li>
+        <li>Jak se vyvíjely operační systémy od dávek po mobily?</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>

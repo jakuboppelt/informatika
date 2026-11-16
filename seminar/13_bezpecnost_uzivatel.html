@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bezpečnost v IT 1: uživatel</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 13</div>
+      <h1>Bezpečnost v IT 1: uživatel</h1>
+      <p class="lede">Hesla, manažer hesel, antivirus, šifrování, správa systému a bezpečné chování na internetu</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Nejslabším článkem zabezpečení bývá člověk, ne technika.</h2>
+      <p class="lede">Bezpečnost uživatele stojí na heslech, aktuálním systému, šifrování, zálohách a opatrném chování.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Princip bezpečného hesla</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Délka</dt><dd>Každý další znak násobí počet možností. Délka pomáhá víc než záměna písmen za znaky.</dd>
+        <dt>Heslová fráze</dt><dd>Několik náhodných slov za sebou: dlouhé heslo, které se dá zapamatovat.</dd>
+        <dt>Jedinečnost</dt><dd>Pro každou službu jiné heslo. Uniklé heslo pak neotevře další účty.</dd>
+        <dt>Nepředvídatelnost</dt><dd>Žádná jména, data narození, slova ze slovníku ani vzory typu Heslo123.</dd>
+        <dt>Změna</dt><dd>Heslo měníme při podezření na únik, ne pravidelně po měsíci.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Proč délka vítězí nad složitostí</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:36%"><col style="width:30%"><col style="width:34%"></colgroup>
+        <thead><tr><th>Heslo</th><th>Znaková sada</th><th>Počet kombinací</th></tr></thead>
+        <tbody>
+          <tr><td>8 malých písmen</td><td>26 znaků</td><td>26^8, asi 2 · 10^11</td></tr>
+          <tr><td>8 znaků všech druhů</td><td>asi 95 znaků</td><td>95^8, asi 7 · 10^15</td></tr>
+          <tr><td>16 malých písmen</td><td>26 znaků</td><td>26^16, asi 4 · 10^22</td></tr>
+          <tr><td>4 náhodná slova</td><td>slovník 7776 slov</td><td>7776^4, asi 4 · 10^15</td></tr>
+          <tr><td>6 náhodných slov</td><td>slovník 7776 slov</td><td>7776^6, asi 2 · 10^23</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Jak služba hesla ukládá</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Haš</dt><dd>Služba neukládá heslo, ale jeho otisk. Z otisku nelze heslo zpětně vypočítat.</dd>
+        <dt>Ověření</dt><dd>Při přihlášení se zadané heslo zahašuje a porovná s uloženým otiskem.</dd>
+        <dt>Sůl</dt><dd>Náhodná hodnota přidaná ke každému heslu. Stejná hesla pak mají různé otisky.</dd>
+        <dt>Pomalé funkce</dt><dd>bcrypt, scrypt, Argon2. Záměrně pomalé, aby zkoušení hesel trvalo dlouho.</dd>
+        <dt>Únik databáze</dt><dd>Útočník zkouší hesla proti otiskům. Krátká a běžná hesla padnou první.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Manažer hesel</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Princip</b><span>Šifrovaný trezor, který hesla ukládá, generuje a vyplňuje do přihlašovacích formulářů.</span></div>
+        <div class="tcard" style="cursor:default"><b>Hlavní heslo</b><span>Jediné heslo, které si pamatujeme. Musí být dlouhé a nikde jinde nepoužité.</span></div>
+        <div class="tcard" style="cursor:default"><b>Příklady</b><span>Bitwarden, 1Password, KeePassXC, Správce hesel Google, aplikace Hesla od Applu.</span></div>
+        <div class="tcard" style="cursor:default"><b>Přínos navíc</b><span>Heslo vyplní jen na správné doméně, takže pomáhá i proti podvodným stránkám.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Dvoufázové ověření a passkeys</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:24%"><col style="width:46%"><col style="width:30%"></colgroup>
+        <thead><tr><th>Způsob</th><th>Jak funguje</th><th>Odolnost</th></tr></thead>
+        <tbody>
+          <tr><td>Kód v SMS</td><td>jednorázový kód na telefon</td><td>nejslabší, ale lepší než nic</td></tr>
+          <tr><td>Aplikace (TOTP)</td><td>kód z času a sdíleného tajemství</td><td>dobrá</td></tr>
+          <tr><td>Potvrzení v aplikaci</td><td>výzva v mobilu, klepnutí</td><td>dobrá</td></tr>
+          <tr><td>Hardwarový klíč</td><td>FIDO2, klíč do USB nebo NFC</td><td>odolný proti phishingu</td></tr>
+          <tr><td>Passkey</td><td>pár klíčů, soukromý zůstává v zařízení</td><td>odolný proti phishingu</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Antivirus</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Signatury</b><span>Porovnává soubory s databází otisků známého malwaru. Vyžaduje stálé aktualizace.</span></div>
+        <div class="tcard" style="cursor:default"><b>Heuristika</b><span>Hledá v kódu podezřelé znaky, a tak odhalí i neznámé varianty. Hrozí plané poplachy.</span></div>
+        <div class="tcard" style="cursor:default"><b>Chování</b><span>Behaviorální analýza sleduje běžící program, například hromadné šifrování souborů.</span></div>
+        <div class="tcard" style="cursor:default"><b>Defender</b><span>Microsoft Defender je součástí Windows. Pro běžného uživatele obvykle stačí.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Symetrické a asymetrické šifrování</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:22%"><col style="width:39%"><col style="width:39%"></colgroup>
+        <thead><tr><th></th><th>Symetrické</th><th>Asymetrické</th></tr></thead>
+        <tbody>
+          <tr><td>Klíče</td><td>jeden společný klíč</td><td>pár: veřejný a soukromý</td></tr>
+          <tr><td>Rychlost</td><td>rychlé</td><td>řádově pomalejší</td></tr>
+          <tr><td>Problém</td><td>jak bezpečně předat klíč</td><td>ověření, komu veřejný klíč patří</td></tr>
+          <tr><td>Příklady</td><td>AES, ChaCha20</td><td>RSA, eliptické křivky</td></tr>
+          <tr><td>Použití</td><td>šifrování dat a disků</td><td>výměna klíčů, elektronický podpis</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Šifrování v praxi</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>HTTPS a TLS</dt><dd>Asymetricky se ověří server a dohodne klíč, data se pak šifrují symetricky.</dd>
+        <dt>Certifikát</dt><dd>Potvrzuje, komu doména patří. Neříká nic o tom, zda je web poctivý.</dd>
+        <dt>Šifrování disku</dt><dd>BitLocker ve Windows, FileVault v macOS, VeraCrypt. Chrání při ztrátě zařízení.</dd>
+        <dt>End-to-end</dt><dd>Zprávu přečte jen odesílatel a příjemce, ne provozovatel. Signal, WhatsApp.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Správa systému a práv</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Aktualizace</b><span>Opravují známé zranitelnosti systému i programů. Zapnout automaticky.</span></div>
+        <div class="tcard" style="cursor:default"><b>Účty</b><span>Běžná práce pod uživatelským účtem, administrátor jen pro správu.</span></div>
+        <div class="tcard" style="cursor:default"><b>Nejmenší oprávnění</b><span>Uživatel i program mají jen ta práva, která nutně potřebují.</span></div>
+        <div class="tcard" style="cursor:default"><b>Firewall</b><span>Filtruje síťový provoz podle pravidel, blokuje nevyžádaná spojení.</span></div>
+        <div class="tcard" style="cursor:default"><b>Zálohy 3-2-1</b><span>Tři kopie dat, dva druhy úložišť, jedna kopie mimo domov.</span></div>
+        <div class="tcard" style="cursor:default"><b>Zámek zařízení</b><span>PIN nebo biometrie, automatické zamykání obrazovky.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Phishing a sociální inženýrství</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Princip</dt><dd>Podvodná zpráva se vydává za banku, školu nebo kurýra a láká údaje či peníze.</dd>
+        <dt>Znaky</dt><dd>Naléhavost, hrozba, nečekaná příloha, odkaz na jinou doménu, než čekáme.</dd>
+        <dt>Obrana</dt><dd>Neklikat na odkaz ve zprávě, adresu služby zadat ručně, ověřit jiným kanálem.</dd>
+        <dt>Varianty</dt><dd>Cílený spear phishing, SMS (smishing), telefonát (vishing).</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Bezpečné chování na internetu</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Veřejné Wi-Fi</b><span>Provoz může sledovat provozovatel sítě. Trvat na HTTPS, citlivé věci přes mobilní data nebo VPN.</span></div>
+        <div class="tcard" style="cursor:default"><b>Stahování</b><span>Programy jen z webu výrobce nebo oficiálního obchodu. Nelegální kopie často nesou malware.</span></div>
+        <div class="tcard" style="cursor:default"><b>Osobní údaje</b><span>Co zveřejníme, těžko smažeme. Adresa, doklady a poloha na sociální sítě nepatří.</span></div>
+        <div class="tcard" style="cursor:default"><b>Oprávnění</b><span>Aplikaci a rozšíření prohlížeče dát jen přístup, který ke své funkci opravdu potřebuje.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Proč je délka hesla důležitější než jeho složitost?</li>
+        <li>Jak služba ukládá hesla a k čemu slouží sůl?</li>
+        <li>Jak funguje manažer hesel a co je hlavní heslo?</li>
+        <li>Co je dvoufázové ověření a co jsou passkeys?</li>
+        <li>Jakými metodami antivirus rozpoznává malware?</li>
+        <li>Čím se liší symetrické a asymetrické šifrování?</li>
+        <li>Co říká princip nejmenších oprávnění a pravidlo 3-2-1?</li>
+        <li>Jak poznáte phishing a jak se mu bráníte?</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>

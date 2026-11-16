@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Programování v Pythonu</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 1</div>
+      <h1>Programování v Pythonu</h1>
+      <p class="lede">Charakteristika jazyka, jeho zařazení, funkce a využití v praxi</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Co je Python</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Vznik</dt><dd>Guido van Rossum, první verze 1991. Dnes se používá řada Python 3.</dd>
+        <dt>Čitelnost</dt><dd>Bloky kódu určuje odsazení, ne závorky. Odsazení je součást syntaxe.</dd>
+        <dt>Interpret</dt><dd>Kód se překládá do bajtkódu a ten vykonává virtuální stroj (CPython).</dd>
+        <dt>Typy</dt><dd>Typ patří hodnotě, ne proměnné. Proměnná je jen jméno pro hodnotu.</dd>
+        <dt>Knihovny</dt><dd>Bohatá standardní knihovna a balíčky z PyPI instalované přes pip.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Kam Python patří</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:26%"><col style="width:37%"><col style="width:37%"></colgroup>
+        <thead><tr><th>Hledisko</th><th>Python</th><th>C++</th></tr></thead>
+        <tbody>
+          <tr><td>Spuštění</td><td>interpretovaný</td><td>kompilovaný</td></tr>
+          <tr><td>Typování</td><td>dynamické, silné</td><td>statické, silné</td></tr>
+          <tr><td>Paradigma</td><td>procedurální, objektové, funkcionální</td><td>procedurální, objektové, generické</td></tr>
+          <tr><td>Správa paměti</td><td>automatická</td><td>ruční nebo chytré ukazatele</td></tr>
+          <tr><td>Rychlost běhu</td><td>nižší</td><td>vysoká</td></tr>
+          <tr><td>Rychlost vývoje</td><td>vysoká</td><td>nižší</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Datové typy</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Čísla</b><span>int pro celá čísla libovolné velikosti, float pro desetinná.</span></div>
+        <div class="tcard" style="cursor:default"><b>Text a logika</b><span>str je neměnný řetězec, bool nabývá hodnot True a False.</span></div>
+        <div class="tcard" style="cursor:default"><b>Seznam a n-tice</b><span>list je měnitelný, tuple neměnná. Obojí drží pořadí prvků.</span></div>
+        <div class="tcard" style="cursor:default"><b>Slovník</b><span>dict ukládá dvojice klíč a hodnota, hledá se podle klíče.</span></div>
+        <div class="tcard" style="cursor:default"><b>Množina</b><span>set neobsahuje duplicity a nemá pořadí.</span></div>
+        <div class="tcard" style="cursor:default"><b>Měnitelnost</b><span>list, dict a set lze měnit na místě. Čísla, text a tuple ne.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Řízení toku programu</h2>
+      <div class="split">
+        <pre class="code">vek = <span class="k">int</span>(<span class="k">input</span>(<span class="s">"Kolik ti je? "</span>))
+
+<span class="k">if</span> vek &gt;= <span class="n">18</span>:
+    <span class="k">print</span>(<span class="s">"dospělý"</span>)
+<span class="k">elif</span> vek &gt;= <span class="n">15</span>:
+    <span class="k">print</span>(<span class="s">"mladistvý"</span>)
+<span class="k">else</span>:
+    <span class="k">print</span>(<span class="s">"dítě"</span>)
+
+<span class="k">for</span> i <span class="k">in</span> <span class="k">range</span>(<span class="n">3</span>):
+    <span class="k">print</span>(i)        <span class="c"># 0, 1, 2</span></pre>
+        <ul class="summary-list">
+        <li>Podmínka: if, elif, else. Za podmínkou následuje dvojtečka a odsazený blok.</li>
+        <li>Cyklus for prochází prvky kolekce nebo rozsahu range.</li>
+        <li>Cyklus while běží, dokud platí podmínka.</li>
+        <li>break cyklus ukončí, continue přeskočí na další průchod.</li>
+        </ul>
+      </div>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Funkce je pojmenovaný blok kódu, který řeší jednu úlohu a dá se volat opakovaně.</h2>
+      <p class="lede">Kód se neopakuje, program se dělí na části a ty se dají samostatně testovat.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Definice a volání funkce</h2>
+      <div class="split">
+        <pre class="code"><span class="k">def</span> obsah(a, b=<span class="n">1</span>):
+    <span class="s">""</span><span class="s">"Vrátí obsah obdélníku."</span><span class="s">""</span>
+    <span class="k">return</span> a * b
+
+<span class="k">print</span>(obsah(<span class="n">3</span>, <span class="n">4</span>))      <span class="c"># 12</span>
+<span class="k">print</span>(obsah(<span class="n">5</span>))         <span class="c"># 5</span>
+<span class="k">print</span>(obsah(b=<span class="n">2</span>, a=<span class="n">6</span>))  <span class="c"># 12</span></pre>
+        <ul class="summary-list">
+        <li>def, jméno, parametry v závorce, dvojtečka a odsazené tělo.</li>
+        <li>Parametr je jméno v definici, argument je hodnota při volání.</li>
+        <li>return vrací výsledek. Funkce bez return vrací None.</li>
+        <li>Parametr může mít výchozí hodnotu, argumenty lze pojmenovat.</li>
+        </ul>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Kategorizace funkcí</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:26%"><col style="width:46%"><col style="width:28%"></colgroup>
+        <thead><tr><th>Druh</th><th>Popis</th><th>Příklad</th></tr></thead>
+        <tbody>
+          <tr><td>Vestavěné</td><td>součást jazyka, bez importu</td><td>print, len, range</td></tr>
+          <tr><td>Knihovní</td><td>z modulů a balíčků</td><td>math.sqrt</td></tr>
+          <tr><td>Uživatelské</td><td>definuje je programátor</td><td>def obsah(a, b)</td></tr>
+          <tr><td>Bez návratové hodnoty</td><td>provedou akci, vrací None</td><td>print("ahoj")</td></tr>
+          <tr><td>Anonymní</td><td>jednořádková funkce bez jména</td><td>lambda x: x * 2</td></tr>
+          <tr><td>Rekurzivní</td><td>volá sama sebe</td><td>faktoriál</td></tr>
+          <tr><td>Metody</td><td>funkce patřící objektu</td><td>"ahoj".upper()</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Rozsah platnosti a předávání</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Lokální proměnná</dt><dd>Vzniká uvnitř funkce a po jejím skončení zaniká.</dd>
+        <dt>Globální proměnná</dt><dd>Vzniká mimo funkce. Funkce ji může číst, pro zápis potřebuje slovo global.</dd>
+        <dt>Předávání</dt><dd>Funkce dostává odkaz na objekt, ne jeho kopii.</dd>
+        <dt>Měnitelné typy</dt><dd>Změna seznamu nebo slovníku uvnitř funkce je vidět i venku.</dd>
+        <dt>Neměnné typy</dt><dd>Číslo ani text funkce venku nezmění, vytvoří si novou hodnotu.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Rekurze a lambda</h2>
+      <div class="split">
+        <pre class="code"><span class="k">def</span> faktorial(n):
+    <span class="k">if</span> n &lt;= <span class="n">1</span>:
+        <span class="k">return</span> <span class="n">1</span>
+    <span class="k">return</span> n * faktorial(n - <span class="n">1</span>)
+
+dvakrat = <span class="k">lambda</span> x: x * <span class="n">2</span>
+
+jmena = [<span class="s">"Petr"</span>, <span class="s">"Jo"</span>, <span class="s">"Alena"</span>]
+sorted(jmena, key=<span class="k">lambda</span> s: <span class="k">len</span>(s))</pre>
+        <ul class="summary-list">
+        <li>Rekurzivní funkce volá sama sebe na menším vstupu.</li>
+        <li>Bez ukončovací podmínky skončí chybou RecursionError.</li>
+        <li>lambda je krátká funkce bez jména, hodí se jako argument jiné funkce.</li>
+        </ul>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Využití Pythonu</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Data a věda</b><span>NumPy, pandas, Matplotlib, Jupyter.</span></div>
+        <div class="tcard" style="cursor:default"><b>Umělá inteligence</b><span>PyTorch, TensorFlow, scikit-learn.</span></div>
+        <div class="tcard" style="cursor:default"><b>Webový backend</b><span>Django, Flask, FastAPI.</span></div>
+        <div class="tcard" style="cursor:default"><b>Automatizace</b><span>Skripty, správa systémů, zpracování souborů.</span></div>
+        <div class="tcard" style="cursor:default"><b>Výuka</b><span>Jednoduchá syntaxe a okamžitá zpětná vazba.</span></div>
+        <div class="tcard" style="cursor:default"><b>Mikrokontroléry</b><span>MicroPython na micro:bitu nebo ESP32.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Výhody a nevýhody</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Výhody</b><span>Čitelná syntaxe, rychlý vývoj, obrovské množství knihoven, přenositelnost mezi systémy, velká komunita.</span></div>
+        <div class="tcard" style="cursor:default"><b>Nevýhody</b><span>Pomalejší běh a vyšší spotřeba paměti, chyby v typech až za běhu, omezený souběh vláken (GIL), slabé uplatnění v mobilních aplikacích.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Co znamená, že je Python interpretovaný a dynamicky typovaný?</li>
+        <li>K čemu slouží odsazení?</li>
+        <li>Jaký je rozdíl mezi parametrem a argumentem?</li>
+        <li>Co vrátí funkce bez příkazu return?</li>
+        <li>Čím se liší lokální a globální proměnná?</li>
+        <li>Vyjmenujte druhy funkcí a ke každému uveďte příklad.</li>
+        <li>Kde se Python používá a kde se nehodí?</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>

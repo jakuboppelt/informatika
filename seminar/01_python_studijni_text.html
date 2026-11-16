@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programování v Pythonu – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li><a href="#co-je-python">Co je Python</a></li>
+    <li><a href="#kategorizace-kam-python-patri">Kategorizace: kam Python patří</a></li>
+    <li><a href="#zaklady-jazyka">Základy jazyka</a></li>
+    <li><a href="#funkce">Funkce</a></li>
+    <li><a href="#vyuziti-vyhody-a-nevyhody">Využití, výhody a nevýhody</a></li>
+    <li><a href="#shrnuti">Shrnutí</a></li>
+    <li><a href="#otazky-k-opakovani">Otázky k opakování</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Seminář · Maturitní otázka 1 · Studijní text</p>
+  <h1>Programování v Pythonu</h1>
+  <p class="lead">Charakteristika jazyka, jeho zařazení, funkce a využití v praxi.</p>
+</header>
+
+<section id="co-je-python">
+<h2>Co je Python</h2>
+<p>Python je vysokoúrovňový, interpretovaný, dynamicky typovaný programovací jazyk pro obecné použití. Navrhl ho Guido van Rossum, první verze vyšla v roce 1991. Název pochází z britské komediální skupiny Monty Python, nikoli od hada.</p>
+<p>Dnes se používá řada Python 3 (od roku 2008). Python 2 už není podporován a s trojkou není zpětně kompatibilní.</p>
+<p>Hlavní rysy jazyka:</p>
+<ul>
+  <li><strong>Čitelnost.</strong> Bloky kódu se nevyznačují závorkami, ale odsazením. Odsazení je tedy součást syntaxe, ne jen úprava.</li>
+  <li><strong>Interpret.</strong> Zdrojový kód se nepřekládá předem do strojového kódu. Interpret (nejčastěji CPython) ho přeloží do bajtkódu a ten vykonává virtuální stroj.</li>
+  <li><strong>Dynamické typování.</strong> Typ nepatří proměnné, ale hodnotě. Proměnná je jen jméno, které na hodnotu odkazuje.</li>
+  <li><strong>Automatická správa paměti.</strong> O uvolňování paměti se stará garbage collector.</li>
+  <li><strong>Bohatá standardní knihovna</strong> a obrovský ekosystém balíčků (instalují se nástrojem <code>pip</code> z repozitáře PyPI).</li>
+</ul>
+</section>
+
+<section id="kategorizace-kam-python-patri">
+<h2>Kategorizace: kam Python patří</h2>
+<p>Programovací jazyky se třídí podle několika hledisek. U maturity je dobré umět Python zařadit podle každého z nich a srovnat ho s C++.</p>
+<div class="tbl"><table>
+<thead><tr><th>Hledisko</th><th>Python</th><th>Pro srovnání C++</th></tr></thead>
+<tbody>
+<tr><td>Úroveň abstrakce</td><td>vysokoúrovňový</td><td>vysokoúrovňový s přístupem k paměti</td></tr>
+<tr><td>Způsob spuštění</td><td>interpretovaný (bajtkód + virtuální stroj)</td><td>kompilovaný do strojového kódu</td></tr>
+<tr><td>Typování</td><td>dynamické, silné</td><td>statické, silné</td></tr>
+<tr><td>Paradigma</td><td>multiparadigmatický: procedurální, objektový, funkcionální prvky</td><td>multiparadigmatický: procedurální, objektový, generický</td></tr>
+<tr><td>Správa paměti</td><td>automatická</td><td>ruční nebo pomocí chytrých ukazatelů</td></tr>
+<tr><td>Rychlost běhu</td><td>nižší</td><td>vysoká</td></tr>
+<tr><td>Rychlost vývoje</td><td>vysoká</td><td>nižší</td></tr>
+</tbody></table></div>
+<p><strong>Dynamické vs. statické typování.</strong> V Pythonu se typ kontroluje až za běhu, v C++ už při překladu. Chyba v typu se proto v Pythonu projeví, až když program dojde na daný řádek.</p>
+<p><strong>Silné vs. slabé typování.</strong> Python je silně typovaný: výraz <code>"3" + 4</code> skončí chybou <code>TypeError</code>, jazyk sám tiše nepřevádí text na číslo.</p>
+<p><strong>Paradigmata.</strong> Procedurální styl skládá program z funkcí. Objektový styl sdružuje data a chování do tříd. Funkcionální styl pracuje s funkcemi jako s hodnotami (<code>map</code>, <code>filter</code>, <code>lambda</code>).</p>
+</section>
+
+<section id="zaklady-jazyka">
+<h2>Základy jazyka</h2>
+<h3>Proměnné a datové typy</h3>
+<div class="tbl"><table>
+<thead><tr><th>Typ</th><th>Význam</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td><code>int</code></td><td>celé číslo libovolné velikosti</td><td><code>42</code></td></tr>
+<tr><td><code>float</code></td><td>desetinné číslo</td><td><code>3.14</code></td></tr>
+<tr><td><code>bool</code></td><td>pravdivostní hodnota</td><td><code>True</code>, <code>False</code></td></tr>
+<tr><td><code>str</code></td><td>text (neměnný)</td><td><code>"ahoj"</code></td></tr>
+<tr><td><code>list</code></td><td>měnitelný seznam</td><td><code>[1, 2, 3]</code></td></tr>
+<tr><td><code>tuple</code></td><td>neměnná n-tice</td><td><code>(1, 2)</code></td></tr>
+<tr><td><code>dict</code></td><td>slovník klíč → hodnota</td><td><code>{"jmeno": "Eva"}</code></td></tr>
+<tr><td><code>set</code></td><td>množina bez duplicit</td><td><code>{1, 2, 3}</code></td></tr>
+</tbody></table></div>
+<p>Typy se dělí na <strong>měnitelné</strong> (mutable: <code>list</code>, <code>dict</code>, <code>set</code>) a <strong>neměnné</strong> (immutable: <code>int</code>, <code>float</code>, <code>str</code>, <code>tuple</code>). Rozdíl je důležitý při předávání do funkcí.</p>
+<h3>Řízení toku programu</h3>
+<pre><code class="language-python">vek = int(input("Kolik ti je? "))
+
+if vek &gt;= 18:
+    print("dospělý")
+elif vek &gt;= 15:
+    print("mladistvý")
+else:
+    print("dítě")
+
+for i in range(3):        # cyklus s daným počtem opakování
+    print(i)              # 0, 1, 2
+
+while vek &lt; 18:           # cyklus s podmínkou
+    vek += 1</code></pre>
+<p>Cyklus <code>for</code> v Pythonu prochází prvky kolekce nebo rozsahu (<code>range</code>). Příkaz <code>break</code> cyklus ukončí, <code>continue</code> přeskočí na další průchod.</p>
+</section>
+
+<section id="funkce">
+<h2>Funkce</h2>
+<p>Funkce je pojmenovaný blok kódu, který řeší jednu dílčí úlohu a dá se volat opakovaně. Důvody, proč funkce používat: kód se neopakuje, program se dělí na menší srozumitelné části a jednotlivé části se dají samostatně testovat.</p>
+<pre><code class="language-python">def obsah_obdelniku(a, b=1):
+    """Vrátí obsah obdélníku o stranách a, b."""
+    return a * b
+
+print(obsah_obdelniku(3, 4))     # 12
+print(obsah_obdelniku(5))        # 5, b má výchozí hodnotu
+print(obsah_obdelniku(b=2, a=6)) # 12, pojmenované argumenty</code></pre>
+<h3>Části funkce</h3>
+<ul>
+  <li><strong>Definice</strong> začíná klíčovým slovem <code>def</code>, následuje jméno, závorky s parametry a dvojtečka.</li>
+  <li><strong>Parametr</strong> je jméno v definici, <strong>argument</strong> je konkrétní hodnota při volání.</li>
+  <li><strong>Návratová hodnota</strong> se předává příkazem <code>return</code>. Funkce bez <code>return</code> vrací <code>None</code>.</li>
+  <li><strong>Dokumentační řetězec</strong> (docstring) popisuje, co funkce dělá.</li>
+</ul>
+<h3>Kategorizace funkcí</h3>
+<div class="tbl"><table>
+<thead><tr><th>Druh</th><th>Popis</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td>Vestavěné</td><td>součást jazyka, bez importu</td><td><code>print</code>, <code>len</code>, <code>input</code>, <code>range</code></td></tr>
+<tr><td>Knihovní</td><td>z modulů standardní knihovny nebo balíčků</td><td><code>math.sqrt</code>, <code>random.randint</code></td></tr>
+<tr><td>Uživatelské</td><td>definuje je programátor pomocí <code>def</code></td><td><code>obsah_obdelniku</code></td></tr>
+<tr><td>S návratovou hodnotou</td><td>vrací výsledek pomocí <code>return</code></td><td><code>len("abc")</code></td></tr>
+<tr><td>Bez návratové hodnoty</td><td>provádějí akci, vrací <code>None</code></td><td><code>print("ahoj")</code></td></tr>
+<tr><td>Anonymní (lambda)</td><td>jednořádková funkce bez jména</td><td><code>lambda x: x * 2</code></td></tr>
+<tr><td>Rekurzivní</td><td>volá sama sebe</td><td>faktoriál</td></tr>
+<tr><td>Metody</td><td>funkce patřící objektu</td><td><code>"ahoj".upper()</code></td></tr>
+</tbody></table></div>
+<h3>Druhy parametrů</h3>
+<ul>
+  <li><strong>Poziční</strong>: přiřazují se podle pořadí.</li>
+  <li><strong>Pojmenované</strong> (keyword): přiřazují se podle jména, <code>f(b=2, a=6)</code>.</li>
+  <li><strong>S výchozí hodnotou</strong>: <code>def f(a, b=1)</code>.</li>
+  <li><strong>Proměnný počet</strong>: <code>*args</code> sbírá poziční argumenty do n-tice, <code>**kwargs</code> pojmenované do slovníku.</li>
+</ul>
+<h3>Rozsah platnosti proměnných</h3>
+<p>Proměnná vytvořená uvnitř funkce je <strong>lokální</strong> a po skončení funkce zaniká. Proměnná vytvořená mimo funkce je <strong>globální</strong>. Funkce může globální proměnnou číst; aby ji mohla přepsat, musí ji označit slovem <code>global</code>. Spoléhat na globální proměnné se nedoporučuje, protože funkce pak závisí na okolí a hůř se testuje.</p>
+<h3>Předávání argumentů</h3>
+<p>Python předává odkaz na objekt. Pokud funkce změní měnitelný objekt (například přidá prvek do seznamu), změna je vidět i venku. Neměnné hodnoty funkce změnit nemůže, jen si vytvoří novou.</p>
+<pre><code class="language-python">def pridej(seznam):
+    seznam.append(99)
+
+cisla = [1, 2]
+pridej(cisla)
+print(cisla)    # [1, 2, 99]</code></pre>
+<h3>Rekurze a lambda</h3>
+<pre><code class="language-python">def faktorial(n):
+    if n &lt;= 1:              # ukončovací podmínka
+        return 1
+    return n * faktorial(n - 1)
+
+dvojnasobek = lambda x: x * 2
+serazeno = sorted(["Petr", "Jo", "Alena"], key=lambda s: len(s))</code></pre>
+<p>Rekurzivní funkce musí mít ukončovací podmínku, jinak skončí chybou <code>RecursionError</code>.</p>
+</section>
+
+<section id="vyuziti-vyhody-a-nevyhody">
+<h2>Využití, výhody a nevýhody</h2>
+<div class="tbl"><table>
+<thead><tr><th>Oblast</th><th>Typické nástroje</th></tr></thead>
+<tbody>
+<tr><td>Analýza dat a věda</td><td>NumPy, pandas, Matplotlib, Jupyter</td></tr>
+<tr><td>Umělá inteligence a strojové učení</td><td>PyTorch, TensorFlow, scikit-learn</td></tr>
+<tr><td>Webový backend</td><td>Django, Flask, FastAPI</td></tr>
+<tr><td>Automatizace a skriptování</td><td>standardní knihovna, správa systémů</td></tr>
+<tr><td>Výuka programování</td><td>jednoduchá syntaxe, okamžitá zpětná vazba</td></tr>
+<tr><td>Mikrokontroléry</td><td>MicroPython (např. micro:bit, ESP32)</td></tr>
+</tbody></table></div>
+<p><strong>Výhody:</strong> čitelná syntaxe, rychlý vývoj, obrovské množství knihoven, přenositelnost mezi operačními systémy, velká komunita.</p>
+<p><strong>Nevýhody:</strong> pomalejší běh než u kompilovaných jazyků, vyšší spotřeba paměti, chyby v typech se projeví až za běhu, omezený souběh vláken v CPythonu (GIL), malé uplatnění v mobilních aplikacích a hrách náročných na výkon.</p>
+<p>V praxi se slabší výkon obchází tím, že výpočetně náročné části jsou napsané v C nebo C++ a Python je jen volá. Tak funguje například NumPy.</p>
+</section>
+
+<section id="shrnuti">
+<h2>Shrnutí</h2>
+<p>Python je interpretovaný, dynamicky a silně typovaný multiparadigmatický jazyk s důrazem na čitelnost. Funkce se definují slovem <code>def</code>, přijímají parametry a hodnotu vracejí příkazem <code>return</code>. Funkce dělíme na vestavěné, knihovní a uživatelské, dále podle návratové hodnoty a na zvláštní druhy (lambda, rekurzivní, metody). Python se používá hlavně v datech, AI, webovém backendu a automatizaci; platí za to nižší rychlostí běhu.</p>
+</section>
+
+<section id="otazky-k-opakovani">
+<h2>Otázky k opakování</h2>
+<ol>
+  <li>Co znamená, že je Python interpretovaný jazyk, a jaké to má důsledky?</li>
+  <li>Jaký je rozdíl mezi dynamickým a statickým typováním? A mezi silným a slabým?</li>
+  <li>K čemu slouží odsazení v Pythonu?</li>
+  <li>Jaký je rozdíl mezi parametrem a argumentem?</li>
+  <li>Co vrátí funkce, která neobsahuje <code>return</code>?</li>
+  <li>Vysvětlete rozdíl mezi lokální a globální proměnnou.</li>
+  <li>Co se stane se seznamem, který funkce uvnitř změní? Proč?</li>
+  <li>Co je rekurze a co nesmí rekurzivní funkci chybět?</li>
+  <li>Vyjmenujte druhy funkcí a ke každému uveďte příklad.</li>
+  <li>Kde se Python v praxi používá a kde se naopak nehodí?</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k maturitní otázce 1 „Programování v Pythonu“.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Operační systémy</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Seminář · maturitní otázka 5</div>
+      <h1>Operační systémy</h1>
+      <p class="lede">Funkce operačního systému, historie a srovnání MS-DOS, Windows, Linuxu a macOS</p>
+      <p class="hint">Šipky na klávesnici nebo tlačítka dole. Studijní text a metodický list jsou na rozcestníku.</p>
+    </div></section>
+
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="eyebrow">Hlavní myšlenka</div>
+      <h2>Operační systém je základní software, který spravuje hardware a umožňuje běh ostatních programů.</h2>
+      <p class="lede">Tvoří vrstvu mezi hardwarem, aplikacemi a uživatelem.</p>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Funkce operačního systému</h2>
+      <div class="cards4 cards3">
+        <div class="tcard" style="cursor:default"><b>Správa procesů</b><span>Spouští programy a přiděluje jim čas procesoru. Umožňuje multitasking.</span></div>
+        <div class="tcard" style="cursor:default"><b>Správa paměti</b><span>Přiděluje programům operační paměť a chrání je před sebou navzájem.</span></div>
+        <div class="tcard" style="cursor:default"><b>Správa souborů</b><span>Organizuje data na discích do souborů a složek pomocí souborového systému.</span></div>
+        <div class="tcard" style="cursor:default"><b>Správa zařízení</b><span>Komunikuje s hardwarem prostřednictvím ovladačů.</span></div>
+        <div class="tcard" style="cursor:default"><b>Uživatelské rozhraní</b><span>Příkazový řádek nebo grafické prostředí s okny.</span></div>
+        <div class="tcard" style="cursor:default"><b>Bezpečnost a síť</b><span>Uživatelské účty, oprávnění, síťová komunikace.</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Stavba operačního systému</h2>
+      <div class="cards4">
+        <div class="tcard" style="cursor:default"><b>Jádro</b><span>Kernel. Běží v privilegovaném režimu, řídí procesor, paměť a zařízení.</span></div>
+        <div class="tcard" style="cursor:default"><b>Ovladače</b><span>Programy, které jádru umožňují pracovat s konkrétním hardwarem.</span></div>
+        <div class="tcard" style="cursor:default"><b>Systémové služby</b><span>Programy na pozadí: síť, tisk, aktualizace.</span></div>
+        <div class="tcard" style="cursor:default"><b>Rozhraní</b><span>Shell: příkazový řádek (CLI) nebo grafické prostředí (GUI).</span></div>
+      </div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Dělení operačních systémů</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:26%"><col style="width:40%"><col style="width:34%"></colgroup>
+        <thead><tr><th>Hledisko</th><th>Druhy</th><th>Příklad</th></tr></thead>
+        <tbody>
+          <tr><td>Počet úloh</td><td>jednoúlohový, víceúlohový</td><td>MS-DOS, Windows</td></tr>
+          <tr><td>Počet uživatelů</td><td>jednouživatelský, víceuživatelský</td><td>MS-DOS, Linux</td></tr>
+          <tr><td>Rozhraní</td><td>textové, grafické</td><td>MS-DOS, macOS</td></tr>
+          <tr><td>Zařízení</td><td>desktop, server, mobil, vestavěné</td><td>Windows, Android</td></tr>
+          <tr><td>Licence</td><td>proprietární, otevřený kód</td><td>Windows, Linux</td></tr>
+          <tr><td>Jádro</td><td>monolitické, mikrojádro, hybridní</td><td>Linux, Windows NT</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Historie operačních systémů</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>50. léta</dt><dd>Počítače bez operačního systému, později dávkové zpracování úloh.</dd>
+        <dt>60. léta</dt><dd>Multiprogramování a sdílení času: více uživatelů u jednoho sálového počítače.</dd>
+        <dt>1969</dt><dd>UNIX v Bellových laboratořích. Vzor pro Linux, macOS i Android.</dd>
+        <dt>80. léta</dt><dd>Osobní počítače: MS-DOS, první grafická rozhraní Macintosh a Windows.</dd>
+        <dt>Po roce 2000</dt><dd>Mobilní systémy Android a iOS, virtualizace, cloud.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">MS-DOS</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Vznik</dt><dd>1981, Microsoft pro první IBM PC. Vychází ze zakoupeného systému 86-DOS.</dd>
+        <dt>Vlastnosti</dt><dd>Jednoúlohový, jednouživatelský, 16bitový, bez ochrany paměti.</dd>
+        <dt>Ovládání</dt><dd>Příkazový řádek: dir, cd, copy, del, format.</dd>
+        <dt>Soubory</dt><dd>Souborový systém FAT, názvy 8 znaků a přípona 3 znaky.</dd>
+        <dt>Dědictví</dt><dd>První verze Windows byly jen nadstavbou nad MS-DOS.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Vývoj Windows</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:24%"><col style="width:12%"><col style="width:64%"></colgroup>
+        <thead><tr><th>Verze</th><th>Rok</th><th>Význam</th></tr></thead>
+        <tbody>
+          <tr><td>Windows 1.0</td><td>1985</td><td>grafická nadstavba MS-DOS</td></tr>
+          <tr><td>Windows 3.1</td><td>1992</td><td>první masově rozšířená verze</td></tr>
+          <tr><td>Windows 95</td><td>1995</td><td>nabídka Start, hlavní panel, dlouhé názvy souborů</td></tr>
+          <tr><td>Windows NT</td><td>1993</td><td>nové 32bitové jádro nezávislé na MS-DOS, pro firmy</td></tr>
+          <tr><td>Windows XP</td><td>2001</td><td>jádro NT i pro domácnosti, konec řady nad MS-DOS</td></tr>
+          <tr><td>Windows 7</td><td>2009</td><td>úspěšný nástupce nepovedené Visty</td></tr>
+          <tr><td>Windows 10</td><td>2015</td><td>jeden systém pro různá zařízení, průběžné aktualizace</td></tr>
+          <tr><td>Windows 11</td><td>2021</td><td>nové rozhraní, vyšší nároky na hardware</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Linux</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>Vznik</dt><dd>1991, Linus Torvalds. Jádro inspirované UNIXem, doplněné nástroji projektu GNU.</dd>
+        <dt>Licence</dt><dd>Svobodný software pod licencí GPL: kód lze číst, měnit a šířit.</dd>
+        <dt>Distribuce</dt><dd>Jádro s dalším softwarem: Ubuntu, Debian, Fedora, Mint, Arch.</dd>
+        <dt>Kde běží</dt><dd>Většina serverů a cloudu, superpočítače, Android, vestavěná zařízení.</dd>
+        <dt>Slabiny</dt><dd>Malý podíl na desktopu, horší podpora některých her a komerčních programů.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">macOS</h2>
+      <dl class="facts" style="font-size:1rem;gap:.55rem 1.1rem">
+        <dt>1984</dt><dd>Macintosh: první masově úspěšný počítač s grafickým rozhraním a myší.</dd>
+        <dt>2001</dt><dd>Mac OS X: zcela nový systém na unixovém základu, jádro XNU.</dd>
+        <dt>Procesory</dt><dd>Motorola, PowerPC, od 2006 Intel, od 2020 vlastní čipy Apple Silicon.</dd>
+        <dt>Vlastnosti</dt><dd>Uzavřený systém určený jen pro počítače Apple, provázaný s iOS.</dd>
+        <dt>Využití</dt><dd>Grafika, video, hudba, vývoj softwaru.</dd>
+      </dl>
+    </div></section>
+
+    <section class="slide"><div class="slide-inner wide">
+      <h2 class="slide-title">Srovnání dnešních systémů</h2>
+      <div class="table-wrap"><table class="datatable"><colgroup><col style="width:22%"><col style="width:26%"><col style="width:26%"><col style="width:26%"></colgroup>
+        <thead><tr><th></th><th>Windows</th><th>Linux</th><th>macOS</th></tr></thead>
+        <tbody>
+          <tr><td>Licence</td><td>proprietární, placená</td><td>otevřený kód, zdarma</td><td>proprietární, s počítačem</td></tr>
+          <tr><td>Hardware</td><td>velmi široká podpora</td><td>široká podpora</td><td>jen počítače Apple</td></tr>
+          <tr><td>Jádro</td><td>hybridní (NT)</td><td>monolitické</td><td>hybridní (XNU)</td></tr>
+          <tr><td>Souborový systém</td><td>NTFS</td><td>ext4</td><td>APFS</td></tr>
+          <tr><td>Silná stránka</td><td>hry, kancelář, firmy</td><td>servery, vývoj</td><td>tvorba médií</td></tr>
+          <tr><td>Slabá stránka</td><td>častý cíl malwaru</td><td>méně komerčního softwaru</td><td>cena, uzavřenost</td></tr>
+        </tbody></table></div>
+    </div></section>
+
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">K zopakování</div>
+      <h2 class="slide-title">Otázky k maturitě</h2>
+      <ul class="summary-list">
+        <li>Co je operační systém a jaké má funkce?</li>
+        <li>Co je jádro a co jsou ovladače?</li>
+        <li>Podle čeho lze operační systémy dělit?</li>
+        <li>Charakterizujte MS-DOS.</li>
+        <li>Čím se liší řada Windows 9x od řady Windows NT?</li>
+        <li>Co je distribuce Linuxu? Uveďte příklady.</li>
+        <li>Z čeho vychází macOS?</li>
+        <li>Srovnejte Windows, Linux a macOS.</li>
+      </ul>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total=slides.length,current=0;
+  var dotsEl=$("dots"),counterEl=$("counter"),prevBtn=$("prevBtn"),nextBtn=$("nextBtn");
+  slides.forEach(function(s,i){
+    s.hidden=i!==0;
+    var d=el("button","dot");d.setAttribute("aria-label","Snímek "+(i+1));
+    d.addEventListener("click",function(){goTo(i);});dotsEl.appendChild(d);
+  });
+  var dotEls=Array.prototype.slice.call(dotsEl.children);
+  function goTo(i){
+    if(i<0||i>=total)return;
+    slides[current].hidden=true;current=i;slides[current].hidden=false;slides[current].scrollTop=0;
+    dotEls.forEach(function(d,idx){d.classList.toggle("is-active",idx===current);});
+    counterEl.textContent=(current+1)+" / "+total;
+    prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;
+  }
+  prevBtn.addEventListener("click",function(){goTo(current-1);});
+  nextBtn.addEventListener("click",function(){goTo(current+1);});
+  document.addEventListener("keydown",function(e){
+    if(e.target&&(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA"))return;
+    if(e.key==="ArrowRight"||e.key==="PageDown")goTo(current+1);
+    if(e.key==="ArrowLeft"||e.key==="PageUp")goTo(current-1);
+  });
+  goTo(0);
+})();
+</script>
+</body>
+</html>
