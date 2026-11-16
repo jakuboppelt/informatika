@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python: seznamy</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open><summary>Obsah</summary><h2>Lekce</h2>
+  <ol><li class="grp">Výklad</li><li><a href="#proc">Proč seznamy</a></li><li><a href="#indexy">Vytvoření a indexy</a></li><li><a href="#zmena">Změna, append a len</a></li><li><a href="#cyklus">Procházení cyklem</a></li><li><a href="#postupy">Typické postupy</a></li><li><a href="#tahak">Tahák</a></li><li class="grp">Indexy</li><li><a href="#u1">1 · Co vypíše?</a></li><li class="grp">Procházení</li><li><a href="#u2">2 · Vysvědčení</a></li><li><a href="#u3">3 · Nejteplejší den</a></li><li><a href="#u4">4 · Nákupní seznam</a></li><li><a href="#u5">5 · Pizza pro třídu 3</a></li><li class="grp">Bonus</li><li><a href="#u6">6 · Kdo sní nejvíc?</a></li></ol></details>
+</aside>
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Programování · Výklad a cvičení</p>
+  <h1>Python: <span class="t">seznamy</span></h1>
+  <p class="lead">Navazuje na <a href="04_vetveni.html">větvení a cykly</a>. Naučíš se uložit víc hodnot do jedné proměnné, sáhnout na konkrétní hodnotu a projít je všechny cyklem. Nejdřív krátký výklad s ukázkami, potom úkoly. Jak programy psát a spouštět, najdeš v <a href="01_python_prvni_kroky.html#jak">prvních krocích</a>.</p>
+  <div class="facts">
+    <div><span class="k">Úkolů</span><span class="v">5 + 1 bonus, od nejlehčího</span></div>
+    <div><span class="k">Čas</span><span class="v">jedna vyučovací hodina</span></div>
+    <div><span class="k">Když se zasekneš</span><span class="v">přečti chybu, pak Nápověda, až nakonec Řešení</span></div>
+  </div>
+</header>
+
+<p class="part">Výklad</p>
+
+<section id="proc">
+<h2>Proč seznamy</h2>
+<p><strong>Seznam je jedna proměnná, ve které je víc hodnot najednou.</strong> Bez něj potřebuje každá hodnota vlastní proměnnou. Představ si, že chceš spočítat průměr známek:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">znamka1 = 1
+znamka2 = 3
+znamka3 = 2
+znamka4 = 1
+znamka5 = 4
+
+prumer = (znamka1 + znamka2 + znamka3 + znamka4 + znamka5) / 5
+print(prumer)</code></pre>
+<p>Co když známek bude 30? Nebo když předem nevíš, kolik jich bude? Takhle to nejde. Se seznamem stačí jedna proměnná:</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">znamky = [1, 3, 2, 1, 4]</code></pre>
+</section>
+
+<section id="indexy">
+<h2>Vytvoření a indexy</h2>
+<p>Hodnoty píšeš do <strong>hranatých závorek</strong> a oddělíš je čárkou. V seznamu můžou být čísla, texty, cokoli.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">znamky = [1, 3, 2, 1, 4]
+jmena = ["Anna", "Petr", "Eva"]
+prazdny = []
+
+print(znamky)
+print(jmena)</code></pre>
+<p class="expect-h">Výstup</p><pre><code>[1, 3, 2, 1, 4]
+['Anna', 'Petr', 'Eva']</code></pre>
+<p>Každá hodnota má své pořadové číslo, <strong>index</strong>. Pozor: <strong>počítá se od nuly</strong>. Na hodnotu sáhneš tak, že index napíšeš do hranatých závorek za jméno seznamu.</p>
+<div class="tbl"><table>
+<thead><tr><th>Index</th><th><code>0</code></th><th><code>1</code></th><th><code>2</code></th></tr></thead>
+<tbody>
+<tr><td>Hodnota</td><td><code>"Anna"</code></td><td><code>"Petr"</code></td><td><code>"Eva"</code></td></tr>
+<tr><td>Záporný index</td><td><code>-3</code></td><td><code>-2</code></td><td><code>-1</code></td></tr>
+</tbody></table></div>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmena = ["Anna", "Petr", "Eva"]
+
+print(jmena[0])
+print(jmena[2])
+print(jmena[-1])</code></pre>
+<p class="expect-h">Výstup</p><pre><code>Anna
+Eva
+Eva</code></pre>
+<p>Záporný index počítá od konce: <code>[-1]</code> je vždy poslední prvek, ať je seznam jakkoli dlouhý.</p>
+<div class="note tip"><b class="lbl">Index mimo seznam</b><p>Když sáhneš na index, který neexistuje, třeba <code>jmena[3]</code>, program skončí s chybou <code>IndexError: list index out of range</code>. Seznam se třemi prvky má indexy jen 0, 1 a 2.</p></div>
+</section>
+
+<section id="zmena">
+<h2>Změna, append a len</h2>
+<h3>Změna hodnoty</h3>
+<p>Přes index můžeš hodnotu i přepsat, stejně jako přiřazuješ do proměnné.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmena = ["Anna", "Petr", "Eva"]
+jmena[1] = "Pavel"
+print(jmena)</code></pre>
+<p class="expect-h">Výstup</p><pre><code>['Anna', 'Pavel', 'Eva']</code></pre>
+<h3>Přidání na konec</h3>
+<p><code>append</code> přidá hodnotu na konec seznamu. Píše se s tečkou za jménem seznamu: seznam si hodnotu „přidá sám do sebe“.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmena = ["Anna", "Pavel", "Eva"]
+jmena.append("Jan")
+print(jmena)</code></pre>
+<p class="expect-h">Výstup</p><pre><code>['Anna', 'Pavel', 'Eva', 'Jan']</code></pre>
+<p>Typicky začneš s prázdným seznamem <code>[]</code> a hodnoty do něj postupně přidáváš, třeba podle toho, co zadá uživatel.</p>
+<h3>Délka seznamu</h3>
+<p><code>len</code> už znáš u textu, kde vrací počet znaků. U seznamu vrací počet prvků.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmena = ["Anna", "Pavel", "Eva", "Jan"]
+print(len(jmena))
+print(jmena[len(jmena) - 1])</code></pre>
+<p class="expect-h">Výstup</p><pre><code>4
+Jan</code></pre>
+<p>Poslední index je vždy o jedna menší než délka: seznam se 4 prvky má indexy 0 až 3.</p>
+</section>
+
+<section id="cyklus">
+<h2>Procházení cyklem</h2>
+<p>Cyklus <code>for</code> umí projít seznam <strong>prvek po prvku</strong>. V každém kole je v proměnné cyklu jedna hodnota ze seznamu.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmena = ["Anna", "Petr", "Eva"]
+
+for jmeno in jmena:
+    print("Ahoj", jmeno)</code></pre>
+<p class="expect-h">Výstup</p><pre><code>Ahoj Anna
+Ahoj Petr
+Ahoj Eva</code></pre>
+<p>Čti to jako: „<strong>pro každé</strong> jméno <strong>v</strong> seznamu jmen udělej…“. Jméno proměnné cyklu (<code>jmeno</code>) si vymýšlíš sám. Zvykem je jednotné číslo od jména seznamu: <code>znamky</code> → <code>znamka</code>.</p>
+<p>Už znáš <code>for i in range(5)</code>. Teď je vidět, co <code>range</code> vlastně dělá: vyrobí řadu čísel 0, 1, 2, 3, 4, kterou cyklus prochází stejně jako seznam.</p>
+<h3>Seznam a podmínka</h3>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">znamky = [1, 3, 2, 5, 4]
+
+for znamka in znamky:
+    if znamka == 5:
+        print("Pozor, pětka!")</code></pre>
+<p class="expect-h">Výstup</p><pre><code>Pozor, pětka!</code></pre>
+</section>
+
+<section id="postupy">
+<h2>Typické postupy</h2>
+<p>Většina programů se seznamy dělá jednu ze čtyř věcí. Všechny mají stejný vzor: <strong>před cyklem</strong> si připravíš proměnnou, <strong>v cyklu</strong> ji upravuješ, <strong>po cyklu</strong> vypíšeš výsledek.</p>
+<h3>Součet a průměr</h3>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">znamky = [1, 3, 2, 1, 4]
+
+soucet = 0
+for znamka in znamky:
+    soucet = soucet + znamka
+
+prumer = soucet / len(znamky)
+print("Průměr:", prumer)</code></pre>
+<p class="expect-h">Výstup</p><pre><code>Průměr: 2.2</code></pre>
+<h3>Největší hodnota</h3>
+<p>Začneš prvním prvkem a pak hledáš, jestli není něco většího.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">teploty = [12, 18, 15, 21, 9]
+
+nejvetsi = teploty[0]
+for t in teploty:
+    if t &gt; nejvetsi:
+        nejvetsi = t
+
+print("Nejtepleji bylo", nejvetsi, "stupňů.")</code></pre>
+<p class="expect-h">Výstup</p><pre><code>Nejtepleji bylo 21 stupňů.</code></pre>
+<h3>Počítání</h3>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">znamky = [1, 3, 1, 5, 1, 2]
+
+jednicek = 0
+for znamka in znamky:
+    if znamka == 1:
+        jednicek = jednicek + 1
+
+print("Počet jedniček:", jednicek)</code></pre>
+<p class="expect-h">Výstup</p><pre><code>Počet jedniček: 3</code></pre>
+<h3>Hledání</h3>
+<p>Jestli je hodnota v seznamu, zjistíš pomocí <code>in</code>. Výsledek je <code>True</code>, nebo <code>False</code>, takže se hodí rovnou do podmínky.</p>
+<div class="codehead"><span>Ukázka</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">nakup = ["mléko", "chleba", "vejce"]
+
+if "chleba" in nakup:
+    print("Chleba nezapomeň!")</code></pre>
+<p class="expect-h">Výstup</p><pre><code>Chleba nezapomeň!</code></pre>
+<div class="note tip"><b class="lbl">Hotové funkce</b><p>Python umí <code>sum(znamky)</code>, <code>max(teploty)</code> a <code>min(teploty)</code> i sám. V úkolech je ale nejdřív napiš cyklem: právě na tom se naučíš, jak procházení funguje. Hotové funkce pak můžeš klidně používat.</p></div>
+</section>
+
+<section id="tahak">
+<h2>Tahák</h2>
+<div class="tbl"><table>
+<thead><tr><th>Zápis</th><th>Co dělá</th></tr></thead>
+<tbody>
+<tr><td><code>s = [3, 1, 2]</code></td><td>vytvoří seznam se třemi prvky</td></tr>
+<tr><td><code>s = []</code></td><td>vytvoří prázdný seznam</td></tr>
+<tr><td><code>s[0]</code></td><td>první prvek (indexy od nuly)</td></tr>
+<tr><td><code>s[-1]</code></td><td>poslední prvek</td></tr>
+<tr><td><code>s[1] = 7</code></td><td>přepíše druhý prvek</td></tr>
+<tr><td><code>s.append(5)</code></td><td>přidá 5 na konec seznamu</td></tr>
+<tr><td><code>len(s)</code></td><td>počet prvků</td></tr>
+<tr><td><code>for x in s:</code></td><td>projde seznam, v <code>x</code> je postupně každý prvek</td></tr>
+<tr><td><code>5 in s</code></td><td><code>True</code>, když je 5 v seznamu</td></tr>
+<tr><td><code>sum(s) max(s) min(s)</code></td><td>součet, největší a nejmenší prvek</td></tr>
+</tbody></table></div>
+
+<h3>Nejčastější chyby</h3>
+<div class="tbl"><table>
+<thead><tr><th>Chyba</th><th>Co obvykle znamená</th></tr></thead>
+<tbody>
+<tr><td><code>IndexError</code></td><td>Index mimo seznam. Často <code>s[len(s)]</code> místo <code>s[len(s) - 1]</code>, nebo počítání od jedničky.</td></tr>
+<tr><td><code>TypeError: … NoneType</code></td><td>Napsal(a) jsi <code>s = s.append(5)</code>. <code>append</code> nic nevrací, seznam se tím ztratí. Piš jen <code>s.append(5)</code>.</td></tr>
+<tr><td><code>TypeError: 'tuple' object …</code></td><td>Kulaté závorky místo hranatých: seznam je <code>[1, 2, 3]</code>, ne <code>(1, 2, 3)</code>.</td></tr>
+<tr><td>špatný součet</td><td><code>soucet = 0</code> je uvnitř cyklu, takže se v každém kole vynuluje. Příprava patří před cyklus.</td></tr>
+<tr><td>dvě jména slepená</td><td>Chybí čárka: <code>["Anna" "Petr"]</code> Python tiše spojí do <code>["AnnaPetr"]</code>.</td></tr>
+</tbody></table></div>
+</section>
+
+<p class="part">Indexy</p>
+<section id="u1" class="task">
+<div class="task-head"><h2><span class="num">1</span> Co vypíše?</h2><span class="time">5 min</span></div>
+<p>Nejdřív si na papír napiš, co program vypíše. Teprve potom ho spusť a porovnej.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">barvy = ["červená", "zelená", "modrá", "žlutá"]
+
+print(barvy[1])
+print(barvy[-1])
+print(len(barvy))
+
+barvy[0] = "černá"
+barvy.append("bílá")
+print(barvy)
+print(barvy[len(barvy) - 1])</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>zelená
+žlutá
+4
+['černá', 'zelená', 'modrá', 'žlutá', 'bílá']
+bílá</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Indexy začínají nulou, takže <code>barvy[1]</code> je druhá barva. <code>[-1]</code> je poslední. Po <code>append</code> má seznam o prvek víc.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">barvy = ["červená", "zelená", "modrá", "žlutá"]
+
+print(barvy[1])      # zelená – index 1 je druhý prvek
+print(barvy[-1])     # žlutá – poslední prvek
+print(len(barvy))    # 4
+
+barvy[0] = "černá"
+barvy.append("bílá")
+print(barvy)
+print(barvy[len(barvy) - 1])   # bílá – teď je seznam dlouhý 5</code></pre>
+<p>Nejčastější omyl je <code>barvy[1]</code> = „červená“. Druhá častá chyba je u posledního řádku: po <code>append</code> je délka 5, takže poslední index je 4.</p></div></details>
+</section>
+<p class="part">Procházení</p>
+<section id="u2" class="task">
+<div class="task-head"><h2><span class="num">2</span> Vysvědčení</h2><span class="time">7 min</span></div>
+<p>Máš seznam známek. Spočítej a vypiš průměr a počet pětek. Nepoužívej <code>sum</code>, napiš to cyklem.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">znamky = [2, 1, 5, 3, 5, 1, 2, 1]
+
+soucet = 0
+petek = 0
+
+# sem napiš cyklus
+
+print("Průměr:", soucet / len(znamky))
+print("Počet pětek:", petek)</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Průměr: 2.5
+Počet pětek: 2</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>V jednom cyklu můžeš dělat dvě věci zároveň: každou známku přičti do <code>soucet</code> a pak se podmínkou zeptej, jestli je to pětka. Pokud ano, zvyš <code>petek</code> o 1.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">znamky = [2, 1, 5, 3, 5, 1, 2, 1]
+
+soucet = 0
+petek = 0
+
+for znamka in znamky:
+    soucet = soucet + znamka
+    if znamka == 5:
+        petek = petek + 1
+
+print("Průměr:", soucet / len(znamky))
+print("Počet pětek:", petek)</code></pre>
+<p>Pořadí je pořád stejné: příprava před cyklem, práce v cyklu, výpis po cyklu. Přičítání je odsazené jen o jednu úroveň, takže se provede pro každou známku. Zvýšení <code>petek</code> je odsazené víc, provede se jen u pětek.</p></div></details>
+</section>
+<section id="u3" class="task">
+<div class="task-head"><h2><span class="num">3</span> Nejteplejší den</h2><span class="time">7 min</span></div>
+<p>Máš naměřené teploty za týden a seznam dnů. Najdi nejvyšší a nejnižší teplotu. Nepoužívej <code>max</code> ani <code>min</code>.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">teploty = [12, 18, 15, 21, 9, 14, 17]
+
+nejvyssi = teploty[0]
+nejnizsi = teploty[0]
+
+# sem napiš cyklus
+
+print("Nejvyšší teplota:", nejvyssi)
+print("Nejnižší teplota:", nejnizsi)</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Nejvyšší teplota: 21
+Nejnižší teplota: 9</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Projdi všechny teploty. Když je aktuální teplota větší než <code>nejvyssi</code>, ulož ji do <code>nejvyssi</code>. U nejnižší to samé, jen obráceně.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">teploty = [12, 18, 15, 21, 9, 14, 17]
+
+nejvyssi = teploty[0]
+nejnizsi = teploty[0]
+
+for t in teploty:
+    if t &gt; nejvyssi:
+        nejvyssi = t
+    if t &lt; nejnizsi:
+        nejnizsi = t
+
+print("Nejvyšší teplota:", nejvyssi)
+print("Nejnižší teplota:", nejnizsi)</code></pre>
+<p>Proč začínat <code>teploty[0]</code> a ne nulou? Kdyby všechny teploty byly pod nulou, maximum by vyšlo 0, i když taková teplota v seznamu vůbec není.</p></div></details>
+</section>
+<section id="u4" class="task">
+<div class="task-head"><h2><span class="num">4</span> Nákupní seznam</h2><span class="time">8 min</span></div>
+<p>Program se opakovaně ptá, co koupit, a ukládá to do seznamu. Když uživatel jen zmáčkne <kbd>Enter</kbd>, ptaní skončí. Pak program vypíše počet položek a celý seznam, každou položku na samostatný řádek.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">nakup = []
+
+polozka = input("Co koupit? (Enter = konec) ")</code></pre>
+<p>Při spuštění zadej například: <code>mléko</code>, <code>chleba</code>, <code>vejce</code> a nakonec jen <kbd>Enter</kbd>. Pak zkus i jiné hodnoty.</p>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Co koupit? (Enter = konec) mléko
+Co koupit? (Enter = konec) chleba
+Co koupit? (Enter = konec) vejce
+Co koupit? (Enter = konec) 
+Na seznamu jsou 3 věci:
+- mléko
+- chleba
+- vejce</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Použij <code>while</code> jako v úloze „Sčítej, dokud nezadám nulu“: první položku načti před cyklem, v cyklu ji přidej pomocí <code>append</code> a načti další. Prázdný vstup je prázdný text <code>""</code>. Výpis je druhý, samostatný cyklus <code>for</code> až po skončení <code>while</code>.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">nakup = []
+
+polozka = input("Co koupit? (Enter = konec) ")
+while polozka != "":
+    nakup.append(polozka)
+    polozka = input("Co koupit? (Enter = konec) ")
+
+print("Na seznamu jsou", len(nakup), "věci:")
+for polozka in nakup:
+    print("-", polozka)</code></pre>
+<p>Tady se poprvé seznam neplní ručně, ale za běhu programu. Program předem neví, kolik položek bude, a se seznamem to nevadí. Prázdný text se do seznamu nedostane, protože cyklus skončí dřív, než by se přidal.</p></div></details>
+</section>
+<section id="u5" class="task">
+<div class="task-head"><h2><span class="num">5</span> Pizza pro třídu 3</h2><span class="time">8 min</span></div>
+<p>Pamatuješ na pizzu pro třídu? Tentokrát nechce každý stejně. Každý student napsal, kolik kousků sní, a jedna pizza má 8 kousků. Spočítej, kolik kousků je potřeba celkem, kolik celých pizz objednat, aby se dostalo na všechny, a kolik kousků zbyde.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">kousky = [3, 2, 4, 3, 5, 2, 3, 4]
+kousku_v_pizze = 8</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Celkem kousků: 26
+Je potřeba koupit 4 pizzy.
+Zbyde 6 kousků.</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Nejdřív cyklem sečti kousky ze seznamu. Pak je to stejné jako minule: <code>//</code> dá počet celých pizz a <code>%</code> zbytek. Když zbytek není nula, musíš přiobjednat ještě jednu pizzu.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">kousky = [3, 2, 4, 3, 5, 2, 3, 4]
+kousku_v_pizze = 8
+
+celkem = 0
+for k in kousky:
+    celkem = celkem + k
+
+pizzy = celkem // kousku_v_pizze
+zbytek = celkem % kousku_v_pizze
+if zbytek &gt; 0:
+    pizzy = pizzy + 1
+
+print("Celkem kousků:", celkem)
+print("Je potřeba koupit", pizzy, "pizzy.")
+print("Zbyde", pizzy * kousku_v_pizze - celkem, "kousků.")</code></pre>
+<p>26 kousků jsou 3 celé pizzy (24 kousků) a 2 kousky navíc, takže objednáš 4 pizzy a 6 kousků zbyde. Vyzkoušej přidat do seznamu studenta, který sní 6 kousků: pak to vyjde přesně na 4 pizzy a nic nezbyde.</p></div></details>
+</section>
+<p class="part">Bonus</p>
+<section id="u6" class="task">
+<div class="task-head"><h2><span class="num">6</span> Kdo sní nejvíc?</h2><span class="time">8 min</span></div>
+<p>K pizze přidej seznam jmen. Jméno a počet kousků na <strong>stejném indexu</strong> patří k sobě: Anna sní 3, Petr 2 a tak dál. Vypiš, kdo sní nejvíc kousků. Když je jich víc se stejným počtem, vypiš všechny.</p>
+<div class="codehead"><span>Výchozí kód</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmena = ["Anna", "Petr", "Eva", "Jan", "Ota", "Lucie", "Tom", "Ema"]
+kousky = [3, 2, 4, 3, 5, 2, 3, 4]</code></pre>
+<p class="expect-h">Očekávaný výstup</p><pre><code>Ota sní 5 kousků.</code></pre>
+<details class="hint"><summary>Nápověda</summary><div><p>Úkol má dva kroky. Nejdřív najdi největší počet kousků, jako v úloze 3. Pak potřebuješ procházet oba seznamy najednou, a to jde přes indexy: <code>for i in range(len(kousky)):</code>. Uvnitř máš <code>jmena[i]</code> a <code>kousky[i]</code>.</p></div></details>
+<details class="sol"><summary>Řešení</summary><div><div class="codehead"><span>Řešení</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">jmena = ["Anna", "Petr", "Eva", "Jan", "Ota", "Lucie", "Tom", "Ema"]
+kousky = [3, 2, 4, 3, 5, 2, 3, 4]
+
+nejvic = kousky[0]
+for k in kousky:
+    if k &gt; nejvic:
+        nejvic = k
+
+for i in range(len(kousky)):
+    if kousky[i] == nejvic:
+        print(jmena[i], "sní", kousky[i], "kousků.")</code></pre>
+<p><code>for x in seznam</code> dává hodnoty, <code>for i in range(len(seznam))</code> dává indexy. Indexy potřebuješ, když procházíš dva seznamy, které k sobě patří. Zkus Evě změnit počet na 5: program vypíše dvě jména.</p></div></details>
+</section>
+
+<p class="foot">Hotovo? Vrať se k úkolu, který ti dal nejvíc práce, a zkus ho napsat znovu bez nápovědy. Tak se to naučíš nejrychleji.</p>
+</main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
+    });
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+})();
+</script>
+</body>
+</html>
