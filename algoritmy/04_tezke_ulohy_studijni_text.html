@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Když je možností příliš – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Obchodní cestující</li>
+    <li><a href="#tsp">Úloha</a></li>
+    <li><a href="#pocet">Kolik je tras</a></li>
+    <li><a href="#soused">Nejbližší soused</a></li>
+    <li><a href="#vylepseni">Rozplétání křížení</a></li>
+    <li class="grp">Batoh</li>
+    <li><a href="#batoh">Úloha</a></li>
+    <li><a href="#pravidla">Hladová pravidla</a></li>
+    <li><a href="#vybery">Kolik je výběrů</a></li>
+    <li class="grp">Souvislosti</li>
+    <li><a href="#heuristiky">Přesně, nebo rychle</a></li>
+    <li><a href="#pnp">P = NP</a></li>
+    <li><a href="#pouziti">Kde se to řeší</a></li>
+    <li><a href="#python">Pro zájemce: Python</a></li>
+    <li class="grp">Procvičení</li>
+    <li><a href="#otazky">Otázky k opakování</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Algoritmy · Studijní text</p>
+  <h1>Když je možností příliš <span class="t">obchodní cestující · batoh · heuristiky</span></h1>
+  <p class="lead">Dvě úlohy, které zná každý z běžného života: objet několik míst co nejkratší cestou a sbalit do batohu co nejvíc užitečných věcí. Počítač je přesto neumí rychle vyřešit přesně, protože možností je příliš. Proto se v praxi používají postupy, které dají „dost dobré“ řešení. Malá čísla u textu odkazují na zdroje na konci.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>popsat úlohu obchodního cestujícího a úlohu batohu</li>
+      <li>vysvětlit, proč počet možností roste explozivně</li>
+      <li>popsat heuristiku nejbližšího souseda a ukázat, kdy selže</li>
+      <li>vysvětlit, co je heuristika a proč se používá</li>
+      <li>ukázat, proč hladová pravidla u batohu nemusí vyjít</li>
+      <li>vlastními slovy vysvětlit otázku P = NP</li>
+      <li>uvést příklady, kde se tyto úlohy řeší v praxi</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Obchodní cestující</p>
+
+<section id="tsp">
+<h2>Úloha obchodního cestujícího</h2>
+<p>Kurýr vyjede z depa, musí doručit balíky na osm adres a vrátit se zpátky. V jakém pořadí má adresy objet, aby ujel co nejméně? Úloze se říká <dfn>problém obchodního cestujícího</dfn> (anglicky <i>travelling salesman problem</i>, TSP): najít nejkratší <strong>okruh</strong>, který projde všemi místy právě jednou a vrátí se na start.<sup class="ref"><a href="#z1">1</a></sup></p>
+<figure class="tu-fig">
+  <svg class="tu-svg" id="figBest" role="img" aria-label="Mapa kurýra s nejkratší trasou 25,3 km"></svg>
+  <figcaption>Mapa z prezentace. Vzdálenosti počítáme vzdušnou čarou v kilometrech. Zelená je nejkratší okruh: 25,3 km.</figcaption>
+</figure>
+<p>Pozor na rozdíl oproti minulé hodině. Dijkstrův algoritmus hledá nejkratší cestu <em>z jednoho místa do druhého</em> a je rychlý i pro miliony křižovatek. Obchodní cestující musí projet <em>všechna</em> místa, a to je úplně jiná obtížnost.</p>
+</section>
+
+<section id="pocet">
+<h2>Kolik je tras</h2>
+<p>Z depa můžeš jet na kterékoli z 8 míst, odtud na kterékoli ze zbylých 7, pak 6… Pořadí je tedy 8 · 7 · 6 · 5 · 4 · 3 · 2 · 1 = <strong>8! = 40 320</strong>. Každý okruh jde projet dvěma směry se stejnou délkou, takže různých tras je polovina: <strong>20 160</strong>. Obecně pro <i>n</i> míst včetně depa je různých okruhů</p>
+<p class="nc-formula"><code>(n − 1)! / 2</code></p>
+<div class="tbl"><table>
+<thead><tr><th>míst</th><th>různých okruhů</th><th>při miliardě tras za sekundu</th></tr></thead>
+<tbody>
+<tr><td class="num">5</td><td class="num">12</td><td>okamžitě</td></tr>
+<tr><td class="num">9</td><td class="num">20 160</td><td>0,02 ms</td></tr>
+<tr><td class="num">12</td><td class="num">19 958 400</td><td>0,02 s</td></tr>
+<tr><td class="num">15</td><td class="num">43 589 145 600</td><td>44 s</td></tr>
+<tr><td class="num">20</td><td class="num">≈ 6,1 · 10<sup>16</sup></td><td>skoro 2 roky</td></tr>
+<tr><td class="num">25</td><td class="num">≈ 3,1 · 10<sup>23</sup></td><td>asi 10 milionů let</td></tr>
+<tr><td class="num">30</td><td class="num">≈ 4,4 · 10<sup>30</sup></td><td>asi 1,4 · 10<sup>14</sup> let, desettisíckrát déle, než existuje vesmír</td></tr>
+</tbody></table></div>
+<p>Tomu se říká <dfn>kombinatorická exploze</dfn>. Faktoriál roste rychleji než cokoli, co známe z běžného života: přidáním jediného místa se počet tras vynásobí počtem míst. Vyzkoušet všechno (<dfn>hrubá síla</dfn>) jde jen u malých úloh. Skutečný kurýr přitom objíždí za den desítky adres.</p>
+</section>
+
+<section id="soused">
+<h2>Nejbližší soused</h2>
+<p>Nejjednodušší rozumný postup: <strong>z místa, kde stojíš, jeď vždy na nejbližší místo, kde jsi ještě nebyl</strong>. Až objedeš všechno, vrať se do depa. Je rychlý a dává použitelné trasy. Na naší mapě:</p>
+<p><strong>Depo → Pekárna → Kino → Knihovna → Radnice → Nemocnice → Zoo → Bazén → Nádraží → Depo</strong></p>
+<p>Celkem <strong>30,0 km</strong>, tedy o 19 % víc než nejkratších 25,3 km. Začátek vypadal dobře, ale postup na nic nemyslí dopředu. Ze Zoo na východním okraji města musel kurýr přejet přes celé město k Bazénu (8,3 km).</p>
+<figure class="tu-fig">
+  <svg class="tu-svg" id="figNN" role="img" aria-label="Trasa podle nejbližšího souseda, 30 km, s křížícími se úseky"></svg>
+  <figcaption>Trasa podle nejbližšího souseda. Červeně jsou úseky, které se kříží.</figcaption>
+</figure>
+<p>Takový postup, který v každém kroku udělá to, co teď vypadá nejlépe, se nazývá <dfn>hladový</dfn> (greedy). Hladové hledání jsme potkali už u hledání nejkratší cesty: bylo rychlé, ale v bažině zvolilo horší cestu.</p>
+</section>
+
+<section id="vylepseni">
+<h2>Rozplétání křížení</h2>
+<p>Když se dva úseky okruhu kříží, dá se trasa vždy zkrátit: obrátíme pořadí míst mezi nimi a místo dvou křížících se úseků vzniknou dva, které se nekříží. Plyne to z trojúhelníkové nerovnosti: úhlopříčky čtyřúhelníku jsou dohromady delší než dvě jeho protilehlé strany.</p>
+<p>Postupným vylepšováním se hladová trasa zkrátí takhle:</p>
+<div class="tbl"><table>
+<thead><tr><th>krok</th><th>co se změní</th><th>délka</th></tr></thead>
+<tbody>
+<tr><td class="num">0</td><td>trasa podle nejbližšího souseda</td><td class="num">30,0 km</td></tr>
+<tr><td class="num">1</td><td>rozpletení úseků Pekárna – Kino a Zoo – Bazén</td><td class="num">28,3 km</td></tr>
+<tr><td class="num">2</td><td>rozpletení úseků Kino – Bazén a Nádraží – Depo</td><td class="num">26,8 km</td></tr>
+<tr><td class="num">3</td><td>přepojení úseků Radnice – Knihovna a Kino – Nádraží (nekřížily se, ale přepojení pomůže)</td><td class="num">25,3 km</td></tr>
+</tbody></table></div>
+<p>Tady vylepšování dojelo až k nejkratší trase. Nemusí to tak být vždycky. Vylepšování může <strong>uvíznout</strong>: žádná malá změna už nepomůže, a přesto existuje lepší trasa. Například trasa Depo → Bazén → Nádraží → Knihovna → Kino → Pekárna → Zoo → Nemocnice → Radnice → Depo (27,7 km) se vylepší na 25,7 km a dál to nejde. Podobně jako turista v mlze, který stoupá pořád nahoru a skončí na vrcholku kopce, ne na nejvyšší hoře.</p>
+</section>
+
+<p class="part">Batoh</p>
+
+<section id="batoh">
+<h2>Úloha batohu</h2>
+<p>Batoh unese 12 kg. Každá věc má váhu a body podle toho, jak se na výletě hodí. Které věci vzít, aby se vešly a měly co nejvíc bodů? Úloze se říká <dfn>problém batohu</dfn> (anglicky <i>knapsack problem</i>).<sup class="ref"><a href="#z2">2</a></sup></p>
+<div class="tbl"><table>
+<thead><tr><th>věc</th><th>váha</th><th>body</th><th>bodů na kg</th></tr></thead>
+<tbody>
+<tr><td>🎸 kytara</td><td class="num">4 kg</td><td class="num">2</td><td class="num">0,5</td></tr>
+<tr><td>⛺ stan</td><td class="num">5 kg</td><td class="num">14</td><td class="num">2,8</td></tr>
+<tr><td>🍖 gril</td><td class="num">7 kg</td><td class="num">6</td><td class="num">0,9</td></tr>
+<tr><td>🛌 spacák</td><td class="num">4 kg</td><td class="num">13</td><td class="num">3,25</td></tr>
+<tr><td>💧 voda</td><td class="num">5 kg</td><td class="num">9</td><td class="num">1,8</td></tr>
+<tr><td>🥫 jídlo</td><td class="num">6 kg</td><td class="num">15</td><td class="num">2,5</td></tr>
+<tr><td>🧥 bunda</td><td class="num">2 kg</td><td class="num">5</td><td class="num">2,5</td></tr>
+<tr><td>📷 foťák</td><td class="num">6 kg</td><td class="num">10</td><td class="num">1,7</td></tr>
+</tbody></table></div>
+<p>Nejlepší výběr je <strong>spacák, jídlo a bunda: 33 bodů a přesně 12 kg</strong>.</p>
+</section>
+
+<section id="pravidla">
+<h2>Hladová pravidla</h2>
+<p>Nabízí se seřadit věci podle nějakého pravidla a brát je popořadě, dokud se vejdou. Žádné z tří přirozených pravidel ale nejlepší výběr nenajde:</p>
+<div class="tbl"><table>
+<thead><tr><th>pravidlo</th><th>co vezme</th><th>váha</th><th>body</th></tr></thead>
+<tbody>
+<tr><td>nejcennější první</td><td>jídlo, stan</td><td class="num">11 kg</td><td class="num">29</td></tr>
+<tr><td>nejlehčí první</td><td>bunda, spacák, kytara</td><td class="num">10 kg</td><td class="num">20</td></tr>
+<tr><td>nejlepší poměr body / kg</td><td>spacák, stan, bunda</td><td class="num">11 kg</td><td class="num">32</td></tr>
+<tr><td><b>nejlepší možné</b></td><td>spacák, jídlo, bunda</td><td class="num">12 kg</td><td class="num"><b>33</b></td></tr>
+</tbody></table></div>
+<p>Poměr body / kg dopadl nejlépe, ale i on selhal: vzal stan, protože má skvělý poměr, a pak se už nevešlo jídlo. Jeden kilogram zůstal prázdný. Nejlepší výběr stan vynechá, a batoh tím přesně zaplní. <strong>Hodnota věci závisí na tom, co dalšího se k ní vejde.</strong> Pravidlo, které se dívá na každou věc zvlášť, tohle neuhlídá.</p>
+</section>
+
+<section id="vybery">
+<h2>Kolik je výběrů</h2>
+<p>U každé věci se rozhodujeme jen ano, nebo ne. Výběr se dá zapsat jako řada jedniček a nul, třeba <code>00010110</code> (spacák, jídlo a bunda), tedy přesně jako <strong>bity</strong>. Osm věcí znamená 2⁸ = <strong>256</strong> výběrů, to počítač zkusí okamžitě. S každou další věcí se ale počet zdvojnásobí:</p>
+<div class="tbl"><table>
+<thead><tr><th>věcí</th><th>výběrů</th><th>při miliardě výběrů za sekundu</th></tr></thead>
+<tbody>
+<tr><td class="num">8</td><td class="num">256</td><td>okamžitě</td></tr>
+<tr><td class="num">30</td><td class="num">≈ 1,07 · 10<sup>9</sup></td><td>asi 1 s</td></tr>
+<tr><td class="num">50</td><td class="num">≈ 1,1 · 10<sup>15</sup></td><td>asi 13 dní</td></tr>
+<tr><td class="num">64</td><td class="num">≈ 1,8 · 10<sup>19</sup></td><td>asi 585 let</td></tr>
+<tr><td class="num">100</td><td class="num">≈ 1,3 · 10<sup>30</sup></td><td>asi 4 · 10<sup>13</sup> let</td></tr>
+</tbody></table></div>
+<p>Růstu, kdy se s každým krokem počet zdvojnásobí, se říká <dfn>exponenciální</dfn>. Je to stejný příběh jako u tras kurýra, jen o něco pomalejší.</p>
+</section>
+
+<p class="part">Souvislosti</p>
+
+<section id="heuristiky">
+<h2>Přesně, nebo rychle?</h2>
+<p><dfn>Heuristika</dfn> je rychlý postup, který obvykle dá dobré řešení, ale nezaručuje to nejlepší. Nejbližší soused i hladová pravidla u batohu jsou heuristiky. V praxi se používají dva přístupy:</p>
+<ul>
+  <li><strong>Přesné metody.</strong> Chytřejší než hrubá síla: umí odříznout velké části možností, o kterých je jasné, že lepší nebudou (podobně jako backtracking u sudoku). Rekord: okruh přes <strong>85 900 bodů</strong>, který vznikl při návrhu čipů v Bell Laboratories, byl přesně vyřešen v letech 2005–2006 programem Concorde.<sup class="ref"><a href="#z3">3</a></sup> Na obecný rychlý přesný postup to ale nestačí, u některých úloh trvá výpočet nepředstavitelně dlouho.</li>
+  <li><strong>Heuristiky a vylepšování.</strong> Rychle sestavit nějaké řešení a pak ho dlouho opravovat malými změnami. Dobré programy tak dostanou trasy, které jsou obvykle jen o pár procent horší než nejlepší možné, za zlomek času.</li>
+</ul>
+<p>Pro kurýra, který potřebuje trasu ráno do pěti minut, je trasa o 2 % delší mnohem lepší než nejkratší trasa spočítaná za týden.</p>
+</section>
+
+<section id="pnp">
+<h2>P = NP: otázka za milion dolarů</h2>
+<p>Obě úlohy mají zvláštní vlastnost: řešení se <strong>snadno ověří</strong>, ale <strong>těžko najde</strong>. Když ti někdo ukáže trasu a řekne „má méně než 26 km“, stačí sečíst úseky. Když ti ukáže batoh se 33 body, sečteš váhy a body. Ale najít takovou trasu nebo batoh je těžké. Stejně jako u sudoku: zkontrolovat vyplněnou mřížku zvládne každý za minutu.</p>
+<p>Informatici označují úlohy, které jde rychle <em>vyřešit</em>, písmenem <strong>P</strong>, a úlohy, jejichž řešení jde rychle <em>ověřit</em>, písmeny <strong>NP</strong>. Otázka <strong>P = NP</strong> se ptá: dá se každá úloha, jejíž řešení jde rychle ověřit, také rychle vyřešit? Jen jsme zatím nepřišli na chytrý postup, nebo takový postup vůbec neexistuje?</p>
+<p>Nikdo to neví. V roce 2000 vypsal Clay Mathematics Institute na sedm nejtěžších otevřených matematických problémů odměnu po milionu dolarů a P = NP je mezi nimi. Vyřešen byl zatím jen jeden ze sedmi a P = NP to není.<sup class="ref"><a href="#z4">4</a></sup></p>
+<div class="note mat"><b class="lbl">Proč na tom záleží</b><p>Kdyby P = NP, šlo by rychle řešit obrovské množství praktických úloh: logistiku, rozvrhy, plánování výroby. Zároveň by ale přestala fungovat velká část dnešní kryptografie, která stojí právě na tom, že něco jde snadno ověřit, ale těžko najít. Většina odborníků si myslí, že P ≠ NP.</p></div>
+</section>
+
+<section id="pouziti">
+<h2>Kde se to řeší</h2>
+<ul>
+  <li><strong>Rozvoz zásilek</strong>: trasy kurýrů, často ještě s časovými okny a kapacitou auta.</li>
+  <li><strong>Výroba</strong>: pořadí vrtání děr do desky plošných spojů, pohyb laseru nebo robotické ruky.</li>
+  <li><strong>Nakládka</strong>: co naložit do kamionu nebo kontejneru s omezenou nosností (batoh).</li>
+  <li><strong>Rozpočet</strong>: které projekty podpořit z omezených peněz, aby byl přínos co největší (batoh, místo kilogramů koruny).</li>
+</ul>
+</section>
+
+<section id="python">
+<h2>Pro zájemce: hrubá síla v Pythonu</h2>
+<p>Oba programy zkoušejí všechny možnosti. Funkce <code>permutations</code> a <code>combinations</code> z modulu <code>itertools</code> vytvoří všechna pořadí a všechny výběry. Ulož si je a spusť u sebe.</p>
+<div class="codehead"><span>kuryr.py</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">import math
+import time
+from itertools import permutations
+
+# místa na mapě: název a souřadnice v km
+MISTA = {
+    "Depo": (3.8, 4.8), "Pekárna": (6.7, 5.1), "Knihovna": (5.4, 2.0),
+    "Kino": (6.7, 2.9), "Nádraží": (0.5, 1.1), "Zoo": (9.1, 3.7),
+    "Bazén": (0.8, 4.3), "Radnice": (7.3, 0.7), "Nemocnice": (9.4, 1.4),
+}
+
+
+def vzdalenost(a, b):
+    return math.dist(MISTA[a], MISTA[b])       # vzdušnou čarou
+
+
+def delka(trasa):
+    okruh = ["Depo"] + list(trasa) + ["Depo"]
+    return sum(vzdalenost(okruh[i], okruh[i + 1]) for i in range(len(okruh) - 1))
+
+
+zacatek = time.perf_counter()
+adresy = [m for m in MISTA if m != "Depo"]
+nejlepsi = min(permutations(adresy), key=delka)    # vyzkouší všechna pořadí
+cas = time.perf_counter() - zacatek
+
+print("Nejkratší trasa:", " → ".join(["Depo", *nejlepsi, "Depo"]))
+print(f"Délka: {delka(nejlepsi):.1f} km")
+print(f"Vyzkoušeno {math.factorial(len(adresy))} pořadí za {cas:.2f} s")</code></pre>
+<pre><code>Nejkratší trasa: Depo → Pekárna → Zoo → Nemocnice → Radnice → Kino → Knihovna → Nádraží → Bazén → Depo
+Délka: 25.3 km
+Vyzkoušeno 40320 pořadí za 0.06 s</code></pre>
+<p>Program zkouší všech 8! = 40 320 pořadí, tedy každý okruh dvakrát (tam i zpět). Přidej do <code>MISTA</code> další místa a sleduj, jak čas roste. Na běžném počítači se u 11 nebo 12 míst už načekáš.</p>
+<div class="codehead"><span>batoh.py</span><button type="button" class="copy" data-copy>Kopírovat</button></div>
+<pre><code class="language-python">from itertools import combinations
+
+NOSNOST = 12
+VECI = {            # název: (váha v kg, body)
+    "kytara": (4, 2), "stan": (5, 14), "gril": (7, 6), "spacák": (4, 13),
+    "voda": (5, 9), "jídlo": (6, 15), "bunda": (2, 5), "foťák": (6, 10),
+}
+
+nejlepsi, nejvic_bodu, vyzkouseno = (), 0, 0
+for pocet in range(len(VECI) + 1):
+    for vyber in combinations(VECI, pocet):      # všechny výběry dané velikosti
+        vyzkouseno += 1
+        vaha = sum(VECI[v][0] for v in vyber)
+        body = sum(VECI[v][1] for v in vyber)
+        if vaha &lt;= NOSNOST and body &gt; nejvic_bodu:
+            nejlepsi, nejvic_bodu = vyber, body
+
+print("Nejlepší batoh:", ", ".join(nejlepsi))
+print("Body:", nejvic_bodu, "| váha:", sum(VECI[v][0] for v in nejlepsi), "kg")
+print("Vyzkoušeno výběrů:", vyzkouseno)</code></pre>
+<pre><code>Nejlepší batoh: spacák, jídlo, bunda
+Body: 33 | váha: 12 kg
+Vyzkoušeno výběrů: 256</code></pre>
+</section>
+
+<p class="part">Procvičení</p>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>V čem se liší problém obchodního cestujícího od hledání nejkratší cesty z A do B?</summary><div class="a"><p>Cestující musí projet všechna místa a vrátit se. Nejkratší cestu z A do B najde Dijkstrův algoritmus rychle, nejkratší okruh přes všechna místa rychle najít neumíme.</p></div></details>
+<details class="q"><summary>Kolik různých okruhů je pro 6 míst včetně depa?</summary><div class="a"><p>(6 − 1)! / 2 = 120 / 2 = 60.</p></div></details>
+<details class="q"><summary>Jak funguje heuristika nejbližšího souseda a proč nemusí najít nejkratší trasu?</summary><div class="a"><p>Vždy jede na nejbližší nenavštívené místo. Nemyslí dopředu, takže na konci často musí přejet daleko, třeba přes celé město zpět k depu.</p></div></details>
+<details class="q"><summary>Proč jde trasu zkrátit, když se dva její úseky kříží?</summary><div class="a"><p>Obrátíme pořadí míst mezi nimi a křížící se úseky nahradíme dvěma, které se nekříží. Ty jsou dohromady kratší, protože úhlopříčky čtyřúhelníku jsou delší než protilehlé strany.</p></div></details>
+<details class="q"><summary>Proč v batohu selhalo i pravidlo „nejlepší poměr body / kg“?</summary><div class="a"><p>Vzalo stan s dobrým poměrem, pak se už nevešlo jídlo a zbyl nevyužitý kilogram. Hodnota věci záleží na tom, co dalšího se k ní vejde.</p></div></details>
+<details class="q"><summary>Kolik je výběrů z 10 věcí do batohu?</summary><div class="a"><p>2¹⁰ = 1 024. Každá věc je vzít, nebo nechat.</p></div></details>
+<details class="q"><summary>Co je heuristika?</summary><div class="a"><p>Rychlý postup, který obvykle dá dobré řešení, ale nezaručuje nejlepší.</p></div></details>
+<details class="q"><summary>Co znamená otázka P = NP vlastními slovy?</summary><div class="a"><p>Dá se každá úloha, jejíž řešení jde rychle ověřit, také rychle vyřešit? Nikdo neví. Za odpověď je vypsaný milion dolarů.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Problém obchodního cestujícího</dt><dd>nejkratší okruh, který projde všemi místy a vrátí se na start</dd>
+  <dt>Problém batohu</dt><dd>výběr věcí s největší hodnotou, které se vejdou do dané nosnosti</dd>
+  <dt>Hrubá síla</dt><dd>vyzkoušení všech možností</dd>
+  <dt>Kombinatorická exploze</dt><dd>prudký růst počtu možností s velikostí úlohy</dd>
+  <dt>Faktoriál n!</dt><dd>součin 1 · 2 · … · n, počet pořadí n věcí</dd>
+  <dt>Hladový postup</dt><dd>v každém kroku udělá to, co teď vypadá nejlépe</dd>
+  <dt>Heuristika</dt><dd>rychlý postup, který nezaručuje nejlepší řešení</dd>
+  <dt>Vylepšování</dt><dd>opravování řešení malými změnami, dokud to pomáhá; může uváznout</dd>
+  <dt>P = NP</dt><dd>otevřená otázka, zda každou rychle ověřitelnou úlohu jde i rychle vyřešit</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Ověřeno v listopadu 2026. Mapa kurýra, předměty v batohu a všechny výsledky jsou spočítané programem.</p>
+<ol class="srcs">
+  <li id="z1"><a href="https://en.wikipedia.org/wiki/Travelling_salesman_problem">Wikipedia: Travelling salesman problem</a></li>
+  <li id="z2"><a href="https://en.wikipedia.org/wiki/Knapsack_problem">Wikipedia: Knapsack problem</a></li>
+  <li id="z3"><a href="https://math.uwaterloo.ca/tsp/pla85900/index.html">University of Waterloo: pla85900</a></li>
+  <li id="z4"><a href="https://www.claymath.org/millennium-problems/">Clay Mathematics Institute: Millennium Prize Problems</a></li>
+  <li id="z5"><a href="https://en.wikipedia.org/wiki/P_versus_NP_problem">Wikipedia: P versus NP problem</a></li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k materiálu Když je možností příliš. Obě hry najdeš v <a href="04_tezke_ulohy.html">prezentaci</a>.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  "use strict";
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy') ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('[data-copy]')).forEach(function (b) {
+    var label = b.textContent, t;
+    b.addEventListener('click', function () {
+      var pre = b.parentNode.nextElementSibling;
+      copyText(pre.textContent.replace(/\s+$/, '') + '\n').then(function () { b.textContent = 'Zkopírováno ✓'; }, function () { b.textContent = 'Nepovedlo se'; });
+      b.setAttribute('aria-pressed', 'true');
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; b.setAttribute('aria-pressed', 'false'); }, 1600);
+    });
+  });
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+
+  /* ===== kurýr (obchodní cestující): mapa, hra, nejbližší soused, rozplétání ===== */
+  var TU_P = [
+    { n: "Depo", e: "📦", x: 3.8, y: 4.8 }, { n: "Pekárna", e: "🥐", x: 6.7, y: 5.1 }, { n: "Knihovna", e: "📚", x: 5.4, y: 2.0 },
+    { n: "Kino", e: "🎬", x: 6.7, y: 2.9 }, { n: "Nádraží", e: "🚉", x: 0.5, y: 1.1 }, { n: "Zoo", e: "🦒", x: 9.1, y: 3.7 },
+    { n: "Bazén", e: "🏊", x: 0.8, y: 4.3 }, { n: "Radnice", e: "🏛️", x: 7.3, y: 0.7 }, { n: "Nemocnice", e: "🏥", x: 9.4, y: 1.4 }
+  ];
+  var TU_BEST = [0, 1, 5, 8, 7, 3, 2, 4, 6];
+  var TU_NS = "http://www.w3.org/2000/svg";
+  function tuSv(t, a, txt) { var e = document.createElementNS(TU_NS, t); for (var k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; }
+  var TU_TALL = window.matchMedia && window.matchMedia("(max-width: 600px)").matches;   /* na mobilu mapa na výšku */
+  function tuXY(i) { return TU_TALL ? [60 + TU_P[i].y * 82, 60 + TU_P[i].x * 92] : [70 + TU_P[i].x * 88, 40 + (6 - TU_P[i].y) * 88]; }
+  function tuD(a, b) { return Math.hypot(TU_P[a].x - TU_P[b].x, TU_P[a].y - TU_P[b].y); }
+  function tuLen(t, closed) { var s = 0; for (var i = 0; i < t.length - 1; i++) s += tuD(t[i], t[i + 1]); if (closed && t.length > 1) s += tuD(t[t.length - 1], t[0]); return s; }
+  function tuKm(v) { return v.toFixed(1).replace(".", ",") + " km"; }
+  var TU_BESTLEN = tuLen(TU_BEST, true);
+  window.tuMine = null;          /* trasa, kterou student naklikal (sdílí ji víc snímků) */
+
+  function tuMap(svg) {
+    svg.setAttribute("viewBox", TU_TALL ? "0 0 600 1000" : "0 0 1000 580");
+    if (TU_TALL) svg.classList.add("is-tall");
+    var gl = tuSv("g", {}), gn = tuSv("g", {}), nodes = [];
+    svg.appendChild(gl); svg.appendChild(gn);
+    TU_P.forEach(function (p, i) {
+      var xy = tuXY(i), g = tuSv("g", { "class": "tu-node" + (i === 0 ? " is-depo" : ""), tabindex: "0", role: "button", "aria-label": p.n });
+      g.appendChild(tuSv("circle", { "class": "tu-hit", cx: xy[0], cy: xy[1], r: 46 }));
+      g.appendChild(tuSv("circle", { "class": "tu-dot", cx: xy[0], cy: xy[1], r: 30 }));
+      g.appendChild(tuSv("text", { "class": "tu-em", x: xy[0], y: xy[1] + 10, "text-anchor": "middle" }, p.e));
+      g.appendChild(tuSv("text", { "class": "tu-name", x: xy[0], y: xy[1] + 52, "text-anchor": "middle" }, p.n));
+      var badge = tuSv("text", { "class": "tu-ord", x: xy[0] + 26, y: xy[1] - 22, "text-anchor": "middle" }, "");
+      g.appendChild(badge);
+      gn.appendChild(g); nodes.push({ g: g, badge: badge });
+    });
+    function draw(t, closed, opt) {
+      opt = opt || {};
+      while (gl.firstChild) gl.removeChild(gl.firstChild);
+      if (opt.ghost) for (var k = 0; k < opt.ghost.length; k++) { var a = tuXY(opt.ghost[k]), b = tuXY(opt.ghost[(k + 1) % opt.ghost.length]); gl.appendChild(tuSv("line", { "class": "tu-ghost", x1: a[0], y1: a[1], x2: b[0], y2: b[1] })); }
+      var segs = [];
+      for (var i = 0; i < t.length - 1; i++) segs.push([t[i], t[i + 1]]);
+      if (closed && t.length > 1) segs.push([t[t.length - 1], t[0]]);
+      segs.forEach(function (s, idx) {
+        var a = tuXY(s[0]), b = tuXY(s[1]), bad = opt.bad && opt.bad.some(function (q) { return q === idx; });
+        gl.appendChild(tuSv("line", { "class": "tu-seg" + (bad ? " is-bad" : "") + (opt.cls ? " " + opt.cls : ""), x1: a[0], y1: a[1], x2: b[0], y2: b[1] }));
+        if (opt.km) gl.appendChild(tuSv("text", { "class": "tu-km", x: (a[0] + b[0]) / 2, y: (a[1] + b[1]) / 2 + 5, "text-anchor": "middle" }, tuD(s[0], s[1]).toFixed(1).replace(".", ",")));
+      });
+      nodes.forEach(function (n, i) {
+        var pos = t.indexOf(i);
+        n.g.classList.toggle("is-visited", pos >= 0);
+        n.g.classList.toggle("is-cur", !closed && t.length && t[t.length - 1] === i);
+        n.g.classList.toggle("is-hint", !!(opt.hint !== undefined && opt.hint === i));
+        n.badge.textContent = pos > 0 ? pos : "";
+      });
+    }
+    return { nodes: nodes, draw: draw };
+  }
+
+  /* segmenty trasy, které se kříží (indexy segmentů) */
+  function tuCross(t) {
+    function o(p, q, r) { return (q.x - p.x) * (r.y - p.y) - (q.y - p.y) * (r.x - p.x); }
+    var n = t.length, out = [];
+    for (var i = 0; i < n; i++) for (var j = i + 2; j < n; j++) {
+      if (i === 0 && j === n - 1) continue;
+      var a = TU_P[t[i]], b = TU_P[t[(i + 1) % n]], c = TU_P[t[j]], d = TU_P[t[(j + 1) % n]];
+      if (o(a, b, c) * o(a, b, d) < 0 && o(c, d, a) * o(c, d, b) < 0) out.push([i, j]);
+    }
+    return out;
+  }
+  /* jedno vylepšení: prohodí pořadí mezi dvěma úseky (2-opt), přednostně u křížení */
+  function tuImprove(t) {
+    var n = t.length, cr = tuCross(t), cand = cr.slice();
+    for (var i = 0; i < n - 1; i++) for (var j = i + 2; j < n; j++) { if (i === 0 && j === n - 1) continue; cand.push([i, j]); }
+    for (var k = 0; k < cand.length; k++) {
+      var i2 = cand[k][0], j2 = cand[k][1];
+      var a = t[i2], b = t[i2 + 1], c = t[j2], d = t[(j2 + 1) % n];
+      var gain = tuD(a, b) + tuD(c, d) - tuD(a, c) - tuD(b, d);
+      if (gain > 1e-9) {
+        var nt = t.slice(0, i2 + 1).concat(t.slice(i2 + 1, j2 + 1).reverse(), t.slice(j2 + 1));
+        return { t: nt, gain: gain, seg: [i2, j2], cross: k < cr.length, names: [TU_P[a].n, TU_P[b].n, TU_P[c].n, TU_P[d].n] };
+      }
+    }
+    return null;
+  }
+  function tuNN() {
+    var t = [0], steps = [];
+    while (t.length < TU_P.length) {
+      var u = t[t.length - 1], best = -1;
+      for (var v = 0; v < TU_P.length; v++) if (t.indexOf(v) < 0 && (best < 0 || tuD(u, v) < tuD(u, best))) best = v;
+      steps.push({ from: u, to: best, d: tuD(u, best) }); t.push(best);
+    }
+    return { t: t, steps: steps };
+  }
+
+  /* hra: naklikej trasu */
+  function tuPlay(root, svg, out) {
+    var M = tuMap(svg), t = [0];
+    function upd() {
+      var done = t.length === TU_P.length;
+      M.draw(t, done, { km: true });
+      if (done) {
+        var L = tuLen(t, true), pct = (L / TU_BESTLEN - 1) * 100;
+        window.tuMine = t.slice();
+        out.innerHTML = "<b>Tvoje trasa: " + tuKm(L) + ".</b> " + (pct < 0.05 ? "To je nejkratší možná trasa, výborně!" : "Zapamatuj si číslo. Uvidíme, jak dopadneš proti ostatním a proti počítači.");
+      } else {
+        out.innerHTML = t.length === 1 ? "Začínáš v depu 📦. Klikej na místa v pořadí, v jakém je objedeš. Na konci se kurýr sám vrátí do depa." :
+          "Zatím " + tuKm(tuLen(t, false)) + ", zbývá " + (TU_P.length - t.length) + " míst.";
+      }
+    }
+    M.nodes.forEach(function (n, i) {
+      function go() { if (t.length === TU_P.length || t.indexOf(i) >= 0) return; t.push(i); upd(); }
+      n.g.addEventListener("click", go);
+      n.g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    });
+    root.querySelector("[data-tu=undo]").addEventListener("click", function () { if (t.length > 1) t.pop(); upd(); });
+    root.querySelector("[data-tu=reset]").addEventListener("click", function () { t = [0]; upd(); });
+    upd();
+  }
+
+  /* exploze: počet okruhů a čas */
+  function tuFact(n) { var f = 1; for (var i = 2; i <= n; i++) f *= i; return f; }
+  function tuBig(v) {
+    if (v < 1e6) return Math.round(v).toLocaleString("cs-CZ");
+    var e = Math.floor(Math.log10(v)), m = v / Math.pow(10, e);
+    return m.toFixed(1).replace(".", ",") + " · 10" + String(e).split("").map(function (c) { return "⁰¹²³⁴⁵⁶⁷⁸⁹"[+c]; }).join("");
+  }
+  function tuTime(sec) {
+    var Y = 365.25 * 86400;
+    if (sec < 1e-3) return "méně než milisekunda";
+    if (sec < 1) return Math.round(sec * 1000) + " ms";
+    if (sec < 60) return sec.toFixed(1).replace(".", ",") + " s";
+    if (sec < 3600) return Math.round(sec / 60) + " min";
+    if (sec < 86400) return (sec / 3600).toFixed(1).replace(".", ",") + " h";
+    if (sec < Y) return Math.round(sec / 86400) + " dní";
+    var y = sec / Y;
+    if (y < 1e6) return tuBig(y) + " let";
+    return tuBig(y) + " let" + (y > 1.38e10 ? " (vesmír existuje 1,38 · 10¹⁰ let)" : "");
+  }
+
+  /* ===== batoh ===== */
+  var KS_C = 12;
+  var KS = [
+    { n: "kytara", e: "🎸", w: 4, v: 2 }, { n: "stan", e: "⛺", w: 5, v: 14 }, { n: "gril", e: "🍖", w: 7, v: 6 }, { n: "spacák", e: "🛌", w: 4, v: 13 },
+    { n: "voda", e: "💧", w: 5, v: 9 }, { n: "jídlo", e: "🥫", w: 6, v: 15 }, { n: "bunda", e: "🧥", w: 2, v: 5 }, { n: "foťák", e: "📷", w: 6, v: 10 }
+  ];
+  var KS_BEST = [3, 5, 6];
+  function ksSum(sel, k) { return sel.reduce(function (s, i) { return s + KS[i][k]; }, 0); }
+  function ksCards(host, onClick) {
+    host.innerHTML = "";
+    return KS.map(function (it, i) {
+      var b = document.createElement("button");
+      b.className = "ks-item"; b.type = "button";
+      b.innerHTML = '<span class="ks-em" aria-hidden="true">' + it.e + '</span><span class="ks-n">' + it.n + '</span><span class="ks-wv"><span>' + it.w + ' kg</span><b>' + it.v + ' b.</b></span>';
+      b.addEventListener("click", function () { onClick(i, b); });
+      host.appendChild(b); return b;
+    });
+  }
+  function ksBar(el, w) {
+    el.innerHTML = '<span class="ks-fill" style="width:0"></span><span class="ks-lab"></span>';
+    return function (kg) {
+      el.querySelector(".ks-fill").style.width = Math.min(100, kg / KS_C * 100) + "%";
+      el.querySelector(".ks-lab").textContent = kg + " z " + KS_C + " kg";
+      el.classList.toggle("is-full", kg === KS_C);
+    };
+  }
+  /* hladová pravidla */
+  var KS_RULES = {
+    value: { t: "Nejcennější první", key: function (i) { return [-KS[i].v, KS[i].w]; } },
+    light: { t: "Nejlehčí první", key: function (i) { return [KS[i].w, -KS[i].v]; } },
+    ratio: { t: "Nejlepší poměr body / kg", key: function (i) { return [-KS[i].v / KS[i].w, KS[i].w]; } }
+  };
+  function ksGreedy(rule) {
+    var order = KS.map(function (_, i) { return i; }).sort(function (a, b) { var A = KS_RULES[rule].key(a), B = KS_RULES[rule].key(b); return A[0] - B[0] || A[1] - B[1]; });
+    var sel = [], log = [], w = 0;
+    order.forEach(function (i) { var ok = w + KS[i].w <= KS_C; if (ok) { sel.push(i); w += KS[i].w; } log.push({ i: i, ok: ok, w: w }); });
+    return { sel: sel, log: log, order: order };
+  }
+
+
+  tuMap(document.getElementById("figBest")).draw(TU_BEST, true, { km: true, cls: "is-best" });
+  var nn = tuNN().t, bad = [];
+  tuCross(nn).forEach(function (c) { bad.push(c[0], c[1]); });
+  tuMap(document.getElementById("figNN")).draw(nn, true, { km: true, bad: bad });
+})();
+</script>
+</body>
+</html>
