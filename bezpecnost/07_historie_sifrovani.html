@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Historie šifrování</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <!-- 0 titul -->
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Bezpečnost · 7. materiál</div>
+      <h1>Historie šifrování</h1>
+      <p class="lede">Souboj tvůrců a luštitelů. Od hole ze Sparty přes dopisy v pivním sudu až po stroj Enigma. Každá šifra byla někdy považovaná za nerozluštitelnou a pak ji někdo rozluštil. Většinu z nich si zkusíš sám.</p>
+      <p class="hint">Šipky ← → listují. Většinu slidů můžeš proklikat.</p>
+    </div></section>
+
+    <!-- 1 otázka -->
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="qmark">?</div>
+      <h2>Jak byste poslali jednu zprávu spolužákovi na druhé straně třídy, aby ji nikdo jiný nepřečetl?</h2>
+      <p class="lede">Zpráva musí projít přes ostatní, kdo sedí mezi vámi, a každý z nich ji může otevřít. Máte dvě minuty: ve dvojicích vymyslete co nejvíc způsobů a napište si je.</p>
+      <p class="lede">Potom je společně roztřídíme. Zjistíš, že jsi právě znovu objevil půl dějin šifrování.</p>
+    </div></section>
+
+    <!-- 2 roztřídění -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">1 · Co je šifrování</div>
+      <h2 class="slide-title">Čtyři druhy nápadů</h2>
+      <p class="lede">Vaše nápady spadnou skoro vždy do jedné z těchto čtyř skupin. Klikni na skupinu a porovnej ji s tím, co vymyslela třída.</p>
+      <div class="cards4" id="sortCards"></div>
+      <div class="panel" id="sortPanel"></div>
+    </div></section>
+
+    <!-- 3 pojmy -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">1 · Co je šifrování</div>
+      <h2 class="slide-title">Pojmy, které budeme potřebovat</h2>
+      <div class="cards4" id="termCards"></div>
+      <div class="panel" id="termPanel"></div>
+    </div></section>
+
+    <!-- 4 Alice, Bob a Eva -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">1 · Co je šifrování</div>
+      <h2 class="slide-title">Alice, Bob a Eva</h2>
+      <p class="lede">V kryptografii se používají tři jména: Alice posílá, Bob přijímá a Eva (z anglického <i>eavesdropper</i>) odposlouchává. Napiš zprávu a zkus, co Eva uvidí.</p>
+      <div class="calc-row">
+        <input class="text-in" id="abeIn" type="text" value="SCHUZKA V PATEK" autocomplete="off" aria-label="Zpráva od Alice">
+        <label for="abeK" class="rsa-muted">klíč (posun)</label>
+        <input type="range" class="narrow" id="abeK" min="1" max="25" value="3" aria-label="Posun klíče">
+        <span class="rsa-time" id="abeKv">3</span>
+        <button class="calc-btn sd-tog" id="abeKnow" type="button" aria-pressed="false">Eva zná klíč</button>
+      </div>
+      <div class="rsa-stage">
+        <div class="rsa-box"><h3>Alice</h3><p>Otevřený text:</p><div class="rsa-eq" id="abeA"></div></div>
+        <div class="rsa-box eve" id="abeMid"><h3>Kanál, kde poslouchá Eva</h3><p>Šifrový text:</p><div class="rsa-eq" id="abeC"></div><p id="abeE"></p></div>
+        <div class="rsa-box"><h3>Bob</h3><p>Dešifrováno s klíčem:</p><div class="rsa-eq" id="abeB"></div></div>
+      </div>
+      <p class="note" id="abeNote"></p>
+    </div></section>
+
+    <!-- 5 dva principy -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">2 · Klasické šifry</div>
+      <h2 class="slide-title">Přeskládat, nebo nahradit</h2>
+      <p class="lede">Skoro všechny staré šifry používají jeden ze dvou triků. Zkus různé zprávy a sleduj řádek se seřazenými písmeny.</p>
+      <div class="calc-row"><input class="text-in" id="tpIn" type="text" value="UTOK ZA SVITANI" autocomplete="off" aria-label="Zpráva"></div>
+      <div class="rsa-vs">
+        <div class="panel"><h3>Transpozice: přeskládání</h3><p class="rsa-sm">Zpráva se napíše do řádků po čtyřech písmenech a čte se po sloupcích.</p><div class="rsa-eq" id="tpT"></div><p class="rsa-sm rsa-muted">Písmena seřazená abecedně:</p><div class="rsa-eq" id="tpTs"></div></div>
+        <div class="panel"><h3>Substituce: nahrazení</h3><p class="rsa-sm">Každé písmeno se nahradí jiným, tady posunem o tři místa v abecedě.</p><div class="rsa-eq" id="tpS"></div><p class="rsa-sm rsa-muted">Písmena seřazená abecedně:</p><div class="rsa-eq" id="tpSs"></div></div>
+      </div>
+      <p class="note" id="tpNote"></p>
+    </div></section>
+
+    <!-- 6 skytale -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">2 · Klasické šifry</div>
+      <h2 class="slide-title">Skytale: tyč ze Sparty</h2>
+      <p class="lede">Podle Plutarcha ovinuli Sparťané kolem dřevěné tyče proužek kůže, napsali zprávu podél tyče a proužek odmotali. Kdo neměl tyč stejné tloušťky, četl zmatek. Tloušťka tyče je tady počet písmen po obvodu.</p>
+      <div class="split">
+        <div class="stack">
+          <div class="calc-row"><input class="text-in" id="skIn" type="text" value="POŠLETE POSILY K ŘECE" autocomplete="off" aria-label="Zpráva"></div>
+          <div class="slider-row"><label for="skE">tyč</label><input type="range" id="skE" min="2" max="8" value="4" aria-label="Tyč odesílatele"><span class="rsa-time" id="skEv">4</span></div>
+          <p class="rsa-sm rsa-muted">Zpráva napsaná podél tyče (řádek je jedno kolečko kolem tyče):</p>
+          <div class="hs-grid" id="skGrid"></div>
+          <p class="rsa-sm rsa-muted">Odmotaný proužek, který se pošle:</p>
+          <div class="hs-out" id="skStrip"></div>
+        </div>
+        <div class="stack">
+          <div class="panel">
+            <h3>Příjemce má svou tyč</h3>
+            <div class="slider-row"><label for="skD">tyč</label><input type="range" id="skD" min="2" max="8" value="4" aria-label="Tyč příjemce"><span class="rsa-time" id="skDv">4</span></div>
+            <div class="hs-out" id="skDec"></div>
+            <p class="rsa-sm" id="skNote"></p>
+          </div>
+          <p class="note">Tyč je zároveň <b>klíč</b>. Je jich jen pár, a tak si Eva může vyzkoušet všechny. Historici navíc nejsou jistí, jestli Sparťané skytale opravdu používali jako šifru, nebo jen jako ověření pravosti posla.</p>
+          <figure class="hs-fig">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/A.scytale.jpg?width=900" alt="Skytale: dřevěná tyč s ovinutým proužkem, na kterém je napsaná zpráva" loading="lazy">
+            <figcaption>Skytale (foto: <a href="https://commons.wikimedia.org/wiki/File:A.scytale.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>). <a href="https://youtu.be/T9N6aGKJdZM" target="_blank" rel="noopener">Video: jak skytale fungovala</a></figcaption>
+          </figure>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 7 Caesar -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">2 · Klasické šifry</div>
+      <h2 class="slide-title">Caesarova šifra</h2>
+      <p class="lede">Podle římského historika Suetonia posouval Caesar každé písmeno o tři místa dál. Spodní abeceda je horní, jen posunutá. Posuň ji a napiš zprávu.</p>
+      <div class="hs-abc" id="csTop" aria-label="Otevřená abeceda"></div>
+      <div class="hs-abc is-key" id="csBot" aria-label="Posunutá abeceda"></div>
+      <div class="slider-row"><label for="csK">k</label><input type="range" id="csK" min="0" max="25" value="3" aria-label="Posun"><span class="rsa-time" id="csKv">3</span></div>
+      <div class="rsa-vs">
+        <div class="panel"><h3>Otevřený text</h3><input class="text-in" id="csIn" type="text" value="SCHUZKA V PATEK" autocomplete="off" aria-label="Otevřený text"></div>
+        <div class="panel"><h3>Šifrový text</h3><div class="hs-out" id="csOut"></div></div>
+      </div>
+      <p class="note">Aktivita: zašifruj větu s posunem, který si domluvíš se sousedem. Pošlete si ji a dešifrujte (posun na druhou stranu, nebo 26 − k).</p>
+    </div></section>
+
+    <!-- 8 hrubá síla -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">2 · Klasické šifry</div>
+      <h2 class="slide-title">Eva zkusí všechny posuny</h2>
+      <p class="lede">Caesarova šifra má jen 25 klíčů. Eva nemusí nic vymýšlet, stačí vyzkoušet všechny posuny. Který z nich dává smysl? Klikni na řádek, který tipuješ.</p>
+      <div class="panel hs-pan"><h3>Zachycený šifrový text</h3><div class="rsa-eq" id="bfC"></div></div>
+      <div class="hs-list2" id="bfList"></div>
+      <div class="calc-row"><button class="calc-btn" id="bfAuto" type="button">Nech to najít počítač</button><span class="rsa-sm" id="bfMsg"></span></div>
+    </div></section>
+
+    <!-- 9 26! -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">2 · Klasické šifry</div>
+      <h2 class="slide-title">Libovolná abeceda: 26! klíčů</h2>
+      <p class="lede">Co když každé písmeno nahradíme libovolným jiným, ne jen posunutým? Klíčem je pak libovolné přeházení abecedy. Prvnímu písmenu máme 26 možností, druhému 25, třetímu 24 a tak dál.</p>
+      <div class="rsa-vs">
+        <div class="panel"><h3>Caesar</h3><div class="rsa-eq">25 klíčů</div><p class="rsa-sm">Vyzkoušíš ručně za pár minut.</p></div>
+        <div class="panel"><h3>Libovolná substituce</h3><div class="rsa-eq" id="kyN"></div><p class="rsa-sm">To je 26! = 26 · 25 · 24 · … · 2 · 1.</p></div>
+      </div>
+      <div class="panel hs-pan">
+        <div class="slider-row"><label for="kyE">v</label><input type="range" id="kyE" min="3" max="12" value="9" aria-label="Rychlost zkoušení"><span class="rsa-sm" id="kyEv"></span></div>
+        <div class="rsa-eq" id="kyT"></div>
+        <p class="rsa-sm" id="kyU"></p>
+      </div>
+      <p class="note warn"><b class="lbl">Pozor</b>Zkoušet všechny klíče je beznadějné. Přesto se i tahle šifra dala rozluštit za odpoledne. Jak? Na další slidu.</p>
+    </div></section>
+
+    <!-- 10 frekvenční analýza -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">3 · Jak se šifry lámaly</div>
+      <h2 class="slide-title">Frekvenční analýza: staň se luštitelem</h2>
+      <p class="lede">V češtině je nejčastější E, pak O, A, N, T. Pod každý sloupec napiš tip a v textu se písmeno nahradí. Pomůžou krátká slova: jednopísmenná bývají A, I, K, O, S, U, V, Z.</p>
+      <div class="hs-text" id="fqText" aria-live="polite"></div>
+      <div class="hs-bars" id="fqBars"></div>
+      <div class="hs-guess" id="fqGuess"></div>
+      <div class="rsa-chips" id="fqRef"></div>
+      <div class="calc-row">
+        <button class="calc-btn" id="fqHint" type="button">Nápověda</button>
+        <button class="calc-btn" id="fqSol" type="button">Ukázat řešení</button>
+        <button class="calc-btn" id="fqClr" type="button">Smazat tipy</button>
+        <button class="calc-btn sd-tog is-active" id="fqSp" type="button" aria-pressed="true">Mezery mezi slovy</button>
+        <span class="rsa-sm" id="fqMsg"></span>
+      </div>
+    </div></section>
+
+    <!-- 11 Marie Stuartovna -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">3 · Jak se šifry lámaly</div>
+      <h2 class="slide-title">Šifra, která stála hlavu</h2>
+      <p class="lede">Marie Stuartovna věřila své šifře. Klikni na jednotlivé události a sleduj, jak se kolem ní zavírala past.</p>
+      <div class="cards4 cards5" id="maCards"></div>
+      <div class="panel" id="maPanel"></div>
+    </div></section>
+
+    <!-- 12 Vigenère -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">3 · Jak se šifry lámaly</div>
+      <h2 class="slide-title">Obrana: Vigenèrova šifra</h2>
+      <p class="lede">Jak se bránit frekvenční analýze? Caesar posune všechna písmena o totéž, Vigenère každé o něco jiného. Klíčové slovo se opakuje pod textem a každé jeho písmeno říká, o kolik se posune písmeno nad ním (A = 0, B = 1, C = 2 …). Změň slovo a sleduj, jak se změní šifra i histogram.</p>
+      <div class="calc-row">
+        <label for="vgKey" class="rsa-muted">klíčové slovo</label>
+        <input class="text-in rsa-num" id="vgKey" type="text" value="MAJAK" maxlength="12" autocomplete="off" aria-label="Klíčové slovo">
+        <span class="rsa-sm" id="vgMsg"></span>
+      </div>
+      <div class="hs-vgd" id="vgDemo" aria-label="Postup šifrování prvních deseti písmen"></div>
+      <div class="hs-out hs-small" id="vgOut"></div>
+      <div class="rsa-vs">
+        <div class="panel"><h3>Caesar (jednoduchá substituce)</h3><div class="hs-bars is-mini" id="vgB1"></div><p class="rsa-sm" id="vgS1"></p></div>
+        <div class="panel"><h3>Vigenère s klíčem</h3><div class="hs-bars is-mini" id="vgB2"></div><p class="rsa-sm" id="vgS2"></p></div>
+      </div>
+    </div></section>
+
+    <!-- 13 Kasiski -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">3 · Jak se šifry lámaly</div>
+      <h2 class="slide-title">Jak Vigenèra rozlousknout</h2>
+      <p class="lede">Stejné slovo zašifrované stejnou částí klíče vypadá v šifrovém textu stejně. Když najdeš opakování, vzdálenost mezi nimi je násobkem délky klíče. Charles Babbage na to přišel kolem roku 1854 a nepublikoval to, Friedrich Kasiski to zveřejnil v roce 1863.</p>
+      <div class="calc-row">
+        <label for="kaKey" class="rsa-muted">skrytý klíč</label>
+        <input class="text-in rsa-num" id="kaKey" type="text" value="MAJAK" maxlength="12" autocomplete="off" aria-label="Klíč">
+        <span class="rsa-sm" id="kaMsg"></span>
+      </div>
+      <p class="rsa-sm rsa-muted">Šifrový text (po deseti písmenech). Klikni vpravo na trojici a uvidíš, kde všude se v textu opakuje:</p>
+      <div class="hs-out hs-small hs-scroll" id="kaTxt"></div>
+      <p class="rsa-sm" id="kaSel"></p>
+      <div class="split">
+        <div class="stack">
+          <p class="rsa-sm rsa-muted">Opakující se trojice písmen v šifrovém textu a vzdálenosti mezi nimi:</p>
+          <div class="hs-out hs-scroll" id="kaRep"></div>
+        </div>
+        <div class="stack">
+          <p class="rsa-sm rsa-muted">Kolikrát je které číslo dělitelem vzdáleností:</p>
+          <div class="hs-bars is-mini is-div" id="kaDiv"></div>
+          <p class="rsa-sm" id="kaVerdict"></p>
+        </div>
+      </div>
+      <p class="note" id="kaCols"></p>
+    </div></section>
+
+    <!-- 14 Enigma -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">4 · Stroje</div>
+      <h2 class="slide-title">Enigma: stále jiná abeceda</h2>
+      <p class="lede">Po každém stisku klávesy se válec otočí a šifrovací abeceda se změní. Tohle je zjednodušená Enigma se třemi válci a reflektorem B, bez propojovací desky. Napiš pořád stejné písmeno a sleduj výstup.</p>
+      <div class="calc-row">
+        <label class="rsa-muted">počáteční polohy</label>
+        <input class="text-in rsa-num" id="enL" type="text" value="A" maxlength="1" aria-label="Levý válec">
+        <input class="text-in rsa-num" id="enM" type="text" value="A" maxlength="1" aria-label="Prostřední válec">
+        <input class="text-in rsa-num" id="enR" type="text" value="A" maxlength="1" aria-label="Pravý válec">
+        <button class="calc-btn" id="enA" type="button">Napsat 12× A</button>
+      </div>
+      <div class="calc-row"><input class="text-in" id="enIn" type="text" value="AHOJSVETE" autocomplete="off" aria-label="Zpráva"></div>
+      <div class="rsa-vs">
+        <div class="panel"><h3>Výstup Enigmy</h3><div class="hs-out" id="enOut"></div><p class="rsa-sm" id="enStat"></p></div>
+        <div class="panel"><h3>Dešifrování</h3><div class="hs-out" id="enBack"></div><p class="rsa-sm">Stejný stroj se stejnou polohou válců vrátí původní text. Enigma šifruje a dešifruje stejně.</p></div>
+      </div>
+      <p class="note">Počet nastavení armádní Enigmy se třemi z pěti válců a deseti kabely na desce je asi 1,6 · 10<sup>20</sup>. Přesto ji rozluštili.</p>
+    </div></section>
+
+    <!-- 15 Polsko a Bletchley -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">4 · Stroje</div>
+      <h2 class="slide-title">Válka šifer: Enigma a Navahové</h2>
+      <p class="lede">Nejdřív matematici z Polska a tým v Bletchley Parku. Pak Navahové v Pacifiku, kteří místo šifry použili vlastní jazyk. Klikej po událostech.</p>
+      <div class="cards4 cards5" id="plCards"></div>
+      <div class="panel" id="plPanel"></div>
+    </div></section>
+
+    <!-- 16 Kerckhoffs -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">5 · Pravidla hry</div>
+      <h2 class="slide-title">Co má zůstat tajné?</h2>
+      <p class="lede">Auguste Kerckhoffs napsal v roce 1883 v článku <i>La cryptographie militaire</i>, že šifrovací systém nesmí vyžadovat tajnost a nesmí vadit, když padne do rukou nepřítele. Proč?</p>
+      <div class="cards4 cards3" id="keCards"></div>
+      <div class="panel" id="kePanel"></div>
+    </div></section>
+
+    <!-- 17 jednorázová tabulka -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">5 · Pravidla hry</div>
+      <h2 class="slide-title">Jednorázová tabulka: dokonalá šifra</h2>
+      <p class="lede">Klíč je zcela náhodný, stejně dlouhý jako zpráva a použije se jen jednou. Pak se z šifrového textu nedá poznat nic. Eva vidí text níže. Napiš libovolnou zprávu stejné délky a zjisti, jaký klíč by ji dal.</p>
+      <div class="panel hs-pan"><h3>Zachycený šifrový text</h3><div class="rsa-eq" id="otC"></div></div>
+      <div class="calc-row">
+        <label for="otIn" class="rsa-muted">tvůj tip na zprávu</label>
+        <input class="text-in" id="otIn" type="text" value="" placeholder="stejný počet písmen" autocomplete="off" aria-label="Tip na zprávu">
+        <button class="calc-btn" id="otNew" type="button">Nový příklad</button>
+      </div>
+      <div class="panel hs-pan"><h3>Klíč, který by to způsobil</h3><div class="rsa-eq" id="otK"></div><p class="rsa-sm" id="otMsg"></p></div>
+      <p class="note">Vernam popsal systém v roce 1917 a Claude Shannon v roce 1949 dokázal, že se z něj nedá nic zjistit. Háček: klíč musí být stejně dlouhý jako zpráva a musíte si ho nějak bezpečně předat.</p>
+    </div></section>
+
+    <!-- 18 problém klíčů -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">5 · Pravidla hry</div>
+      <h2 class="slide-title">Zbývá jeden velký problém</h2>
+      <p class="lede">Všechny dosavadní šifry mají společnou slabinu: odesílatel i příjemce musí znát stejný tajný klíč. Ale jak si ho předají, když se nesetkali? Za druhé světové války se klíčové listiny Enigmy rozvážely předem. A klíčů je potřeba hodně.</p>
+      <div class="panel hs-pan">
+        <div class="slider-row"><label for="kcN">n</label><input type="range" id="kcN" min="2" max="300" value="30" aria-label="Počet lidí"><span class="rsa-time" id="kcNv">30</span></div>
+        <div class="rsa-eq" id="kcT"></div>
+        <p class="rsa-sm">Když chce každá dvojice z n lidí posílat tajné zprávy, potřebuje n · (n − 1) / 2 různých klíčů. A všechny se musí předat bezpečně.</p>
+      </div>
+      <p class="note">Právě tohle vyřešily myšlenky z 20. století. Na ně navazuje přednáška o RSA.</p>
+    </div></section>
+
+    <!-- 19 veřejný klíč -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">6 · Průlom</div>
+      <h2 class="slide-title">Šifrování s veřejným klíčem</h2>
+      <p class="lede">Klíč, který se nemusí předávat. Pět zastávek na cestě k dnešku.</p>
+      <div class="cards4 cards5" id="pkCards"></div>
+      <div class="panel" id="pkPanel"></div>
+    </div></section>
+
+    <!-- 20 souboj -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Přehled</div>
+      <h2 class="slide-title">Souboj tvůrců a luštitelů</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Šifra</th><th>Kdy</th><th>Princip</th><th>Jak se prolomila</th></tr></thead>
+          <tbody>
+            <tr><td><b>Skytale</b></td><td>antika</td><td>přeskládání písmen</td><td class="ko">zkoušení průměru tyče</td></tr>
+            <tr><td><b>Caesar</b></td><td>1. stol. př. n. l.</td><td>posun abecedy, 25 klíčů</td><td class="ko">vyzkoušení všech klíčů</td></tr>
+            <tr><td><b>Jednoduchá substituce</b></td><td>starověk až středověk</td><td>libovolná abeceda, 26! klíčů</td><td class="ko">frekvenční analýza (al-Kindí, kolem 850)</td></tr>
+            <tr><td><b>Šifra Marie Stuartovny</b></td><td>16. století</td><td>substituce a znaky pro slova</td><td class="ko">frekvenční analýza (Phelippes, 1586)</td></tr>
+            <tr><td><b>Vigenère</b></td><td>1553</td><td>klíčové slovo, více abeced</td><td class="ko">Babbage kolem 1854, Kasiski 1863</td></tr>
+            <tr><td><b>Enigma</b></td><td>20.–40. léta 20. století</td><td>elektromechanický stroj s válci</td><td class="ko">Rejewski 1932, Bletchley Park</td></tr>
+            <tr><td><b>Jednorázová tabulka</b></td><td>1917</td><td>náhodný klíč délky zprávy</td><td class="ok">neprolomitelná, když se dodrží pravidla</td></tr>
+            <tr><td><b>Veřejný klíč (RSA)</b></td><td>1977</td><td>zámek a klíček z prvočísel</td><td class="ok">další přednáška</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">U každé šifry se opakuje totéž: někdo ji vymyslel, všichni jí věřili, někdo ji rozluštil, a vznikla lepší.</p>
+    </div></section>
+
+    <!-- 21 aktivita -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Aktivita</div>
+      <h2 class="slide-title">Pošli zprávu spolužákovi</h2>
+      <ol class="summary-list">
+        <li><b>Dvojice</b>: Alice a Bob se domluví, jak si předají klíč. Předtím to ještě nikdo ostatní nesmí slyšet.</li>
+        <li><b>Zašifrování</b>: Alice napíše krátkou zprávu (asi 30 písmen) a zašifruje ji substituční šifrou. Pomůže <a href="07_historie_sifrovani_aplikace.html" target="_blank" rel="noopener">aplikace Substituční šifra</a> nebo papír s abecedou.</li>
+        <li><b>Odeslání</b>: šifrový text pošle Alice přes třídu na papírku, nebo ho napíše na tabuli. Každý ho vidí.</li>
+        <li><b>Eva luští</b>: zbytek třídy zkusí text rozluštit frekvenční analýzou bez klíče. Kdo to dokáže první?</li>
+        <li><b>Rozbor</b>: kdo byl rychlý a proč? Jak bys zprávu zašifroval, aby Eva uspěla později nebo vůbec? A jak jste si předali klíč?</li>
+      </ol>
+    </div></section>
+
+    <!-- 22 kvíz -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Pravda, nebo ne?</h2>
+      <p class="score" id="qzScore"></p>
+      <div class="clue" id="qzText"></div>
+      <div class="seg">
+        <button class="calc-btn" data-a="1" type="button">Pravda</button>
+        <button class="calc-btn" data-a="0" type="button">Není pravda</button>
+        <button class="calc-btn" id="qzNext" type="button" hidden>Další →</button>
+      </div>
+      <div class="feedback" id="qzFb"></div>
+    </div></section>
+
+    <!-- 23 shrnutí -->
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li>Staré šifry používají dva triky: <b>transpozici</b> (přeskládání) a <b>substituci</b> (nahrazení). Moderní kombinují oba.</li>
+        <li>Caesar padne na <b>zkoušení všech klíčů</b>, jednoduchá substituce na <b>frekvenční analýzu</b> (al-Kindí, kolem roku 850).</li>
+        <li>Vigenèra rozlousknul <b>Babbage a Kasiski</b>: opakování v šifrovém textu prozradí délku klíče.</li>
+        <li><b>Enigma</b> měla asi 10<sup>20</sup> nastavení, a přesto padla na matematiku a na chyby lidí.</li>
+        <li><b>Kerckhoffs</b>: tajný má být jen klíč, ne postup. Dokonalá je jen <b>jednorázová tabulka</b>, ale má klíč dlouhý jako zpráva.</li>
+        <li>Zbývá problém <b>předání klíče</b>. Ten vyřešil veřejný klíč a o něm je přednáška o RSA.</li>
+      </ul>
+    </div></section>
+
+    <!-- 24 zdroje -->
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud jsou fakta a kde číst dál</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Historie</h3><ul class="src-list">
+          <li><a href="https://www.bl.uk/stories/blogs/posts/the-gallows-letter" target="_blank" rel="noopener">British Library: The Gallows Letter (17. 7. 1586)</a></li>
+          <li><a href="https://www.nsa.gov/Portals/70/documents/news-features/declassified-documents/crypto-almanac-50th/to-catch-a-queen.pdf" target="_blank" rel="noopener">NSA: To Catch a Queen</a></li>
+          <li><a href="https://www.gchq.gov.uk/information/the-pyry-forest-meeting" target="_blank" rel="noopener">GCHQ: The Pyry Forest Meeting (1939)</a></li>
+          <li><a href="https://ethw.org/Milestones:First_Breaking_of_Enigma_Code_by_the_Team_of_Polish_Cipher_Bureau%2C_1932-1939" target="_blank" rel="noopener">IEEE Milestone: Polish Cipher Bureau, 1932–1939</a></li>
+          <li><a href="https://simonsingh.net/The_Black_Chamber/crackingsubstitution.html" target="_blank" rel="noopener">Simon Singh: al-Kindí a frekvenční analýza</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Šifry a teorie</h3><ul class="src-list">
+          <li><a href="https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher" target="_blank" rel="noopener">Vigenèrova šifra (Bellaso 1553, Kasiski 1863)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Scytale" target="_blank" rel="noopener">Skytale a Plutarchův popis</a></li>
+          <li><a href="https://cryptool.org/en/education/history" target="_blank" rel="noopener">CrypTool: History of Cryptography</a></li>
+          <li><a href="https://www.sttmedia.com/characterfrequency-czech" target="_blank" rel="noopener">Četnost písmen v češtině (sttmedia.com)</a></li>
+          <li>S. Singh (1999): <i>The Code Book</i> · D. Kahn (1967): <i>The Codebreakers</i></li>
+        </ul></div>
+      </div>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var fits = [];
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function cs(n) { return Number(n).toLocaleString("cs-CZ"); }
+  function mod(a, n) { return ((a % n) + n) % n; }
+
+  /* ---------- navigace ---------- */
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total = slides.length, current = 0;
+  var dotsEl = $("dots"), counterEl = $("counter"), prevBtn = $("prevBtn"), nextBtn = $("nextBtn");
+  slides.forEach(function (s, i) {
+    s.hidden = i !== 0;
+    var d = el("button", "dot" + (i === 0 ? " is-active" : "")); d.setAttribute("aria-label", "Snímek " + (i + 1));
+    d.addEventListener("click", function () { goTo(i); });
+    dotsEl.appendChild(d);
+  });
+  var dotEls = Array.prototype.slice.call(dotsEl.children);
+  function goTo(i) {
+    if (i < 0 || i >= total) return;
+    slides[current].hidden = true; current = i; slides[current].hidden = false;
+    dotEls.forEach(function (d, idx) { d.classList.toggle("is-active", idx === current); });
+    counterEl.textContent = (current + 1) + " / " + total;
+    prevBtn.disabled = current === 0; nextBtn.disabled = current === total - 1;
+    runFits();
+  }
+  prevBtn.addEventListener("click", function () { goTo(current - 1); });
+  nextBtn.addEventListener("click", function () { goTo(current + 1); });
+  document.addEventListener("keydown", function (e) {
+    var t = e.target && e.target.tagName;
+    if (t === "INPUT" || t === "TEXTAREA") return;
+    if (e.key === "ArrowRight") goTo(current + 1);
+    if (e.key === "ArrowLeft") goTo(current - 1);
+  });
+
+  /* ---------- pomocné: výběr z karet ---------- */
+  function picker(btnHost, items, mk, panel, showFn) {
+    var btns = [], act = 0;
+    items.forEach(function (it, i) {
+      var b = mk(it, i); b.addEventListener("click", function () {
+        btns.forEach(function (x) { x.classList.remove("is-active"); }); b.classList.add("is-active"); act = i; showFn(it, i);
+      }); btnHost.appendChild(b); btns.push(b);
+    });
+    btns[0].classList.add("is-active"); showFn(items[0], 0);
+    fits.push({ slide: btnHost.closest(".slide"), fn: function () {
+      panel.style.minHeight = "0px"; var m = 0;
+      items.forEach(function (it, i) { showFn(it, i); m = Math.max(m, panel.offsetHeight); });
+      panel.style.minHeight = m + "px"; showFn(items[act], act);
+    } });
+  }
+  function runFits() { fits.forEach(function (f) { if (!f.slide.hidden) f.fn(); }); }
+  window.addEventListener("resize", runFits);
+  function panelHtml(p, title, text, extra) { p.innerHTML = "<h3>" + title + "</h3><p>" + text + "</p>" + (extra || ""); }
+  function quote(q) { return '<div class="quote">' + esc(q) + "</div>"; }
+  function tcard(c) { return el("button", "tcard", "<b>" + c.n + "</b><span>" + c.s + "</span>"); }
+
+  /* ---------- šifry ---------- */
+  var ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  function strip(s) { return String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase(); }
+  function lettersOnly(s) { return strip(s).replace(/[^A-Z]/g, ""); }
+  function caesar(s, k) {
+    return strip(s).replace(/[A-Z]/g, function (c) { return ABC[mod(ABC.indexOf(c) + k, 26)]; });
+  }
+  function substMap(s, key) {
+    return strip(s).replace(/[A-Z]/g, function (c) { return key[ABC.indexOf(c)]; });
+  }
+  function invKey(key) { var inv = []; for (var i = 0; i < 26; i++) inv[ABC.indexOf(key[i])] = ABC[i]; return inv.join(""); }
+  function vigenere(s, key, dec) {
+    var k = lettersOnly(key); if (!k) return strip(s); var j = 0;
+    return strip(s).replace(/[A-Z]/g, function (c) { var sh = ABC.indexOf(k[j++ % k.length]); return ABC[mod(ABC.indexOf(c) + (dec ? -sh : sh), 26)]; });
+  }
+  function counts(s) { var c = []; for (var i = 0; i < 26; i++) c[i] = 0; var l = lettersOnly(s); for (var j = 0; j < l.length; j++) c[ABC.indexOf(l[j])]++; return { c: c, n: l.length }; }
+  function sortedLetters(s) { return lettersOnly(s).split("").sort().join(""); }
+  function group(s, n) { return s.replace(new RegExp("(.{" + n + "})", "g"), "$1 ").trim(); }
+
+  // Četnost písmen v češtině (v %, písmena s diakritikou sloučena se základními; zdroj: sttmedia.com, zaokrouhleno)
+  var CZ = { A: 9.1, B: 2.2, C: 3.1, D: 3.8, E: 11.6, F: 0.2, G: 0.3, H: 2.3, I: 6.5, J: 2.3, K: 3.6, L: 5.2, M: 3.3, N: 6.4, O: 8.0, P: 3.2, Q: 0.0, R: 4.6, S: 5.3, T: 5.8, U: 3.2, V: 3.9, W: 0.1, X: 0.1, Y: 3.2, Z: 3.1 };
+  var CZ_ORDER = ABC.split("").sort(function (a, b) { return CZ[b] - CZ[a] || (a < b ? -1 : 1); });
+
+  /* ---------- 2: roztřídění ---------- */
+  var SORT = [
+    { n: "Schovat", s: "steganografie", t: "Schovat existenci zprávy", d: "Neviditelný inkoust, zpráva v obrázku, první písmena slov, vzkaz pod lavicí. Nikdo nepozná, že zpráva vůbec existuje. Když ji ale někdo najde, přečte ji. Tomu se říká <b>steganografie</b>." },
+    { n: "Přeskládat", s: "transpozice", t: "Přeskládat písmena", d: "Zpráva se přečte od zadu, po sloupcích nebo po každém druhém písmenu. Písmena zůstanou stejná, změní se jejich pořadí. Říká se tomu <b>transpozice</b>." },
+    { n: "Nahradit", s: "substituce", t: "Nahradit písmena", d: "Každé písmeno nebo slovo se nahradí jiným: A za Z, nebo číslem, nebo značkou. Pořadí zůstane, změní se písmena. Říká se tomu <b>substituce</b>." },
+    { n: "Kódová kniha", s: "kód", t: "Domluvit si slovník", d: "Předem si domluvíte, že „jahody“ znamená „útok“ a „déšť“ znamená „ústup“. Nemění se písmena, ale celé významy. Slovo <b>kód</b> se používá právě pro tohle, <b>šifra</b> pracuje s písmeny." }
+  ];
+  var sortPanel = $("sortPanel");
+  picker($("sortCards"), SORT, tcard, sortPanel, function (c) { panelHtml(sortPanel, c.t, c.d); });
+
+  /* ---------- 3: pojmy ---------- */
+  var TERMS = [
+    { n: "Šifra", s: "postup", t: "Šifra", d: "Pravidlo, jak zprávu přepsat tak, aby ji nepovolaný nepřečetl, třeba „posuň každé písmeno o 3“. Starší název: šifrovací algoritmus." },
+    { n: "Klíč", s: "tajná část", t: "Klíč", d: "Údaj, který nastavuje šifru: při Caesarovi číslo posunu, u skytale tloušťka tyče. Stejná šifra s jiným klíčem dá jiný výsledek." },
+    { n: "Otevřený a šifrový", s: "text", t: "Otevřený text a šifrový text", d: "<b>Otevřený text</b> je zpráva před zašifrováním, čitelná pro každého. <b>Šifrový text</b> je zpráva po zašifrování. Šifrování vede z prvního ke druhému, dešifrování zpět." },
+    { n: "Kryptografie", s: "a luštění", t: "Kryptografie a kryptoanalýza", d: "<b>Kryptografie</b> šifry vymýšlí a používá. <b>Kryptoanalýza</b> (luštění) je prolamuje bez znalosti klíče. Dohromady se tomu říká kryptologie. Celé dějiny jsou závod mezi nimi." }
+  ];
+  var termPanel = $("termPanel");
+  picker($("termCards"), TERMS, tcard, termPanel, function (c) { panelHtml(termPanel, c.t, c.d); });
+
+  /* ---------- 4: Alice, Bob, Eva ---------- */
+  var abeKnow = false;
+  function abeUpdate() {
+    var k = +$("abeK").value, txt = $("abeIn").value, c = caesar(txt, k), back = caesar(c, -k);
+    $("abeKv").textContent = k;
+    $("abeA").textContent = strip(txt) || "–"; $("abeC").textContent = c || "–"; $("abeB").textContent = back || "–";
+    $("abeMid").classList.toggle("is-hot", abeKnow);
+    $("abeE").textContent = abeKnow ? "Eva zná klíč a čte: " + back : "Eva vidí jen zmatek a klíč nezná.";
+    $("abeNote").textContent = abeKnow
+      ? "Jakmile Eva získá klíč, je po tajemství. Proto je celé umění v tom, aby klíč zůstal jen mezi Alicí a Bobem."
+      : "Bob ví, že posun je " + k + ", a text přečte. Eva by musela klíč uhodnout, nebo šifru prolomit.";
+    $("abeKnow").classList.toggle("is-active", abeKnow); $("abeKnow").setAttribute("aria-pressed", String(abeKnow));
+  }
+  $("abeIn").addEventListener("input", abeUpdate); $("abeK").addEventListener("input", abeUpdate);
+  $("abeKnow").addEventListener("click", function () { abeKnow = !abeKnow; abeUpdate(); });
+  abeUpdate();
+
+  /* ---------- 5: dva principy ---------- */
+  function transpose4(s) {
+    var l = lettersOnly(s), cols = 4; while (l.length % cols) l += "X";
+    var rows = l.length / cols, out = "";
+    for (var c = 0; c < cols; c++) for (var r = 0; r < rows; r++) out += l[r * cols + c];
+    return out;
+  }
+  function tpUpdate() {
+    var t = $("tpIn").value, a = transpose4(t), b = caesar(lettersOnly(t), 3);
+    $("tpT").textContent = group(a, 4) || "–"; $("tpTs").textContent = group(sortedLetters(a), 4) || "–";
+    $("tpS").textContent = group(b, 4) || "–"; $("tpSs").textContent = group(sortedLetters(b), 4) || "–";
+    $("tpNote").textContent = "U transpozice zůstává stejná sada písmen (případně s přidanými X), u substituce je jiná. Tak Eva pozná, o který druh šifry jde.";
+  }
+  $("tpIn").addEventListener("input", tpUpdate); tpUpdate();
+
+  /* ---------- 6: skytale ---------- */
+  function skGridOf(text, R) {
+    var l = lettersOnly(text); if (!l) return { l: "", C: 0, cells: [] };
+    var C = Math.ceil(l.length / R); while (l.length < R * C) l += "X";
+    return { l: l, C: C };
+  }
+  function skEnc(text, R) {
+    var g = skGridOf(text, R), out = "";
+    for (var c = 0; c < g.C; c++) for (var r = 0; r < R; r++) out += g.l[r * g.C + c];
+    return { strip: out, g: g };
+  }
+  function skDec(strip, R) {
+    var n = strip.length; if (!n) return "";
+    var C = Math.ceil(n / R), grid = [], i = 0, r, c;
+    for (r = 0; r < R; r++) grid[r] = [];
+    for (c = 0; c < C; c++) for (r = 0; r < R; r++) { if (i < n) grid[r][c] = strip[i++]; }
+    var out = ""; for (r = 0; r < R; r++) for (c = 0; c < C; c++) if (grid[r][c]) out += grid[r][c];
+    return out;
+  }
+  function skUpdate() {
+    var R = +$("skE").value, D = +$("skD").value;
+    $("skEv").textContent = R; $("skDv").textContent = D;
+    var e = skEnc($("skIn").value, R), g = e.g, grid = $("skGrid");
+    grid.innerHTML = ""; grid.style.gridTemplateColumns = "repeat(" + (g.C || 1) + ", minmax(0, 2rem))";
+    for (var r = 0; r < R; r++) for (var c = 0; c < g.C; c++) grid.appendChild(el("span", "hs-cell", g.l[r * g.C + c]));
+    $("skStrip").textContent = e.strip || "–";
+    var dec = skDec(e.strip, D);
+    $("skDec").textContent = dec || "–";
+    $("skNote").textContent = D === R ? "Stejná tyč, a zpráva je čitelná (zprávu doplnilo případné X)." : "Jiná tyč, a zpráva je nečitelná. Zkus najít správnou.";
+  }
+  ["skIn", "skE", "skD"].forEach(function (id) { $(id).addEventListener("input", skUpdate); });
+  skUpdate();
+
+  /* ---------- 7: Caesar ---------- */
+  (function () {
+    var top = $("csTop"), bot = $("csBot");
+    ABC.split("").forEach(function (c) { top.appendChild(el("span", "", c)); bot.appendChild(el("span", "", c)); });
+    function upd() {
+      var k = +$("csK").value; $("csKv").textContent = k;
+      Array.prototype.forEach.call(bot.children, function (s, i) { s.textContent = ABC[mod(i + k, 26)]; });
+      $("csOut").textContent = caesar($("csIn").value, k) || "–";
+    }
+    $("csK").addEventListener("input", upd); $("csIn").addEventListener("input", upd); upd();
+  })();
+
+  /* ---------- 8: hrubá síla ---------- */
+  (function () {
+    var plain = "SEJDEME SE ZITRA V PET", K = 11, cipher = caesar(plain, K);
+    $("bfC").textContent = cipher;
+    var list = $("bfList"), rows = [], solved = false;
+    function score(t) { var c = counts(t), s = 0; for (var i = 0; i < 26; i++) { var e = CZ[ABC[i]] * c.n / 100; if (e > 0) s += Math.pow(c.c[i] - e, 2) / e; } return s; }
+    function pick(k, auto) {
+      rows.forEach(function (r, i) { r.classList.remove("is-wrong", "is-right"); });
+      var ok = k === K; rows[k - 1].classList.add(ok ? "is-right" : "is-wrong");
+      $("bfMsg").textContent = ok ? (auto ? "Počítač vybral řádek s písmeny nejvíc podobnými češtině." : "Správně. Šifru zná jen Eva, ne Alice: posun " + K + ".") : "Tohle smysl nedává. Zkus další řádek.";
+    }
+    for (var k = 1; k <= 25; k++) (function (k) {
+      var b = el("button", "hs-try", "<b>" + k + "</b><span>" + esc(caesar(cipher, -k)) + "</span>");
+      b.addEventListener("click", function () { pick(k, false); }); list.appendChild(b); rows.push(b);
+    })(k);
+    $("bfAuto").addEventListener("click", function () {
+      var best = 1, bs = 1e18; for (var k = 1; k <= 25; k++) { var s = score(caesar(cipher, -k)); if (s < bs) { bs = s; best = k; } }
+      pick(best, true);
+    });
+  })();
+
+  /* ---------- 9: 26! ---------- */
+  (function () {
+    var F = 403291461126605635584000000; // 26!
+    $("kyN").textContent = "403 291 461 126 605 635 584 000 000";
+    function fmtYears(y) {
+      if (y < 1) return "méně než rok";
+      if (y < 1e3) return cs(Math.round(y)) + " let";
+      if (y < 1e6) return cs(Math.round(y / 1e3)) + " tisíc let";
+      if (y < 1e9) return cs(Math.round(y / 1e6)) + " milionů let";
+      if (y < 1e12) return cs(Math.round(y / 1e9 * 10) / 10) + " miliard let";
+      if (y < 1e15) return cs(Math.round(y / 1e12 * 10) / 10) + " bilionů let";
+      return cs(Math.round(y / 1e15 * 10) / 10) + " biliard let";
+    }
+    function upd() {
+      var e = +$("kyE").value, v = Math.pow(10, e), y = F / v / 31557600;
+      $("kyEv").textContent = "zkouším 10^" + e + " klíčů za sekundu";
+      $("kyT").textContent = "Vyzkoušet všechny klíče: " + fmtYears(y);
+      var age = 13.8e9, ratio = y / age;
+      $("kyU").textContent = ratio < 0.001 ? "To je zlomek stáří vesmíru (13,8 miliardy let)." : ("Stáří vesmíru je asi 13,8 miliardy let. Tedy " + cs(Math.round(ratio * 10) / 10) + "× stáří vesmíru.");
+    }
+    $("kyE").addEventListener("input", upd); upd();
+  })();
+
+  /* ---------- 10: frekvenční analýza ---------- */
+  (function () {
+    var KEY = "JFWIHYOTZSNXPQAGVLDRCBUMEK";
+    var PLAIN = "Frekvenční analýza je metoda, kterou popsal arabský učenec al-Kindí už v devátém století. Spočítá, která písmena šifrového textu se opakují nejčastěji, a porovná je s češtinou. V češtině je nejčastější písmeno e, pak o, a, n a t. Kdo tyto stopy najde, může vyluštit šifru bez znalosti klíče. Substituční šifra se dlouho zdála bezpečná, protože klíčů je obrovské množství, ale frekvenční analýza ji prolomila bez zkoušení klíčů.";
+    var WORDS = strip(PLAIN).split(/[^A-Z]+/).filter(Boolean);
+    var CW = WORDS.map(function (w) { return substMap(w, KEY); });
+    var INV = invKey(KEY);
+    var all = CW.join(""), cnt = counts(all);
+    var order = ABC.split("").sort(function (a, b) { return cnt.c[ABC.indexOf(b)] - cnt.c[ABC.indexOf(a)] || (a < b ? -1 : 1); });
+    var guess = {}, spaces = true;
+    var bars = $("fqBars"), gbox = $("fqGuess"), inputs = {};
+    var max = Math.max.apply(null, cnt.c);
+    order.forEach(function (L) {
+      var n = cnt.c[ABC.indexOf(L)];
+      var col = el("div", "hs-col" + (n ? "" : " is-zero"));
+      var bar = el("div", "hs-bar"); bar.style.height = Math.max(2, Math.round(n / max * 100)) + "%"; bar.title = L + ": " + n + "×";
+      col.appendChild(bar); col.appendChild(el("span", "hs-lab", L)); bars.appendChild(col);
+      var inp = el("input", "text-in hs-in"); inp.type = "text"; inp.maxLength = 1; inp.setAttribute("aria-label", "Tip na písmeno " + L); inp.autocomplete = "off";
+      inp.addEventListener("input", function () {
+        var v = strip(inp.value).replace(/[^A-Z]/g, "").slice(-1); inp.value = v;
+        if (v) guess[L] = v; else delete guess[L]; render();
+      });
+      inputs[L] = inp; gbox.appendChild(inp);
+    });
+    $("fqRef").innerHTML = '<span class="rsa-chip">V češtině nejčastěji:</span>' + CZ_ORDER.slice(0, 12).map(function (c) { return '<span class="rsa-chip is-yes">' + c + "</span>"; }).join("");
+    function render() {
+      var used = {}, dup = {};
+      Object.keys(guess).forEach(function (k) { var g = guess[k]; if (used[g]) { dup[g] = true; } used[g] = true; });
+      Object.keys(inputs).forEach(function (L) { var g = guess[L]; inputs[L].classList.toggle("is-bad", !!g && !!dup[g]); });
+      var html = CW.map(function (w) {
+        return w.split("").map(function (c) {
+          var g = guess[c];
+          if (g) return '<span class="is-set">' + g + "</span>";
+          return '<span class="is-un">' + c.toLowerCase() + "</span>";
+        }).join("");
+      }).join(spaces ? '<span class="hs-sp"> </span>' : "");
+      $("fqText").innerHTML = html;
+      var right = 0, tot = 0; ABC.split("").forEach(function (c) { if (cnt.c[ABC.indexOf(c)]) { tot++; if (guess[c] === INV[ABC.indexOf(c)]) right++; } });
+      $("fqMsg").textContent = right === tot ? "Hotovo. Rozluštil jsi celý text." : "Správně: " + right + " z " + tot + " písmen. Která to jsou, musíš zjistit z textu.";
+    }
+    $("fqHint").addEventListener("click", function () {
+      for (var i = 0; i < order.length; i++) { var L = order[i]; if (cnt.c[ABC.indexOf(L)] && guess[L] !== INV[ABC.indexOf(L)]) { guess[L] = INV[ABC.indexOf(L)]; inputs[L].value = guess[L]; break; } }
+      render();
+    });
+    $("fqSol").addEventListener("click", function () { order.forEach(function (L) { if (cnt.c[ABC.indexOf(L)]) { guess[L] = INV[ABC.indexOf(L)]; inputs[L].value = guess[L]; } }); render(); });
+    $("fqClr").addEventListener("click", function () { guess = {}; Object.keys(inputs).forEach(function (L) { inputs[L].value = ""; }); render(); });
+    $("fqSp").addEventListener("click", function () { spaces = !spaces; this.classList.toggle("is-active", spaces); this.setAttribute("aria-pressed", String(spaces)); render(); });
+    render();
+  })();
+
+  /* ---------- 11: Marie Stuartovna ---------- */
+  var MARIE = [
+    { n: "1568", s: "vězněna", t: "Vězeň, který nemá zmizet", d: "Skotská královna Marie Stuartovna uprchla do Anglie, kde ji její příbuzná Alžběta I. držela ve vězení. Pro anglické katolíky byla možnou královnou, a tedy hrozbou. Pro ministra Francise Walsinghama byla cílem." },
+    { n: "1585", s: "Gifford", t: "Zrádný kurýr", d: "Walsingham získal dvojitého agenta Gilberta Gifforda. Ten nabídl Marii, že bude její dopisy tajně vozit. Skutečně je vozil: zalepené ve vodotěsném pouzdře v zátce pivního sudu, který zásoboval hrad Chartley." },
+    { n: "17. 7. 1586", s: "dopis", t: "Dopis, který ji odsoudil", d: "Anthony Babington jí napsal o plánu zabít Alžbětu a osvobodit ji. Marie odpověděla šifrou a plán schválila. Walsinghamův luštitel Thomas Phelippes šifru rozluštil <b>frekvenční analýzou</b>: spočítal nejčastější značky a hádal písmena." },
+    { n: "Srpen 1586", s: "past", t: "Padělaný dodatek", d: "Phelippes k Mariině dopisu připsal šifrovaný dodatek, v němž žádá Babingtona o jména spiklenců. Šifra byla prolomená, a tak mohl psát jejím hlasem. Babingtona i další zatkli a popravili." },
+    { n: "1587", s: "poprava", t: "Soud a poprava", d: "Marii soudili v říjnu 1586 a popravili 8. února 1587. Poučení: <b>slabá šifra může být horší než žádná</b>, protože jí věříte. Marie ani její tajemníci si nepřipustili, že by někdo mohl šifru rozluštit a ještě do ní psát." }
+  ];
+  var maPanel = $("maPanel");
+  picker($("maCards"), MARIE, tcard, maPanel, function (c) { panelHtml(maPanel, c.t, c.d); });
+
+  /* ---------- 12: Vigenère a histogramy ---------- */
+  var VTEXT = "Sifra, ktera vypada nerozlustitelne, muze byt slaba. Marie Stuartovna verila sve sifre, a prave proto uverila i falesnemu dodatku. Dobry sifrovaci system musi obstat i tehdy, kdyz nepritel zna cely postup a nezna jen klic. To je zasada, kterou uz v roce 1883 vyslovil Auguste Kerckhoffs. Kdo chce zpravu opravdu ochranit, nesmi se spolehat na to, ze jeho postup zustane utajeny, ale musi si pohlidat klic. Frekvence pismen v textu totiz prozrazuje velmi mnoho, a proto se vymyslely sifry, ktere pismena michaji.";
+  function barsInto(host, cnt, maxPct) {
+    host.innerHTML = "";
+    for (var i = 0; i < 26; i++) {
+      var p = cnt.n ? cnt.c[i] / cnt.n * 100 : 0;
+      var col = el("div", "hs-col"), bar = el("div", "hs-bar"); bar.style.height = Math.max(2, Math.round(p / maxPct * 100)) + "%"; bar.title = ABC[i] + ": " + p.toFixed(1).replace(".", ",") + " %";
+      col.appendChild(bar); col.appendChild(el("span", "hs-lab", ABC[i])); host.appendChild(col);
+    }
+  }
+  function topLetter(cnt) { var m = 0, ix = 0; for (var i = 0; i < 26; i++) if (cnt.c[i] > m) { m = cnt.c[i]; ix = i; } return { L: ABC[ix], p: cnt.n ? m / cnt.n * 100 : 0 }; }
+  function vgUpdate() {
+    var key = lettersOnly($("vgKey").value);
+    if (!key) { $("vgMsg").textContent = "Zadej klíčové slovo z písmen."; return; }
+    $("vgMsg").textContent = "";
+    var vc = vigenere(VTEXT, key), cc = caesar(lettersOnly(VTEXT), 3);
+    $("vgOut").textContent = group(lettersOnly(vc).slice(0, 110), 5) + " …";
+    var demo = $("vgDemo"), pl = lettersOnly(VTEXT).slice(0, 10), rows = [["text", pl.split("")], ["klíč", []], ["posun", []], ["šifra", []]], d, sh;
+    for (d = 0; d < pl.length; d++) {
+      var kc = key[d % key.length]; sh = ABC.indexOf(kc);
+      rows[1][1].push(kc); rows[2][1].push(String(sh)); rows[3][1].push(ABC[mod(ABC.indexOf(pl[d]) + sh, 26)]);
+    }
+    demo.innerHTML = "";
+    rows.forEach(function (r, ri) {
+      demo.appendChild(el("span", "hs-vgl", r[0]));
+      r[1].forEach(function (v) { demo.appendChild(el("span", "hs-cell" + (ri === 2 ? " is-num" : "") + (ri === 3 ? " is-out" : ""), v)); });
+    });
+    var c1 = counts(cc), c2 = counts(vc), mx = Math.max(Math.max.apply(null, c1.c) / c1.n, Math.max.apply(null, c2.c) / c2.n) * 100;
+    barsInto($("vgB1"), c1, mx); barsInto($("vgB2"), c2, mx);
+    var t1 = topLetter(c1), t2 = topLetter(c2);
+    $("vgS1").textContent = "Nejčastější písmeno " + t1.L + " tvoří " + t1.p.toFixed(1).replace(".", ",") + " % textu. Vidíš výrazné vrcholy.";
+    $("vgS2").textContent = "Nejčastější písmeno " + t2.L + " tvoří jen " + t2.p.toFixed(1).replace(".", ",") + " %. Graf je mnohem plošší.";
+  }
+  $("vgKey").addEventListener("input", vgUpdate); vgUpdate();
+
+  /* ---------- 13: Kasiski ---------- */
+  var KTEXT = "Sifra je pravidlo, jak z otevreneho textu udelat sifrovy text. Klic je tajna cast sifry. Kdo zna klic, precte sifrovy text, a kdo ho nezna, musi sifru rozlustit. Dobra sifra musi vydrzet, i kdyz nepritel zna sifru a nezna jen klic. Kdyz ale klic zna jen odesilatel a prijemce, musi si klic predat. Proto je predani klice stejne dulezite jako sifra sama. Sifrovy text bez klice vypada jako nahodny sum, ale opakovani v sifrovem textu prozradi, jak dlouhy klic je.";
+  function kaUpdate() {
+    var key = lettersOnly($("kaKey").value);
+    if (key.length < 2) { $("kaMsg").textContent = "Klíč musí mít aspoň dvě písmena."; return; }
+    $("kaMsg").textContent = "";
+    var ct = vigenere(KTEXT, key), c = lettersOnly(ct), seen = {}, reps = [], i, j;
+    for (i = 0; i + 3 <= c.length; i++) { var t = c.substr(i, 3); (seen[t] = seen[t] || []).push(i); }
+    var dist = [];
+    Object.keys(seen).forEach(function (t) {
+      var p = seen[t]; if (p.length < 2) return;
+      for (j = 1; j < p.length; j++) { reps.push({ t: t, a: p[0], d: p[j] - p[0] }); dist.push(p[j] - p[0]); }
+    });
+    reps.sort(function (a, b) { return a.a - b.a; });
+    var html = "";
+    reps.slice(0, 14).forEach(function (r, ri) { html += "<button type=\"button\" class=\"hs-rep\" data-i=\"" + ri + "\"><b>" + r.t + "</b> na pozici " + (r.a + 1) + ", vzdálenost " + r.d + "</button>"; });
+    if (reps.length > 14) html += "<div class=\"rsa-muted\">… a dalších " + (reps.length - 14) + "</div>";
+    $("kaRep").innerHTML = html || "Žádné opakování.";
+    function kaMark(ri) {
+      var r = reps[ri], hits = seen[r ? r.t : ""] || [], out = "", q, inM;
+      Array.prototype.forEach.call($("kaRep").querySelectorAll(".hs-rep"), function (b) { b.classList.toggle("is-sel", +b.dataset.i === ri); });
+      for (q = 0; q < c.length; q++) {
+        inM = hits.some(function (h) { return q >= h && q < h + 3; });
+        out += (inM ? '<mark class="hs-mk">' + c[q] + "</mark>" : c[q]) + ((q + 1) % 10 === 0 ? " " : "");
+      }
+      $("kaTxt").innerHTML = out;
+      $("kaSel").textContent = r ? r.t + " je na pozicích " + hits.map(function (h) { return h + 1; }).join(", ") + ". Vzdálenost " + r.d + " je dělitelná čísly: " + [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter(function (q) { return r.d % q === 0; }).join(", ") + ". Opravdové opakování slova má vzdálenost dělitelnou délkou klíče, náhodná shoda ne. Proto se počítají všechny trojice." : "";
+    }
+    Array.prototype.forEach.call($("kaRep").querySelectorAll(".hs-rep"), function (b) { b.addEventListener("click", function () { kaMark(+b.dataset.i); }); });
+    if (reps.length) kaMark(0); else $("kaTxt").textContent = c;
+    var tally = {}; for (i = 2; i <= 12; i++) tally[i] = 0;
+    dist.forEach(function (d) { for (var q = 2; q <= 12; q++) if (d % q === 0) tally[q]++; });
+    var mx = Math.max.apply(null, Object.keys(tally).map(function (q) { return tally[q]; })), host = $("kaDiv"), best = 0;
+    for (i = 2; i <= 12; i++) if (mx > 0 && tally[i] >= 0.85 * mx) best = i;
+    host.innerHTML = "";
+    for (i = 2; i <= 12; i++) {
+      var col = el("div", "hs-col"), bar = el("div", "hs-bar" + (i === best ? " is-top" : "")); bar.style.height = Math.max(2, Math.round(tally[i] / (mx || 1) * 100)) + "%"; bar.title = i + ": " + tally[i] + "×";
+      col.appendChild(bar); col.appendChild(el("span", "hs-lab", i)); host.appendChild(col);
+    }
+    if (!best) { $("kaVerdict").textContent = "Opakování je málo. Zkus jiný klíč."; $("kaCols").textContent = ""; return; }
+    $("kaVerdict").textContent = "Vysoko vychází číslo " + best + ", takže délka klíče je pravděpodobně " + best + (best === key.length ? " a to se shoduje se skutečností." : ", skutečná délka je ale " + key.length + " (násobky a náhoda umí zmást).");
+    var cols = []; for (i = 0; i < best; i++) cols.push("");
+    for (i = 0; i < c.length; i++) cols[i % best] += c[i];
+    function chi(s, sh) { var cn = counts(caesar(s, -sh)), x = 0; for (var q = 0; q < 26; q++) { var e = CZ[ABC[q]] * cn.n / 100; if (e > 0) x += Math.pow(cn.c[q] - e, 2) / e; } return x; }
+    var guessKey = cols.map(function (s) { var b = 0, bs = 1e18; for (var sh = 0; sh < 26; sh++) { var v = chi(s, sh); if (v < bs) { bs = v; b = sh; } } return ABC[b]; }).join("");
+    $("kaCols").innerHTML = "Teď stačí šifrový text rozdělit do " + best + " sloupců. Každý sloupec je obyčejný Caesar, takže pro něj vyzkoušíš všech 26 posunů a vybereš ten, který nejvíc připomíná češtinu. Vyjde odhad klíče <b>" + guessKey + "</b> (skutečný klíč: <b>" + key + "</b>). Z krátkého textu vyjde odhad jen přibližně, zbylá písmena se dohledají čtením: která slova dávají smysl?";
+  }
+  $("kaKey").addEventListener("input", kaUpdate); kaUpdate();
+
+  /* ---------- 14: Enigma ---------- */
+  var ROT = [{ w: "EKMFLGDQVZNTOWYHXUSPAIBRCJ", n: "Q" }, { w: "AJDKSIRUXBLHWTMCQGZNPYFVOE", n: "E" }, { w: "BDFHJLCPRTXVZNYEIWGAKMUSQO", n: "V" }];
+  var REF = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
+  function enigma(text, pos) {
+    var p = pos.slice(), out = "", i, x, y;
+    var t = lettersOnly(text);
+    for (var q = 0; q < t.length; q++) {
+      x = ABC.indexOf(t[q]);
+      if (p[1] === ABC.indexOf(ROT[1].n)) { p[0] = (p[0] + 1) % 26; p[1] = (p[1] + 1) % 26; }
+      else if (p[2] === ABC.indexOf(ROT[2].n)) { p[1] = (p[1] + 1) % 26; }
+      p[2] = (p[2] + 1) % 26;
+      for (i = 2; i >= 0; i--) x = mod(ABC.indexOf(ROT[i].w[mod(x + p[i], 26)]) - p[i], 26);
+      x = ABC.indexOf(REF[x]);
+      for (i = 0; i < 3; i++) { y = mod(x + p[i], 26); x = mod(ROT[i].w.indexOf(ABC[y]) - p[i], 26); }
+      out += ABC[x];
+    }
+    return { out: out, pos: p, inn: t };
+  }
+  function enUpdate() {
+    var pos = ["enL", "enM", "enR"].map(function (id) { var v = lettersOnly($(id).value).slice(0, 1) || "A"; return ABC.indexOf(v); });
+    var r = enigma($("enIn").value, pos), b = enigma(r.out, pos), selfMap = 0;
+    for (var i = 0; i < r.out.length; i++) if (r.out[i] === r.inn[i]) selfMap++;
+    $("enOut").textContent = group(r.out, 5) || "–"; $("enBack").textContent = group(b.out, 5) || "–";
+    $("enStat").textContent = "Válce po zprávě: " + ABC[r.pos[0]] + " " + ABC[r.pos[1]] + " " + ABC[r.pos[2]] + ". Písmen, která se zašifrovala sama na sebe: " + selfMap + ". Enigma to nikdy neudělá, a to byla její slabina.";
+  }
+  ["enL", "enM", "enR", "enIn"].forEach(function (id) { $(id).addEventListener("input", enUpdate); });
+  $("enA").addEventListener("click", function () { $("enIn").value = "AAAAAAAAAAAA"; enUpdate(); });
+  enUpdate();
+
+  /* ---------- 15: Polsko a Bletchley ---------- */
+  var POL = [
+    { n: "1932", s: "Rejewski", t: "Polský matematik rozlouskl Enigmu", d: "Marian Rejewski z polského Šifrového úřadu využil matematiku permutací a francouzské tajné listiny a rozluštil zapojení válců vojenské Enigmy. Podařilo se mu to bez toho, aby stroj viděl. Spolu s Jerzym Różyckým a Henrykem Zygalskim potom luštili zprávy denně." },
+    { n: "1938", s: "bomba", t: "Stroj, který luští", d: "Rejewski navrhl „bombu“ (bomba kryptologiczna), stroj, který procházel možná nastavení válců. Němci ale přidávali další válce a kabely na desce a Poláci pomalu přestávali stíhat." },
+    { n: "1939", s: "Pyry", t: "Polsko předává tajemství spojencům", d: "25. a 26. července 1939 se v lese u Pyr nedaleko Varšavy sešli polští, francouzští a britští luštitelé. Poláci předali všechno, co o Enigmě věděli, včetně rekonstruovaného stroje. O pár týdnů později začala válka." },
+    { n: "1940", s: "Bletchley Park", t: "Turing a první britská bomba", d: "Alan Turing, který pracoval v Bletchley Parku, se v lednu 1940 v Paříži sešel s polskými luštiteli. Rozhovory s Rejewským pomohly vzniku britské Bombe. Využívala se i slabina Enigmy: písmeno se nikdy nezašifruje samo na sebe, a navíc se hodily odhady známých slov v textu." },
+    { n: "1942", s: "Navahové", t: "Kód, který nikdo nerozluštil", d: "Americká námořní pěchota v roce 1942 najala 29 mužů z indiánského kmene Navahů. Ti vytvořili kód z navažštiny, jazyka bez písma, který neznal skoro nikdo mimo kmen: pro písmena zvolili anglická slova přeložená do navažštiny a pro asi 450 vojenských pojmů, které v jazyce nebyly, vymysleli popisná slova (ponorka byla „železná ryba“). Šlo o kód, ne o šifru, a ani Japonci ho za válku nerozluštili. Při dobývání Iwodžimy poslalo šest Navahů za prvních 48 hodin přes 800 zpráv bez chyby. Operace zůstala utajená do roku 1968 a původních 29 mužů dostalo v roce 2001 kongresovou zlatou medaili." }
+  ];
+  var plPanel = $("plPanel");
+  picker($("plCards"), POL, tcard, plPanel, function (c) { panelHtml(plPanel, c.t, c.d); });
+
+  /* ---------- 16: Kerckhoffs ---------- */
+  var KER = [
+    { n: "Tajný postup", s: "„nikdo neví, jak šifruji“", t: "Tajím celý postup", d: "Vypadá to bezpečně, ale stačí jeden zajatý stroj, zrádce nebo špeh a všechno je prozrazeno. Pak se musí vyměnit celý systém, tedy všechny stroje a postupy." },
+    { n: "Tajný klíč", s: "postup je veřejný", t: "Tajím jen klíč", d: "Postup může znát každý, klidně ho odborníci rozebírají a hledají v něm chyby. Když klíč unikne, vymění se jen on. Klíč se mění snadno, zatímco celý systém ne." },
+    { n: "Kerckhoffs 1883", s: "pravidlo", t: "Kerckhoffsův princip", d: "Systém nesmí vyžadovat tajnost a nesmí vadit, když padne do rukou nepřítele. O šedesát let později Claude Shannon řekl to samé jinak: nepřítel zná systém. Dodnes se tak navrhují šifry, třeba AES, jejíž postup je veřejný." }
+  ];
+  var kePanel = $("kePanel");
+  picker($("keCards"), KER, tcard, kePanel, function (c) { panelHtml(kePanel, c.t, c.d); });
+
+  /* ---------- 17: jednorázová tabulka ---------- */
+  (function () {
+    var plain = "UTOKZITRA", key = "", ct = "";
+    function rnd() { var a = new Uint8Array(1), v; do { crypto.getRandomValues(a); v = a[0]; } while (v >= 234); return v % 26; }
+    function make() {
+      key = ""; for (var i = 0; i < plain.length; i++) key += ABC[rnd()];
+      ct = vigenere(plain, key); $("otC").textContent = ct; $("otIn").value = ""; upd();
+    }
+    function upd() {
+      var g = lettersOnly($("otIn").value);
+      if (!g) { $("otK").textContent = "–"; $("otMsg").textContent = "Napiš zprávu o " + ct.length + " písmenech (například MIR ZITRA)."; return; }
+      if (g.length !== ct.length) { $("otK").textContent = "–"; $("otMsg").textContent = "Potřebuji přesně " + ct.length + " písmen, máš " + g.length + "."; return; }
+      var k = ""; for (var i = 0; i < g.length; i++) k += ABC[mod(ABC.indexOf(ct[i]) - ABC.indexOf(g[i]), 26)];
+      $("otK").textContent = k;
+      $("otMsg").textContent = g === plain ? "To je opravdu původní zpráva a pravý klíč." : "Existuje klíč, který z tohoto šifrového textu udělá „" + g + "“. Eva nemá jak poznat, který klíč je pravý.";
+    }
+    $("otIn").addEventListener("input", upd); $("otNew").addEventListener("click", make); make();
+  })();
+
+  /* ---------- 18: počet klíčů ---------- */
+  function kcUpdate() {
+    var n = +$("kcN").value; $("kcNv").textContent = n;
+    $("kcT").textContent = n + " lidí potřebuje " + cs(n * (n - 1) / 2) + " tajných klíčů";
+  }
+  $("kcN").addEventListener("input", kcUpdate); kcUpdate();
+
+  /* ---------- 19: veřejný klíč ---------- */
+  var PK = [
+    { n: "1973", s: "GCHQ, tajně", t: "Cocks vymyslel totéž dřív", d: "Britský matematik Clifford Cocks z GCHQ popsal v zásadě stejný algoritmus jako později RSA. Byla to ale státní tajemství a veřejnost se to dozvěděla až po odtajnění v roce 1997." },
+    { n: "1976", s: "Diffie a Hellman", t: "Nápad dvou klíčů", d: "Whitfield Diffie a Martin Hellman publikovali myšlenku šifrování s veřejným klíčem a způsob, jak se dohodnout na společném klíči před odposlouchávajícím. Odpadá nutnost předat klíč předem." },
+    { n: "1977", s: "RSA a DES", t: "RSA a první standard", d: "Rivest, Shamir a Adleman vymysleli algoritmus RSA a v USA se stal standardem šifra DES, kterou dnes nahradila AES. Obě využívaly stejný princip: veřejný postup a tajný klíč." },
+    { n: "2001", s: "AES", t: "AES nahradil DES", d: "V roce 2001 vybral americký NIST jako nový standard algoritmus AES (Rijndael). Používá se dodnes, například v Wi-Fi a HTTPS. Šifruje data, zatímco RSA a podobné algoritmy chrání klíče." },
+    { n: "Dnes", s: "po kvantu", t: "Co dál", d: "Kvůli možným kvantovým počítačům přecházejí standardy na postkvantové algoritmy. Příběh souboje tvůrců a luštitelů tedy pokračuje. A jak funguje RSA, ukáže další přednáška." }
+  ];
+  var pkPanel = $("pkPanel");
+  picker($("pkCards"), PK, tcard, pkPanel, function (c) { panelHtml(pkPanel, c.t, c.d); });
+
+  /* ---------- 22: kvíz ---------- */
+  var Q = [
+    { t: "Transpozice nahrazuje písmena jinými, substituce je přeskládává.", a: 0, f: "Je to naopak: transpozice přeskládává, substituce nahrazuje." },
+    { t: "Caesarovu šifru lze rozluštit vyzkoušením všech 25 posunů.", a: 1, f: "Klíčů je jen 25, takže stačí zkusit všechny." },
+    { t: "Libovolná substituční šifra se nedá rozluštit, protože má 26! klíčů.", a: 0, f: "Dá. Frekvenční analýza nezkouší klíče, využívá toho, že písmena mají různou četnost." },
+    { t: "Frekvenční analýzu popsal al-Kindí už v 9. století.", a: 1, f: "Spis o luštění zpráv napsal kolem roku 850 v Bagdádu." },
+    { t: "Vigenèrova šifra odolala frekvenční analýze, ale nakonec ji rozluštil Kasiski.", a: 1, f: "Opakování v šifrovém textu prozradí délku klíče. Kasiski to zveřejnil v roce 1863, Babbage to našel dříve." },
+    { t: "Enigma šifrovala někdy písmeno samo na sebe.", a: 0, f: "Nikdy. Tahle slabina pomáhala luštitelům." },
+    { t: "Kerckhoffsův princip říká, že šifra je bezpečná, když zůstane tajný její postup.", a: 0, f: "Naopak: bezpečnost má stát jen na tajném klíči, postup může být veřejný." },
+    { t: "Jednorázová tabulka je dokonalá, pokud je klíč náhodný, stejně dlouhý jako zpráva a použitý jen jednou.", a: 1, f: "Shannon v roce 1949 dokázal, že z takového šifrového textu nelze nic zjistit." }
+  ];
+  var qI = 0, qOk = 0, qAns = false;
+  var ansBtns = Array.prototype.slice.call(document.querySelectorAll("[data-a]")).filter(function (b) { return b.dataset.a === "0" || b.dataset.a === "1"; });
+  function qRender() {
+    qAns = false; var q = Q[qI];
+    $("qzScore").textContent = "Tvrzení " + (qI + 1) + " z " + Q.length + " · správně " + qOk;
+    $("qzText").textContent = q.t; $("qzFb").innerHTML = ""; $("qzNext").hidden = true;
+    ansBtns.forEach(function (b) { b.hidden = false; b.disabled = false; b.classList.remove("is-right", "is-wrong"); });
+  }
+  ansBtns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      if (qAns) return; qAns = true;
+      var q = Q[qI], ok = +b.dataset.a === q.a; if (ok) qOk++;
+      ansBtns.forEach(function (x) { if (+x.dataset.a === q.a) x.classList.add("is-right"); x.disabled = true; });
+      if (!ok) b.classList.add("is-wrong");
+      $("qzScore").textContent = "Tvrzení " + (qI + 1) + " z " + Q.length + " · správně " + qOk;
+      $("qzFb").innerHTML = "<b>" + (ok ? "Správně." : "Tentokrát ne.") + "</b> " + q.f;
+      $("qzNext").hidden = false; $("qzNext").textContent = qI === Q.length - 1 ? "Výsledek" : "Další →";
+    });
+  });
+  $("qzNext").addEventListener("click", function () {
+    if (qI === Q.length - 1) {
+      $("qzText").innerHTML = "<b>Výsledek: " + qOk + " z " + Q.length + ".</b>";
+      $("qzFb").innerHTML = qOk === Q.length ? "Výborně." : "Projdi si ještě slidy o frekvenční analýze a o Vigenèrovi.";
+      ansBtns.forEach(function (b) { b.hidden = true; }); $("qzNext").textContent = "Znovu"; qI = -1; qOk = 0; return;
+    }
+    qI++; qRender();
+  });
+  qRender();
+
+  goTo(0);
+})();
+</script>
+</body>
+</html>

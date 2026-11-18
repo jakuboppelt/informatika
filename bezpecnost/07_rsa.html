@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>RSA</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="deck">
+<div class="app">
+  <div class="stage" id="stage">
+
+    <!-- 0 titul -->
+    <section class="slide title-slide"><div class="slide-inner">
+      <div class="eyebrow">Bezpečnost · 7. materiál</div>
+      <h1>RSA</h1>
+      <p class="lede">Jak si šeptat před celým světem. Od prvočísel přes zámek a klíč až k algoritmu, který chrání HTTPS, e-podpisy i přihlášení na servery. Skoro všechno si zkusíš sám.</p>
+      <p class="hint">Šipky ← → listují. Většinu slidů můžeš proklikat.</p>
+    </div></section>
+
+    <!-- 1 otázka -->
+    <section class="slide pause-slide"><div class="slide-inner">
+      <div class="qmark">?</div>
+      <h2>Jak pošleš tajemství někomu, koho jsi nikdy nepotkal, když poslouchá celý svět?</h2>
+      <p class="lede">Heslo k Wi-Fi si šeptneš do ucha. Internet ale ucho nemá: každá zpráva projde desítkami cizích počítačů. Přesto platíš kartou a přihlašuješ se do banky a nikdo ti nic neukradne. Na čem to celé stojí?</p>
+      <p class="lede">Odpověď začíná u věci, kterou znáš ze základní školy: u prvočísel.</p>
+    </div></section>
+
+    <!-- 2 hádanka -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">1 · Prvočísla</div>
+      <h2 class="slide-title">Dvě úlohy, jedno číslo</h2>
+      <p class="lede">Spusť stopky a vyřeš obě úlohy. Počítej v hlavě nebo na papíře, kalkulačku nech být. Která bude trvat déle?</p>
+      <div class="calc-row"><button class="calc-btn" id="riStart" type="button">Spustit stopky</button><span class="rsa-time" id="riTime">0,0 s</span></div>
+      <div class="rsa-tasks">
+        <div class="rsa-task"><span class="meta">Úloha A</span><h3>Vynásob 89 × 97</h3>
+          <input class="text-in" id="riA" type="text" inputmode="numeric" placeholder="výsledek" autocomplete="off" aria-label="Výsledek násobení">
+          <div class="hverd" id="riAv"></div></div>
+        <div class="rsa-task"><span class="meta">Úloha B</span><h3>Rozlož 8633 na dvě prvočísla</h3>
+          <input class="text-in" id="riB" type="text" inputmode="numeric" placeholder="jedno z nich" autocomplete="off" aria-label="Jeden z činitelů">
+          <div class="hverd" id="riBv"></div></div>
+      </div>
+      <p class="note" id="riNote">Výsledek úlohy A je zároveň zadání úlohy B. Stejné číslo, jen opačným směrem.</p>
+    </div></section>
+
+    <!-- 3 síto -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">1 · Prvočísla</div>
+      <h2 class="slide-title">Co je prvočíslo a jak je najít</h2>
+      <div class="split">
+        <div class="rsa-grid" id="svGrid" aria-label="Čísla 1 až 100"></div>
+        <div class="stack">
+          <p class="lede"><b>Prvočíslo</b> je číslo větší než 1, které je dělitelné jen jedničkou a samo sebou. Číslo 7 ano, číslo 8 ne (je dělitelné dvěma).</p>
+          <p class="lede">Eratosthenovo síto: vezmi nejmenší nevyškrtnuté číslo, nech ho a škrtni všechny jeho násobky.</p>
+          <div class="calc-row">
+            <button class="calc-btn" id="svNext" type="button">Další krok</button>
+            <button class="calc-btn" id="svAll" type="button">Celé najednou</button>
+            <button class="calc-btn" id="svReset" type="button">Znovu</button>
+          </div>
+          <div class="panel p-hash"><p id="svInfo"></p></div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 4 základní věta -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">1 · Prvočísla</div>
+      <h2 class="slide-title">Prvočísla jsou atomy čísel</h2>
+      <p class="lede">Každé přirozené číslo větší než 1 se dá <b>jediným způsobem</b> složit z prvočísel (na pořadí nezáleží). Říká se tomu základní věta aritmetiky. Vyber číslo nebo napiš vlastní.</p>
+      <div class="seg" id="faSeg"></div>
+      <div class="calc-row"><input class="text-in" id="faIn" type="text" inputmode="numeric" value="360" maxlength="12" autocomplete="off" aria-label="Číslo k rozkladu"></div>
+      <div class="formula f-md" id="faOut"></div>
+      <p class="note" id="faNote"></p>
+    </div></section>
+
+    <!-- 5 asymetrie -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">1 · Prvočísla</div>
+      <h2 class="slide-title">Násobit je snadné, rozkládat je pomalé</h2>
+      <p class="lede">Vyber délku čísla. Počítač vybere dvě prvočísla, vynásobí je a pak se pokusí rozložit výsledek tím nejjednodušším způsobem: zkouší dělitele 3, 5, 7, 9, …</p>
+      <div class="seg" id="fdSeg"></div>
+      <div class="panel p-hash"><div class="rsa-eq" id="fdOut">Klikni na délku čísla.</div></div>
+      <p class="lede">Každé dvě číslice navíc znamenají zhruba desetkrát víc práce. Co to udělá se skutečným klíčem? Posuň jezdcem.</p>
+      <div class="slider-row"><input type="range" id="bitsRange" min="16" max="4096" step="16" value="2048" aria-label="Počet bitů čísla n"><span class="big-val" id="bitsVal">2048 bitů</span></div>
+      <div class="panel p-hash"><div class="rsa-eq" id="bitsOut"></div></div>
+      <p class="note">Nejlepší známý algoritmus (obecné číselné síto) je mnohem rychlejší než zkoušení dělitelů, ale pořád roste neúměrně rychle s délkou čísla. Číslo o 2048 bitech nezvládne, a proto mu věříme.</p>
+    </div></section>
+
+    <!-- 6 kolik prvočísel -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">1 · Prvočísla</div>
+      <h2 class="slide-title">Dojdou nám prvočísla?</h2>
+      <p class="lede">Nedojdou. <b>Euklides</b> to dokázal před více než 2000 lety: kdyby jich bylo konečně mnoho, vynásobil by je a přičetl jedničku. Takové číslo není dělitelné žádným z nich, takže musí být samo prvočíslo nebo mít nový prvočinitel. Spor.</p>
+      <p class="lede">A nejsou jen nekonečně, je jich i velmi hodně. Vyber délku v bitech.</p>
+      <div class="cards4" id="cntCards"></div>
+      <div class="panel" id="cntPanel"></div>
+    </div></section>
+
+    <!-- 7 jak najít obří prvočíslo -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">1 · Prvočísla</div>
+      <h2 class="slide-title">Jak se najde obří prvočíslo</h2>
+      <p class="lede">Prvočísla se neskládají podle vzorce. Vybere se <b>náhodné liché číslo</b> a otestuje se. Nejdřív rychle dělením malými prvočísly, potom Miller–Rabinovým testem, který složené číslo prozradí s velkou jistotou během jediného kola.</p>
+      <div class="seg" id="genSeg"></div>
+      <div class="panel p-hash"><div class="rsa-chips" id="genChips"><span class="rsa-spin">Vyber délku a hledej.</span></div><p class="note" id="genInfo"></p><div class="quote rsa-scroll" id="genOut"></div></div>
+    </div></section>
+
+    <!-- 8 symetrická šifra -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">2 · Klíče a zámek</div>
+      <h2 class="slide-title">Jeden klíč a jeden problém</h2>
+      <p class="lede">Cézarova šifra posune každé písmeno o <b>k</b> míst. Odesílatel i příjemce používají stejné k. Šifru dnes rozluští každý za minutu, ale princip platí i pro moderní šifry jako AES: <b>jeden společný tajný klíč</b>.</p>
+      <div class="calc-row"><input class="text-in" id="ceIn" type="text" value="Sejdeme se v patek" maxlength="40" autocomplete="off" spellcheck="false" aria-label="Text k zašifrování"></div>
+      <div class="slider-row"><input type="range" id="ceK" min="0" max="25" value="3" aria-label="Posun k"><span class="big-val" id="ceKVal">k = 3</span></div>
+      <div class="panel p-hash"><div class="rsa-eq" id="ceOut"></div></div>
+      <p class="note">Jak ale dostane Bob klíč k = 3, když ho poslouchá Eva? Poslat ho stejným kanálem je k ničemu. Před rokem 1976 se klíče vozily kurýrem.</p>
+    </div></section>
+
+    <!-- 9 visací zámek -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">2 · Klíče a zámek</div>
+      <h2 class="slide-title">Nápad: pošli otevřený zámek</h2>
+      <div class="chain" id="lockSteps"></div>
+      <div class="rsa-stage">
+        <div class="rsa-box" id="stA"><h3>Alice</h3><p></p></div>
+        <div class="rsa-box eve" id="stC"><h3>Cesta · poslouchá Eva</h3><p></p></div>
+        <div class="rsa-box" id="stB"><h3>Bob</h3><p></p></div>
+      </div>
+      <div class="panel p-hash" id="lockPanel"></div>
+    </div></section>
+
+    <!-- 10 počet klíčů -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">2 · Klíče a zámek</div>
+      <h2 class="slide-title">Klíčů je najednou mnohem míň</h2>
+      <p class="lede">Se společným tajným klíčem potřebuje každá dvojice lidí svůj vlastní klíč. S párem veřejný a soukromý klíč má každý člověk jen jeden pár. Kolik je lidí?</p>
+      <div class="slider-row"><input type="range" id="kcN" min="2" max="300" value="30" aria-label="Počet lidí"><span class="big-val" id="kcNVal">30 lidí</span></div>
+      <div class="rsa-vs">
+        <div class="panel"><span class="meta">Společné tajné klíče</span><div class="big-val" id="kcSym"></div><p id="kcSymT"></p></div>
+        <div class="panel"><span class="meta">Páry klíčů (RSA)</span><div class="big-val" id="kcAsy"></div><p id="kcAsyT"></p></div>
+      </div>
+      <p class="note">Počet dvojic je n·(n − 1) / 2. Pro miliardu uživatelů internetu by to bylo zhruba 5 · 10<sup>17</sup> klíčů. Páry jich potřebují miliardu.</p>
+    </div></section>
+
+    <!-- 11 dvě použití -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">2 · Klíče a zámek</div>
+      <h2 class="slide-title">Dva klíče, dvě použití</h2>
+      <p class="lede">Co jeden klíč zamkne, to druhý odemkne. Podle toho, kdo zamyká, vznikne šifrování, nebo podpis.</p>
+      <div class="cards4 cards3" id="useCards"></div>
+      <div class="panel" id="usePanel"></div>
+    </div></section>
+
+    <!-- 12 metafora a matematika -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">2 · Klíče a zámek</div>
+      <h2 class="slide-title">Zámek převedený do matematiky</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Zámek na krabici</th><th>RSA</th><th>Kdo to umí</th></tr></thead>
+          <tbody>
+            <tr><td><b>Otevřený zámek</b></td><td>veřejný klíč (n, e)</td><td class="ok">kdokoli</td></tr>
+            <tr><td><b>Zacvaknutí zámku</b></td><td class="mono-s">c = m<sup>e</sup> mod n</td><td class="ok">kdokoli, kdo zná (n, e)</td></tr>
+            <tr><td><b>Klíček od zámku</b></td><td>soukromý klíč (n, d)</td><td class="ko">jen majitel</td></tr>
+            <tr><td><b>Odemknutí</b></td><td class="mono-s">m = c<sup>d</sup> mod n</td><td class="ko">jen majitel</td></tr>
+            <tr><td><b>Vypáčení zámku</b></td><td>rozložit n na prvočísla p a q</td><td class="ko">nikdo, když je n dost velké</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Takový zámek se musí dát zavřít snadno a otevřít jen s vědomím tajemství. Matematicky se mu říká jednosměrná funkce s tajnými vrátky. Vrátka jsou v našem případě prvočísla p a q.</p>
+    </div></section>
+
+    <!-- 13 historie -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">3 · Algoritmus RSA</div>
+      <h2 class="slide-title">Kdo to vymyslel</h2>
+      <div class="cards4" id="hisCards"></div>
+      <div class="panel" id="hisPanel"></div>
+    </div></section>
+
+    <!-- 14 modulo -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">3 · Algoritmus RSA</div>
+      <h2 class="slide-title">Nástroj č. 1: počítání na ciferníku</h2>
+      <div class="split">
+        <svg class="rsa-clock" id="clkSvg" viewBox="0 0 220 220" role="img" aria-label="Ciferník"></svg>
+        <div class="stack">
+          <p class="lede">Když v 11 hodin přičteš 3 hodiny, nebude 14, ale 2. Ciferník „přeteče“. Zbytek po dělení se píše <b>a mod n</b>.</p>
+          <div class="slider-row"><label for="clkA">a</label><input type="range" id="clkA" min="0" max="100" value="47"><span class="big-val" id="clkAVal">47</span></div>
+          <div class="slider-row"><label for="clkN">n</label><input type="range" id="clkN" min="2" max="24" value="12"><span class="big-val" id="clkNVal">12</span></div>
+          <div class="panel p-hash"><div class="rsa-eq" id="clkOut"></div></div>
+        </div>
+      </div>
+      <p class="note">Celé RSA se počítá takhle: každý výsledek se zbytkem po dělení čísla n vrátí zpátky na ciferník o n dílcích, takže čísla nikdy nepřerostou n.</p>
+    </div></section>
+
+    <!-- 15 generování klíčů -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">3 · Algoritmus RSA</div>
+      <h2 class="slide-title">Vyrob si pár klíčů</h2>
+      <p class="lede">Zatím s malými čísly, aby šlo vše spočítat. Vyber dvě prvočísla a veřejný exponent e. Klíče vzniknou hned.</p>
+      <div class="sliders">
+        <div class="slider-row"><label for="kgPr">p</label><input type="range" id="kgPr" min="0" max="20" value="13" aria-label="Prvočíslo p"><span class="big-val" id="kgP"></span></div>
+        <div class="slider-row"><label for="kgQr">q</label><input type="range" id="kgQr" min="0" max="20" value="11" aria-label="Prvočíslo q"><span class="big-val" id="kgQ"></span></div>
+      </div>
+      <div class="seg" id="eSeg" aria-label="Volba e"></div>
+      <div class="panel p-hash"><div class="rsa-eq" id="kgSteps"></div></div>
+      <div class="rsa-keys">
+        <div class="rsa-key pub"><span class="meta">Veřejný klíč · rozdává se</span><div class="big-val" id="kPub"></div></div>
+        <div class="rsa-key priv"><span class="meta">Soukromý klíč · zůstává u majitele</span><div class="big-val" id="kPriv"></div></div>
+      </div>
+    </div></section>
+
+    <!-- 16 šifrování -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">3 · Algoritmus RSA</div>
+      <h2 class="slide-title">Zašifruj a dešifruj zprávu</h2>
+      <p class="lede">Písmena nahradíme čísly (A = 1, … Z = 26). Bob zná jen <b>veřejný</b> klíč, Alice má i <b>soukromý</b>. Používají se klíče z minulého slidu, takže když je tam změníš, změní se i tady.</p>
+      <div class="calc-row"><input class="text-in" id="enIn" type="text" value="AHOJ" maxlength="12" autocomplete="off" spellcheck="false" aria-label="Zpráva (písmena A až Z)"></div>
+      <div class="rsa-keys">
+        <div class="rsa-key pub"><span class="meta">Bob zná</span><div class="big-val" id="enPub"></div></div>
+        <div class="rsa-key priv"><span class="meta">Alice zná navíc</span><div class="big-val" id="enPriv"></div></div>
+      </div>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Písmeno</th><th>Číslo</th><th>Bob zašifruje</th><th>Alice dešifruje</th><th>Zpět</th></tr></thead>
+          <tbody id="enRows"></tbody>
+        </table>
+      </div>
+      <div class="panel p-hash"><div class="rsa-eq" id="enWire"></div></div>
+    </div></section>
+
+    <!-- 17 proč to funguje -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">3 · Algoritmus RSA</div>
+      <h2 class="slide-title">Proč se zpráva vrátí</h2>
+      <p class="lede">Klíče se vybírají tak, aby platilo <b>e · d = 1 + k · φ</b>. Eulerova věta říká, že m<sup>φ</sup> dává zbytek 1, a tak se při dešifrování mocniny „vykrátí“:</p>
+      <div class="formula f-sm">m<sup>e·d</sup> = m<sup>1 + k·φ</sup> = m · (m<sup>φ</sup>)<sup>k</sup> ≡ m · 1<sup>k</sup> = m</div>
+      <div class="panel p-hash"><div class="rsa-eq" id="vfEq"></div></div>
+      <div class="calc-row">
+        <input class="text-in rsa-num" id="vfM" type="text" inputmode="numeric" value="65" maxlength="6" autocomplete="off" aria-label="Zpráva m jako číslo">
+        <button class="calc-btn" id="vfAll" type="button">Ověř všech n zpráv</button>
+      </div>
+      <div class="panel p-hash"><div class="rsa-eq" id="vfOut"></div></div>
+    </div></section>
+
+    <!-- 18 Eva -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">3 · Algoritmus RSA</div>
+      <h2 class="slide-title">Buď Eva: rozlom hračku</h2>
+      <p class="lede">Eva vidí všechno, co putuje po cestě: veřejný klíč (n, e) a zašifrované číslo. Nezná p, q, φ ani d. Aby je zjistila, musí <b>rozložit n</b>. Rozluští zprávu ze slidu o šifrování?</p>
+      <button class="calc-btn" id="evGo" type="button">Spustit útok</button>
+      <div class="panel p-hash"><div class="rsa-eq" id="evOut">Klikni a Eva se pustí do práce.</div></div>
+      <p class="note">S malými čísly padne šifra za zlomek milisekundy. Proto se v praxi používají prvočísla o stovkách číslic a n má 617 číslic. Připomeň si jezdec ze slidu o rozkladu.</p>
+    </div></section>
+
+    <!-- 19 podpis -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">3 · Algoritmus RSA</div>
+      <h2 class="slide-title">Obrácený směr: podpis</h2>
+      <p class="lede">Alice spočítá hash zprávy (tady primitivní: vážený součet znaků mod n) a „zamkne“ ho <b>soukromým</b> klíčem. Kdokoli ho „odemkne“ veřejným a porovná. Zkus přepsat text na straně příjemce.</p>
+      <div class="sign-grid">
+        <div class="sign-col">
+          <h3>Alice podepisuje</h3>
+          <textarea class="text-in" id="sgText" rows="2" maxlength="60" spellcheck="false" aria-label="Text k podpisu">Platim 100 Kc</textarea>
+          <div class="quote" id="sgSig"></div>
+        </div>
+        <div class="sign-col">
+          <h3>Příjemce ověřuje</h3>
+          <textarea class="text-in" id="sgRecv" rows="2" maxlength="60" spellcheck="false" aria-label="Přijatý text"></textarea>
+          <div class="hverd" id="sgVerdict"></div>
+          <div class="quote" id="sgInfo"></div>
+        </div>
+      </div>
+      <p class="note">Hash s jen několika tisíci hodnotami je slabý: dva různé texty se stejným hashem najdeš za pár minut a podpis pak platí pro oba. Skutečné podpisy proto používají SHA-256 a doplnění PSS.</p>
+    </div></section>
+
+    <!-- 20 skutečný klíč -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">4 · RSA v praxi</div>
+      <h2 class="slide-title">Skutečný klíč RSA-2048</h2>
+      <p class="lede">Prohlížeč vyrobí pár klíčů, jaký se používá na webech. Počítá se přímo v tvém počítači a nikam se neposílá.</p>
+      <div class="calc-row"><button class="calc-btn" id="rkBtn" type="button">Vygenerovat klíč</button><span class="note" id="rkTime"></span></div>
+      <div class="panel p-hash"><div class="rsa-eq" id="rkEq">Klíč zatím nevznikl.</div><div class="quote rsa-scroll" id="rkN"></div></div>
+      <div class="calc-row"><input class="text-in" id="rkMsg" type="text" value="Ahoj, tady Bob" maxlength="100" autocomplete="off" aria-label="Zpráva pro skutečné RSA"><button class="calc-btn" id="rkEnc" type="button">Zašifruj a dešifruj</button></div>
+      <div class="panel p-hash"><div class="quote rsa-scroll" id="rkCt">Šifrovaný text se zobrazí tady.</div><div class="rsa-eq" id="rkPt"></div></div>
+    </div></section>
+
+    <!-- 21 padding -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">4 · RSA v praxi</div>
+      <h2 class="slide-title">Proč hračka stačit nemůže</h2>
+      <p class="lede">Naše RSA je <b>deterministické</b>: stejný vstup dá vždy stejný výstup. Kdo vidí opakování, luští zprávu podle četností jako u Cézara. Skutečné RSA proto zprávu před zašifrováním doplní náhodným balastem (padding OAEP).</p>
+      <div class="rsa-vs">
+        <div class="panel"><span class="meta">Hračka (písmeno po písmenu)</span>
+          <input class="text-in" id="pdIn" type="text" value="KOKOS A KOKOSY" maxlength="20" autocomplete="off" spellcheck="false" aria-label="Text pro hračku">
+          <div class="rsa-chips" id="pdChips"></div><p class="note" id="pdInfo"></p></div>
+        <div class="panel"><span class="meta">RSA-OAEP (skutečné)</span>
+          <button class="calc-btn" id="pdBtn" type="button">Zašifruj dvakrát totéž</button>
+          <div class="quote" id="pdA">…</div><div class="quote" id="pdB">…</div><p class="note" id="pdOaep"></p></div>
+      </div>
+    </div></section>
+
+    <!-- 22 hybrid -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">4 · RSA v praxi</div>
+      <h2 class="slide-title">RSA nešifruje data, jen klíč</h2>
+      <p class="lede">RSA je pomalé a zvládne jen malý blok (u 2048 bitů nanejvýš 190 bajtů). Proto se používá <b>hybridně</b>: RSA ochrání malý klíč a data se šifrují rychlou symetrickou šifrou AES.</p>
+      <div class="chain" id="hyChain"></div>
+      <div class="panel p-hash" id="hyPanel"></div>
+      <div class="calc-row"><button class="calc-btn" id="spBtn" type="button">Změřit rychlost</button><span class="note">RSA-2048 (dešifrování bloku) proti AES-256-GCM v tomto prohlížeči.</span></div>
+      <div class="panel p-hash"><div class="rsa-eq" id="spOut">Klikni na změření.</div></div>
+    </div></section>
+
+    <!-- 23 kde potkáváš -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">4 · RSA v praxi</div>
+      <h2 class="slide-title">Kde na RSA narazíš</h2>
+      <div class="cards4 cards5" id="whCards"></div>
+      <div class="panel" id="whPanel"></div>
+    </div></section>
+
+    <!-- 24 velikosti -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">4 · RSA v praxi</div>
+      <h2 class="slide-title">Jak dlouhý klíč</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Délka n</th><th>Síla</th><th>Stav</th></tr></thead>
+          <tbody>
+            <tr><td><b>1024 bitů</b></td><td>asi 80 bitů</td><td class="ko">nedoporučeno, vyřazeno</td></tr>
+            <tr><td><b>2048 bitů</b></td><td>112 bitů</td><td class="ok">dnes běžné minimum</td></tr>
+            <tr><td><b>3072 bitů</b></td><td>128 bitů</td><td class="ok">rezerva do budoucna</td></tr>
+            <tr><td><b>7680 bitů</b></td><td>192 bitů</td><td>velmi pomalé</td></tr>
+            <tr><td><b>15360 bitů</b></td><td>256 bitů</td><td>v praxi se nepoužívá</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Síla v bitech říká, kolik kroků potřebuje útočník (u RSA-2048 asi 2<sup>112</sup>). Je mnohem menší než délka klíče, protože na rozklad existují chytřejší postupy než zkoušení dělitelů. Hodnoty jsou z doporučení NIST (SP 800-57).</p>
+      <p class="note">Délka klíče nestačí. Když generátor náhodných čísel selže, mají různé klíče společné prvočíslo a jdou rozložit snadno. Studie z roku 2012 takové klíče našla v milionech zařízení na internetu.</p>
+    </div></section>
+
+    <!-- 25 budoucnost -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">4 · RSA v praxi</div>
+      <h2 class="slide-title">Zlomí RSA kvantové počítače</h2>
+      <div class="seg" id="quSeg"></div>
+      <div class="panel" id="quPanel"></div>
+    </div></section>
+
+    <!-- 26 mýty -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">4 · RSA v praxi</div>
+      <h2 class="slide-title">Mýtus a skutečnost</h2>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Mýtus</th><th>Skutečnost</th></tr></thead>
+          <tbody>
+            <tr><td>RSA se používá k šifrování souborů.</td><td>Ne. Zvládne jen malý blok. Soubor šifruje AES a RSA ochrání jeho klíč.</td></tr>
+            <tr><td>Veřejný klíč musí zůstat utajený.</td><td>Naopak: má být všude. Utajený musí být jen soukromý klíč.</td></tr>
+            <tr><td>Soukromý klíč můžu poslat kolegovi e-mailem.</td><td>Nikdy. Kdo ho má, může se za tebe vydávat a číst tvou poštu.</td></tr>
+            <tr><td>Delší klíč je zadarmo.</td><td>Ne. Dvakrát delší klíč zpomalí dešifrování zhruba osmkrát.</td></tr>
+            <tr><td>Stačí zašifrovat m<sup>e</sup> mod n.</td><td>Ne. Bez paddingu (OAEP, PSS) je to deterministické a dá se zneužít.</td></tr>
+            <tr><td>Kvantové počítače už RSA zlomily.</td><td>Ne. Zatím není dost velký stroj, ale hrozba je natolik reálná, že se plánuje přechod.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div></section>
+
+    <!-- 27 kód -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zkus doma</div>
+      <h2 class="slide-title">RSA od nuly v Pythonu</h2>
+      <p class="lede">Celé RSA na pár řádcích. Vlastní prvočísla, klíče, zašifrování a dešifrování. Stačí standardní knihovna (Python 3.8 a novější).</p>
+      <div class="codebox">
+        <button class="copy" type="button" data-for="code1">Kopírovat</button>
+        <pre class="code" id="code1"><span class="k">import</span> math
+<span class="k">import</span> secrets
+
+
+<span class="k">def</span> je_prvocislo(n, kol=<span class="n">20</span>):
+    <span class="c">"""Miller–Rabin: pravděpodobnostní test prvočíselnosti."""</span>
+    <span class="k">if</span> n &lt; <span class="n">2</span>:
+        <span class="k">return</span> <span class="k">False</span>
+    <span class="k">for</span> p <span class="k">in</span> (<span class="n">2</span>, <span class="n">3</span>, <span class="n">5</span>, <span class="n">7</span>, <span class="n">11</span>, <span class="n">13</span>):
+        <span class="k">if</span> n % p == <span class="n">0</span>:
+            <span class="k">return</span> n == p
+    d, s = n - <span class="n">1</span>, <span class="n">0</span>
+    <span class="k">while</span> d % <span class="n">2</span> == <span class="n">0</span>:
+        d //= <span class="n">2</span>
+        s += <span class="n">1</span>
+    <span class="k">for</span> _ <span class="k">in</span> <span class="k">range</span>(kol):
+        a = secrets.randbelow(n - <span class="n">3</span>) + <span class="n">2</span>
+        x = <span class="k">pow</span>(a, d, n)
+        <span class="k">if</span> x <span class="k">in</span> (<span class="n">1</span>, n - <span class="n">1</span>):
+            <span class="k">continue</span>
+        <span class="k">for</span> _ <span class="k">in</span> <span class="k">range</span>(s - <span class="n">1</span>):
+            x = x * x % n
+            <span class="k">if</span> x == n - <span class="n">1</span>:
+                <span class="k">break</span>
+        <span class="k">else</span>:
+            <span class="k">return</span> <span class="k">False</span>
+    <span class="k">return</span> <span class="k">True</span>
+
+
+<span class="k">def</span> nahodne_prvocislo(bity):
+    <span class="k">while</span> <span class="k">True</span>:
+        x = secrets.randbits(bity) | (<span class="n">1</span> &lt;&lt; (bity - <span class="n">1</span>)) | <span class="n">1</span>   <span class="c"># přesně `bity` bitů, liché</span>
+        <span class="k">if</span> je_prvocislo(x):
+            <span class="k">return</span> x
+
+
+e = <span class="n">65537</span>
+<span class="k">while</span> <span class="k">True</span>:
+    p, q = nahodne_prvocislo(<span class="n">512</span>), nahodne_prvocislo(<span class="n">512</span>)
+    phi = (p - <span class="n">1</span>) * (q - <span class="n">1</span>)
+    <span class="k">if</span> p != q <span class="k">and</span> math.gcd(e, phi) == <span class="n">1</span>:
+        <span class="k">break</span>
+
+n = p * q
+d = <span class="k">pow</span>(e, -<span class="n">1</span>, phi)            <span class="c"># modulární inverze (Python 3.8+)</span>
+
+<span class="k">print</span>(<span class="s">"n má"</span>, <span class="k">len</span>(<span class="k">str</span>(n)), <span class="s">"číslic"</span>)
+zprava = <span class="k">int</span>.from_bytes(<span class="s">"Ahoj"</span>.encode(), <span class="s">"big"</span>)
+sifra = <span class="k">pow</span>(zprava, e, n)      <span class="c"># šifrování: m^e mod n</span>
+<span class="k">print</span>(<span class="s">"šifra:"</span>, sifra)
+<span class="k">print</span>(<span class="s">"zpět: "</span>, <span class="k">pow</span>(sifra, d, n).to_bytes(<span class="n">4</span>, <span class="s">"big"</span>).decode())</pre>
+      </div>
+      <p class="note">Je to jen pro výuku: klíč o 1024 bitech je dnes slabý a chybí padding. Skutečné klíče vyrábí osvědčená knihovna. Zkus změnit 512 na 16 a rozložit n ručně.</p>
+    </div></section>
+
+    <!-- 28 knihovna a příkazy -->
+    <section class="slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zkus doma</div>
+      <h2 class="slide-title">Skutečné RSA: knihovna a příkazy</h2>
+      <div class="codebox">
+        <button class="copy" type="button" data-for="code2">Kopírovat</button>
+        <pre class="code" id="code2"><span class="k">from</span> cryptography.hazmat.primitives <span class="k">import</span> hashes
+<span class="k">from</span> cryptography.hazmat.primitives.asymmetric <span class="k">import</span> rsa, padding
+
+soukromy = rsa.generate_private_key(public_exponent=<span class="n">65537</span>, key_size=<span class="n">2048</span>)
+verejny = soukromy.public_key()
+
+oaep = padding.OAEP(mgf=padding.MGF1(hashes.SHA256()), algorithm=hashes.SHA256(), label=<span class="k">None</span>)
+s1 = verejny.encrypt(<span class="s">b"Ahoj"</span>, oaep)
+s2 = verejny.encrypt(<span class="s">b"Ahoj"</span>, oaep)
+<span class="k">print</span>(s1 == s2)                    <span class="c"># False: OAEP přidává náhodu</span>
+<span class="k">print</span>(soukromy.decrypt(s1, oaep))     <span class="c"># b'Ahoj'</span>
+
+pss = padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH)
+podpis = soukromy.sign(<span class="s">b"Smlouva"</span>, pss, hashes.SHA256())
+verejny.verify(podpis, <span class="s">b"Smlouva"</span>, pss, hashes.SHA256())   <span class="c"># při změně textu vyhodí InvalidSignature</span></pre>
+      </div>
+      <p class="lede">Potřebuješ <span class="mono-s">pip install cryptography</span>. Na příkazové řádce:</p>
+      <div class="table-wrap">
+        <table class="datatable">
+          <thead><tr><th>Příkaz</th><th>Co dělá</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-s">openssl genrsa -out soukromy.pem 2048</td><td>vytvoří soukromý klíč</td></tr>
+            <tr><td class="mono-s">openssl rsa -in soukromy.pem -pubout -out verejny.pem</td><td>vytáhne z něj veřejný klíč</td></tr>
+            <tr><td class="mono-s">openssl rsa -in soukromy.pem -noout -text</td><td>vypíše modulus (n), prime1 (p), prime2 (q), exponenty</td></tr>
+            <tr><td class="mono-s">ssh-keygen -t rsa -b 3072</td><td>pár klíčů pro přihlášení přes SSH</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">OpenSSL najdeš v Git Bash na Windows, na Linuxu a macOS je k dispozici. Příkaz ssh-keygen je ve Windows 10 a 11 jako součást klienta OpenSSH.</p>
+    </div></section>
+
+    <!-- 29 aktivita -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Aktivita</div>
+      <h2 class="slide-title">RSA ve třídě na papíře</h2>
+      <ol class="summary-list">
+        <li><b>Klíče</b>: každý si vybere dvě prvočísla do 50 a spočítá n, φ, e a d. Pomůže slide s generátorem.</li>
+        <li><b>Zveřejnění</b>: dvojici (n, e) napíše na tabuli. Číslo d nikomu neříká.</li>
+        <li><b>Zpráva</b>: soused si vybere cizí veřejný klíč, zprávu převede na čísla (A = 1) a zašifruje je. V Pythonu stačí <span class="mono-s">pow(m, e, n)</span>.</li>
+        <li><b>Dešifrování</b>: majitel klíče vrátí čísla na písmena pomocí <span class="mono-s">pow(c, d, n)</span>.</li>
+        <li><b>Eva</b>: zbytek třídy zkusí z veřejného klíče zjistit d. Jak dlouho jim to trvá? A co kdybyste si vybrali prvočísla o šesti číslicích?</li>
+      </ol>
+    </div></section>
+
+    <!-- 30 kvíz -->
+    <section class="slide"><div class="slide-inner">
+      <div class="eyebrow">Zkouška</div>
+      <h2 class="slide-title">Pravda, nebo ne?</h2>
+      <p class="score" id="qzScore"></p>
+      <div class="clue" id="qzText"></div>
+      <div class="seg">
+        <button class="calc-btn" data-a="1" type="button">Pravda</button>
+        <button class="calc-btn" data-a="0" type="button">Není pravda</button>
+        <button class="calc-btn" id="qzNext" type="button" hidden>Další →</button>
+      </div>
+      <div class="feedback" id="qzFb"></div>
+    </div></section>
+
+    <!-- 31 shrnutí -->
+    <section class="slide summary-slide"><div class="slide-inner">
+      <div class="eyebrow">Shrnutí</div>
+      <h2 class="slide-title">Co si odneseš</h2>
+      <ul class="summary-list">
+        <li><b>Prvočísla</b> jsou atomy čísel. Dvě velká vynásobit je okamžité, součin rozložit je prakticky nemožné.</li>
+        <li>Pár <b>veřejný a soukromý klíč</b> řeší předání tajemství cizím lidem: zámek se rozdává, klíček zůstává u majitele.</li>
+        <li><b>RSA</b>: n = p · q, veřejný klíč (n, e), soukromý klíč d. Šifrování je c = m<sup>e</sup> mod n, dešifrování m = c<sup>d</sup> mod n.</li>
+        <li>Obrácený směr je <b>podpis</b>: podepisuje soukromý klíč, ověřuje veřejný.</li>
+        <li>V praxi se přidává <b>padding</b> (OAEP, PSS) a RSA chrání jen klíč, data šifruje AES.</li>
+        <li>Dnes platí <b>2048 bitů jako minimum</b>. Kvůli kvantovým počítačům se plánuje přechod na postkvantové algoritmy.</li>
+      </ul>
+    </div></section>
+
+    <!-- 32 zdroje -->
+    <section class="slide summary-slide"><div class="slide-inner wide">
+      <div class="eyebrow">Zdroje</div>
+      <h2 class="slide-title">Odkud jsou fakta a kde číst dál</h2>
+      <div class="src-cols">
+        <div class="src-group"><h3>Původní práce a standardy</h3><ul class="src-list">
+          <li>R. Rivest, A. Shamir, L. Adleman (1978): <i>A Method for Obtaining Digital Signatures and Public-Key Cryptosystems</i>, Communications of the ACM</li>
+          <li>W. Diffie, M. Hellman (1976): <i>New Directions in Cryptography</i>, IEEE Transactions on Information Theory</li>
+          <li><a href="https://datatracker.ietf.org/doc/html/rfc8017" target="_blank" rel="noopener">RFC 8017: PKCS #1 v2.2 (RSA, OAEP, PSS)</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Clifford_Cocks" target="_blank" rel="noopener">Clifford Cocks a utajený objev z GCHQ (1973)</a></li>
+        </ul></div>
+        <div class="src-group"><h3>Bezpečnost dnes</h3><ul class="src-list">
+          <li><a href="https://cse.ucsd.edu/node/2053" target="_blank" rel="noopener">Rekord v rozkladu: RSA-250, 829 bitů (2020)</a></li>
+          <li><a href="https://factorable.net/" target="_blank" rel="noopener">Mining your Ps and Qs (2012): společná prvočísla v klíčích</a></li>
+          <li><a href="https://csrc.nist.gov/pubs/fips/203/final" target="_blank" rel="noopener">NIST: FIPS 203 (ML-KEM), postkvantová výměna klíčů</a></li>
+          <li><a href="https://postquantum.com/security-pqc/nist-ir-8547-final/" target="_blank" rel="noopener">NIST IR 8547: plán vyřazení RSA po roce 2030 a 2035</a></li>
+        </ul></div>
+      </div>
+    </div></section>
+
+  </div>
+
+  <div class="navbar">
+    <a class="nav-btn home-btn" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+    <button class="nav-btn" id="prevBtn" aria-label="Předchozí">← Zpět</button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter">1 / 1</span>
+    <button class="nav-btn" id="nextBtn" aria-label="Další">Další →</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var fits = [];
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function sup(x) { return "<sup>" + x + "</sup>"; }
+  function cs(n) { return Number(n).toLocaleString("cs-CZ"); }
+  function fmtMs(ms) { return ms < 1 ? "méně než 1 ms" : (ms < 100 ? ms.toFixed(1).replace(".", ",") + " ms" : Math.round(ms) + " ms"); }
+
+  /* ---------- navigace ---------- */
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var total = slides.length, current = 0;
+  var dotsEl = $("dots"), counterEl = $("counter"), prevBtn = $("prevBtn"), nextBtn = $("nextBtn");
+  slides.forEach(function (s, i) {
+    s.hidden = i !== 0;
+    var d = el("button", "dot" + (i === 0 ? " is-active" : "")); d.setAttribute("aria-label", "Snímek " + (i + 1));
+    d.addEventListener("click", function () { goTo(i); });
+    dotsEl.appendChild(d);
+  });
+  var dotEls = Array.prototype.slice.call(dotsEl.children);
+  function goTo(i) {
+    if (i < 0 || i >= total) return;
+    slides[current].hidden = true; current = i; slides[current].hidden = false;
+    dotEls.forEach(function (d, idx) { d.classList.toggle("is-active", idx === current); });
+    counterEl.textContent = (current + 1) + " / " + total;
+    prevBtn.disabled = current === 0; nextBtn.disabled = current === total - 1;
+    runFits();
+  }
+  prevBtn.addEventListener("click", function () { goTo(current - 1); });
+  nextBtn.addEventListener("click", function () { goTo(current + 1); });
+  document.addEventListener("keydown", function (e) {
+    var t = e.target && e.target.tagName;
+    if (t === "INPUT" || t === "TEXTAREA") return;
+    if (e.key === "ArrowRight") goTo(current + 1);
+    if (e.key === "ArrowLeft") goTo(current - 1);
+  });
+
+  /* ---------- pomocné: výběr z karet ---------- */
+  function picker(btnHost, items, mk, panel, showFn) {
+    var btns = [], act = 0;
+    items.forEach(function (it, i) {
+      var b = mk(it, i); b.addEventListener("click", function () {
+        btns.forEach(function (x) { x.classList.remove("is-active"); }); b.classList.add("is-active"); act = i; showFn(it, i);
+      }); btnHost.appendChild(b); btns.push(b);
+    });
+    btns[0].classList.add("is-active"); showFn(items[0], 0);
+    fits.push({ slide: btnHost.closest(".slide"), fn: function () {
+      panel.style.minHeight = "0px"; var m = 0;
+      items.forEach(function (it, i) { showFn(it, i); m = Math.max(m, panel.offsetHeight); });
+      panel.style.minHeight = m + "px"; showFn(items[act], act);
+    } });
+  }
+  function runFits() { fits.forEach(function (f) { if (!f.slide.hidden) f.fn(); }); }
+  window.addEventListener("resize", runFits);
+  function panelHtml(p, title, text, extra) { p.innerHTML = "<h3>" + title + "</h3><p>" + text + "</p>" + (extra || ""); }
+  function quote(q) { return '<div class="quote">' + esc(q) + "</div>"; }
+
+  /* ---------- matematika (BigInt) ---------- */
+  function modpow(b, e, m) {
+    b = BigInt(b); e = BigInt(e); m = BigInt(m);
+    var r = 1n; b %= m;
+    while (e > 0n) { if (e & 1n) r = r * b % m; e >>= 1n; b = b * b % m; }
+    return r;
+  }
+  function gcd(a, b) { a = BigInt(a); b = BigInt(b); while (b) { var t = a % b; a = b; b = t; } return a; }
+  function inv(a, m) {
+    a = BigInt(a); m = BigInt(m);
+    var t = 0n, nt = 1n, r = m, nr = a % m;
+    while (nr !== 0n) {
+      var q = r / nr, tmp = t - q * nt; t = nt; nt = tmp;
+      tmp = r - q * nr; r = nr; nr = tmp;
+    }
+    if (r !== 1n) return null;
+    return t < 0n ? t + m : t;
+  }
+  function isP(x) { if (x < 2) return false; if (x % 2 === 0) return x === 2; for (var i = 3; i * i <= x; i += 2) if (x % i === 0) return false; return true; }
+  function letters(w) { return w.toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Z]/g, ""); }
+  var HAS = !!(window.crypto && window.crypto.subtle);
+  var NOCRYPTO = "Tento prohlížeč neumí WebCrypto (je potřeba https nebo localhost).";
+
+  /* ---------- 2: hádanka ---------- */
+  var riT0 = 0, riTick = null, riDone = { a: null, b: null };
+  function riFmt(ms) { return (ms / 1000).toFixed(1).replace(".", ",") + " s"; }
+  $("riStart").addEventListener("click", function () {
+    riT0 = Date.now(); riDone = { a: null, b: null };
+    $("riA").value = ""; $("riB").value = ""; $("riAv").textContent = ""; $("riBv").textContent = "";
+    $("riAv").className = "hverd"; $("riBv").className = "hverd";
+    $("riNote").textContent = "Výsledek úlohy A je zároveň zadání úlohy B. Stejné číslo, jen opačným směrem.";
+    clearInterval(riTick);
+    riTick = setInterval(function () { $("riTime").textContent = riFmt(Date.now() - riT0); }, 100);
+    $("riA").focus();
+  });
+  function riCheck() {
+    if (!riT0) { $("riAv").textContent = ""; return; }
+    var a = parseInt($("riA").value, 10), b = parseInt($("riB").value, 10);
+    if (riDone.a === null && a === 8633) { riDone.a = Date.now() - riT0; $("riAv").textContent = "Správně, za " + riFmt(riDone.a) + "."; $("riAv").className = "hverd is-ok"; }
+    if (riDone.b === null && (b === 89 || b === 97)) { riDone.b = Date.now() - riT0; $("riBv").textContent = "Správně: 89 × 97 = 8633, za " + riFmt(riDone.b) + "."; $("riBv").className = "hverd is-ok"; }
+    if (riDone.a !== null && riDone.b !== null) {
+      clearInterval(riTick);
+      $("riNote").textContent = "Rozklad trval " + (riDone.b > riDone.a ? "asi " + Math.max(1, Math.round(riDone.b / Math.max(riDone.a, 1))) + "× déle" : "stejně dlouho") + ". A to je číslo o čtyřech číslicích. Násobení se s velikostí nezhorší skoro vůbec, rozklad ano.";
+    }
+  }
+  $("riA").addEventListener("input", riCheck); $("riB").addEventListener("input", riCheck);
+
+  /* ---------- 3: síto ---------- */
+  var SV = [2, 3, 5, 7], svStep = 0;
+  for (var gi = 1; gi <= 100; gi++) $("svGrid").appendChild(el("div", "rsa-cell", String(gi)));
+  function svComp(steps) {
+    var comp = { 1: true }, k, m;
+    for (k = 0; k < steps; k++) for (m = SV[k] * SV[k]; m <= 100; m += SV[k]) comp[m] = true;
+    return comp;
+  }
+  function svRender() {
+    /* stav 0 = začátek, 1 až 4 = škrtání násobků 2, 3, 5, 7, 5 = hotovo */
+    var applied = Math.min(svStep, 4), comp = svComp(applied), prev = svComp(Math.max(applied - 1, 0));
+    var cur = svStep >= 1 && svStep <= 4 ? SV[svStep - 1] : 0, left = 0, cells = $("svGrid").children;
+    for (var n = 1; n <= 100; n++) {
+      var cls = "rsa-cell";
+      if (comp[n]) cls += " is-out";
+      if (svStep === 5 && !comp[n]) { cls += " is-prime"; left++; }
+      else if (n === cur) cls += " is-cur";
+      else if (svStep < 5 && SV.slice(0, applied).indexOf(n) >= 0) cls += " is-keep";
+      else if (cur && comp[n] && !prev[n]) cls += " is-hit";
+      cells[n - 1].className = cls;
+    }
+    var t;
+    if (svStep === 0) t = "Čísla 1 až 100. Jednička se mezi prvočísla nepočítá, tak ji škrtneme hned. Začneme dvojkou.";
+    else if (svStep < 5) t = "Nech číslo <b>" + cur + "</b> a škrtni jeho násobky od " + cur + " · " + cur + " = " + (cur * cur) + " výš (oranžově). Menší násobky už škrtl některý předchozí krok.";
+    else t = "Hotovo. Další prvočíslo 11 má 11 · 11 = 121 &gt; 100, takže už nemá co škrtat. Zelených čísel je <b>" + left + "</b>: tolik je prvočísel do 100.";
+    $("svInfo").innerHTML = t;
+    $("svNext").disabled = svStep >= 5;
+  }
+  $("svNext").addEventListener("click", function () { if (svStep < 5) { svStep++; svRender(); } });
+  $("svAll").addEventListener("click", function () { svStep = 5; svRender(); });
+  $("svReset").addEventListener("click", function () { svStep = 0; svRender(); });
+  svRender();
+
+  /* ---------- 4: rozklad na prvočísla ---------- */
+  function factorize(n) {
+    var f = [], d = 2;
+    while (d * d <= n) { var c = 0; while (n % d === 0) { n /= d; c++; } if (c) f.push([d, c]); d += d === 2 ? 1 : 2; }
+    if (n > 1) f.push([n, 1]);
+    return f;
+  }
+  function faUpdate() {
+    var raw = $("faIn").value.replace(/\s+/g, ""), n = parseInt(raw, 10), out = $("faOut"), note = $("faNote");
+    if (!/^\d+$/.test(raw) || n < 2) { out.textContent = "Napiš celé číslo od 2."; note.textContent = ""; return; }
+    if (n > 999999999999) { out.textContent = "Moc velké. Zkus nejvýš 12 číslic."; note.textContent = "Právě tohle ukazuje, proč je rozklad těžký."; return; }
+    var f = factorize(n);
+    if (f.length === 1 && f[0][1] === 1) { out.innerHTML = n + " je prvočíslo"; note.textContent = "Rozložit už se nedá: je to samo atom."; return; }
+    out.innerHTML = cs(n) + " = " + f.map(function (x) { return x[0] + (x[1] > 1 ? sup(x[1]) : ""); }.bind(null)).join(" · ");
+    note.textContent = f.length === 2 && f[0][1] === 1 && f[1][1] === 1 ? "Součin dvou prvočísel: přesně takový tvar má n v RSA." : "Jiný rozklad na prvočísla neexistuje.";
+  }
+  [360, 1001, 8633, 65537, 999999999989].forEach(function (v) {
+    var b = el("button", "calc-btn", String(v)); b.type = "button";
+    b.addEventListener("click", function () { $("faIn").value = v; faUpdate(); });
+    $("faSeg").appendChild(b);
+  });
+  $("faIn").addEventListener("input", faUpdate); faUpdate();
+
+  /* ---------- 5: násobit vs. rozkládat ---------- */
+  var RATE = 1e8, measured = false;
+  function randPrime(d) {
+    var lo = Math.pow(10, d - 1), hi = Math.pow(10, d);
+    for (;;) { var x = Math.floor(lo + Math.random() * (hi - lo)); if (x % 2 === 0) x++; if (isP(x)) return x; }
+  }
+  function fmtTime(lg) {
+    var s = Math.pow(10, lg);
+    if (lg < -3) return "méně než milisekunda";
+    if (lg < 0) return Math.round(s * 1000) + " ms";
+    if (s < 60) return s.toFixed(1).replace(".", ",") + " s";
+    if (s < 3600) return Math.round(s / 60) + " min";
+    if (s < 86400) return Math.round(s / 3600) + " h";
+    if (s < 3.156e7) return Math.round(s / 86400) + " dní";
+    var yl = lg - Math.log10(3.156e7);
+    if (yl < 6) return cs(Math.round(Math.pow(10, yl))) + " let";
+    return "10" + sup(Math.round(yl)) + " let";
+  }
+  function fmtSteps(lg) { return lg < 7 ? cs(Math.round(Math.pow(10, lg))) : "10" + sup(Math.round(lg)); }
+  function bitsRender() {
+    var b = +$("bitsRange").value; $("bitsVal").textContent = b + " bitů";
+    var digits = Math.floor(b * Math.log10(2)) + 1, lgS = (b / 2 - 1) * Math.log10(2), lgT = lgS - Math.log10(RATE);
+    var mul = Math.pow(Math.ceil(b / 2 / 64), 2), univ = 17.64;
+    var h = 'Číslo n má <b>' + b + ' bitů</b>, tedy asi ' + digits + ' číslic.<br>' +
+      'Vynásobit dvě prvočísla o ' + (b / 2) + ' bitech: asi <span class="g">' + cs(mul) + '</span> základních operací, tedy mikrosekundy.<br>' +
+      'Rozklad zkoušením dělitelů: asi <span class="w">' + fmtSteps(lgS) + '</span> dělení.<br>' +
+      'Při ' + cs(Math.round(RATE / 1e6)) + ' milionech dělení za sekundu' + (measured ? " (změřeno u tebe)" : " (odhad)") + ': <span class="w">' + fmtTime(lgT) + '</span>.';
+    if (lgT > univ) h += '<br>Stáří vesmíru je zhruba 4,4 · 10' + sup(17) + ' s. Tohle je ještě asi <span class="w">10' + sup(Math.round(lgT - univ)) + '×</span> déle.';
+    $("bitsOut").innerHTML = h;
+  }
+  $("bitsRange").addEventListener("input", bitsRender);
+  [8, 10, 12, 14].forEach(function (D) {
+    var b = el("button", "calc-btn", D + " číslic"); b.type = "button";
+    b.addEventListener("click", function () {
+      var p = randPrime(D / 2), q; do { q = randPrime(D / 2); } while (q === p);
+      var n = p * q, t0 = performance.now(), steps = 0, f = 0;
+      for (var i = 3; i * i <= n; i += 2) { steps++; if (n % i === 0) { f = i; break; } }
+      var t = performance.now() - t0;
+      if (t >= 8) { RATE = steps / (t / 1000); measured = true; }
+      $("fdOut").innerHTML = "<b>n = " + cs(n) + "</b> (" + D + " číslic), vzniklo vynásobením dvou náhodných prvočísel<br>" +
+        'Násobení p · q: <span class="g">okamžitě</span><br>' +
+        'Rozklad zkoušením dělitelů: nalezeno <span class="w">' + cs(f) + " × " + cs(n / f) + '</span> po ' + cs(steps) + ' dělení za <span class="w">' + fmtMs(t) + "</span>";
+      bitsRender();
+    });
+    $("fdSeg").appendChild(b);
+  });
+  bitsRender();
+
+  /* ---------- 6: kolik prvočísel ---------- */
+  var CNT = [32, 64, 512, 1024].map(function (b) {
+    return { b: b, n: b + " bitů", s: b === 1024 ? "pro RSA-2048" : (b === 512 ? "klíč RSA-1024" : (b === 64 ? "běžné číslo" : "jako int")) };
+  });
+  var cntPanel = $("cntPanel");
+  picker($("cntCards"), CNT, function (c) { return el("button", "tcard", "<b>" + c.n + "</b><span>" + c.s + "</span>"); }, cntPanel, function (c) {
+    var lg = (c.b - 1) * Math.log10(2) - Math.log10(c.b * Math.LN2), k = Math.round(c.b * Math.LN2);
+    var x = lg < 12 ? cs(Math.round(Math.pow(10, lg))) : "10" + sup(Math.round(lg));
+    panelHtml(cntPanel, "Prvočísel s přesně " + c.b + " bity je zhruba " + x,
+      "Náhodné číslo je prvočíslo s pravděpodobností asi 1 / (b · ln 2), tedy každé " + k + ". číslo, mezi lichými každé " + Math.round(k / 2) + ". " +
+      (lg > 80 ? "Atomů ve viditelném vesmíru je asi 10" + sup(80) + ", takže prvočísel je nesrovnatelně víc a dva lidé si náhodou nevyberou totéž." : "To už je pěkná hromada."));
+  });
+
+  /* ---------- 7: generátor prvočísla ---------- */
+  var SMALLB = []; for (var sp = 2; sp < 1000; sp++) if (isP(sp)) SMALLB.push(BigInt(sp));
+  function randBig(bits) {
+    var n = Math.ceil(bits / 8), a = new Uint8Array(n), x = 0n, i;
+    crypto.getRandomValues(a);
+    for (i = 0; i < n; i++) x = (x << 8n) | BigInt(a[i]);
+    x &= (1n << BigInt(bits)) - 1n; x |= (1n << BigInt(bits - 1)); x |= 1n;
+    return x;
+  }
+  function smallFactor(x) { for (var i = 0; i < SMALLB.length; i++) if (x % SMALLB[i] === 0n) return SMALLB[i]; return 0n; }
+  function millerRabin(n, k) {
+    var d = n - 1n, s = 0, i, r;
+    while ((d & 1n) === 0n) { d >>= 1n; s++; }
+    for (i = 0; i < k; i++) {
+      var a = 2n + randBig(40) % (n - 3n), x = modpow(a, d, n);
+      if (x === 1n || x === n - 1n) continue;
+      var comp = true;
+      for (r = 1; r < s; r++) { x = x * x % n; if (x === n - 1n) { comp = false; break; } }
+      if (comp) return false;
+    }
+    return true;
+  }
+  [64, 128, 256, 512].forEach(function (bits) {
+    var b = el("button", "calc-btn", "Hledat " + bits + " bitů"); b.type = "button";
+    b.addEventListener("click", function () {
+      if (!HAS) { $("genInfo").textContent = NOCRYPTO; return; }
+      var t0 = performance.now(), tries = 0, bySmall = 0, byMR = 0, chips = [], x;
+      for (;;) {
+        x = randBig(bits); tries++;
+        var tail = "…" + x.toString().slice(-6), f = smallFactor(x);
+        if (f) { bySmall++; chips.push({ t: tail + " ÷" + f, y: false }); }
+        else if (!millerRabin(x, 1)) { byMR++; chips.push({ t: tail + " M–R", y: false }); }
+        else if (millerRabin(x, 20)) { chips.push({ t: tail + " ✓", y: true }); break; }
+        else { byMR++; chips.push({ t: tail + " M–R", y: false }); }
+        if (tries > 20000) break;
+      }
+      var t = performance.now() - t0, host = $("genChips"), shown = chips.slice(-16);
+      host.innerHTML = (chips.length > 16 ? '<span class="rsa-chip">… +' + (chips.length - 16) + " dřívějších pokusů</span>" : "") +
+        shown.map(function (c) { return '<span class="rsa-chip ' + (c.y ? "is-yes" : "is-no") + '">' + c.t + "</span>"; }).join("");
+      $("genInfo").innerHTML = "Nalezeno po <b>" + tries + "</b> pokusech (" + bySmall + " vyřadilo dělení malými prvočísly, " + byMR + " Miller–Rabin) za " + fmtMs(t) +
+        ". Očekávaný počet pokusů: asi " + Math.round(bits * Math.LN2 / 2) + ". Číslo má " + x.toString().length + " číslic:";
+      $("genOut").textContent = x.toString();
+    });
+    $("genSeg").appendChild(b);
+  });
+
+  /* ---------- 8: Cézar ---------- */
+  function caesar(t, k) {
+    return t.toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[A-Z]/g, function (c) { return String.fromCharCode((c.charCodeAt(0) - 65 + k) % 26 + 65); });
+  }
+  function ceUpdate() {
+    var k = +$("ceK").value, t = $("ceIn").value;
+    $("ceKVal").textContent = "k = " + k;
+    $("ceOut").innerHTML = "Text:    <b>" + esc(caesar(t, 0)) + "</b><br>Šifra:   <span class=\"w\">" + esc(caesar(t, k)) + "</span><br>Zpět:    " + esc(caesar(caesar(t, k), (26 - k) % 26)) + " <span class=\"rsa-muted\">(stejné k, opačný směr)</span>";
+  }
+  $("ceIn").addEventListener("input", ceUpdate); $("ceK").addEventListener("input", ceUpdate); ceUpdate();
+
+  /* ---------- 9: visací zámek ---------- */
+  var LOCK = [
+    { n: "1 · Alice", s: "vyrobí pár", A: "Má otevřený zámek a k němu jediný klíček. Klíček nikdy nepustí z ruky.", C: "Nic se neděje.", B: "Nic neví.", hot: "A", t: "Dvojice zámek a klíček", d: "Zámek jde zavřít bez klíče, stačí ho zacvaknout. Otevřít ho jde jen klíčkem. To je celé tajemství, zbytek je řemeslo." },
+    { n: "2 · Alice", s: "rozešle zámek", A: "Rozdá otevřené zámky všem: na web, do e-mailu, na vizitku.", C: "Otevřený zámek vidí každý, i Eva. Nevadí to.", B: "Dostal otevřený zámek.", hot: "C", t: "Otevřený zámek je veřejný klíč", d: "Zveřejnit ho je v pořádku, protože s ním se dá zprávu jen zamknout. Nikdo jím nic neotevře." },
+    { n: "3 · Bob", s: "zamkne zprávu", A: "Čeká na zprávu.", C: "Putuje zamčená krabice. Eva ji vidí, ale nemá klíček.", B: "Vloží zprávu do krabice a zacvakne Alicin zámek. Zpět ji sám neotevře.", hot: "B", t: "Zamknout umí každý, odemknout jen Alice", d: "Ani Bob už zprávu neotevře. Zámek poslouchá jen Alici, a proto Eva nepomůže, ani kdyby Boba zastavila a vzala mu krabici." },
+    { n: "4 · Alice", s: "odemkne", A: "Odemkne krabici svým klíčkem a čte.", C: "Eva drží zamčenou krabici a otevřený zámek. Bez klíčku nic.", B: "Hotovo.", hot: "A", t: "Soukromý klíč nikam necestoval", d: "Proto se nemohl cestou ztratit ani prozradit. A proto se to dá dělat i s lidmi, které jsi nikdy nepotkal." }
+  ];
+  var lockPanel = $("lockPanel");
+  picker($("lockSteps"), LOCK, function (c) { return el("button", "", esc(c.n) + "<span>" + c.s + "</span>"); }, lockPanel, function (c) {
+    var map = { A: "stA", B: "stB", C: "stC" };
+    ["A", "B", "C"].forEach(function (k) {
+      var box = $(map[k]); box.querySelector("p").textContent = c[k]; box.classList.toggle("is-hot", c.hot === k);
+    });
+    panelHtml(lockPanel, c.t, c.d);
+  });
+
+  /* ---------- 10: počet klíčů ---------- */
+  function kcUpdate() {
+    var n = +$("kcN").value;
+    $("kcNVal").textContent = n + " lidí";
+    $("kcSym").textContent = cs(n * (n - 1) / 2); $("kcAsy").textContent = cs(n);
+    $("kcSymT").textContent = "Každá dvojice si musí tajně předat vlastní klíč.";
+    $("kcAsyT").textContent = "Každý si vyrobí jeden pár a veřejný klíč zveřejní.";
+  }
+  $("kcN").addEventListener("input", kcUpdate); kcUpdate();
+
+  /* ---------- 11: dvě použití ---------- */
+  var USES = [
+    { n: "Šifrování", s: "utajení obsahu", t: "Zamyká veřejný klíč příjemce", d: "Odesílatel zašifruje zprávu veřejným klíčem příjemce. Přečíst ji dokáže jen ten, kdo má odpovídající soukromý klíč.", q: "c = m^e mod n   →   m = c^d mod n" },
+    { n: "Podpis", s: "důkaz autorství", t: "Zamyká soukromý klíč autora", d: "Autor „zamkne“ hash dokumentu svým soukromým klíčem. Kdokoli veřejným klíčem ověří, že podpis vytvořil držitel klíče a že se text nezměnil. Nic se tím neutajuje.", q: "s = h^d mod n   →   h = s^e mod n" },
+    { n: "Obojí", s: "podepsat a zašifrovat", t: "Například ve schránce PGP", d: "Odesílatel zprávu podepíše svým soukromým klíčem a zašifruje veřejným klíčem příjemce. Příjemce rozšifruje svým soukromým a ověří podpis veřejným klíčem odesílatele.", q: "podpis: můj soukromý · šifra: jeho veřejný" }
+  ];
+  var usePanel = $("usePanel");
+  picker($("useCards"), USES, function (c) { return el("button", "tcard", "<b>" + c.n + "</b><span>" + c.s + "</span>"); }, usePanel, function (c) { panelHtml(usePanel, c.t, c.d, quote(c.q)); });
+
+  /* ---------- 13: historie ---------- */
+  var HIS = [
+    { n: "1973", s: "GCHQ, tajně", t: "Clifford Cocks vymyslel totéž dřív", d: "Britský matematik Clifford Cocks z GCHQ popsal v zásadě stejný algoritmus už v roce 1973. Byla to ale státní tajemství a veřejnost se o tom dozvěděla až po odtajnění v roce 1997." },
+    { n: "1976", s: "Diffie a Hellman", t: "Nápad dvou klíčů", d: "Whitfield Diffie a Martin Hellman publikovali myšlenku asymetrické kryptografie a způsob, jak se dohodnout na společném klíči před odposlouchávajícím. Zbývalo vymyslet, jak udělat zámek, který se dá zavřít veřejně." },
+    { n: "1977", s: "Rivest, Shamir, Adleman", t: "Algoritmus RSA", d: "Ron Rivest, Adi Shamir a Leonard Adleman z MIT postavili zámek na obtížnosti rozkladu na prvočísla. Algoritmus se jmenuje po jejich příjmeních a v srpnu 1977 ho popularizoval Martin Gardner ve Scientific American. Za RSA dostali v roce 2002 Turingovu cenu." },
+    { n: "2000", s: "patent vypršel", t: "RSA je pro všechny", d: "Patent na RSA platil v USA do roku 2000. Od té doby ho smí kdokoli používat zdarma a prakticky každý program na tom staví." }
+  ];
+  var hisPanel = $("hisPanel");
+  picker($("hisCards"), HIS, function (c) { return el("button", "tcard", "<b>" + c.n + "</b><span>" + c.s + "</span>"); }, hisPanel, function (c) { panelHtml(hisPanel, c.t, c.d); });
+
+  /* ---------- 14: ciferník ---------- */
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function svgEl(tag, attrs, cls) { var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (cls) e.setAttribute("class", cls); return e; }
+  function clkRender() {
+    var a = +$("clkA").value, n = +$("clkN").value, r = a % n, svg = $("clkSvg"), i;
+    $("clkAVal").textContent = a; $("clkNVal").textContent = n;
+    svg.innerHTML = "";
+    svg.appendChild(svgEl("circle", { cx: 110, cy: 110, r: 100 }, "rsa-clock-face"));
+    for (i = 0; i < n; i++) {
+      var ang = i / n * 2 * Math.PI - Math.PI / 2, on = i === r;
+      svg.appendChild(svgEl("circle", { cx: 110 + 78 * Math.cos(ang), cy: 110 + 78 * Math.sin(ang), r: on ? 4 : 2.5 }, "rsa-clock-dot" + (on ? " is-on" : "")));
+      var t = svgEl("text", { x: 110 + 91 * Math.cos(ang), y: 110 + 91 * Math.sin(ang) }, "rsa-clock-num" + (on ? " is-on" : ""));
+      t.textContent = i; svg.appendChild(t);
+    }
+    var ar = r / n * 2 * Math.PI - Math.PI / 2;
+    svg.appendChild(svgEl("line", { x1: 110, y1: 110, x2: 110 + 70 * Math.cos(ar), y2: 110 + 70 * Math.sin(ar) }, "rsa-clock-hand"));
+    svg.appendChild(svgEl("circle", { cx: 110, cy: 110, r: 5 }, "rsa-clock-hub"));
+    $("clkOut").innerHTML = a + " = <b>" + Math.floor(a / n) + "</b> · " + n + " + <span class=\"g\">" + r + "</span><br>" + a + " mod " + n + " = <span class=\"g\">" + r + "</span><br><span class=\"rsa-muted\">Ručička se " + Math.floor(a / n) + "× obejde a zastaví se na " + r + ".</span>";
+  }
+  $("clkA").addEventListener("input", clkRender); $("clkN").addEventListener("input", clkRender); clkRender();
+
+  /* ---------- 15: generování klíčů (sdílený stav K) ---------- */
+  var PL = []; for (var px = 11; px <= 97; px++) if (isP(px)) PL.push(px);
+  var ECAND = [3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113];
+  var iP = PL.indexOf(61), iQ = PL.indexOf(53), eSel = 17, K = {};
+  $("kgPr").max = PL.length - 1; $("kgQr").max = PL.length - 1; $("kgPr").value = iP; $("kgQr").value = iQ;
+  function setKeys() {
+    var p = PL[iP], q = PL[iQ], n = p * q, phi = (p - 1) * (q - 1);
+    var valid = ECAND.filter(function (e) { return e < phi && gcd(e, phi) === 1n; });
+    if (valid.indexOf(eSel) < 0) eSel = valid.indexOf(17) >= 0 ? 17 : valid[0];
+    var d = Number(inv(eSel, phi));
+    K = { p: p, q: q, n: n, phi: phi, e: eSel, d: d, valid: valid };
+    kgRender(); enRender(); vfRender(); sgRender();
+  }
+  function kgRender() {
+    $("kgP").textContent = K.p; $("kgQ").textContent = K.q;
+    var host = $("eSeg"); host.innerHTML = "";
+    var show = K.valid.slice(0, 7); if (show.indexOf(K.e) < 0) show[show.length - 1] = K.e;
+    show.forEach(function (e) {
+      var b = el("button", "calc-btn" + (e === K.e ? " is-active" : ""), "e = " + e); b.type = "button";
+      b.addEventListener("click", function () { eSel = e; setKeys(); });
+      host.appendChild(b);
+    });
+    var k = (K.e * K.d - 1) / K.phi;
+    $("kgSteps").innerHTML =
+      "<b>1.</b> dvě prvočísla: p = " + K.p + ", q = " + K.q + "<br>" +
+      "<b>2.</b> n = p · q = " + K.p + " · " + K.q + " = <span class=\"g\">" + K.n + "</span><br>" +
+      "<b>3.</b> φ = (p − 1)(q − 1) = " + (K.p - 1) + " · " + (K.q - 1) + " = " + K.phi + "<br>" +
+      "<b>4.</b> e s gcd(e, φ) = 1: e = <span class=\"g\">" + K.e + "</span><br>" +
+      "<b>5.</b> d s e · d ≡ 1 (mod φ): d = <span class=\"w\">" + K.d + "</span>, protože " + K.e + " · " + K.d + " = " + (K.e * K.d) + " = " + k + " · " + K.phi + " + 1";
+    $("kPub").textContent = "(n, e) = (" + K.n + ", " + K.e + ")";
+    $("kPriv").textContent = "(n, d) = (" + K.n + ", " + K.d + ")";
+  }
+  $("kgPr").addEventListener("input", function () {
+    iP = +$("kgPr").value; if (iP === iQ) { iQ = (iQ + 1) % PL.length; $("kgQr").value = iQ; } setKeys();
+  });
+  $("kgQr").addEventListener("input", function () {
+    iQ = +$("kgQr").value; if (iP === iQ) { iP = (iP + 1) % PL.length; $("kgPr").value = iP; } setKeys();
+  });
+
+  /* ---------- 16: šifrování hračky ---------- */
+  var ENC = { cs: [] };
+  function enRender() {
+    var l = letters($("enIn").value), rows = $("enRows"); rows.innerHTML = "";
+    $("enPub").textContent = "(n, e) = (" + K.n + ", " + K.e + ")";
+    $("enPriv").textContent = "d = " + K.d;
+    ENC.cs = [];
+    if (!l) { $("enWire").textContent = "Napiš aspoň jedno písmeno (A až Z)."; return; }
+    for (var i = 0; i < l.length; i++) {
+      var m = l.charCodeAt(i) - 64, c = Number(modpow(m, K.e, K.n)), back = Number(modpow(c, K.d, K.n));
+      ENC.cs.push(c);
+      var tr = el("tr", "", "<td><b>" + l.charAt(i) + "</b></td><td>" + m + "</td><td class=\"mono-s\">" + m + "<sup>" + K.e + "</sup> mod " + K.n + " = <b>" + c + "</b></td><td class=\"mono-s\">" + c + "<sup>" + K.d + "</sup> mod " + K.n + " = " + back + "</td><td class=\"" + (back === m ? "ok" : "ko") + "\">" + (back >= 1 && back <= 26 ? String.fromCharCode(64 + back) : "?") + "</td>");
+      rows.appendChild(tr);
+    }
+    $("enWire").innerHTML = "Po drátě putuje: <span class=\"w\">" + ENC.cs.join(" ") + "</span><br><span class=\"rsa-muted\">Eva vidí tahle čísla a (n, e). Nic víc.</span>" +
+      (l.indexOf("A") >= 0 ? "<br><span class=\"rsa-muted\">Všimni si: písmeno A (číslo 1) se zašifruje samo na sebe, protože 1 na jakoukoli mocninu je 1. Další slabina hračky, kterou řeší padding.</span>" : "");
+  }
+  $("enIn").addEventListener("input", function () { enRender(); });
+
+  /* ---------- 17: ověření ---------- */
+  function vfRender() {
+    var k = (K.e * K.d - 1) / K.phi;
+    $("vfEq").innerHTML = "e · d = " + K.e + " · " + K.d + " = " + (K.e * K.d) + " = 1 + <b>" + k + "</b> · " + K.phi + " = 1 + k · φ";
+    vfTry();
+  }
+  function vfTry() {
+    var raw = $("vfM").value.replace(/\s+/g, ""), m = parseInt(raw, 10), out = $("vfOut");
+    if (!/^\d+$/.test(raw) || m >= K.n) { out.innerHTML = "Napiš číslo m od 0 do " + (K.n - 1) + "."; return; }
+    var c = Number(modpow(m, K.e, K.n)), back = Number(modpow(c, K.d, K.n));
+    out.innerHTML = "m = " + m + " → c = " + m + sup(K.e) + " mod " + K.n + " = <span class=\"w\">" + c + "</span> → c" + sup(K.d) + " mod " + K.n + " = <span class=\"g\">" + back + "</span>" + (m <= 1 ? "<br><span class=\"rsa-muted\">Čísla 0 a 1 se zašifrují sama na sebe. Jeden z důvodů, proč se přidává padding.</span>" : "");
+  }
+  $("vfM").addEventListener("input", vfTry);
+  $("vfAll").addEventListener("click", function () {
+    var ok = 0, bad = [], t0 = performance.now();
+    for (var m = 0; m < K.n; m++) { var c = modpow(m, K.e, K.n); if (modpow(c, K.d, K.n) === BigInt(m)) ok++; else if (bad.length < 5) bad.push(m); }
+    $("vfOut").innerHTML = ok === K.n ?
+      "Všech <span class=\"g\">" + cs(K.n) + "</span> zpráv (m = 0 … " + (K.n - 1) + ") se po zašifrování a dešifrování vrátilo beze změny. Zabralo to " + fmtMs(performance.now() - t0) + "." :
+      "Chyba u " + (K.n - ok) + " zpráv, například " + bad.join(", ") + ". Zkus jiné e.";
+  });
+
+  /* ---------- 18: Eva ---------- */
+  $("evGo").addEventListener("click", function () {
+    var n = K.n, steps = 0, f = 0, t0 = performance.now();
+    for (var i = 2; i * i <= n; i++) { steps++; if (n % i === 0) { f = i; break; } }
+    var t = performance.now() - t0, q = n / f, phi = (f - 1) * (q - 1), d2 = Number(inv(K.e, phi));
+    var msg = ENC.cs.map(function (c) { var m = Number(modpow(c, d2, n)); return m >= 1 && m <= 26 ? String.fromCharCode(64 + m) : "?"; }).join("");
+    $("evOut").innerHTML =
+      "Eva zná: n = " + n + ", e = " + K.e + ", c = " + ENC.cs.join(" ") + "<br>" +
+      "<b>1.</b> zkouší dělitele 2, 3, 4, …: narazí na <span class=\"w\">" + f + "</span> po " + steps + " pokusech (" + fmtMs(t) + ")<br>" +
+      "<b>2.</b> q = n / p = " + q + ", φ = " + (f - 1) + " · " + (q - 1) + " = " + phi + "<br>" +
+      "<b>3.</b> d = e<sup>−1</sup> mod φ = <span class=\"w\">" + d2 + "</span> " + (d2 === K.d ? "(stejné jako Alicino d)" : "") + "<br>" +
+      "<b>4.</b> dešifruje: <span class=\"g\">" + (msg || "(žádná zpráva)") + "</span>";
+  });
+
+  /* ---------- 19: podpis (hračka) ---------- */
+  function thash(t) {
+    var s = 0, u = t.toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    for (var i = 0; i < u.length; i++) s += u.charCodeAt(i) * (i + 1);
+    return s % K.n;
+  }
+  var sgSig = 0, sgSigned = "";
+  function sgRender() {
+    var t = $("sgText").value;
+    sgSigned = t; var h = thash(t); sgSig = Number(modpow(h, K.d, K.n));
+    $("sgSig").innerHTML = "hash(text) = " + h + "<br>podpis s = " + h + sup(K.d) + " mod " + K.n + " = <b>" + sgSig + "</b>";
+    $("sgRecv").value = t; sgVerify();
+  }
+  function sgVerify() {
+    var r = $("sgRecv").value, h2 = thash(r), v = Number(modpow(sgSig, K.e, K.n)), ok = h2 === v, vd = $("sgVerdict");
+    vd.textContent = ok ? "Podpis platí. Text je beze změny." : "PODPIS NEPLATÍ. Text se změnil.";
+    vd.className = "hverd " + (ok ? "is-ok" : "is-bad");
+    $("sgInfo").textContent = "s^e mod n = " + v + "\nhash přijatého textu = " + h2;
+  }
+  $("sgText").addEventListener("input", sgRender); $("sgRecv").addEventListener("input", sgVerify);
+
+  setKeys();
+
+  /* ---------- 20: skutečný klíč (WebCrypto) ---------- */
+  var RK = null;
+  function b64uToBig(s) {
+    s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "=";
+    var bin = atob(s), x = 0n; for (var i = 0; i < bin.length; i++) x = (x << 8n) | BigInt(bin.charCodeAt(i)); return x;
+  }
+  function toHex(buf) { return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ("0" + b.toString(16)).slice(-2); }).join(""); }
+  function genRealKey() {
+    var t0 = performance.now();
+    return crypto.subtle.generateKey({ name: "RSA-OAEP", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" }, true, ["encrypt", "decrypt"]).then(function (k) {
+      return crypto.subtle.exportKey("jwk", k.privateKey).then(function (j) {
+        RK = { pub: k.publicKey, priv: k.privateKey, n: b64uToBig(j.n), p: b64uToBig(j.p), q: b64uToBig(j.q), e: b64uToBig(j.e), d: b64uToBig(j.d), ms: performance.now() - t0 };
+        return RK;
+      });
+    });
+  }
+  function ensureRK() { return RK ? Promise.resolve(RK) : genRealKey(); }
+  function rkShow() {
+    var r = RK, nd = r.n.toString().length;
+    $("rkTime").textContent = "Klíč vznikl za " + fmtMs(r.ms) + ".";
+    $("rkEq").innerHTML = "n: <b>" + nd + " číslic</b> (" + r.n.toString(2).length + " bitů) · e = <b>" + r.e + "</b><br>" +
+      "p: " + r.p.toString().length + " číslic · q: " + r.q.toString().length + " číslic · p · q = n: <span class=\"g\">" + (r.p * r.q === r.n ? "ano" : "ne") + "</span><br>" +
+      "d: " + r.d.toString().length + " číslic <span class=\"rsa-muted\">(tajné, p a q také)</span><br><span class=\"rsa-muted\">Veřejný klíč (n, e):</span>";
+    $("rkN").textContent = r.n.toString();
+  }
+  $("rkBtn").addEventListener("click", function () {
+    if (!HAS) { $("rkEq").textContent = NOCRYPTO; return; }
+    $("rkEq").innerHTML = "<span class=\"rsa-spin\">Generuji…</span>";
+    RK = null; genRealKey().then(rkShow, function () { $("rkEq").textContent = "Tento prohlížeč nepodporuje RSA-OAEP v WebCrypto."; });
+  });
+  $("rkEnc").addEventListener("click", function () {
+    if (!HAS) { $("rkCt").textContent = NOCRYPTO; return; }
+    var msg = new TextEncoder().encode($("rkMsg").value);
+    ensureRK().then(function (r) { rkShow(); return crypto.subtle.encrypt({ name: "RSA-OAEP" }, r.pub, msg).then(function (ct) {
+      $("rkCt").textContent = "Šifrový text (" + ct.byteLength + " bajtů):\n" + toHex(ct);
+      return crypto.subtle.decrypt({ name: "RSA-OAEP" }, r.priv, ct);
+    }); }).then(function (pt) { $("rkPt").innerHTML = "Dešifrováno soukromým klíčem: <span class=\"g\">" + esc(new TextDecoder().decode(pt)) + "</span>"; },
+      function () { $("rkPt").textContent = "Zpráva je moc dlouhá (u RSA-2048 s OAEP nejvýš 190 bajtů) nebo prohlížeč RSA-OAEP nepodporuje."; });
+  });
+
+  /* ---------- 21: padding ---------- */
+  function pdRender() {
+    var l = letters($("pdIn").value), cs2 = [], seen = {}, i, host = $("pdChips"); host.innerHTML = "";
+    if (!l) { $("pdInfo").textContent = "Napiš písmena A až Z."; return; }
+    for (i = 0; i < l.length; i++) { var c = Number(modpow(l.charCodeAt(i) - 64, K.e, K.n)); cs2.push(c); seen[c] = (seen[c] || 0) + 1; }
+    cs2.forEach(function (c, j) { host.appendChild(el("span", "rsa-chip" + (seen[c] > 1 ? " is-no" : ""), l.charAt(j) + " → " + c)); });
+    $("pdInfo").textContent = "Písmen " + l.length + ", různých čísel " + Object.keys(seen).length + ". Opakování (červeně) prozradí, že jde o stejná písmena.";
+  }
+  $("pdIn").addEventListener("input", pdRender);
+  fits.push({ slide: $("pdIn").closest(".slide"), fn: pdRender });
+  $("pdBtn").addEventListener("click", function () {
+    if (!HAS) { $("pdA").textContent = NOCRYPTO; return; }
+    var msg = new TextEncoder().encode("Ahoj");
+    ensureRK().then(function (r) {
+      return Promise.all([crypto.subtle.encrypt({ name: "RSA-OAEP" }, r.pub, msg), crypto.subtle.encrypt({ name: "RSA-OAEP" }, r.pub, msg)]).then(function (cts) {
+        var a = toHex(cts[0]), b = toHex(cts[1]);
+        $("pdA").textContent = "1. " + a.slice(0, 56) + "…"; $("pdB").textContent = "2. " + b.slice(0, 56) + "…";
+        $("pdOaep").textContent = "Zpráva je dvakrát stejná, šifrové texty se liší (" + (a === b ? "shodují se, což je podezřelé" : "OAEP přidává náhodu") + "). Příjemce je přesto oba rozšifruje na „Ahoj“.";
+      });
+    }, function () { $("pdA").textContent = "Tento prohlížeč nepodporuje RSA-OAEP v WebCrypto."; });
+  });
+
+  /* ---------- 22: hybrid a rychlost ---------- */
+  var HY = [
+    { n: "1 · Klient", s: "vymyslí klíč AES", t: "Náhodný tajný klíč (256 bitů)", d: "Prohlížeč vygeneruje krátký náhodný klíč pro AES. Je malý a zvládne ho zašifrovat i RSA." },
+    { n: "2 · Klient", s: "RSA zamkne klíč", t: "Klíč AES se zašifruje veřejným klíčem", d: "Klíč AES se zašifruje veřejným klíčem serveru (s paddingem OAEP) a pošle se." },
+    { n: "3 · Server", s: "RSA odemkne klíč", t: "Klíč AES si přečte jen server", d: "Server ho dešifruje svým soukromým klíčem. Teď oba znají stejný tajný klíč a Eva ne." },
+    { n: "4 · Oba", s: "dál jen AES", t: "Data se šifrují rychle", d: "AES zvládne stovky megabajtů za sekundu. Dnešní HTTPS (TLS 1.3) dělá výměnu klíčů jinak (ECDHE) a RSA slouží hlavně k podpisu certifikátu serveru, princip „malý klíč přes pomalou šifru“ ale platí dál." }
+  ];
+  var hyPanel = $("hyPanel");
+  picker($("hyChain"), HY, function (c) { return el("button", "", esc(c.n) + "<span>" + c.s + "</span>"); }, hyPanel, function (c) { panelHtml(hyPanel, c.t, c.d); });
+  $("spBtn").addEventListener("click", function () {
+    var out = $("spOut");
+    if (!HAS) { out.textContent = NOCRYPTO; return; }
+    out.innerHTML = "<span class=\"rsa-spin\">Měřím…</span>";
+    var mbRsa = 0, rk;
+    ensureRK().then(function (r) {
+      rk = r; var pt = new Uint8Array(190); crypto.getRandomValues(pt);
+      return crypto.subtle.encrypt({ name: "RSA-OAEP" }, r.pub, pt);
+    }).then(function (ct) {
+      var N = 30, t0 = performance.now(), p = Promise.resolve(), i;
+      for (i = 0; i < N; i++) p = p.then(function () { return crypto.subtle.decrypt({ name: "RSA-OAEP" }, rk.priv, ct); });
+      return p.then(function () { mbRsa = N * 190 / 1048576 / ((performance.now() - t0) / 1000); });
+    }).then(function () {
+      return crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt"]);
+    }).then(function (key) {
+      var buf = new Uint8Array(1048576), iv = new Uint8Array(12), o;
+      for (o = 0; o < buf.length; o += 65536) crypto.getRandomValues(buf.subarray(o, o + 65536));
+      var M = 20, t0 = performance.now(), p = Promise.resolve(), i;
+      for (i = 0; i < M; i++) p = p.then(function () { crypto.getRandomValues(iv); return crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, buf); });
+      return p.then(function () { return M / ((performance.now() - t0) / 1000); });
+    }).then(function (mbAes) {
+      out.innerHTML = "RSA-2048 dešifrování: <span class=\"w\">" + mbRsa.toFixed(2).replace(".", ",") + " MB/s</span><br>AES-256-GCM: <span class=\"g\">" + Math.round(mbAes) + " MB/s</span><br>AES je asi <b>" + cs(Math.round(mbAes / mbRsa)) + "×</b> rychlejší. Proto RSA nešifruje data.";
+    }, function () { out.textContent = "Měření se v tomto prohlížeči nepovedlo."; });
+  });
+
+  /* ---------- 23: kde potkáváš RSA ---------- */
+  var WH = [
+    { n: "HTTPS", s: "certifikáty", t: "Podpis certifikátu webu", d: "Certifikát webu je podepsaný autoritou, často právě RSA podpisem. Prohlížeč jím ověří, že se bavíš se správným serverem. Samotná výměna klíče v TLS 1.3 už jde jinak." },
+    { n: "SSH", s: "přihlášení", t: "Klíč místo hesla", d: "Příkaz ssh-keygen -t rsa vyrobí pár klíčů. Veřejný klíč dáš na server, soukromý zůstane u tebe. Novější instalace volí jako výchozí kratší a rychlejší Ed25519." },
+    { n: "E-mail", s: "PGP a S/MIME", t: "Šifrovaná a podepsaná pošta", d: "PGP/GPG a S/MIME používají RSA (nebo eliptické křivky) pro podpis a pro ochranu klíče zprávy. Zpráva samotná se šifruje symetricky." },
+    { n: "Podpisy", s: "dokumenty a kód", t: "Elektronický podpis, JWT, aktualizace", d: "Kvalifikované certifikáty pro elektronický podpis, tokeny JWT s algoritmem RS256 nebo podepsané aktualizace programů používají podpis RSA." },
+    { n: "Ne RSA", s: "kde už není", t: "Bitcoin, nové SSH, TLS 1.3", d: "Bitcoin používá podpisy ECDSA, výměna klíčů v TLS 1.3 používá ECDHE a nové klíče SSH bývají Ed25519. Eliptické křivky dávají stejnou sílu s mnohem kratším klíčem." }
+  ];
+  var whPanel = $("whPanel");
+  picker($("whCards"), WH, function (c) { return el("button", "tcard", "<b>" + c.n + "</b><span>" + c.s + "</span>"); }, whPanel, function (c) { panelHtml(whPanel, c.t, c.d); });
+
+  /* ---------- 25: kvantové počítače ---------- */
+  var QU = [
+    { n: "Rekordy", t: "Co klasické počítače rozložily", d: "Největší veřejně rozložené číslo z RSA výzvy dlouho bylo RSA-250 (829 bitů, 250 číslic) z února 2020. Stálo to zhruba 2700 let výpočtu jednoho jádra procesoru. Od klíče o 2048 bitech nás dělí propast." },
+    { n: "Shorův algoritmus", t: "Rozklad v rozumném čase, ale jen na kvantovém počítači", d: "Peter Shor ukázal v roce 1994, že dostatečně velký kvantový počítač by rozložil n rychle. Takový stroj zatím neexistuje. Odhady, kolik qubitů by RSA-2048 vyžadovalo, ale klesly z asi 20 milionů (2021) na zhruba milion (2025)." },
+    { n: "Co dál", t: "Postkvantová kryptografie", d: "NIST vydal v srpnu 2024 první standardy odolné proti kvantovým počítačům (FIPS 203 ML-KEM, FIPS 204 ML-DSA, FIPS 205 SLH-DSA). Podle plánu NIST se má RSA-2048 po roce 2030 přestat používat a po roce 2035 být zakázané. Útočníci už dnes mohou data ukládat a luštit je později, proto se s přechodem nečeká." }
+  ];
+  var quPanel = $("quPanel");
+  picker($("quSeg"), QU, function (c) { return el("button", "calc-btn", esc(c.n)); }, quPanel, function (c) { panelHtml(quPanel, c.t, c.d); });
+
+  /* ---------- 30: kvíz ---------- */
+  var Q = [
+    { t: "Veřejný klíč smí znát kdokoli, aniž by to ohrozilo zprávy.", a: 1, f: "Veřejným klíčem se dá zprávu jen zamknout. Právě proto se rozdává." },
+    { t: "Zprávu zašifrovanou veřejným klíčem může dešifrovat i ten, kdo ji zašifroval.", a: 0, f: "Nemůže. Odemknout ji umí jen držitel soukromého klíče, ani Bob už svou krabici neotevře." },
+    { t: "Bezpečnost RSA stojí na tom, že je těžké rozložit velké číslo na prvočísla.", a: 1, f: "Kdo rozloží n na p a q, spočítá φ i d a zpráva je prozrazená." },
+    { t: "RSA je rychlé, proto se jím šifrují celé soubory.", a: 0, f: "RSA je pomalé a zvládne jen malý blok. Soubor šifruje AES a RSA ochrání jeho klíč." },
+    { t: "Podpis vytváří veřejný klíč a ověřuje soukromý.", a: 0, f: "Je to naopak: podepisuje soukromý klíč, ověřuje veřejný." },
+    { t: "RSA-OAEP zašifruje stejnou zprávu dvakrát do dvou různých šifrových textů.", a: 1, f: "OAEP přidává náhodu, takže opakování zpráv nejde poznat." }
+  ];
+  var qI = 0, qOk = 0, qAns = false;
+  var ansBtns = Array.prototype.slice.call(document.querySelectorAll("[data-a]")).filter(function (b) { return b.dataset.a === "0" || b.dataset.a === "1"; });
+  function qRender() {
+    qAns = false; var q = Q[qI];
+    $("qzScore").textContent = "Tvrzení " + (qI + 1) + " z " + Q.length + " · správně " + qOk;
+    $("qzText").textContent = q.t; $("qzFb").innerHTML = ""; $("qzNext").hidden = true;
+    ansBtns.forEach(function (b) { b.hidden = false; b.disabled = false; b.classList.remove("is-right", "is-wrong"); });
+  }
+  ansBtns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      if (qAns) return; qAns = true;
+      var q = Q[qI], ok = +b.dataset.a === q.a; if (ok) qOk++;
+      ansBtns.forEach(function (x) { if (+x.dataset.a === q.a) x.classList.add("is-right"); x.disabled = true; });
+      if (!ok) b.classList.add("is-wrong");
+      $("qzScore").textContent = "Tvrzení " + (qI + 1) + " z " + Q.length + " · správně " + qOk;
+      $("qzFb").innerHTML = "<b>" + (ok ? "Správně." : "Tentokrát ne.") + "</b> " + q.f;
+      $("qzNext").hidden = false; $("qzNext").textContent = qI === Q.length - 1 ? "Výsledek" : "Další →";
+    });
+  });
+  $("qzNext").addEventListener("click", function () {
+    if (qI === Q.length - 1) {
+      $("qzText").innerHTML = "<b>Výsledek: " + qOk + " z " + Q.length + ".</b>";
+      $("qzFb").innerHTML = qOk === Q.length ? "Výborně." : "Projdi si ještě slidy o zámku, klíčích a paddingu.";
+      ansBtns.forEach(function (b) { b.hidden = true; }); $("qzNext").textContent = "Znovu"; qI = -1; qOk = 0; return;
+    }
+    qI++; qRender();
+  });
+  qRender();
+
+  /* ---------- kopírování kódu ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll("button.copy"), function (b) {
+    b.addEventListener("click", function () {
+      var src = document.getElementById(b.dataset["for"]); if (!src) return;
+      var text = src.textContent;
+      function ok() { b.textContent = "Zkopírováno"; setTimeout(function () { b.textContent = "Kopírovat"; }, 1600); }
+      function fallback() {
+        var ta = document.createElement("textarea"); ta.value = text; ta.className = "copy-tmp";
+        document.body.appendChild(ta); ta.select();
+        try { if (document.execCommand("copy")) ok(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(ok, fallback); } else { fallback(); }
+    });
+  });
+
+  goTo(0);
+})();
+</script>
+</body>
+</html>

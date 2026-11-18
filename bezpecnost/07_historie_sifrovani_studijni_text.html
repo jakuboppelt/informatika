@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historie šifrování – studijní text</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Základ</li>
+    <li><a href="#pojmy">Pojmy a Alice, Bob, Eva</a></li>
+    <li><a href="#druhy">Čtyři způsoby utajení</a></li>
+    <li class="grp">Staré šifry</li>
+    <li><a href="#skytale">Skytale a transpozice</a></li>
+    <li><a href="#caesar">Caesarova šifra</a></li>
+    <li><a href="#substituce">Substituční šifra a 26!</a></li>
+    <li class="grp">Luštitelé</li>
+    <li><a href="#frekvence">Frekvenční analýza</a></li>
+    <li><a href="#marie">Marie Stuartovna</a></li>
+    <li class="grp">Vigenère a Enigma</li>
+    <li><a href="#vigenere">Vigenèrova šifra</a></li>
+    <li><a href="#kasiski">Jak se prolomila</a></li>
+    <li><a href="#enigma">Enigma</a></li>
+    <li><a href="#navaho">Navahové: jazyk jako kód</a></li>
+    <li class="grp">Poučení</li>
+    <li><a href="#kerckhoffs">Kerckhoffsův princip</a></li>
+    <li><a href="#otp">Jednorázová tabulka</a></li>
+    <li><a href="#klice">Problém předání klíče</a></li>
+    <li><a href="#verejny">Cesta k veřejnému klíči</a></li>
+    <li class="grp">Prakticky</li>
+    <li><a href="#python">Python</a></li>
+    <li><a href="#ukoly">Úkoly</a></li>
+    <li class="grp">Opakování</li>
+    <li><a href="#otazky">Otázky</a></li>
+    <li><a href="#slovnicek">Slovníček</a></li>
+    <li><a href="#zdroje">Zdroje</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Bezpečnost · Studijní text</p>
+  <h1>Historie šifrování <span class="t">souboj tvůrců a luštitelů</span></h1>
+  <p class="lead">Od hůlky ve starém Řecku přes Caesara, arabské učence a špiony královny Alžběty až po Enigmu. Šifry se po tisíce let vyvíjely proto, že je někdo prolomil a tvůrci museli vymyslet lepší. Text souvisí s <a href="07_historie_sifrovani.html">prezentací</a>, šifrovat a dešifrovat si můžeš v <a href="07_historie_sifrovani_aplikace.html">aplikaci</a>. Navazuje na něj <a href="07_rsa.html">RSA</a>.</p>
+  <div class="must">
+    <h2>Po přečtení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit pojmy šifra, klíč, otevřený a šifrový text, kryptografie a kryptoanalýza</li>
+      <li>rozlišit steganografii, transpozici, substituci a kód</li>
+      <li>zašifrovat a dešifrovat Caesarovou a substituční šifrou</li>
+      <li>popsat frekvenční analýzu a vysvětlit, proč porazila substituční šifru</li>
+      <li>popsat Vigenèrovu šifru a to, jak se prolomila</li>
+      <li>vysvětlit Kerckhoffsův princip a problém předání klíče</li>
+      <li>říct, proč je jednorázová tabulka dokonalá a proč se téměř nepoužívá</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Základ</p>
+
+<section id="pojmy">
+<h2>Pojmy a Alice, Bob, Eva</h2>
+<p><dfn>Kryptografie</dfn> je věda o tom, jak zprávu utajit. <dfn>Kryptoanalýza</dfn> je opačná věda: jak utajenou zprávu přečíst bez povolení. Oba obory spolu soupeří a jeden žene druhý dopředu. Dohromady se jim říká <dfn>kryptologie</dfn>.</p>
+<div class="tbl"><table>
+<thead><tr><th>Pojem</th><th>Význam</th></tr></thead>
+<tbody>
+<tr><td><strong>Otevřený text</strong></td><td>zpráva, jak ji napsal odesílatel</td></tr>
+<tr><td><strong>Šifrový text</strong></td><td>zpráva po zašifrování</td></tr>
+<tr><td><strong>Šifra</strong></td><td>postup, kterým se otevřený text mění na šifrový</td></tr>
+<tr><td><strong>Klíč</strong></td><td>tajná informace, která řídí šifru (posun, přeházená abeceda, heslo)</td></tr>
+<tr><td><strong>Šifrování, dešifrování</strong></td><td>otevřený text → šifrový text s klíčem a zpět</td></tr>
+<tr><td><strong>Luštění</strong></td><td>dostat otevřený text bez znalosti klíče</td></tr>
+</tbody></table></div>
+<p>V kryptografii se říká, že zprávu posílá <strong>Alice</strong> a přijímá ji <strong>Bob</strong>. Zprávu po cestě zachytí <strong>Eva</strong> (anglicky <i>eavesdropper</i>, odposlouchávač). Šifra je dobrá, když Eva dostane všechno, co putuje kanálem, a přesto zprávu nepřečte.</p>
+<div class="note mat"><b class="lbl">Hlavní myšlenka</b><p>Zabezpečení stojí na <strong>klíči</strong>, ne na tom, že Eva nezná postup. Alice a Bob se musí na klíči domluvit předem a tak, aby ho Eva nezachytila.</p></div>
+</section>
+
+<section id="druhy">
+<h2>Čtyři způsoby utajení</h2>
+<div class="tbl"><table>
+<thead><tr><th>Způsob</th><th>Co dělá</th><th>Příklad</th></tr></thead>
+<tbody>
+<tr><td><strong>Steganografie</strong></td><td>skrývá, že zpráva vůbec existuje</td><td>zpráva v dutém předmětu, neviditelný inkoust, bity v obrázku</td></tr>
+<tr><td><strong>Transpozice</strong></td><td>mění pořadí písmen, písmena zůstávají stejná</td><td>skytale, čtení tabulky po sloupcích</td></tr>
+<tr><td><strong>Substituce</strong></td><td>nahrazuje písmena jinými, pořadí zůstává</td><td>Caesarova šifra, náhodná abeceda, Vigenère</td></tr>
+<tr><td><strong>Kód</strong></td><td>nahrazuje celá slova nebo věty jinými znaky podle kódové knihy</td><td>vojenské kódové knihy, „tajný text“ dohodnutý dopředu</td></tr>
+</tbody></table></div>
+<p>Rozdíl mezi transpozicí a substitucí poznáš z četností písmen. Po transpozici má šifrový text <strong>stejná písmena</strong> a stejné počty jako originál, jen jsou promíchaná. Po substituci jsou <strong>jiná písmena</strong>, ale pořadí je zachované.</p>
+<div class="note warn"><b class="lbl">Pozor</b><p>Kód není šifra. Šifra pracuje s písmeny podle pravidla, kód s významem slov. Kód se musí dohodnout předem a nedá se použít na zprávu, na kterou v kódové knize není slovo.</p></div>
+</section>
+
+<p class="part">Staré šifry</p>
+
+<section id="skytale">
+<h2>Skytale a transpozice</h2>
+<p>Řecký spisovatel Plútarchos popisuje spartskou <dfn>skytale</dfn>: proužek kůže se namotá na hůlku určitého průměru, napíše se na něj zpráva po délce hůlky a rozmotaný proužek vypadá jako změť písmen. Přečte ho jen ten, kdo má hůlku stejné tloušťky. Klíčem je tedy tloušťka hůlky. Historici se přou, zda ji Sparťané opravdu používali jako šifru, nebo spíš jako ověření posla, takže ber skytale jako ukázku principu transpozice, ne jako jistý historický fakt.</p>
+<p>Jak skytale fungovala, ukazuje <a href="https://youtu.be/T9N6aGKJdZM" target="_blank" rel="noopener">video</a>, fotografii skytale najdeš na <a href="https://commons.wikimedia.org/wiki/Category:Scytale" target="_blank" rel="noopener">Wikimedia Commons</a>.</p>
+<p>Totéž se dá zapsat tabulkou: zprávu píšeš po řádcích do tabulky o <i>n</i> sloupcích a čteš po sloupcích. Například SEJDEME SE ZITRA do čtyř sloupců:</p>
+<pre><code>S E J D
+E M E S
+E Z I T
+R A
+
+čteme po sloupcích: SEER EMZA JEI DST</code></pre>
+<p>Písmena jsou stejná, jen v jiném pořadí. Klíčem je počet sloupců. Slabina: klíčů je málo (zkusíš všechny počty sloupců) a text pořád vypadá jako promíchaná čeština, takže pokus se pozná.</p>
+</section>
+
+<section id="caesar">
+<h2>Caesarova šifra</h2>
+<p>Římský císař Julius Caesar podle Suetonia posouval každé písmeno o tři místa v abecedě: A → D, B → E, C → F. Obecně se posouvá o <i>k</i> míst a po Z se pokračuje od A. Klíčem je číslo <i>k</i>.</p>
+<pre><code>otevřený text:  S E J D E M E
+posun o 3:      V H M G H P H</code></pre>
+<p>Dešifruje se posunem zpátky. Šifra má jediné číslo jako klíč, takže existuje jen <strong>25 klíčů</strong> (posun 0 nic nemění). Eva vyzkouší všech 25 posunů za pár minut, to je <dfn>útok hrubou silou</dfn>. Správný posun pozná podle toho, že jediný dá čitelný text.</p>
+<p>Dnes ji dokáže luštit i žák bez počítače, ale ukazuje základní princip: šifra je postup, klíč je číslo, které se musí utajit.</p>
+</section>
+
+<section id="substituce">
+<h2>Substituční šifra a číslo 26!</h2>
+<p>Pokud se místo posunu abeceda libovolně přeházet, vznikne <dfn>monoalfabetická substituce</dfn>: každému písmenu odpovídá právě jedno jiné a vždy stejné. Klíčem je celá přeházená abeceda, například:</p>
+<pre><code>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+Q B W I J H Z Y V M C S T L K N A R O D F E P X G U</code></pre>
+<p>Kolik je takových klíčů? První písmeno má 26 možností, druhé 25 a tak dál. Dohromady 26! = 26 · 25 · … · 1 = <strong>403 291 461 126 605 635 584 000 000</strong>, tedy zhruba 4 · 10<sup>26</sup>. Kdyby jeden počítač zkoušel miliardu klíčů za sekundu, trvalo by to zhruba 13 miliard let, tedy přibližně tolik, kolik je stáří vesmíru. Hrubou silou se tedy substituční šifra prolomit nedá.</p>
+<div class="note tip"><b class="lbl">Zkus to</b><p>V <a href="07_historie_sifrovani_aplikace.html">aplikaci</a> zašifruj zprávu náhodnou abecedou a pošli ji spolužákovi bez klíče. Pak mu klíč pošli zvlášť. Rozdíl uvidíš hned.</p></div>
+<p>Pro lidskou potřebu se dá klíč snadno zapamatovat jako <strong>klíčové slovo</strong>: napíšeš slovo bez opakujících se písmen a doplníš zbytek abecedy. Z klíče SIFRA vznikne abeceda <code>SIFRABCDEGHJKLMNOPQTUVWXYZ</code>. Je to snazší, ale klíčů je pak o mnoho méně, protože slovo se musí dát vymyslet.</p>
+</section>
+
+<p class="part">Luštitelé</p>
+
+<section id="frekvence">
+<h2>Frekvenční analýza</h2>
+<p>Substituční šifra přesto padla, a to bez zkoušení klíčů. Arabský učenec <strong>al-Kindí</strong> kolem roku 850 popsal, že v každém jazyce se písmena vyskytují s jinou, charakteristickou četností. Jeho spis <i>Rukopis o dešifrování kryptografických zpráv</i> se znovu našel až v roce 1987 v Istanbulu. Postup je jednoduchý:</p>
+<ol class="plan">
+  <li>Spočítej, kolikrát se v šifrovém textu vyskytuje každé písmeno.</li>
+  <li>Nejčastější písmeno šifrového textu je pravděpodobně nejčastější písmeno jazyka. V češtině je to E, potom O, A, N, T.</li>
+  <li>Dosaď odhady a hledej slova. Krátká slova (A, V, S, SE, NA), zdvojená písmena a typické koncovky ti napoví další písmena.</li>
+  <li>Oprav chyby podle toho, co dává smysl, a pokračuj, dokud se text nečte.</li>
+</ol>
+<div class="tbl"><table>
+<thead><tr><th>Písmeno</th><th>E</th><th>A</th><th>O</th><th>I</th><th>N</th><th>T</th><th>S</th><th>L</th><th>R</th></tr></thead>
+<tbody><tr><td><strong>% v češtině</strong></td><td class="num">11,6</td><td class="num">9,1</td><td class="num">8,0</td><td class="num">6,5</td><td class="num">6,4</td><td class="num">5,8</td><td class="num">5,3</td><td class="num">5,2</td><td class="num">4,6</td></tr></tbody></table></div>
+<p>Hodnoty jsou zaokrouhlené a bez diakritiky, přesné procento se u různých textů mírně liší. Čím je text delší, tím spolehlivěji frekvence vychází, u krátké zprávy může odhad selhat.</p>
+<div class="note mat"><b class="lbl">Poučení</b><p>Počet klíčů nestačí. Šifra je silná jen tehdy, když <strong>zakrývá statistické vlastnosti jazyka</strong>. Substituce, která písmenu vždy dá stejnou náhradu, je neukrývá. Tomu se říká, že monoalfabetická substituce zachovává frekvence.</p></div>
+</section>
+
+<section id="marie">
+<h2>Marie Stuartovna a Babingtonovo spiknutí</h2>
+<p>Skotská královna Marie Stuartovna byla od roku 1568 vězněna v Anglii, protože měla nárok na anglický trůn a pro katolické odpůrce Alžbětě I. byla možnou náhradnicí. V roce 1586 se katolická skupina kolem Anthonyho Babingtona rozhodla Alžbětu zabít a Marii osvobodit. Marie s nimi komunikovala šifrovanými dopisy, které se do vězení dostávaly <strong>v zátce piva</strong> sudu. Spojku Gilberta Gifforda ale měl ve službách Alžbětin ministr <strong>Francis Walsingham</strong>: Gifford dopisy nejprve dával luštitelům a až potom je předával dál.</p>
+<p>Luštitel <strong>Thomas Phelippes</strong> šifru Marie (substituční šifru s množstvím zvláštních znaků a výpustek) rozluštil pomocí frekvenční analýzy. Jeho nejslavnějším krokem bylo, že do jedné odpovědi dopsal <strong>podvržený dovětek</strong> s žádostí o jména šesti spiklenců. Dopis z července 1586, v němž Marie souhlasí s atentátem, se pak stal klíčovým důkazem. V říjnu 1586 byla souzena a v únoru 1587 popravena.</p>
+<div class="note warn"><b class="lbl">Co z toho plyne</b><p>Šifra, která se dá luštit statistikou, může stát život. Příběh navíc ukazuje druhou věc: <strong>kanál</strong> (spojka v zátce sudu) byl prolomen dřív než šifra. I perfektní šifra je k ničemu, když útočník vlastní cestu zprávy nebo klíč.</p></div>
+</section>
+
+<p class="part">Vigenère a Enigma</p>
+
+<section id="vigenere">
+<h2>Vigenèrova šifra</h2>
+<p>Odpovědí na frekvenční analýzu byla <dfn>polyalfabetická šifra</dfn>: každé písmeno se šifruje jinou abecedou. Nejznámější je <strong>Vigenèrova šifra</strong>. Klíčem je slovo a opakuje se pod textem. Každé písmeno klíče určuje posun Caesarovy šifry:</p>
+<pre><code>otevřený text:  U T O K   Z I T R A
+klíč:           K L I C   K L I C K
+šifrový text:   E E W M   J T B T K</code></pre>
+<p>První písmeno U má pořadí 20 (A = 0), písmeno K z klíče 10. Součet 30 je po odečtení 26 roven 4, a to je E. Stejné písmeno otevřeného textu se šifruje pokaždé jinak (T z prvního slova se změní na E, T ze slova ZITRA na B), takže četnosti se vyrovnají a frekvenční analýza jednoduše nezabere. Šifře se dlouho říkalo <i>le chiffre indéchiffrable</i>, nerozluštitelná šifra.</p>
+<div class="note tip"><b class="lbl">Jméno nesedí</b><p>Metodu poprvé popsal Giovan Battista Bellaso v roce 1553. Blaise de Vigenère vydal v roce 1586 jinou, silnější verzi (autoklíč), ale šifra se po něm pojmenovala omylem.</p></div>
+</section>
+
+<section id="kasiski">
+<h2>Jak se Vigenèrova šifra prolomila</h2>
+<p>Slabinou je, že se klíč <strong>opakuje</strong>. Když je klíč dlouhý <i>d</i> písmen, každé <i>d</i>-té písmeno textu se šifruje stejným posunem, tedy každý „sloupec“ je obyčejná Caesarova šifra. Stačí zjistit <i>d</i>:</p>
+<ol class="plan">
+  <li><strong>Kasiského test.</strong> Najdi v šifrovém textu opakující se skupiny písmen (třeba tříznakové). Pokud se stejné slovo otevřeného textu sešlo se stejnou částí klíče, vznikne stejná skupina. Vzdálenost mezi výskyty je násobkem délky klíče. Společný dělitel několika vzdáleností je pravděpodobná délka klíče <i>d</i>.</li>
+  <li><strong>Rozdělení na sloupce.</strong> Z textu vyber každé <i>d</i>-té písmeno. Dostaneš <i>d</i> samostatných Caesarových šifer.</li>
+  <li><strong>Frekvenční analýza každého sloupce.</strong> Každý sloupec se vyluští jako Caesar a z posunů vznikne klíč.</li>
+</ol>
+<p>Metodu poprvé zveřejnil pruský důstojník Friedrich Kasiski v roce 1863. Charles Babbage ji objevil už kolem roku 1854, ale nezveřejnil ji, takže se uznání dostalo Kasiskému. V prezentaci si test můžeš zkusit na dlouhém textu a uvidíš, že délka klíče vyjde správně, ale odhad klíče z krátkého textu je přibližný.</p>
+<div class="note mat"><b class="lbl">Souboj pokračuje</b><p>Čím delší a náhodnější klíč, tím je Vigenère odolnější. Jakmile se klíč opakuje, je prolomitelný. Nepřekonatelný by byl jen klíč, který se nikdy neopakuje a je stejně dlouhý jako zpráva.</p></div>
+</section>
+
+<section id="enigma">
+<h2>Enigma</h2>
+<p>V první polovině 20. století přišly stroje. Německá <dfn>Enigma</dfn> byla elektromechanický šifrovací stroj. Každý stisk klávesy otočil rotory, takže stejné písmeno se pokaždé šifrovalo jinak, takže šlo o polyalfabetickou šifru s velmi dlouhou periodou (u tří rotorů asi 17 tisíc písmen). Měla tři (později až pět) rotorů, reflektor a propojovací desku. Počet možných nastavení vojenské Enigmy se pohybuje kolem 1,6 · 10<sup>20</sup>.</p>
+<p>Enigma měla důležitou vlastnost: reflektor způsobil, že šifrování a dešifrování byla totéž (nastavení stroje stačilo), ale zároveň se žádné písmeno nikdy nešifrovalo samo na sebe. Tato „slabost“ pomáhala luštitelům.</p>
+<ul>
+<li><strong>Polsko.</strong> V prosinci 1932 prolomil Enigmu polský matematik Marian Rejewski s kolegy Jerzym Różyckim a Henrykem Zygalskim. Používali matematiku permutací a chyby německých operátorů. V roce 1938 postavili stroj zvaný „bomba“, který zkoušel nastavení.</li>
+<li><strong>Předání Britům.</strong> Poláci v červenci 1939 (setkání v Pyrách u Varšavy, 25.–26. července) předali své poznatky a kopie Enigmy Francouzům a Britům.</li>
+<li><strong>Bletchley Park.</strong> Alan Turing se s polskými kryptoanalytiky setkal v lednu 1940 v Paříži a vyvinul podstatně výkonnější stroj <strong>Bombe</strong>. První britská Bombe vznikla v roce 1940. Luštění Enigmy sloužilo spojencům po celou válku.</li>
+</ul>
+<div class="note warn"><b class="lbl">Co z toho plyne</b><p>Enigma nepadla kvůli slabé matematice, ale kvůli <strong>lidským chybám</strong> (opakované klíče, předvídatelné zprávy jako „nic nového“ na začátku) a kvůli tomu, že luštitelé měli stroje a spoustu textu. Silná šifra se špatně používá snadno slabou.</p></div>
+</section>
+
+<section id="navaho">
+<h2>Navahové: jazyk jako kód</h2>
+<p>Zatímco v Evropě se luštila Enigma, americká námořní pěchota šla v Pacifiku úplně jinou cestou. V roce 1942 najala 29 mužů z indiánského kmene <strong>Navahů</strong> a ti vytvořili kód ze svého jazyka. Navažština byla tehdy jazyk bez běžného písma a skoro nikdo mimo kmen ji neuměl, takže ji nepřítel neměl jak se naučit.</p>
+<ul>
+<li><strong>Písmena.</strong> Pro každé písmeno abecedy zvolili anglické slovo a to přeložili do navažštiny. Slovo se pak přečetlo po písmenech.</li>
+<li><strong>Vojenské pojmy.</strong> Pro asi 450 pojmů, které v navažštině neexistovaly, vymysleli popisná slova. Ponorka byla například „železná ryba“.</li>
+<li><strong>Rychlost.</strong> Zpráva se překládala z hlavy bez šifrovacích tabulek a strojů. Šest Navahů na Iwodžimě za prvních 48 hodin poslalo a přijalo přes 800 zpráv bez chyby.</li>
+<li><strong>Výsledek.</strong> Japonci ani Němci kód za války nerozluštili. Program zůstal utajený do roku 1968 a původních 29 mužů dostalo v roce 2001 kongresovou zlatou medaili. Za válku sloužilo asi 400 Navahů.</li>
+</ul>
+<div class="note mat"><b class="lbl">Kód, nebo šifra?</b><p>Je to <strong>kód</strong> (viz <a href="#druhy">čtyři způsoby utajení</a>): nahrazuje slova a významy, ne jednotlivá písmena podle pravidla. Funguje díky tomu, že jazyk neznal nepřítel, ne díky matematice. Je to tedy bezpečnost „utajením“, a proto by dnes neobstála (Kerckhoffsův princip), ale ve své době stačila, protože nepřítel neměl žádný slovník ani text, ze kterého by se jazyk dal naučit.</p></div>
+</section>
+
+<p class="part">Poučení</p>
+
+<section id="kerckhoffs">
+<h2>Kerckhoffsův princip</h2>
+<p>Nizozemec Auguste Kerckhoffs napsal v roce 1883 v knize <i>La cryptographie militaire</i> soubor zásad. Dnes se cituje jedna z nich: <strong>bezpečnost systému nesmí záviset na tom, zda je utajený postup, ale jen na tom, zda je utajený klíč.</strong> Postup, stroj nebo program se dříve či později dostane k nepříteli, klíč se dá vyměnit.</p>
+<p>Opakem je „bezpečnost utajením“ (<i>security through obscurity</i>). Dnes se proto používají jen <strong>veřejné algoritmy</strong> (AES, SHA-2, RSA), které roky zkoumají tisíce odborníků. Algoritmus, který nikdo nesmí vidět, nemá nikdo možnost prověřit.</p>
+</section>
+
+<section id="otp">
+<h2>Jednorázová tabulka</h2>
+<p>Existuje šifra, kterou nelze rozluštit vůbec. Je to <dfn>jednorázová tabulka</dfn> (<i>one-time pad</i>, Vernamova šifra, 1917). Pravidla jsou tři: klíč je <strong>skutečně náhodný</strong>, <strong>stejně dlouhý</strong> jako zpráva a <strong>použije se jen jednou</strong>. Šifruje se jako Vigenère, jen s klíčem délky zprávy. Claude Shannon v roce 1949 matematicky dokázal, že šifrový text pak neříká nic o otevřeném textu: ke každému možnému textu stejné délky existuje klíč, který z šifrového textu zprávu vyrobí.</p>
+<p>V prezentaci to uvidíš: ke stejnému šifrovému textu najdeš klíč pro libovolnou zprávu stejné délky, a Eva proto nemá jak poznat, která je ta pravá.</p>
+<div class="note warn"><b class="lbl">Proč se nepoužívá všude</b><p>Klíč musí být <strong>dlouhý jako všechna data</strong>, musí se předat bezpečnou cestou a nesmí se použít podruhé. Pokud se opakuje, šifra se prolomí (sovětské zprávy z projektu Venona se luštily právě kvůli opakovaným stránkám). Předat dlouhý klíč je ten samý problém jako předat zprávu, jen o krok dřív.</p></div>
+</section>
+
+<section id="klice">
+<h2>Problém předání klíče</h2>
+<p>Všechny dosavadní šifry jsou <dfn>symetrické</dfn>: odesílatel i příjemce mají stejný klíč. Ten se musí nejdřív bezpečně předat, například osobně nebo kurýrem. Jakmile je ale někdo dál než dosah ruky, vzniká začarovaný kruh.</p>
+<p>Navíc roste počet klíčů. Pokud se mají v týmu <i>n</i> lidí domluvit každý s každým tajně, potřebují <strong>n(n − 1)/2</strong> klíčů. Pro 4 lidi je to 6, pro 10 lidí 45, pro 100 lidí 4 950 a pro tisíc lidí skoro půl milionu.</p>
+<div class="note mat"><b class="lbl">Otázka, na kterou odpovídá RSA</b><p>Dá se zprávu zašifrovat tak, aby k tomu příjemce nemusel předem tajně předat klíč? To je problém, který se podařilo vyřešit až v 70. letech 20. století.</p></div>
+</section>
+
+<section id="verejny">
+<h2>Cesta k veřejnému klíči</h2>
+<div class="tbl"><table>
+<thead><tr><th>Rok</th><th>Událost</th></tr></thead>
+<tbody>
+<tr><td class="num">1973</td><td>Clifford Cocks v britské utajené službě GCHQ vymyslí princip později známý jako RSA. Práce byla utajená a zveřejněna až v roce 1997.</td></tr>
+<tr><td class="num">1976</td><td>Whitfield Diffie a Martin Hellman zveřejní myšlenku šifrování s veřejným klíčem a výměnu klíčů přes nezabezpečený kanál.</td></tr>
+<tr><td class="num">1977</td><td>Rivest, Shamir a Adleman vymyslí RSA. Ve stejném roce se objevuje šifra DES.</td></tr>
+<tr><td class="num">2001</td><td>Standardem symetrického šifrování se stává AES.</td></tr>
+<tr><td class="num">dnes</td><td>Při návštěvě webu se klíče domlouvají pomocí asymetrické kryptografie a samotná data chrání symetrická šifra jako AES.</td></tr>
+</tbody></table></div>
+<p>Souboj tvůrců a luštitelů tím nekončí: dnes se připravují šifry odolné proti kvantovým počítačům. Princip je pořád stejný, jakmile je šifra prolomena, vznikne lepší.</p>
+</section>
+
+<p class="part">Prakticky</p>
+
+<section id="python">
+<h2>Python</h2>
+<h3>Caesar, substituce, Vigenère a četnosti</h3>
+<div class="codehead"><span>Python</span><button class="copy" type="button" data-for="p1">Kopírovat</button></div>
+<pre><code id="p1" class="language-python">import secrets
+import unicodedata
+from collections import Counter
+
+ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+def cisty(text):
+    """Velká písmena bez diakritiky, ostatní znaky zůstanou."""
+    t = unicodedata.normalize("NFD", text)
+    return "".join(c for c in t if not unicodedata.combining(c)).upper()
+
+def caesar(text, k):
+    return "".join(ABC[(ABC.index(c) + k) % 26] if c in ABC else c
+                   for c in cisty(text))
+
+def nahodny_klic():
+    p = list(ABC)
+    secrets.SystemRandom().shuffle(p)
+    return "".join(p)
+
+def substituce(text, klic):
+    return "".join(klic[ABC.index(c)] if c in ABC else c for c in cisty(text))
+
+def desifruj(text, klic):
+    return "".join(ABC[klic.index(c)] if c in ABC else c for c in cisty(text))
+
+def vigenere(text, slovo, zpet=False):
+    slovo = [ABC.index(c) for c in cisty(slovo) if c in ABC]
+    vysl, i = [], 0
+    for c in cisty(text):
+        if c in ABC:
+            posun = slovo[i % len(slovo)] * (-1 if zpet else 1)
+            vysl.append(ABC[(ABC.index(c) + posun) % 26])
+            i += 1
+        else:
+            vysl.append(c)
+    return "".join(vysl)
+
+def cetnosti(text):
+    pismena = [c for c in cisty(text) if c in ABC]
+    return [(c, n, 100 * n / len(pismena))
+            for c, n in Counter(pismena).most_common()]
+
+zprava = "Sejdeme se zítra v pět hodin u školy."
+print(caesar(zprava, 3))                    # VHMGHPH VH CLWUD Y SHW KRGLQ X VNROB.
+klic = nahodny_klic()
+sifra = substituce(zprava, klic)
+print(klic, sifra, desifruj(sifra, klic))
+print(vigenere("UTOK ZITRA", "KLIC"))       # EEWM JTBTK
+for c, n, p in cetnosti(sifra)[:5]:
+    print(c, n, f"{p:.1f} %")
+</code></pre>
+<h3>Útok hrubou silou na Caesara</h3>
+<div class="codehead"><span>Python</span><button class="copy" type="button" data-for="p2">Kopírovat</button></div>
+<pre><code id="p2" class="language-python">ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+def posun(text, k):
+    return "".join(ABC[(ABC.index(c) + k) % 26] if c in ABC else c for c in text)
+
+sifra = "VHMGHPH VH CLWUD Y SHW KRGLQ X VNROB."
+for k in range(1, 26):
+    print(k, posun(sifra, -k))      # který řádek dává smysl?
+</code></pre>
+</section>
+
+<section id="ukoly">
+<h2>Úkoly</h2>
+<ol class="plan">
+  <li>Zašifruj Caesarem (posun 5) větu o dvaceti písmenech nejdřív ručně, pak v aplikaci. Souhlasí výsledky?</li>
+  <li>Vyber náhodný klíč v aplikaci, zašifruj odstavec z učebnice a pošli ho spolužákovi bez klíče. Zjisti, za jak dlouho text vyluští z histogramu.</li>
+  <li>Spočítej, kolik klíčů má transpozice do tabulky o 2 až 10 sloupcích a kolik Caesarova šifra. Pak porovnej s 26!.</li>
+  <li>Rozluštěte ve dvojici šifrový text z prezentace (snímek 11) pomocí frekvenční analýzy a zapište, v jakém pořadí jste písmena odhalovali.</li>
+  <li>Napiš program, který Caesarův šifrový text rozluští automaticky tak, že vybere posun, při kterém má text nejvíc písmen E, O a A.</li>
+  <li>Zjisti, jak dlouhý klíč by potřebovala jednorázová tabulka pro přenos jednoho filmu o velikosti 2 GB.</li>
+</ol>
+</section>
+
+<p class="part">Opakování</p>
+
+<section id="otazky">
+<h2>Otázky k opakování</h2>
+<p>Nejdřív odpověz sám, pak si rozbal správnou odpověď.</p>
+<details class="q"><summary>Čím se liší kryptografie od kryptoanalýzy?</summary><div class="a"><p>Kryptografie zprávy utajuje, kryptoanalýza je čte bez povolení. Oba obory se navzájem posouvají.</p></div></details>
+<details class="q"><summary>Jak se liší transpozice od substituce?</summary><div class="a"><p>Transpozice mění pořadí písmen a písmena zůstávají stejná. Substituce mění písmena a pořadí zůstává.</p></div></details>
+<details class="q"><summary>Kolik klíčů má Caesarova šifra a jak se prolomí?</summary><div class="a"><p>Má 25 možných posunů, prolomí se hrubou silou: vyzkouší se všechny a čitelný text je správný.</p></div></details>
+<details class="q"><summary>Proč se substituční šifra s 26! klíči nedá luštit hrubou silou, ale přesto padla?</summary><div class="a"><p>Klíčů je moc na zkoušení, ale šifra zachovává četnosti písmen. Frekvenční analýza ji rozluští bez znalosti klíče.</p></div></details>
+<details class="q"><summary>Jak funguje frekvenční analýza?</summary><div class="a"><p>Spočítá se četnost písmen v šifrovém textu a porovná s četností v jazyce. Nejčastější písmeno šifry odpovídá nejčastějšímu písmenu jazyka (E, O, A, N, T v češtině), pak se dosazují další písmena.</p></div></details>
+<details class="q"><summary>Jak byla odhalena Marie Stuartovna?</summary><div class="a"><p>Její dopisy procházely přes dvojitého agenta Gifforda, který je dával luštitelům. Phelippes je vyluštil frekvenční analýzou a do jedné odpovědi dopsal podvržený dovětek.</p></div></details>
+<details class="q"><summary>Proč se Vigenèrova šifra bránila frekvenční analýze a jak se prolomila?</summary><div class="a"><p>Stejné písmeno se šifruje podle klíče pokaždé jinak, takže se četnosti vyrovnají. Prolomí ji opakování klíče: Kasiského test najde délku klíče a každý sloupec se pak vyluští jako Caesar.</p></div></details>
+<details class="q"><summary>Proč byla Enigma prolomitelná?</summary><div class="a"><p>Kvůli lidským chybám německých operátorů, předvídatelným zprávám a tomu, že šifrovací stroj nikdy nešifroval písmeno samo na sebe. Rejewski ji prolomil matematicky, Bletchley Park pak stavěl Bomby.</p></div></details>
+<details class="q"><summary>Proč Navahové nepoužili šifru, ale kód, a proč fungoval?</summary><div class="a"><p>Nahrazovali slova a významy z jazyka, který nepřítel neznal a neměl z čeho se naučit. Fungoval díky utajení jazyka, ne díky matematice.</p></div></details>
+<details class="q"><summary>Co říká Kerckhoffsův princip?</summary><div class="a"><p>Bezpečnost má záviset jen na utajení klíče, ne na utajení algoritmu. Předpokládá se, že nepřítel algoritmus zná.</p></div></details>
+<details class="q"><summary>Proč je jednorázová tabulka dokonalá a proč se nepoužívá všude?</summary><div class="a"><p>S náhodným klíčem délky zprávy použitým jednou nedává šifrový text o zprávě žádnou informaci. Klíč se ale musí bezpečně předat a je stejně velký jako data.</p></div></details>
+<details class="q"><summary>Jaký problém řeší veřejný klíč?</summary><div class="a"><p>Problém předání klíče: dva lidé, kteří se nikdy nesetkali, se mohou domluvit na tajném spojení přes veřejný kanál.</p></div></details>
+</section>
+
+<section id="slovnicek">
+<h2>Slovníček pojmů</h2>
+<dl class="gloss">
+  <dt>Kryptografie</dt><dd>věda o utajování zpráv</dd>
+  <dt>Kryptoanalýza</dt><dd>věda o čtení šifrových zpráv bez klíče</dd>
+  <dt>Šifra</dt><dd>postup, jak změnit otevřený text na šifrový a zpět</dd>
+  <dt>Klíč</dt><dd>tajný údaj, který řídí šifru</dd>
+  <dt>Steganografie</dt><dd>ukrytí existence zprávy</dd>
+  <dt>Transpozice</dt><dd>změna pořadí písmen</dd>
+  <dt>Substituce</dt><dd>nahrazení písmen jinými</dd>
+  <dt>Kód</dt><dd>nahrazení slov nebo vět podle kódové knihy</dd>
+  <dt>Hrubá síla</dt><dd>zkoušení všech možných klíčů</dd>
+  <dt>Frekvenční analýza</dt><dd>luštění podle četnosti písmen</dd>
+  <dt>Monoalfabetická šifra</dt><dd>každé písmeno se vždy mění na stejné</dd>
+  <dt>Polyalfabetická šifra</dt><dd>stejné písmeno se mění podle klíče pokaždé jinak</dd>
+  <dt>Kasiského test</dt><dd>hledání délky klíče z opakujících se skupin písmen</dd>
+  <dt>Kerckhoffsův princip</dt><dd>bezpečnost stojí jen na utajení klíče</dd>
+  <dt>Jednorázová tabulka</dt><dd>šifra s náhodným klíčem délky zprávy použitým jednou</dd>
+  <dt>Symetrická šifra</dt><dd>odesílatel i příjemce mají stejný klíč</dd>
+</dl>
+</section>
+
+<section id="zdroje">
+<h2>Zdroje</h2>
+<p>Historická fakta (Marie Stuartovna, Enigma, Vigenère, Kasiski) vycházejí z knihy Simona Singha a z dalších historických přehledů. Četnosti písmen jsou zaokrouhlené z tabulky sttmedia.com.</p>
+<ol class="srcs">
+  <li id="z1">Simon Singh: <i>The Code Book</i> (1999), česky <i>Kniha kódů a šifer</i></li>
+  <li id="z2"><a href="https://www.sttmedia.com/characterfrequency-czech">STT Media: četnost písmen v češtině</a></li>
+  <li id="z3"><a href="https://www.csunplugged.org/en/topics/cryptography/">CS Unplugged: Cryptography</a></li>
+  <li id="z4"><a href="https://www.khanacademy.org/computing/computer-science/cryptography">Khan Academy: Cryptography</a></li>
+  <li id="z5"><a href="https://www.cryptoclub.org/">Cryptoclub</a></li>
+  <li id="z7"><a href="https://www.cia.gov/stories/story/navajo-code-talkers-and-the-unbreakable-code/">CIA: Navajo Code Talkers and the unbreakable code</a> · <a href="https://www.dvidshub.net/news/79570/americas-secret-weapon-navajo-code-talkers">DVIDS: America's secret weapon: Navajo Code Talkers</a></li>
+  <li id="z6">Auguste Kerckhoffs: <i>La cryptographie militaire</i> (1883)</li>
+</ol>
+</section>
+
+<p class="foot">Studijní text k prezentaci <a href="07_historie_sifrovani.html">Historie šifrování</a>. Související: <a href="07_historie_sifrovani_aplikace.html">aplikace Substituční šifra</a>, <a href="07_rsa.html">RSA</a>, <a href="05_hash_funkce.html">Hash funkce</a>.</p>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script>
+(function () {
+  try { if (window.Prism) Prism.highlightAll(); } catch (e) {}
+  if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+  Array.prototype.forEach.call(document.querySelectorAll('button.copy'), function (b) {
+    b.addEventListener('click', function () {
+      var src = document.getElementById(b.getAttribute('data-for')); if (!src) return;
+      var text = src.textContent;
+      function ok() { b.textContent = 'Zkopírováno'; setTimeout(function () { b.textContent = 'Kopírovat'; }, 1600); }
+      function fb() {
+        var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { if (document.execCommand('copy')) ok(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(ok, fb); } else { fb(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

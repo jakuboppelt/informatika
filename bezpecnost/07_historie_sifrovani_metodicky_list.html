@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodický list: Historie šifrování</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Před hodinou</li>
+    <li><a href="#info">Základní údaje</a></li>
+    <li><a href="#cile">Cíle</a></li>
+    <li><a href="#priprava">Co připravit</a></li>
+    <li><a href="#plan">Časový plán</a></li>
+    <li class="grp">1. hodina · Šifry a luštění</li>
+    <li><a href="#a1">1 · Pošli zprávu spolužákovi</a></li>
+    <li><a href="#a2">2 · Typy a pojmy</a></li>
+    <li><a href="#a3">3 · Caesar a hrubá síla</a></li>
+    <li><a href="#a4">4 · 26! a frekvenční analýza</a></li>
+    <li><a href="#a5">5 · Marie Stuartovna</a></li>
+    <li><a href="#a6">6 · Shrnutí a exit ticket</a></li>
+    <li class="grp">2. hodina · Vigenère až RSA</li>
+    <li><a href="#b1">1 · Opakování</a></li>
+    <li><a href="#b2">2 · Vigenère a Kasiski</a></li>
+    <li><a href="#b3">3 · Enigma</a></li>
+    <li><a href="#b4">4 · Kerckhoffs a jednorázová tabulka</a></li>
+    <li><a href="#b5">5 · Klíče a cesta k RSA</a></li>
+    <li class="grp">Podklady</li>
+    <li><a href="#tabule">Zápis na tabuli</a></li>
+    <li><a href="#chyby">Časté chyby</a></li>
+    <li><a href="#diferenciace">Rychlí a pomalejší</a></li>
+    <li><a href="#zaloha">Když nejde technika</a></li>
+    <li><a href="#jedna">Jen jedna hodina?</a></li>
+    <li><a href="#reflexe">Po hodině</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="back"><a href="../index.html">← Všechny materiály</a></p>
+  <p class="eyebrow">Informatika · Bezpečnost · Metodický list pro učitele</p>
+  <h1>Historie šifrování <span class="t">1–2 × 45′</span></h1>
+  <p class="lead">Úvod k tématu RSA. Studenti nejdřív sami posílají zprávu spolužákovi tak, aby ji cestou nepřečetl nikdo další, a pak se na hodině opakuje to, co lidstvo objevilo za dva tisíce let: transpozice, Caesar, substituce, frekvenční analýza, Vigenère, Enigma a nakonec problém předání klíče, který vede k veřejnému klíči. Vedeš podle <a href="07_historie_sifrovani.html">prezentace</a>, studenti mají <a href="07_historie_sifrovani_studijni_text.html">studijní text</a> a <a href="07_historie_sifrovani_aplikace.html">aplikaci</a>.</p>
+  <div class="facts">
+    <div><span class="k">Navazuje na</span><span class="v">nic (úvod), pro 2. hodinu hesla a hash funkce</span></div>
+    <div><span class="k">Metody</span><span class="v">aktivita ve třídě, řešení ve dvojicích, výklad, kvíz</span></div>
+    <div><span class="k">Vede k</span><span class="v">přednášce o RSA</span></div>
+  </div>
+</header>
+
+<p class="part">Před hodinou</p>
+
+<section id="info">
+<h2>Základní údaje</h2>
+<div class="tbl"><table>
+<tbody>
+<tr><th scope="row">Předmět</th><td>Informatika, blok Bezpečnost</td></tr>
+<tr><th scope="row">Třída</th><td>2.–4. ročník gymnázia, využitelné i v maturitním semináři</td></tr>
+<tr><th scope="row">Rozsah</th><td><strong>1. hodina</strong> (nutná): aktivita, Caesar, substituce, frekvenční analýza. <strong>2. hodina</strong> (doporučená): Vigenère, Enigma, Kerckhoffs, jednorázová tabulka a cesta k RSA.</td></tr>
+<tr><th scope="row">Předchozí znalosti</th><td>žádné zvláštní, stačí abeceda a základy modulo (pro Vigenèra). Příjemné je mít za sebou hesla a hash.</td></tr>
+<tr><th scope="row">Mezipředmětové vazby</th><td>dějepis (Marie Stuartovna, druhá světová válka), matematika (kombinatorika, modulo, pravděpodobnost), český jazyk (četnost písmen)</td></tr>
+<tr><th scope="row">Materiály</th><td><a href="07_historie_sifrovani.html">prezentace</a> (25 snímků), <a href="07_historie_sifrovani_aplikace.html">aplikace</a> pro šifrování a dešifrování, <a href="07_historie_sifrovani_studijni_text.html">studijní text</a></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="cile">
+<h2>Cíle</h2>
+<div class="two">
+  <div class="card">
+    <h3>Po 1. hodině student</h3>
+    <ul>
+      <li>rozliší šifru, klíč, kryptografii a kryptoanalýzu;</li>
+      <li>rozliší steganografii, transpozici, substituci a kód;</li>
+      <li>zašifruje a dešifruje Caesarem a substitucí;</li>
+      <li>vysvětlí, proč je hrubou silou Caesar slabý a substituce ne;</li>
+      <li>popíše frekvenční analýzu a použije ji na krátkém textu.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Po 2. hodině student</h3>
+    <ul>
+      <li>vysvětlí princip Vigenèrovy šifry a to, jak se prolomila;</li>
+      <li>popíše hlavní kroky luštění Enigmy a roli lidských chyb;</li>
+      <li>formuluje Kerckhoffsův princip;</li>
+      <li>vysvětlí, proč je jednorázová tabulka dokonalá a nepraktická;</li>
+      <li>zformuluje problém předání klíče a otázku, kterou řeší RSA.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="priprava">
+<h2>Co připravit</h2>
+<ul class="check">
+  <li><strong>Papír a tužku pro každého.</strong> Aktivita „Pošli zprávu“ je na papíře, bez techniky.</li>
+  <li><strong>Projektor</strong> s prezentací. Všechny interakce fungují offline, stačí otevřít soubor.</li>
+  <li><strong>Čtyři až pět „Ev“ předem domluvených</strong> (dobrovolníci), kteří budou zprávy cestou zachytávat. Stačí jim to říct o přestávce.</li>
+  <li><strong>Šifrovaný odstavec pro frekvenční analýzu</strong>: je ve snímku 11. Pro samostatnou práci ho studenti mohou mít i vytištěný.</li>
+  <li>Volitelně <strong>učebnu s počítači</strong> pro aplikaci a program v Pythonu. Bez ní se aplikace promítá.</li>
+  <li>Lístečky na exit tickety.</li>
+</ul>
+<div class="note tip"><b class="lbl">Proč aktivita na začátku</b><p>Jde o to, aby studenti sami narazili na problém. Většinou vymyslí transpozici nebo posun písmen a skoro nikdo nenapadne, jak předat klíč. Právě tahle zkušenost vede přímo k Caesarovi a později k RSA.</p></div>
+</section>
+
+<section id="plan">
+<h2>Časový plán</h2>
+<h3>1. hodina · Šifry a luštění</h3>
+<div class="tl-bar" role="img" aria-label="Rozdělení první hodiny do šesti fází">
+  <a href="#a1" class="f8">1 · Aktivita</a>
+  <a href="#a2" class="f6">2 · Typy</a>
+  <a href="#a3" class="f7">3 · Caesar</a>
+  <a href="#a4" class="f10">4 · Frekvence</a>
+  <a href="#a5" class="f7">5 · Marie</a>
+  <a href="#a6" class="f5">6</a>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Snímky</th><th>Forma</th></tr></thead>
+<tbody>
+<tr><td class="num">0–8</td><td><a href="#a1">Pošli zprávu spolužákovi</a></td><td class="num">1, 2</td><td>třída, papír</td></tr>
+<tr><td class="num">8–14</td><td><a href="#a2">Pojmy, čtyři způsoby utajení, transpozice a substituce</a></td><td class="num">3–6</td><td>rozhovor, třídění karet</td></tr>
+<tr><td class="num">14–21</td><td><a href="#a3">Caesar, hrubá síla</a></td><td class="num">8, 9</td><td>dvojice, výklad</td></tr>
+<tr><td class="num">21–33</td><td><a href="#a4">26! a frekvenční analýza, studenti luští</a></td><td class="num">10, 11</td><td>dvojice</td></tr>
+<tr><td class="num">33–40</td><td><a href="#a5">Marie Stuartovna</a></td><td class="num">12</td><td>výklad, otázky</td></tr>
+<tr><td class="num">40–45</td><td><a href="#a6">Shrnutí, exit ticket</a></td><td class="num">23, 24</td><td>písemně</td></tr>
+</tbody></table></div>
+
+<h3>2. hodina · Vigenère až RSA</h3>
+<div class="tl-bar" role="img" aria-label="Rozdělení druhé hodiny do pěti fází">
+  <a href="#b1" class="f4">1</a>
+  <a href="#b2" class="f10">2 · Vigenère</a>
+  <a href="#b3" class="f9">3 · Enigma</a>
+  <a href="#b4" class="f10">4 · OTP</a>
+  <a href="#b5" class="f10">5 · Klíče a RSA</a>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Čas</th><th>Fáze</th><th>Snímky</th><th>Forma</th></tr></thead>
+<tbody>
+<tr><td class="num">0–4</td><td><a href="#b1">Opakování, otázka na rozehřátí</a></td><td class="num">—</td><td>rozhovor</td></tr>
+<tr><td class="num">4–14</td><td><a href="#b2">Vigenèrova šifra, histogram, Kasiského test</a></td><td class="num">13, 14</td><td>výklad, ukázka</td></tr>
+<tr><td class="num">14–23</td><td><a href="#b3">Enigma, Polsko a Bletchley Park</a></td><td class="num">15, 16</td><td>simulace, výklad</td></tr>
+<tr><td class="num">23–33</td><td><a href="#b4">Kerckhoffs a jednorázová tabulka</a></td><td class="num">17, 18</td><td>ukázka, diskuse</td></tr>
+<tr><td class="num">33–45</td><td><a href="#b5">Počet klíčů, cesta k veřejnému klíči, tabulka souboje, kvíz</a></td><td class="num">19–24</td><td>posuvník, hlasování</td></tr>
+</tbody></table></div>
+<p class="foot">Snímek 25 jsou zdroje, nepoužívá se při výkladu.</p>
+</section>
+
+<p class="part">1. hodina · Šifry a luštění</p>
+
+<section id="a1" class="phase">
+<div class="ph-head"><span class="time">0–8 min</span><h2>1 · Pošli zprávu spolužákovi</h2><span class="slides-ref">snímky 1, 2</span></div>
+<p class="goal">Studenti sami narazí na problém utajení zprávy a skoro vždy vymyslí transpozici nebo substituci.</p>
+<h3>Učitel dělá</h3>
+<blockquote class="say">„Máte pět minut. Každý napíše na papír krátkou větu, třeba kde a v kolik se sejdeme. Zprávu musíte poslat spolužákovi přes třídu. Cestou ji ale bude chtít přečíst Eva. Vymyslete, jak to napsat, aby ji přečetl jen adresát. Jde o to, abyste se nemohli domluvit předem.“</blockquote>
+<p>Studenti ve dvojicích (nebo čtveřicích) zprávu zašifrují a pošlou ji dalšímu. Čtyři vybraní „Evové“ jsou rozmístění ve třídě a zprávy po cestě zachytávají. Po aktivitě vyber, co se studentům povedlo a co ne.</p>
+<details class="q"><summary>„Povedlo se někomu zprávu rozluštit? Jak?“ <span class="key">klíčová</span></summary><div class="a"><p>Typické řešení: posun písmen, obrácená abeceda, čtení po sloupcích, čísla místo písmen. Všechno jsou to <strong>šifry s klíčem</strong>, a studenti si všimnou, že adresát potřebuje vědět, jak se zpráva zakódovala. Z toho vyplyne otázka: „A jak mu to řekneš tak, aby to neslyšela Eva?“ Vrátíš se k ní v 2. hodině.</p></div></details>
+<div class="note tip"><b class="lbl">Co si zapsat</b><p>Zapiš si, které způsoby studenti použili. Ve fázi 2 je pojmenuješ (transpozice, substituce), ve fázi 5 se k nim vrátíš.</p></div>
+</section>
+
+<section id="a2" class="phase">
+<div class="ph-head"><span class="time">8–14 min</span><h2>2 · Typy a pojmy</h2><span class="slides-ref">snímky 3–6</span></div>
+<p class="goal">Pojmy šifra, klíč, Alice, Bob, Eva. Čtyři způsoby utajení. Rozdíl mezi transpozicí a substitucí.</p>
+<h3>Učitel dělá</h3>
+<p>Na snímku 3 si studenti seřadí karty (steganografie, transpozice, substituce, kód). Použij příklady z aktivity. Snímek 4 prokliknutím pojmů, snímek 5 ukáže Alici, Boba a Evu a posuvníkem Caesara. Snímek 6 porovná transpozici a substituci na stejném textu: po transpozici jsou <strong>stejná písmena v jiném pořadí</strong>, po substituci <strong>jiná písmena ve stejném pořadí</strong>.</p>
+<details class="q"><summary>„Podle čeho z šifrového textu poznáš, že je to transpozice?“</summary><div class="a"><p>Má stejnou skladbu písmen jako čeština (hodně E, O, A), jen zamíchaná. Po substituci jsou nejčastější jiná písmena.</p></div></details>
+<p>Skytale (snímek 7) je nepovinná: ukaž ji, pokud je čas, nebo ji dej rychlým studentům jako domácí zajímavost. Pozor, historici se přou, jestli šlo opravdu o šifru.</p>
+</section>
+
+<section id="a3" class="phase">
+<div class="ph-head"><span class="time">14–21 min</span><h2>3 · Caesar a hrubá síla</h2><span class="slides-ref">snímky 8, 9</span></div>
+<p class="goal">Zašifrovat a dešifrovat Caesarem. Pochopit, že 25 klíčů se dá projít všechny.</p>
+<h3>Učitel dělá</h3>
+<p>Na snímku 8 ukaž dvě abecedy pod sebou a posuvník. Studenti si na papír zašifrují jedno slovo s posunem 3 a kontrolují si ho ve dvojicích. Na snímku 9 jsou hotové 25 pokusů: klikáním na posuny je studenti zkoušejí na šifrovém textu a hledají, který dává smysl.</p>
+<blockquote class="say">„Máte šifrový text a víte, že je to Caesar. Jak ho rozluštíte, když neznáte posun? Máte jen pětadvacet možností. Kdo by to zkoušel ručně? A počítač?“</blockquote>
+<details class="q"><summary>„Proč je Caesarova šifra slabá, když ji Eva zná?“</summary><div class="a"><p>I kdyby Eva postup neznala, vyzkouší 25 posunů. To je <strong>hrubá síla</strong>. Proto se šifry navrhují s obrovským počtem klíčů. Substituce má 26! klíčů, a to Eva zkoušet nechce. Přesto padla, viz další fáze.</p></div></details>
+</section>
+
+<section id="a4" class="phase">
+<div class="ph-head"><span class="time">21–33 min</span><h2>4 · 26! a frekvenční analýza</h2><span class="slides-ref">snímky 10, 11</span></div>
+<p class="goal">Počet klíčů nestačí. Frekvenční analýza prolomí substituci, protože zachovává četnosti.</p>
+<h3>Učitel dělá</h3>
+<p>Snímek 10 (kalkulačka 26!): posuvníkem rychlosti ukaž, že zkoušení všech klíčů by trvalo asi tolik, co stáří vesmíru. Pak zeptej: „Takže je šifra bezpečná?“ a přejdi na snímek 11.</p>
+<blockquote class="say">„Tady je text zašifrovaný substitucí. Víte, že je česky. Najděte písmeno, které se vyskytuje nejčastěji. V češtině je nejčastější E. Dosaďte ho. Co se dá poznat dál? Krátká slova, jednopísmenné slovo…“</blockquote>
+<p>Studenti ve dvojicích luští podle histogramu. Můžeš použít tlačítko <em>Nápověda</em> a po osmi minutách <em>Ukázat řešení</em>. Zpráva ukazuje jen počet správných písmen, takže studenti nevidí, která jsou dobře.</p>
+<details class="q"><summary>„Jak může být šifra se 4 · 10²⁶ klíči prolomena za pár minut?“ <span class="key">klíčová</span></summary><div class="a"><p>Luštitel nezkouší klíče. Využívá toho, že <strong>jazyk má strukturu</strong> a substituce ji zachovává: každé písmeno se vždy mění na totéž. Poučení pro Vigenèra: šifra musí tuto strukturu zakrýt.</p></div></details>
+<div class="note warn"><b class="lbl">Pozor</b><p>Krátký text se frekvenční analýzou luští špatně, v krátkém textu nemusí být nejčastější právě E. Studentům to řekni dopředu, ať se nezlobí.</p></div>
+</section>
+
+<section id="a5" class="phase">
+<div class="ph-head"><span class="time">33–40 min</span><h2>5 · Marie Stuartovna</h2><span class="slides-ref">snímek 12</span></div>
+<p class="goal">Ukázat, že luštění má lidské následky, a vyprávění zakotvit v příběhu.</p>
+<h3>Učitel dělá</h3>
+<p>Snímek 12 prokliknutím karet vyprávěj příběh. Nech studenty hádat, kde se řetěz utajení přetrhl: u šifry, u spojky, nebo u obojího.</p>
+<blockquote class="say">„Marie měla šifru. Nikdo ji neprolomil geniálním nápadem, prolomil ji Thomas Phelippes frekvenční analýzou, o které jste se právě učili. Jenže ještě předtím musel někdo dopisy dostat do ruky. Kdo?“</blockquote>
+<details class="q"><summary>„Co kdyby šifra byla nerozluštitelná?“</summary><div class="a"><p>Šifra by ji neochránila stejně, kdyby Gifford vydal klíč nebo kdyby byli odhaleni jinak. Bezpečnost je řetěz: šifra, klíč, kanál, lidé.</p></div></details>
+</section>
+
+<section id="a6" class="phase">
+<div class="ph-head"><span class="time">40–45 min</span><h2>6 · Shrnutí a exit ticket</h2><span class="slides-ref">snímky 23, 24</span></div>
+<p class="goal">Ověřit klíčové pojmy a zjistit, co zůstalo nejasné.</p>
+<p>Kvíz na snímku 23 je osm pravdivých a nepravdivých tvrzení. Pro 1. hodinu použij jen první polovinu (Caesar, hrubá síla, substituce, frekvence). Snímek 24 je shrnutí.</p>
+<h3>Exit ticket (psaný na papír)</h3>
+<ol class="plan">
+  <li>Proč se dá substituční šifra s 26! klíči prolomit?</li>
+  <li>Jaký je rozdíl mezi transpozicí a substitucí?</li>
+  <li>Co z dnešní hodiny nechápeš nebo by tě zajímalo víc?</li>
+</ol>
+</section>
+
+<p class="part">2. hodina · Vigenère až RSA</p>
+
+<section id="b1" class="phase">
+<div class="ph-head"><span class="time">0–4 min</span><h2>1 · Opakování</h2><span class="slides-ref">bez snímků</span></div>
+<p class="goal">Připomenout, že frekvenční analýza porazila substituci, a otevřít otázku, jak ji obejít.</p>
+<blockquote class="say">„Minule jsme rozluštili substituci podle četnosti písmen. Co byste udělali jako tvůrce šifry, aby to nešlo?“</blockquote>
+<p>Studenti zpravidla navrhnou: šifrovat písmena jinak podle místa v textu. To je Vigenèr.</p>
+</section>
+
+<section id="b2" class="phase">
+<div class="ph-head"><span class="time">4–14 min</span><h2>2 · Vigenère a Kasiski</h2><span class="slides-ref">snímky 13, 14</span></div>
+<p class="goal">Polyalfabetická šifra zakryje četnosti, ale opakování klíče ji prozradí.</p>
+<h3>Učitel dělá</h3>
+<p>Snímek 13: porovnej histogram textu šifrovaného Caesarem (jeden vysoký sloupec) a Vigenèrem (vyrovnaný). Na snímku 14 ukaž Kasiského test: opakující se skupiny, jejich vzdálenosti a dělitelé. Délka klíče se pozná, odhad samotného klíče z krátkého textu je přibližný, což aplikace přímo říká.</p>
+<details class="q"><summary>„Proč opakování klíče šifru prozradí?“</summary><div class="a"><p>Každé <i>d</i>-té písmeno se šifruje stejným posunem, takže každý sloupec je obyčejný Caesar a frekvenční analýza na něj opět funguje.</p></div></details>
+<div class="note tip"><b class="lbl">Odbočka</b><p>Šifra se jmenuje po Vigenèrovi omylem: poprvé ji popsal Bellaso (1553). Studenti to rádi slyší.</p></div>
+</section>
+
+<section id="b3" class="phase">
+<div class="ph-head"><span class="time">14–23 min</span><h2>3 · Enigma</h2><span class="slides-ref">snímky 15, 16</span></div>
+<p class="goal">Mechanizace šifry, role matematiky a lidských chyb při luštění.</p>
+<h3>Učitel dělá</h3>
+<p>Na snímku 15 studenti zadají text do simulace a všimnou si dvou věcí: stejné písmeno se šifruje pokaždé jinak a <strong>žádné písmeno se nikdy nezašifruje samo na sebe</strong>. Zkouška: zadej výsledek zpět, vznikne původní text. Na snímku 16 projdi postupně Polsko (1932, bomba 1938), předání v roce 1939 a Bletchley Park.</p>
+<details class="q"><summary>„Proč bylo důležité, že se písmeno nikdy nezašifruje samo na sebe?“</summary><div class="a"><p>Luštitel pak může vyloučit nastavení, při nichž by se to stalo. Při uhodnutém slově v textu (třeba „WETTERBERICHT“) vyřadí velkou část pozic.</p></div></details>
+<div class="note warn"><b class="lbl">Co z toho plyne</b><p>Silný stroj prolomily matematika a <strong>lidské chyby</strong>. Studenti často čekají jeden geniální nápad. Řekni jim, že realita byla spolupráce Poláků, Britů, matematiků a lingvistů.</p></div>
+</section>
+
+<section id="b4" class="phase">
+<div class="ph-head"><span class="time">23–33 min</span><h2>4 · Kerckhoffs a jednorázová tabulka</h2><span class="slides-ref">snímky 17, 18</span></div>
+<p class="goal">Bezpečnost stojí na klíči, ne na utajení postupu. Existuje nerozluštitelná šifra, ale je nepraktická.</p>
+<h3>Učitel dělá</h3>
+<p>Snímek 17: tři karty o Kerckhoffsově principu, nech studenty odpovědět na otázku, který systém je bezpečnější (veřejný algoritmus, nebo tajný). Snímek 18: vytvoř náhodný klíč, student napíše libovolnou zprávu stejné délky a aplikace ukáže klíč, který z téhož šifrového textu vyrobí jeho zprávu.</p>
+<details class="q"><summary>„Když Eva zachytí šifrový text, může najít zprávu?“ <span class="key">klíčová</span></summary><div class="a"><p>Může najít <strong>jakoukoli</strong> zprávu stejné délky, a právě proto nemá jak poznat pravou. To je Shannonův důkaz dokonalého utajení.</p></div></details>
+</section>
+
+<section id="b5" class="phase">
+<div class="ph-head"><span class="time">33–45 min</span><h2>5 · Klíče a cesta k RSA</h2><span class="slides-ref">snímky 19–24</span></div>
+<p class="goal">Problém předání klíče a růst počtu klíčů jako přechod k RSA.</p>
+<h3>Učitel dělá</h3>
+<p>Snímek 19: posuvník počtu lidí ukáže n(n − 1)/2 klíčů. Snímek 20: časová osa 1973–dnes. Snímek 21: tabulka „Souboj tvůrců a luštitelů“, nech studenty tipovat, kdo vyhrál, dřív než ji ukážeš. Snímek 22 je aktivita „Pošli zprávu“ s aplikací, snímek 23 kvíz, snímek 24 shrnutí.</p>
+<blockquote class="say">„Jak předat klíč tak, abyste se nemuseli předtím potkat? Ještě v roce 1975 by vám každý kryptograf řekl, že to nejde. Příště ukážu, že jde.“</blockquote>
+<h3>Aktivita s aplikací (snímek 22, pokud máš čas)</h3>
+<p>Studenti v aplikaci zašifrují větu náhodnou abecedou a pošlou šifrový text sousedovi. Klíč si pošlou zvlášť (třeba ústně). Pak je zeptej: „A co kdyby klíč zachytila Eva?“</p>
+</section>
+
+<p class="part">Podklady</p>
+
+<section id="tabule">
+<h2>Zápis na tabuli</h2>
+<h3>Konec 1. hodiny</h3>
+<div class="board">
+  <div class="bcol">
+    <div class="bh">Pojmy</div>
+    <div class="bs">šifra + klíč: otevřený → šifrový</div>
+    <div class="bs">kryptografie × kryptoanalýza</div>
+    <div class="bs">Alice, Bob, Eva</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Typy</div>
+    <div class="bs">transpozice: pořadí, stejná písmena</div>
+    <div class="bs">substituce: jiná písmena, stejné pořadí</div>
+    <div class="bcode">Caesar: 25 klíčů<br>substituce: 26!</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Luštění</div>
+    <div class="bs">hrubá síla: zkus všechny klíče</div>
+    <div class="bcode">frekvence: E 11,6 % · A 9,1 %<br>O 8,0 % · I 6,5 % · N 6,4 %</div>
+    <div class="bs">substituce zachovává frekvence</div>
+  </div>
+</div>
+<h3>Konec 2. hodiny</h3>
+<div class="board">
+  <div class="bcol">
+    <div class="bh">Vigenère</div>
+    <div class="bs">klíč = slovo, opakuje se</div>
+    <div class="bcode">UTOK + KLIC → EEWM</div>
+    <div class="bs">prolomil Kasiski (1863)</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Zásady</div>
+    <div class="bs">Kerckhoffs: tajný jen klíč</div>
+    <div class="bs">OTP: náhodný, dlouhý jako zpráva, jednou</div>
+    <div class="bs">Enigma: matematika + chyby lidí</div>
+  </div>
+  <div class="bcol">
+    <div class="bh">Problém</div>
+    <div class="bcode">n lidí → n(n−1)/2 klíčů</div>
+    <div class="bs">jak předat klíč?</div>
+    <div class="bs">→ veřejný klíč, RSA</div>
+  </div>
+</div>
+</section>
+
+<section id="chyby">
+<h2>Časté chyby a mylné představy</h2>
+<div class="tbl"><table>
+<thead><tr><th>Mylná představa</th><th>Jak ji vyvrátit</th></tr></thead>
+<tbody>
+<tr><td>„Kód a šifra je totéž.“</td><td>Šifra mění písmena podle pravidla, kód nahrazuje slova nebo věty podle knihy. Kód se musí domluvit dopředu a nepokryje slova, která v knize nejsou.</td></tr>
+<tr><td>„Čím víc klíčů, tím bezpečnější šifra.“</td><td>Substituce má 26! klíčů a padla na frekvenční analýzu. Počet klíčů je nutná, ne postačující podmínka.</td></tr>
+<tr><td>„Šifra je bezpečná, protože ji nikdo nezná.“</td><td>Kerckhoffsův princip: nepřítel postup dříve či později získá. Bezpečný je jen klíč.</td></tr>
+<tr><td>„Enigmu rozluštil Turing sám.“</td><td>Prolomili ji nejprve Poláci (Rejewski, Różycki, Zygalski) a Turing a další v Bletchley Parku stavěli na jejich práci.</td></tr>
+<tr><td>„Jednorázovou tabulku použiju opakovaně, je to přece nerozluštitelné.“</td><td>Při opakování klíče šifra prolomitelná je. Proto se jmenuje jednorázová.</td></tr>
+<tr><td>„Vigenèrova šifra je nerozluštitelná.“</td><td>Byla považována za takovou, ale opakování klíče ji prozradí. Kasiski (1863), dříve Babbage.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="diferenciace">
+<h2>Rychlí a pomalejší</h2>
+<div class="two">
+  <div class="card">
+    <h3>Kdo je hotový dřív</h3>
+    <ul>
+      <li>Napsat v Pythonu Caesarovu šifru a útok hrubou silou (kód je ve studijním textu).</li>
+      <li>Najít v textu opakující se skupiny a odhadnout délku klíče Vigenèra.</li>
+      <li>Spočítat počet nastavení Enigmy (60 · 17 576 · 150 738 274 937 250).</li>
+      <li>Zjistit, co je „one-time pad“ v projektu Venona a proč se luštil.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Kdo potřebuje víc času</h3>
+    <ul>
+      <li>V 1. hodině stačí zvládnout Caesara a pochopit, proč selhává hrubá síla. Frekvenční analýzu stačí vidět.</li>
+      <li>Při luštění použít tlačítko <em>Nápověda</em> a pracovat s přepisem znaků ve dvojici.</li>
+      <li>Ve 2. hodině se soustředit na Kerckhoffsův princip a problém předání klíče, Enigmu stačí vyprávět.</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="zaloha">
+<h2>Když nejde technika</h2>
+<ul>
+  <li><strong>Nejde projektor:</strong> všechny šifry jsou na papír. Napiš na tabuli abecedu a posunutou abecedu, frekvenční tabulku češtiny a šifrový text z <a href="07_historie_sifrovani_studijni_text.html#frekvence">studijního textu</a>.</li>
+  <li><strong>Nefunguje aplikace:</strong> aktivitu „Pošli zprávu“ udělej s papírovou přeházenou abecedou, kterou si vymyslí každá dvojice.</li>
+  <li><strong>Frekvenční analýza bez počítače:</strong> rozdej vytištěný text a nech studenty čárkovat písmena (děleno mezi dvojice po abecedě: jeden počítá A–M, druhý N–Z).</li>
+</ul>
+</section>
+
+<section id="jedna">
+<h2>Máš jen jednu hodinu?</h2>
+<p>Odučí se 1. hodina podle plánu. Z 2. hodiny přidej jen snímky 17 a 19 (Kerckhoffs a počet klíčů, asi 4 minuty) místo fáze 5 a Vigenèra, Enigmu a jednorázovou tabulku zadej jako samostudium podle <a href="07_historie_sifrovani_studijni_text.html">studijního textu</a>. Pro velmi krátkou verzi (45 minut) použij snímky 1, 2, 3, 6, 8, 9, 11, 12, 19, 20, 23 a 24.</p>
+</section>
+
+<section id="reflexe">
+<h2>Po hodině</h2>
+<ul>
+  <li>Kolik dvojic při aktivitě vymyslelo posun nebo transpozici? Čeho si Evy všimly?</li>
+  <li>Kolik dvojic rozluštilo text na snímku 11 do konce hodiny?</li>
+  <li>Kolik exit ticketů správně odpovědělo, proč se substituce dá prolomit?</li>
+  <li>Ve 2. hodině: dokázali studenti říct, proč Enigma padla?</li>
+</ul>
+</section>
+
+<p class="foot">Metodický list k jedné až dvěma hodinám na téma historie šifrování. Navazuje na prezentaci <a href="07_historie_sifrovani.html">Historie šifrování</a>, <a href="07_historie_sifrovani_aplikace.html">aplikaci</a> a <a href="07_historie_sifrovani_studijni_text.html">studijní text</a>. Další téma: <a href="07_rsa.html">RSA</a>.</p>
+</main>
+</div>
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>

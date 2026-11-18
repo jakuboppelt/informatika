@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Substituční šifra – aplikace</title>
+<link rel="stylesheet" href="../styl.css">
+</head>
+<body class="doc">
+<a class="home-fab" href="../index.html" aria-label="Všechny materiály" title="Všechny materiály"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
+<div class="wrap">
+<aside class="toc" aria-label="Obsah">
+  <details open>
+  <summary>Obsah</summary>
+  <h2>Obsah</h2>
+  <ol>
+    <li class="grp">Šifra</li>
+    <li><a href="#klic">1 · Klíč</a></li>
+    <li><a href="#sifrovani">2 · Šifrování</a></li>
+    <li><a href="#desifrovani">3 · Dešifrování</a></li>
+    <li class="grp">Jak to funguje</li>
+    <li><a href="#krok">4 · Písmeno po písmenu</a></li>
+    <li><a href="#lusteni">5 · Luštění bez klíče</a></li>
+  </ol>
+  </details>
+</aside>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Informatika · Bezpečnost · Aplikace</p>
+  <h1>Substituční šifra <span class="t">šifruj a dešifruj</span></h1>
+  <p class="lead">Každé písmeno zprávy se nahradí jiným podle klíče. Tady si klíč vybereš (posun, klíčové slovo, náhodná abeceda nebo vlastní), zašifruješ text a pak ho stejným klíčem dešifruješ. Na konci si můžeš zkusit, jak by šifru luštil někdo, kdo klíč nezná. Aplikace souvisí s <a href="07_historie_sifrovani.html">prezentací Historie šifrování</a> a se <a href="07_historie_sifrovani_studijni_text.html">studijním textem</a>.</p>
+  <div class="must">
+    <h2>Po vyzkoušení bys měl umět</h2>
+    <ul>
+      <li>vysvětlit, co je klíč substituční šifry a kolik jich je</li>
+      <li>zašifrovat a dešifrovat zprávu ručně i v aplikaci</li>
+      <li>popsat, proč se musí klíč předat bezpečně</li>
+      <li>ukázat, jak frekvence písmen prozradí šifru</li>
+    </ul>
+  </div>
+</header>
+
+<p class="part">Šifra</p>
+
+<section id="klic">
+<h2>1 · Klíč</h2>
+<p>Klíčem substituční šifry je <strong>abeceda, která je přeházená</strong>. Horní řádek je normální abeceda, spodní řádek ukazuje, čím se které písmeno nahradí. Klíč můžeš vytvořit čtyřmi způsoby, nebo ho přepsat ručně.</p>
+<div class="sc-tool">
+  <div class="sc-row" id="scModes" role="group" aria-label="Způsob tvorby klíče">
+    <button class="calc-btn is-active" type="button" data-mode="caesar">Caesar (posun)</button>
+    <button class="calc-btn" type="button" data-mode="word">Klíčové slovo</button>
+    <button class="calc-btn" type="button" data-mode="rand">Náhodná abeceda</button>
+    <button class="calc-btn" type="button" data-mode="own">Vlastní</button>
+  </div>
+  <div class="sc-row" id="scCtl">
+    <div class="sc-ctl" data-for="caesar"><label for="scShift">Posun</label><input type="range" id="scShift" min="1" max="25" value="3" aria-label="Posun"><span class="sc-val" id="scShiftV">3</span></div>
+    <div class="sc-ctl" data-for="word" hidden><label for="scWord">Klíčové slovo</label><input class="sc-in" id="scWord" type="text" value="SIFRA" maxlength="20" autocomplete="off" aria-label="Klíčové slovo"></div>
+    <div class="sc-ctl" data-for="rand" hidden><button class="calc-btn" type="button" id="scShuffle">Zamíchat znovu</button></div>
+    <div class="sc-ctl" data-for="own" hidden><span class="sc-hint">Napiš nebo vlož do pole níže 26 různých písmen.</span></div>
+  </div>
+  <div class="sc-abc" id="scTop" aria-label="Otevřená abeceda"></div>
+  <div class="sc-abc is-key" id="scBot" aria-label="Klíč, tedy šifrová abeceda"></div>
+  <div class="sc-row">
+    <label for="scKey">Klíč (26 písmen)</label>
+    <input class="sc-in is-wide" id="scKey" type="text" maxlength="26" autocomplete="off" spellcheck="false" aria-label="Klíč">
+    <button class="calc-btn" type="button" data-copy="scKey">Kopírovat klíč</button>
+  </div>
+  <p class="sc-msg" id="scKeyMsg" role="status"></p>
+</div>
+<div class="note tip"><b class="lbl">Kolik klíčů existuje</b><p>Caesarův posun má jen 25 možností. Libovolné přeházení abecedy má 26! = 403 291 461 126 605 635 584 000 000 možností, tedy zhruba tolik, kolik by jeden počítač zkoušel za celý věk vesmíru (miliarda klíčů za sekundu). Přesto se šifra dá rozluštit, viz poslední část.</p></div>
+</section>
+
+<section id="sifrovani">
+<h2>2 · Šifrování</h2>
+<p>Napiš nebo vlož zprávu. Diakritika se odstraní a malá písmena se změní na velká, protože klíč má jen 26 písmen.</p>
+<div class="sc-tool">
+  <label for="scPlain">Otevřený text</label>
+  <textarea class="sc-area" id="scPlain" rows="4" spellcheck="false" aria-label="Otevřený text">Sejdeme se zítra v pět hodin u školy. Přijď včas a nikomu o tom neříkej.</textarea>
+  <div class="sc-row">
+    <button class="calc-btn is-active" type="button" id="scKeep" aria-pressed="true">Zachovat mezery a interpunkci</button>
+    <button class="calc-btn" type="button" id="scGroup" aria-pressed="false">Po pěti písmenech</button>
+  </div>
+  <label for="scCipher">Šifrový text</label>
+  <div class="sc-out" id="scCipher" aria-live="polite"></div>
+  <div class="sc-row">
+    <button class="calc-btn" type="button" data-copy="scCipher">Kopírovat šifrový text</button>
+    <button class="calc-btn" type="button" id="scSend">Poslat do dešifrování</button>
+  </div>
+</div>
+</section>
+
+<section id="desifrovani">
+<h2>3 · Dešifrování</h2>
+<p>Vlož šifrový text (třeba od spolužáka) a nastav ve <a href="#klic">kroku 1</a> klíč, který vám sdělil. Aplikace použije stejný klíč pozpátku: najde písmeno v dolním řádku a napíše odpovídající z horního.</p>
+<div class="sc-tool">
+  <label for="scIn">Šifrový text</label>
+  <textarea class="sc-area" id="scIn" rows="4" spellcheck="false" placeholder="Sem vlož šifrový text" aria-label="Šifrový text"></textarea>
+  <label for="scPlain2">Otevřený text</label>
+  <div class="sc-out" id="scPlain2" aria-live="polite"></div>
+  <div class="sc-row"><button class="calc-btn" type="button" data-copy="scPlain2">Kopírovat otevřený text</button></div>
+</div>
+<div class="note warn"><b class="lbl">Jak se předá klíč?</b><p>Pokud si klíč pošleš stejným kanálem jako zprávu, odposlouchávač dostane obojí. Šifra pak nic nechrání. Právě tomu se říká problém předání klíče.</p></div>
+</section>
+
+<p class="part">Jak to funguje</p>
+
+<section id="krok">
+<h2>4 · Písmeno po písmenu</h2>
+<p>Takhle probíhá šifrování uvnitř: každé písmeno otevřeného textu najdeš v horním řádku a opíšeš písmeno pod ním. Projdi si to krok za krokem na textu z kroku 2.</p>
+<div class="sc-tool">
+  <div class="sc-abc" id="stTop" aria-label="Otevřená abeceda"></div>
+  <div class="sc-abc is-key" id="stBot" aria-label="Šifrová abeceda"></div>
+  <div class="sc-row">
+    <button class="calc-btn" type="button" id="stBack">← Zpět</button>
+    <button class="calc-btn" type="button" id="stNext">Další písmeno →</button>
+    <button class="calc-btn" type="button" id="stAll">Celé</button>
+    <button class="calc-btn" type="button" id="stReset">Od začátku</button>
+    <span class="sc-hint" id="stInfo"></span>
+  </div>
+  <div class="sc-trace" id="stTrace"></div>
+  <div class="sc-trace is-out" id="stOut"></div>
+</div>
+</section>
+
+<section id="lusteni">
+<h2>5 · Luštění bez klíče</h2>
+<p>Co když klíč neznáš? Porovnej, jak často se písmena vyskytují v šifrovém textu (kroku 3, a když je prázdný, z kroku 2) a v češtině. Nejčastější písmeno šifrového textu je s největší pravděpodobností E, potom O, A, N, T. Takhle luštil šifru už al-Kindí.</p>
+<div class="sc-tool">
+  <p class="sc-hint" id="fqSrc"></p>
+  <p class="sc-lab">Šifrový text</p>
+  <div class="sc-bars" id="fqA"></div>
+  <p class="sc-lab">Čeština</p>
+  <div class="sc-bars is-ref" id="fqB"></div>
+  <p class="sc-msg" id="fqMsg"></p>
+  <div class="sc-row">
+    <button class="calc-btn" type="button" id="fqCaesar">Zkusit Caesarův posun automaticky</button>
+    <span class="sc-hint" id="fqCaesarMsg"></span>
+  </div>
+</div>
+<div class="note tip"><b class="lbl">Zkus to</b><p>Zašifruj dlouhý text náhodnou abecedou, výsledek pošli spolužákovi bez klíče a sleduj, jestli ho rozluští jen z grafu a z krátkých slov. Pak totéž s Caesarem.</p></div>
+</section>
+
+<p class="foot">Aplikace k přednášce <a href="07_historie_sifrovani.html">Historie šifrování</a>. Všechno se počítá ve tvém prohlížeči, žádný text se nikam neposílá.</p>
+</main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function mod(a, n) { return ((a % n) + n) % n; }
+  var ABC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  var CZ = { A: 9.1, B: 2.2, C: 3.1, D: 3.8, E: 11.6, F: 0.2, G: 0.3, H: 2.3, I: 6.5, J: 2.3, K: 3.6, L: 5.2, M: 3.3, N: 6.4, O: 8.0, P: 3.2, Q: 0.0, R: 4.6, S: 5.3, T: 5.8, U: 3.2, V: 3.9, W: 0.1, X: 0.1, Y: 3.2, Z: 3.1 };
+  function strip(s) { return String(s).normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase(); }
+  function lettersOnly(s) { return strip(s).replace(/[^A-Z]/g, ""); }
+
+  /* ---------- klíč ---------- */
+  var key = ABC, mode = "caesar";
+  function caesarKey(k) { return ABC.split("").map(function (c, i) { return ABC[mod(i + k, 26)]; }).join(""); }
+  function wordKey(w) {
+    var seen = {}, out = "", l = lettersOnly(w);
+    for (var i = 0; i < l.length; i++) if (!seen[l[i]]) { seen[l[i]] = 1; out += l[i]; }
+    for (var j = 0; j < 26; j++) if (!seen[ABC[j]]) out += ABC[j];
+    return out;
+  }
+  function randKey() {
+    var a = ABC.split(""), buf = new Uint32Array(26), i, j, t;
+    do {
+      crypto.getRandomValues(buf);
+      for (i = 25; i > 0; i--) { j = buf[i] % (i + 1); t = a[i]; a[i] = a[j]; a[j] = t; }
+    } while (a.join("") === ABC);
+    return a.join("");
+  }
+  function validKey(k) { if (k.length !== 26) return false; var s = {}; for (var i = 0; i < 26; i++) { if (ABC.indexOf(k[i]) < 0 || s[k[i]]) return false; s[k[i]] = 1; } return true; }
+  function invKey(k) { var inv = []; for (var i = 0; i < 26; i++) inv[ABC.indexOf(k[i])] = ABC[i]; return inv.join(""); }
+  function apply(text, k, keepOthers) {
+    return strip(text).replace(/[^A-Z]/g, function (c) { return keepOthers ? c : ""; }).replace(/[A-Z]/g, function (c) { return k[ABC.indexOf(c)]; });
+  }
+  function group5(s) { return s.replace(/(.{5})/g, "$1 ").trim(); }
+
+  var abcRows = ["scTop", "scBot", "stTop", "stBot"];
+  abcRows.forEach(function (id) { ABC.split("").forEach(function (c) { $(id).appendChild(el("span", "", c)); }); });
+  function drawKey() {
+    Array.prototype.forEach.call($("scTop").children, function (s, i) { s.textContent = ABC[i]; });
+    Array.prototype.forEach.call($("scBot").children, function (s, i) { s.textContent = key[i]; });
+    Array.prototype.forEach.call($("stBot").children, function (s, i) { s.textContent = key[i]; });
+  }
+
+  var modeBtns = Array.prototype.slice.call($("scModes").querySelectorAll("button"));
+  function setMode(m) {
+    mode = m;
+    modeBtns.forEach(function (b) { b.classList.toggle("is-active", b.dataset.mode === m); });
+    Array.prototype.forEach.call($("scCtl").children, function (c) { c.hidden = c.dataset["for"] !== m; });
+    if (m === "caesar") key = caesarKey(+$("scShift").value);
+    else if (m === "word") key = wordKey($("scWord").value);
+    else if (m === "rand") key = randKey();
+    $("scKey").value = key; refresh();
+  }
+  modeBtns.forEach(function (b) { b.addEventListener("click", function () { setMode(b.dataset.mode); }); });
+  $("scShift").addEventListener("input", function () { $("scShiftV").textContent = this.value; if (mode === "caesar") setMode("caesar"); });
+  $("scWord").addEventListener("input", function () { if (mode === "word") setMode("word"); });
+  $("scShuffle").addEventListener("click", function () { setMode("rand"); });
+  $("scKey").addEventListener("input", function () {
+    var v = lettersOnly(this.value).slice(0, 26); this.value = v;
+    if (mode !== "own") { mode = "own"; modeBtns.forEach(function (b) { b.classList.toggle("is-active", b.dataset.mode === "own"); }); Array.prototype.forEach.call($("scCtl").children, function (c) { c.hidden = c.dataset["for"] !== "own"; }); }
+    if (validKey(v)) key = v;
+    refresh(v);
+  });
+
+  /* ---------- šifrování a dešifrování ---------- */
+  var keep = true, grp = false;
+  function toggle(btn, val) { btn.classList.toggle("is-active", val); btn.setAttribute("aria-pressed", String(val)); }
+  $("scKeep").addEventListener("click", function () { keep = !keep; toggle(this, keep); refresh(); });
+  $("scGroup").addEventListener("click", function () { grp = !grp; toggle(this, grp); refresh(); });
+  $("scPlain").addEventListener("input", function () { stIdx = 0; refresh(); });
+  $("scIn").addEventListener("input", function () { refresh(); });
+  $("scSend").addEventListener("click", function () { $("scIn").value = $("scCipher").textContent; refresh(); $("desifrovani").scrollIntoView({ behavior: "smooth", block: "start" }); });
+
+  /* ---------- krokování ---------- */
+  var stIdx = 0;
+  function stDraw() {
+    var s = strip($("scPlain").value), inv = key, chars = s.split(""), html = "", out = "", count = 0, cur = null, i;
+    var letterPos = [];
+    for (i = 0; i < chars.length; i++) if (/[A-Z]/.test(chars[i])) letterPos.push(i);
+    var total = letterPos.length;
+    if (stIdx > total) stIdx = total;
+    for (i = 0; i < chars.length; i++) {
+      var c = chars[i], isL = /[A-Z]/.test(c);
+      if (isL) {
+        count++;
+        var done = count <= stIdx, isCur = count === stIdx;
+        html += '<span class="' + (isCur ? "is-cur" : done ? "is-done" : "") + '">' + c + "</span>";
+        if (done) out += '<span class="' + (isCur ? "is-cur" : "") + '">' + key[ABC.indexOf(c)] + "</span>";
+        if (isCur) cur = c;
+      } else {
+        html += '<span class="is-sp">' + (c === " " ? "&nbsp;" : c) + "</span>";
+        if (count < stIdx || (count === stIdx && stIdx > 0)) out += '<span class="is-sp">' + (c === " " ? "&nbsp;" : c) + "</span>";
+      }
+    }
+    $("stTrace").innerHTML = html || "–"; $("stOut").innerHTML = out || "–";
+    Array.prototype.forEach.call($("stTop").children, function (sp, k) { sp.classList.toggle("is-cur", cur === ABC[k]); });
+    Array.prototype.forEach.call($("stBot").children, function (sp, k) { sp.classList.toggle("is-cur", cur === ABC[k]); });
+    $("stInfo").textContent = stIdx === 0 ? total + " písmen k zašifrování" : (cur ? cur + " → " + key[ABC.indexOf(cur)] + " (" + stIdx + " z " + total + ")" : stIdx + " z " + total);
+    $("stBack").disabled = stIdx === 0; $("stNext").disabled = stIdx >= total;
+  }
+  $("stNext").addEventListener("click", function () { stIdx++; stDraw(); });
+  $("stBack").addEventListener("click", function () { if (stIdx > 0) stIdx--; stDraw(); });
+  $("stAll").addEventListener("click", function () { stIdx = 1e9; stDraw(); });
+  $("stReset").addEventListener("click", function () { stIdx = 0; stDraw(); });
+
+  /* ---------- četnost ---------- */
+  var refDone = false;
+  function barsInto(host, vals, maxPct, hot) {
+    host.innerHTML = "";
+    for (var i = 0; i < 26; i++) {
+      var col = el("div", "sc-col"), bar = el("div", "sc-bar" + (hot && hot[ABC[i]] ? " is-top" : ""));
+      bar.style.height = Math.max(2, Math.round(vals[i] / maxPct * 100)) + "%"; bar.title = ABC[i] + ": " + vals[i].toFixed(1).replace(".", ",") + " %";
+      col.appendChild(bar); col.appendChild(el("span", "sc-l", ABC[i])); host.appendChild(col);
+    }
+  }
+  function freqDraw() {
+    var src = lettersOnly($("scIn").value), label = "Zdroj: šifrový text z kroku 3.";
+    if (!src) { src = lettersOnly($("scCipher").textContent); label = "Zdroj: šifrový text z kroku 2 (krok 3 je prázdný)."; }
+    $("fqSrc").textContent = label + " Písmen: " + src.length + ".";
+    var c = [], i; for (i = 0; i < 26; i++) c[i] = 0;
+    for (i = 0; i < src.length; i++) c[ABC.indexOf(src[i])]++;
+    var p = c.map(function (x) { return src.length ? x / src.length * 100 : 0; });
+    var order = ABC.split("").sort(function (a, b) { return p[ABC.indexOf(b)] - p[ABC.indexOf(a)] || (a < b ? -1 : 1); });
+    var hot = {}; order.slice(0, 3).forEach(function (L) { if (p[ABC.indexOf(L)] > 0) hot[L] = 1; });
+    var ref = ABC.split("").map(function (L) { return CZ[L]; }), mx = Math.max(12, Math.max.apply(null, p));
+    barsInto($("fqA"), p, mx, hot); barsInto($("fqB"), ref, mx, { E: 1, O: 1, A: 1 });
+    $("fqMsg").textContent = src.length < 40 ? "Text je krátký, frekvence nejsou spolehlivé. Potřebuješ aspoň několik desítek písmen." : "Tři nejčastější písmena textu: " + order.slice(0, 3).join(", ") + ". V češtině: E, O, A.";
+  }
+  $("fqCaesar").addEventListener("click", function () {
+    var src = lettersOnly($("scIn").value) || lettersOnly($("scCipher").textContent);
+    if (src.length < 8) { $("fqCaesarMsg").textContent = "Text je příliš krátký."; return; }
+    var best = 0, bs = 1e18;
+    for (var s = 0; s < 26; s++) {
+      var cnt = [], i, x = 0; for (i = 0; i < 26; i++) cnt[i] = 0;
+      for (i = 0; i < src.length; i++) cnt[mod(ABC.indexOf(src[i]) - s, 26)]++;
+      for (i = 0; i < 26; i++) { var e = CZ[ABC[i]] * src.length / 100; if (e > 0) x += Math.pow(cnt[i] - e, 2) / e; }
+      if (x < bs) { bs = x; best = s; }
+    }
+    $("fqCaesarMsg").textContent = best === 0 ? "Vypadá to, že posun je 0, tedy text je nezašifrovaný, nebo nejde o Caesara." : "Nejlépe sedí posun " + best + ". Nastavil jsem ho jako klíč.";
+    if (best) { $("scShift").value = best; $("scShiftV").textContent = best; setMode("caesar"); }
+  });
+
+  /* ---------- kopírování ---------- */
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = el("textarea", "copy-tmp"); ta.value = t; ta.setAttribute("readonly", ""); document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy") ? ok() : fail(); } catch (e) { fail(e); }
+      document.body.removeChild(ta);
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("[data-copy]"), function (b) {
+    var label = b.textContent, t;
+    b.addEventListener("click", function () {
+      var src = $(b.dataset.copy), text = "value" in src ? src.value : src.textContent;
+      copyText(text).then(function () { b.textContent = "Zkopírováno"; }, function () { b.textContent = "Nepovedlo se"; });
+      clearTimeout(t); t = setTimeout(function () { b.textContent = label; }, 1600);
+    });
+  });
+
+  /* ---------- vykreslení všeho ---------- */
+  function refresh(rawKey) {
+    var ok = validKey(key) && (rawKey === undefined || rawKey === key);
+    var msg = $("scKeyMsg");
+    if (rawKey !== undefined && !validKey(rawKey)) {
+      var miss = ABC.split("").filter(function (c) { return rawKey.indexOf(c) < 0; });
+      var dup = rawKey.split("").filter(function (c, i) { return rawKey.indexOf(c) !== i; });
+      msg.className = "sc-msg is-bad";
+      msg.textContent = rawKey.length < 26 ? "Zatím " + rawKey.length + " z 26 písmen." + (dup.length ? " Opakuje se: " + dup.join(", ") + "." : "") : "Klíč musí obsahovat každé písmeno právě jednou." + (dup.length ? " Opakuje se: " + dup.join(", ") + "." : "");
+      if (rawKey.length >= 26) msg.textContent += " Chybí: " + miss.join(", ") + ".";
+    } else {
+      msg.className = "sc-msg is-ok"; msg.textContent = "Klíč je platný. Písmeno A se šifruje jako " + key[0] + ", B jako " + key[1] + ", C jako " + key[2] + ".";
+      var fixed = ABC.split("").filter(function (c, i) { return key[i] === c; });
+      if (fixed.length) msg.textContent += " Pozor: " + fixed.join(", ") + " se šifruje samo na sebe.";
+    }
+    drawKey();
+    var p = $("scPlain").value, c = apply(p, key, keep && !grp);
+    $("scCipher").textContent = (grp ? group5(apply(p, key, false)) : c) || "–";
+    var inp = $("scIn").value, back = apply(inp, invKey(key), true);
+    $("scPlain2").textContent = back || "–";
+    stDraw(); freqDraw();
+  }
+
+  setMode("caesar");
+  $("scIn").value = "";
+  // předvyplnění dešifrování ukázkou: stejný klíč, aby šlo hned zkusit
+  refresh();
+})();
+</script>
+<script>
+if (window.matchMedia('(max-width: 900px)').matches) { var d = document.querySelector('.toc details'); if (d) d.open = false; }
+</script>
+</body>
+</html>
